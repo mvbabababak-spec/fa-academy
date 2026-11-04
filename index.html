@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="آموزش AI">
+<meta name="description" content="مجموعه کتاب‌های آموزشی هوش مصنوعی — فارسی">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="assets/images/ai/ai-computervision.png">
+<link rel="apple-touch-icon" href="assets/images/ai/ai-computervision.png">
+<link rel="stylesheet" href="assets/css/style.css">
+<title>آکادمی هوش مصنوعی — آموزش فارسی</title>
+</head>
+<body>
+<div id="app">
+<div id="top-progress" class="top-progress" style="display:none"><div class="top-progress-bar"></div></div>
+
+<header class="app-header">
+<button class="header-back" id="header-back" onclick="App.goBack()" style="display:none"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+<div class="header-title" id="header-title">آکادمی هوش مصنوعی</div>
+<button class="header-search" onclick="App.showScreen('search')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></button>
+</header>
+
+<nav class="bottom-nav">
+<button class="nav-item active" data-screen="home" onclick="App.showScreen('home')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9M5 10v10h14V10"/></svg><span>خانه</span></button>
+<button class="nav-item" data-screen="progress" onclick="App.showScreen('progress')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span>پروش</span></button>
+<button class="nav-item" data-screen="bookmarks" onclick="App.showScreen('bookmarks')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg><span>علامت</span></button>
+<button class="nav-item" data-screen="notes" onclick="App.showScreen('notes')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg><span>یادداشت</span></button>
+<button class="nav-item" data-screen="settings" onclick="App.showScreen('settings')"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>تنظیمات</span></button>
+</nav>
+
+<section id="screen-home" class="screen active">
+<div class="home-hero">
+<div class="home-hero-bg"></div>
+<div class="home-hero-content">
+<div class="home-hero-badge">📚 آموزش هوش مصنوعی — فارسی</div>
+<h1 class="home-hero-title">آکادمی هوش مصنوعی</h1>
+<p class="home-hero-subtitle">مجموعه کامل کتاب‌ها و دوران آموزشی — مایکروسافت</p>
+<div class="home-hero-stats" id="home-stats"></div>
+</div>
+</div>
+<div class="home-content">
+<div class="section-title">کتاب‌ها</div>
+<div id="home-books" class="books-grid"></div>
+<div class="section-title">دوران آموزشی</div>
+<div id="courses-grid" class="books-grid"></div>
+</div>
+</section>
+
+<section id="screen-book" class="screen">
+<div class="book-header" id="book-header"></div>
+<div class="book-content" id="book-content"></div>
+</section>
+
+<section id="screen-reader" class="screen">
+<div class="reader-body" id="reader-body">
+<div class="reader-header" id="reader-header"></div>
+<article class="reader-content" id="reader-content"></article>
+<div class="reader-nav">
+<button class="reader-nav-btn" id="reader-prev" onclick="App.prevSection()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg><span>قبلی</span></button>
+<button class="reader-nav-btn" id="reader-next" onclick="App.nextSection()"><span>بعدی</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg></button>
+</div>
+</div>
+</section>
+
+<section id="screen-progress" class="screen">
+<div class="screen-content" id="progress-content"></div>
+</section>
+
+<section id="screen-bookmarks" class="screen">
+<div class="screen-content" id="bookmarks-list"></div>
+</section>
+
+<section id="screen-notes" class="screen">
+<div class="screen-content" id="notes-list"></div>
+</section>
+
+<section id="screen-search" class="screen">
+<div class="search-bar"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><input type="text" id="search-input" placeholder="جستجو در همه کتاب‌ها و دوران..."></div>
+<div class="search-results" id="search-results"></div>
+</section>
+
+<section id="screen-settings" class="screen">
+<div class="screen-content" id="settings-content"></div>
+</section>
+
+</div>
+<script src="assets/js/book-data.js"></script>
+<script src="assets/js/courses-data.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>
