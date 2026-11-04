@@ -1,5 +1,5 @@
-// ===== فا-اکدمی Service Worker v6 =====
-const CACHE_NAME = 'fa-academy-v7';
+// ===== فا-اکدمی Service Worker v8 =====
+const CACHE_NAME = 'fa-academy-v8';
 const CORE_FILES = [
   './',
   './index.html',
@@ -10,7 +10,9 @@ const CORE_FILES = [
   './assets/icons/icon-512.png',
   './assets/icons/apple-touch-icon.png',
   './assets/icons/favicon-32.png',
-  './assets/images/art-science-cover.svg'
+  './assets/images/art-science-cover.webp',
+  './assets/images/babak-ai/ch02-families.webp',
+  './assets/images/babak-ai/ch02-token-cycle.webp'
 ];
 
 // ===== INSTALL: Cache core files =====
