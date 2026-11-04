@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0f">
+<meta name="description" content="فا-اکدمی — مرجع آموزشی هوش مصنوعی به زبان فارسی">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%236366f1'/><text x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'>ف</text></svg>">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%236366f1'/><text x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'>ف</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<title>فا-اکدمی — آموزش هوش مصنوعی به فارسی</title>
+<style>
+/* ========== DESIGN TOKENS ========== */
+:root{
+  /* Background layers */
+  --bg-base:#0a0a0f;
+  --bg-elevated:#0d0d14;
+  --bg-surface:rgba(20,20,30,.72);
+  --bg-surface-solid:#13131a;
+  --bg-hover:rgba(30,30,45,.8);
+  --bg-input:rgba(15,15,25,.6);
+
+  /* Accent colors */
+  --accent-primary:#6366f1;
+  --accent-secondary:#8b5cf6;
+  --accent-tertiary:#06b6d4;
+  --accent-glow:rgba(99,102,241,.15);
+  --accent-glow-strong:rgba(99,102,241,.3);
+
+  /* Text */
+  --text-primary:#f1f1f4;
+  --text-secondary:#a1a1b5;
+  --text-tertiary:#6b6b80;
+  --text-faded:#4a4a5a;
+
+  /* Borders */
+  --border-subtle:rgba(255,255,255,.06);
+  --border-default:rgba(255,255,255,.1);
+  --border-strong:rgba(255,255,255,.15);
+  --border-accent:rgba(99,102,241,.4);
+
+  /* Typography */
+  --font-sans:'Vazirmatn',-apple-system,BlinkMacSystemFont,'Segoe UI',Tahoma,sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --font-size-xs:.75rem;
+  --font-size-sm:.8125rem;
+  --font-size-base:.9375rem;
+  --font-size-md:1rem;
+  --font-size-lg:1.125rem;
+  --font-size-xl:1.25rem;
+  --font-size-2xl:1.5rem;
+  --font-size-3xl:1.875rem;
+  --font-size-4xl:2.25rem;
+  --font-size-5xl:3rem;
+
+  /* Spacing (4px base) */
+  --space-1:.25rem; --space-2:.5rem; --space-3:.75rem; --space-4:1rem;
+  --space-5:1.25rem; --space-6:1.5rem; --space-8:2rem; --space-10:2.5rem;
+  --space-12:3rem; --space-16:4rem; --space-20:5rem;
+
+  /* Radius */
+  --radius-sm:6px; --radius-md:10px; --radius-lg:14px;
+  --radius-xl:20px; --radius-2xl:28px; --radius-full:9999px;
+
+  /* Shadows */
+  --shadow-sm:0 1px 2px rgba(0,0,0,.3);
+  --shadow-md:0 4px 12px rgba(0,0,0,.35),0 1px 3px rgba(0,0,0,.3);
+  --shadow-lg:0 12px 32px rgba(0,0,0,.4),0 4px 8px rgba(0,0,0,.3);
+  --shadow-glow:0 0 24px var(--accent-glow),0 0 8px var(--accent-glow);
+  --shadow-card:0 1px 3px rgba(0,0,0,.2),0 8px 24px rgba(0,0,0,.15);
+
+  /* Motion */
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  --ease-in-out:cubic-bezier(.4,0,.2,1);
+  --ease-spring:cubic-bezier(.34,1.56,.64,1);
+  --dur-fast:.15s; --dur-normal:.25s; --dur-slow:.4s;
+
+  /* Layout */
+  --header-h:60px;
+  --sidebar-w:280px;
+  --max-w:1280px;
+}
+
+/* ========== RESET ========== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--font-sans);
+  background:var(--bg-base);
+  color:var(--text-primary);
+  direction:rtl;
+  line-height:1.7;
+  font-size:var(--font-size-base);
+  font-feature-settings:"kern" 1,"liga" 1,"calt" 1;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* Animated background */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%,rgba(99,102,241,.12),transparent),
+    radial-gradient(ellipse 60% 40% at 80% 20%,rgba(139,92,246,.08),transparent),
+    radial-gradient(ellipse 50% 30% at 20% 60%,rgba(6,182,212,.06),transparent);
+  pointer-events:none;
+  z-index:0;
+}
+
+img{max-width:100%;height:auto;display:block}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input{font-family:inherit}
+a{color:var(--accent-primary);text-decoration:none}
+
+::selection{background:rgba(99,102,241,.3);color:#fff}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.15)}
+
+/* ========== LOADING ========== */
+#loading{
+  position:fixed;
+  inset:0;
+  background:var(--bg-base);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+  transition:opacity var(--dur-slow) var(--ease-out);
+}
+#loading.hidden{opacity:0;pointer-events:none}
+.loading-spinner{
+  width:56px;
+  height:56px;
+  position:relative;
+}
+.loading-spinner::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  border-radius:50%;
+  border:2px solid var(--border-default);
+  border-top-color:var(--accent-primary);
+  animation:spin 1s linear infinite;
+}
+.loading-spinner::after{
+  content:'';
+  position:absolute;
+  inset:8px;
+  border-radius:50%;
+  border:2px solid transparent;
+  border-bottom-color:var(--accent-secondary);
+  animation:spin 1.5s linear infinite reverse;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{
+  margin-top:var(--space-8);
+  font-size:var(--font-size-lg);
+  color:var(--text-secondary);
+  text-align:center;
+}
+.loading-progress{
+  margin-top:var(--space-5);
+  width:200px;
+  height:3px;
+  background:var(--border-subtle);
+  border-radius:var(--radius-full);
+  overflow:hidden;
+  position:relative;
+}
+.loading-progress-bar{
+  height:100%;
+  background:linear-gradient(90deg,var(--accent-primary),var(--accent-secondary));
+  border-radius:var(--radius-full);
+  width:0%;
+  transition:width var(--dur-slow) var(--ease-out);
+  box-shadow:0 0 8px var(--accent-glow-strong);
+}
+.loading-error{
+  margin-top:var(--space-5);
+  padding:var(--space-4) var(--space-6);
+  background:rgba(239,68,68,.1);
+  border:1px solid rgba(239,68,68,.2);
+  border-radius:var(--radius-md);
+  color:#fca5a5;
+  font-size:var(--font-size-sm);
+  text-align:center;
+  max-width:400px;
+}
+.loading-retry{
+  margin-top:var(--space-5);
+  padding:var(--space-3) var(--space-8);
+  background:var(--accent-primary);
+  color:#fff;
+  border-radius:var(--radius-md);
+  font-size:var(--font-size-sm);
+  font-weight:600;
+  transition:all var(--dur-fast) var(--ease-out);
+}
+.loading-retry:hover{background:var(--accent-secondary);transform:translateY(-1px);box-shadow:var(--shadow-glow)}
+
+/* ========== APP ========== */
+#app{
+  display:none;
+  min-height:100vh;
+  flex-direction:column;
+  position:relative;
+  z-index:1;
+}
+#app.show{display:flex}
+
+/* ========== HEADER ========== */
+header{
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:rgba(10,10,15,.72);
+  backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  border-bottom:1px solid var(--border-subtle);
+  height:var(--header-h);
+  display:flex;
+  align-items:center;
+  padding:0 var(--space-6);
+  gap:var(--space-4);
+}
+.header-logo{
+  display:flex;
+  align-items:center;
+  gap:var(--space-2);
+  font-size:var(--font-size-lg);
+  font-weight:800;
+  color:var(--text-primary);
+  white-space:nowrap;
+  letter-spacing:-.02em;
+}
+.header-logo-icon{
+  width:34px;
+  height:34px;
+  border-radius:var(--radius-md);
+  background:linear-gradient(135deg,var(--accent-primary),var(--accent-secondary));
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:var(--font-size-lg);
+  font-weight:800;
+  color:#fff;
+  box-shadow:0 4px 16px var(--accent-glow);
+  flex-shrink:0;
+}
+.header-nav{
+  display:flex;
+  gap:var(--space-1);
+  margin-right:auto;
+}
+.nav-btn{
+  padding:var(--space-2) var(--space-4);
+  border-radius:var(--radius-md);
+  font-size:var(--font-size-sm);
+  font-weight:500;
+  color:var(--text-secondary);
+  transition:all var(--dur-fast) var(--ease-out);
+  position:relative;
+  white-space:nowrap;
+}
+.nav-btn:hover{color:var(--text-primary);background:var(--bg-hover)}
+.nav-btn.active{
+  color:var(--text-primary);
+  background:var(--bg-surface);
+  border:1px solid var(--border-default);
+}
+.nav-btn.active::after{
+  content:'';
+  position:absolute;
+  bottom:-1px;
+  right:var(--space-4);
+  left:var(--space-4);
+  height:2px;
+  background:linear-gradient(90deg,var(--accent-primary),var(--accent-secondary));
+  border-radius:var(--radius-full);
+  box-shadow:0 0 8px var(--accent-glow-strong);
+}
+.header-search{
+  position:relative;
+  flex-shrink:0;
+}
+.header-search input{
+  width:200px;
+  padding:var(--space-2) var(--space-3) var(--space-2) var(--space-8);
+  background:var(--bg-input);
+  border:1px solid var(--border-subtle);
+  border-radius:var(--radius-md);
+  color:var(--text-primary);
+  font-size:var(--font-size-sm);
+  transition:all var(--dur-normal) var(--ease-out);
+}
+.header-search input:focus{
+  outline:none;
+  width:280px;
+  border-color:var(--border-accent);
+  background:var(--bg-elevated);
+  box-shadow:0 0 0 3px var(--accent-glow);
+}
+.header-search input::placeholder{color:var(--text-tertiary)}
+.header-search-icon{
+  position:absolute;
+  left:var(--space-3);
+  top:50%;
+  transform:translateY(-50%);
+  color:var(--text-tertiary);
+  font-size:var(--font-size-sm);
+  pointer-events:none;
+}
+.header-offline-badge{
+  display:flex;
+  align-items:center;
+  gap:var(--space-1);
+  padding:var(--space-1) var(--space-3);
+  border-radius:var(--radius-md);
+  font-size:var(--font-size-xs);
+  font-weight:500;
+  white-space:nowrap;
+  opacity:0;
+  transition:opacity var(--dur-normal);
+}
+.header-offline-badge.show{opacity:1}
+.header-offline-badge.online{color:#4ade80;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2)}
+.header-offline-badge.offline{color:#fbbf24;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2)}
+
+/* ========== MAIN ========== */
+main{
+  flex:1;
+  padding:var(--space-10) var(--space-6) var(--space-20);
+  max-width:var(--max-w);
+  margin:0 auto;
+  width:100%;
+  position:relative;
+  z-index:1;
+}
+
+/* ========== HOME ========== */
+.home-hero{
+  text-align:center;
+  padding:var(--space-16) 0 var(--space-12);
+  position:relative;
+}
+.home-hero h1{
+  font-size:var(--font-size-5xl);
+  font-weight:800;
+  letter-spacing:-.04em;
+  line-height:1.1;
+  margin-bottom:var(--space-4);
+  background:linear-gradient(180deg,#fff 0%,#a1a1b5 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.home-hero h1 .accent{
+  background:linear-gradient(135deg,var(--accent-primary),var(--accent-secondary),var(--accent-tertiary));
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.home-hero p{
+  font-size:var(--font-size-xl);
+  color:var(--text-secondary);
+  max-width:600px;
+  margin:0 auto;
+  line-height:1.6;
+}
+.hero-stats{
+  display:flex;
+  gap:var(--space-3);
+  justify-content:center;
+  margin-top:var(--space-12);
+  flex-wrap:wrap;
+}
+.hero-stat{
+  background:var(--bg-surface);
+  backdrop-filter:blur(12px);
+  border:1px solid var(--border-subtle);
+  border-radius:var(--radius-lg);
+  padding:var(--space-5) var(--space-8);
+  text-align:center;
+  min-width:140px;
+  transition:all var(--dur-normal) var(--ease-out);
+  position:relative;
+  overflow:hidden;
+}
+.hero-stat::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--accent-primary),transparent);
+  opacity:0;
+  transition:opacity var(--dur-normal);
+}
+.hero-stat:hover::before{opacity:.5}
+.hero-stat:hover{transform:translateY(-3px);border-color:var(--border-accent);box-shadow:var(--shadow-lg)}
+.hero-stat-num{
+  font-size:var(--font-size-3xl);
+  font-weight:800;
+  color:var(--text-primary);
+  letter-spacing:-.03em;
+  line-height:1;
+}
+.hero-stat-label{
+  font-size:var(--font-size-sm);
+  color:var(--text-tertiary);
+  margin-top:var(--space-2);
+}
+.home-tabs{
+  display:flex;
+  gap:var(--space-2);
+  margin-bottom:var(--space-8);
+  background:var(--bg-surface);
+  backdrop-filter:blur(12px);
+  border:1px solid var(--border-subtle);
+  border-radius:var(--radius-lg);
+  padding:var(--space-1);
+  width:fit-content;
+}
+.home-tab{
+  padding:var(--space-3) var(--space-6);
+  border-radius:var(--radius-md);
+  font-size:var(--font-size-sm);
+  font-weight:600;
+  color:var(--text-secondary);
+  transition:all var(--dur-fast) var(--ease-out);
+}
+.home-tab:hover{color:var(--text-primary)}
+.home-tab.active{
+  background:var(--bg-elevated);
+  color:var(--text-primary);
+  box-shadow:var(--shadow-sm);
+  border:1px solid var(--border-default);
+}
+
+/* ========== GRID & CARDS ========== */
+.content-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:var(--space-6);
+}
+.book-card{
+  background:var(--bg-surface);
+  backdrop-filter:blur(12px);
+  border:1px solid var(--border-subtle);
+  border-radius:var(--radius-xl);
+  overflow:hidden;
+  cursor:pointer;
+  transition:all var(--dur-normal) var(--ease-out);
+  position:relative;
+  display:flex;
+  flex-direction:column;
+}
+.book-card:hover{
+  transform:translateY(-4px);
+  border-color:var(--border-accent);
+  box-shadow:var(--shadow-lg),0 0 24px var(--accent-glow);
+}
+.book-card:hover .book-cover-img{transform:scale(1.05)}
+.book-card-cover{
+  height:180px;
+  position:relative;
+  overflow:hidden;
+  background:linear-gradient(135deg,#1a1a2e,#16213e);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.book-cover-img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transition:transform var(--dur-slow) var(--ease-out);
+}
+.book-cover-placeholder{
+  font-size:3rem;
+  opacity:.6;
+}
+.book-card-info{
+  padding:var(--space-5);
+  flex:1;
+  display:flex;
+  flex-direction:column;
+}
+.book-card-info h3{
+  font-size:var(--font-size-lg);
+  font-weight:700;
+  color:var(--text-primary);
+  margin-bottom:var(--space-2);
+  letter-spacing:-.02em;
+  line-height:1.4;
+}
+.book-card-subtitle{
+  font-size:var(--font-size-sm);
+  color:var(--text-secondary);
+  margin-bottom:var(--space-3);
+  line-height:1.5;
+}
+.book-card-meta{
+  display:flex;
+  gap:var(--space-3);
+  font-size:var(--font-size-xs);
+  color:var(--text-tertiary);
+  margin-top:auto;
+  padding-top:var(--space-3);
+  border-top:1px solid var(--border-subtle);
+}
+.book-card-meta span{display:flex;align-items:center;gap:4px}
+.book-card-author{
+  font-size:var(--font-size-xs);
+  color:var(--accent-primary);
+  margin-top:var(--space-2);
+}
+
+/* ========== BOOK/COURSE VIEW ========== */
+.view-header{
+  margin-bottom:var(--space-8);
+  animation:fadeInUp var(--dur-normal) var(--ease-out);
+}
+@keyframes fadeInUp{
+  from{opacity:0;transform:translateY(12px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.view-header h2{
+  font-size:var(--font-size-3xl);
+  font-weight:800;
+  letter-spacing:-.03em;
+  margin-bottom:var(--space-2);
+  background:linear-gradient(180deg,#fff,#a1a1b5);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.view-header p{color:var(--text-secondary);font-size:var(--font-size-md)}
+
+.back-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:var(--space-2);
+  padding:var(--space-2) var(--space-4);
+  border-radius:var(--radius-md);
+  font-size:var(--font-size-sm);
+  font-weight:500;
+  color:var(--text-secondary);
+  transition:all var(--dur-fast) var(--ease-out);
+  margin-bottom:var(--space-6);
+}
+.back-btn:hover{color:var(--text-primary);background:var(--bg-hover)}
+.back-btn svg{width:16px;height:16px}
+
+.chapter-card{
+  background:var(--bg-surface);
+  backdrop-filter:blur(12px);
+  border:1px solid var(--border-subtle);
+  border-radius:var(--radius-lg);
+  margin-bottom:var(--space-3);
+  overflow:hidden;
+  transition:border-color var(--dur-fast);
+}
+.chapter-card.open{border-color:var(--border-default)}
+.chapter-header{
+  display:flex;
+  align-items:center;
+  gap:var(--space-4);
+  padding:var(--space-4) var(--space-5);
+  cursor:pointer;
+  transition:background var(--dur-fast);
+}
+.chapter-header:hover{background:var(--bg-hover)}
+.chapter-icon{
+  width:40px;
+  height:40px;
+  border-radius:var(--radius-md);
+  background:linear-gradient(135deg,rgba(99,102,241,.15),rgba(139,92,246,.1));
+  border:1px solid var(--border-accent);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:var(--font-size-xl);
+  flex-shrink:0;
+}
+.chapter-info{flex:1;min-width:0}
+.chapter-title{
+  font-size:var(--font-size-md);
+  font-weight:600;
+  color:var(--text-primary);
+}
+.chapter-num{
+  font-size:var(--font-size-xs);
+  color:var(--text-tertiary);
+  margin-top:2px;
+}
+.chapter-arrow{
+  color:var(--text-tertiary);
+  transition:transform var(--dur-normal) var(--ease-out);
+  flex-shrink:0;
+}
+.chapter-card.open .chapter-arrow{transform:rotate(180deg)}
+.chapter-body{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height var(--dur-normal) var(--ease-out);
+}
+.chapter-card.open .chapter-body{max-height:1000px}
+.chapter-body-inner{padding:0 var(--space-5) var(--space-4)}
+.section-item{
+  display:flex;
+  align-items:center;
+  gap:var(--space-3);
+  padding:var(--space-3) var(--space-4);
+  border-radius:var(--radius-md);
+  cursor:pointer;
+  transition:all var(--dur-fast) var(--ease-out);
+  color:var(--text-secondary);
+  font-size:var(--font-size-sm);
+}
+.section-item:hover{
+  background:var(--bg-hover);
+  color:var(--text-primary);
+  padding-right:var(--space-5);
+}
+.section-item-num{
+  width:24px;
+  height:24px;
+  border-radius:var(--radius-sm);
+  background:var(--bg-input);
+  border:1px solid var(--border-subtle);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:var(--font-size-xs);
+  color:var(--text-tertiary);
+  flex-shrink:0;
+}
+.section-item:hover .section-item-num{
+  background:var(--accent-glow);
+  border-color:var(--border-accent);
+  color:var(--text-primary);
+}
+
+/* ========== READER ========== */
+.reader-layout{
+  display:flex;
+  gap:var(--space-8);
+  align-items:flex-start;
+  animation:fadeInUp var(--dur-normal) var(--ease-out);
+}
+.reader-toc{
+  width:260px;
+  flex-shrink:0;
+  position:sticky;
+  top:calc(var(--header-h) + var(--space-6));
+  max-height:calc(100vh - var(--header-h) - var(--space-12));
+  overflow-y:auto;
+}
+.reader-toc-header{
+  font-size:var(--font-size-xs);
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  color:var(--text-tertiary);
+  padding:var(--space-3) var(--space-4);
+  margin-bottom:var(--space-2);
+}
+.toc-chapter{
+  font-size:var(--font-size-xs);
+  font-weight:600;
+  color:var(--text-secondary);
+  padding:var(--space-3) var(--space-4);
+  margin-top:var(--space-2);
+}
+.toc-section{
+  display:block;
+  padding:var(--space-2) var(--space-4);
+  border-radius:var(--radius-sm);
+  font-size:var(--font-size-sm);
+  color:var(--text-tertiary);
+  cursor:pointer;
+  transition:all var(--dur-fast) var(--ease-out);
+  border-right:2px solid transparent;
+}
+.toc-section:hover{color:var(--text-primary);background:var(--bg-hover)}
+.toc-section.active{
+  color:var(--text-primary);
+  background:var(--accent-glow);
+  border-right-color:var(--accent-primary);
+  font-weight:600;
+}
+
+.reader-main{flex:1;min-width:0}
+.reader-toolbar{
+  display:flex;
+  align-items:center;
+  gap:var(--space-4);
+  padding:var(--space-4) var(--space-6);
+  background:var(--bg-surface);
+  backdrop-filter:blur(12px);
+  border:1px solid var(--border-subtle);
+  border-radius:var(--radius-lg);
+  margin-bottom:var(--space-6);
+}
+.reader-breadcrumb{
+  display:flex;
+  align-items:center;
+  gap:var(--space-2);
+  font-size:var(--font-size-sm);
+  color:var(--text-secondary);
+  flex:1;
+  min-width:0;
+  overflow:hidden;
+}
+.reader-breadcrumb a{
+  color:var(--text-secondary);
+  cursor:pointer;
+  white-space:nowrap;
+  transition:color var(--dur-fast);
+}
+.reader-breadcrumb a:hover{color:var(--text-primary)}
+.reader-breadcrumb .sep{color:var(--text-faded)}
+.reader-breadcrumb .current{color:var(--text-primary);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.reader-nav{display:flex;gap:var(--space-2)}
+.reader-nav-btn{
+  display:flex;
+  align-items:center;
+  gap:var(--space-2);
+  padding:var(--space-2) var(--space-4);
+  border-radius:var(--radius-md);
+  font-size:var(--font-size-sm);
+  font-weight:500;
+  color:var(--text-secondary);
+  border:1px solid var(--border-subtle);
+  background:var(--bg-input);
+  transition:all var(--dur-fast) var(--ease-out);
+}
+.reader-nav-btn:hover:not(:disabled){
+  color:var(--text-primary);
+  border-color:var(--border-default);
+  background:var(--bg-elevated);
+}
+.reader-nav-btn:disabled{opacity:.3;cursor:not-allowed}
+
+.reader-content{
+  background:var(--bg-surface);
+  backdrop-filter:blur(12px);
+  border:1px solid var(--border-subtle);
+  border-radius:var(--radius-xl);
+  padding:var(--space-10) var(--space-12);
+  line-height:1.85;
+  font-size:var(--font-size-md);
+  color:var(--text-secondary);
+  max-width:820px;
+  margin:0 auto;
+}
+.reader-content h1{
+  font-size:var(--font-size-3xl);
+  font-weight:800;
+  color:var(--text-primary);
+  margin:var(--space-12) 0 var(--space-6);
+  padding-bottom:var(--space-4);
+  border-bottom:1px solid var(--border-subtle);
+  letter-spacing:-.03em;
+}
+.reader-content h1:first-child{margin-top:0}
+.reader-content h2{
+  font-size:var(--font-size-2xl);
+  font-weight:700;
+  color:var(--text-primary);
+  margin:var(--space-10) 0 var(--space-4);
+  letter-spacing:-.02em;
+}
+.reader-content h3{
+  font-size:var(--font-size-xl);
+  font-weight:600;
+  color:var(--text-primary);
+  margin:var(--space-8) 0 var(--space-3);
+}
+.reader-content p{margin:var(--space-4) 0}
+.reader-content ul,.reader-content ol{margin:var(--space-4) 0;padding-right:var(--space-6)}
+.reader-content li{margin:var(--space-2) 0}
+.reader-content li::marker{color:var(--accent-primary)}
+.reader-content strong{color:var(--text-primary);font-weight:600}
+.reader-content a{color:var(--accent-primary);text-decoration:underline;text-decoration-color:var(--border-accent);text-underline-offset:2px}
+.reader-content a:hover{text-decoration-color:var(--accent-primary)}
+.reader-content code{
+  background:var(--bg-input);
+  border:1px solid var(--border-subtle);
+  padding:2px 6px;
+  border-radius:var(--radius-sm);
+  font-size:.85em;
+  font-family:var(--font-mono);
+  color:#f0abfc;
+}
+.reader-content pre{
+  background:var(--bg-base);
+  border:1px solid var(--border-subtle);
+  border-radius:var(--radius-lg);
+  padding:var(--space-5);
+  overflow-x:auto;
+  margin:var(--space-6) 0;
+  font-size:.85em;
+  line-height:1.6;
+}
+.reader-content pre code{
+  background:none;
+  border:none;
+  padding:0;
+  color:var(--text-secondary);
+}
+.reader-content blockquote{
+  border-right:3px solid var(--accent-primary);
+  padding:var(--space-4) var(--space-6);
+  margin:var(--space-6) 0;
+  background:var(--bg-input);
+  border-radius:0 var(--radius-md) var(--radius-md) 0;
+  color:var(--text-secondary);
+}
+.reader-content blockquote p{margin:0}
+.reader-content img{
+  border-radius:var(--radius-lg);
+  margin:var(--space-6) 0;
+  border:1px solid var(--border-subtle);
+}
+.reader-content table{
+  width:100%;
+  border-collapse:collapse;
+  margin:var(--space-6) 0;
+  font-size:var(--font-size-sm);
+}
+.reader-content th{
+  background:var(--bg-elevated);
+  color:var(--text-primary);
+  font-weight:600;
+  padding:var(--space-3) var(--space-4);
+  border:1px solid var(--border-subtle);
+  text-align:right;
+}
+.reader-content td{
+  padding:var(--space-3) var(--space-4);
+  border:1px solid var(--border-subtle);
+  color:var(--text-secondary);
+}
+.reader-content hr{
+  border:none;
+  border-top:1px solid var(--border-subtle);
+  margin:var(--space-10) 0;
+}
+.reader-content iframe{
+  border-radius:var(--radius-lg);
+  border:1px solid var(--border-subtle);
+  margin:var(--space-6) 0;
+  max-width:100%;
+}
+.empty-content{
+  padding:var(--space-20);
+  text-align:center;
+  color:var(--text-tertiary);
+}
+.empty-content .icon{font-size:3rem;margin-bottom:var(--space-4);opacity:.3}
+.empty-content p{margin-bottom:var(--space-2)}
+
+/* ========== SEARCH ========== */
+.search-page-header{
+  text-align:center;
+  margin-bottom:var(--space-8);
+}
+.search-page-header h2{
+  font-size:var(--font-size-3xl);
+  font-weight:800;
+  margin-bottom:var(--space-3);
+  letter-spacing:-.03em;
+}
+.search-page-header p{color:var(--text-secondary)}
+.search-input-large{
+  width:100%;
+  max-width:600px;
+  margin:0 auto var(--space-8);
+  display:block;
+  padding:var(--space-4) var(--space-5) var(--space-4) var(--space-12);
+  background:var(--bg-surface);
+  backdrop-filter:blur(12px);
+  border:1px solid var(--border-default);
+  border-radius:var(--radius-lg);
+  color:var(--text-primary);
+  font-size:var(--font-size-md);
+  transition:all var(--dur-normal) var(--ease-out);
+}
+.search-input-large:focus{
+  outline:none;
+  border-color:var(--border-accent);
+  box-shadow:0 0 0 4px var(--accent-glow);
+}
+.search-results-info{
+  color:var(--text-tertiary);
+  font-size:var(--font-size-sm);
+  margin-bottom:var(--space-4);
+}
+.search-result{
+  background:var(--bg-surface);
+  backdrop-filter:blur(12px);
+  border:1px solid var(--border-subtle);
+  border-radius:var(--radius-lg);
+  padding:var(--space-5);
+  margin-bottom:var(--space-3);
+  cursor:pointer;
+  transition:all var(--dur-fast) var(--ease-out);
+}
+.search-result:hover{
+  border-color:var(--border-accent);
+  background:var(--bg-elevated);
+  transform:translateX(-4px);
+  box-shadow:var(--shadow-md);
+}
+.search-result-title{
+  font-size:var(--font-size-md);
+  font-weight:600;
+  color:var(--text-primary);
+  margin-bottom:var(--space-2);
+}
+.search-result-context{
+  font-size:var(--font-size-sm);
+  color:var(--text-tertiary);
+  margin-bottom:var(--space-2);
+}
+.search-result-type{
+  display:inline-block;
+  padding:2px 10px;
+  border-radius:var(--radius-full);
+  font-size:var(--font-size-xs);
+  font-weight:600;
+}
+.search-result-type.book{background:rgba(99,102,241,.15);color:var(--accent-primary)}
+.search-result-type.course{background:rgba(6,182,212,.15);color:var(--accent-tertiary)}
+.search-no-results{
+  text-align:center;
+  padding:var(--space-20);
+  color:var(--text-tertiary);
+}
+.search-no-results .icon{font-size:3rem;margin-bottom:var(--space-4);opacity:.3}
+
+/* ========== ANIMATIONS ========== */
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes scaleIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.animate-in{animation:fadeIn var(--dur-normal) var(--ease-out) both}
+
+/* Skeleton loading */
+.skeleton{
+  background:linear-gradient(90deg,var(--bg-elevated) 25%,var(--bg-hover) 50%,var(--bg-elevated) 75%);
+  background-size:200% 100%;
+  animation:shimmer 1.5s infinite;
+  border-radius:var(--radius-md);
+}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* ========== RESPONSIVE ========== */
+@media(max-width:1024px){
+  .reader-layout{flex-direction:column}
+  .reader-toc{position:static;width:100%;max-height:none;display:none}
+  .reader-toc.show{display:block}
+}
+@media(max-width:768px){
+  main{padding:var(--space-6) var(--space-4) var(--space-16)}
+  header{padding:0 var(--space-4)}
+  .header-search input{width:120px}
+  .header-search input:focus{width:160px}
+  .nav-btn{padding:var(--space-2) var(--space-3);font-size:var(--font-size-xs)}
+  .home-hero h1{font-size:var(--font-size-3xl)}
+  .home-hero p{font-size:var(--font-size-md)}
+  .hero-stats{gap:var(--space-2)}
+  .hero-stat{min-width:100px;padding:var(--space-4)}
+  .content-grid{grid-template-columns:1fr}
+  .reader-content{padding:var(--space-6)}
+  .reader-toolbar{flex-wrap:wrap;padding:var(--space-3) var(--space-4)}
+  .reader-nav-btn{font-size:var(--font-size-xs)}
+}
+
+/* ========== OFFLINE BADGE ========== */
+.offline-indicator{
+  position:fixed;
+  bottom:var(--space-6);
+  right:var(--space-6);
+  padding:var(--space-3) var(--space-5);
+  background:var(--bg-surface);
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(245,158,11,.3);
+  border-radius:var(--radius-lg);
+  color:#fbbf24;
+  font-size:var(--font-size-sm);
+  font-weight:500;
+  display:flex;
+  align-items:center;
+  gap:var(--space-2);
+  z-index:50;
+  opacity:0;
+  transform:translateY(20px);
+  transition:all var(--dur-normal) var(--ease-out);
+  pointer-events:none;
+}
+.offline-indicator.show{opacity:1;transform:translateY(0)}
+
+/* ========== PRINT ========== */
+@media print{
+  header,.reader-toc,.reader-toolbar,.reader-nav{display:none}
+  body{background:#fff;color:#000}
+  .reader-content{background:none;border:none;padding:0}
+}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loading">
+  <div class="loading-spinner"></div>
+  <div class="loading-text" id="loadingText">در حال دانلود داده‌ها...</div>
+  <div class="loading-progress"><div class="loading-progress-bar" id="loadingBar"></div></div>
+  <div class="loading-error" id="loadingError" style="display:none"></div>
+  <button class="loading-retry" id="loadingRetry" style="display:none" onclick="location.reload()">تلاش مجدد</button>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <header>
+    <div class="header-logo" onclick="navTo('home')" style="cursor:pointer">
+      <div class="header-logo-icon">ف</div>
+      <span>فا-اکدمی</span>
+    </div>
+    <nav class="header-nav">
+      <button class="nav-btn active" data-nav="home" onclick="navTo('home')">خانه</button>
+      <button class="nav-btn" data-nav="books" onclick="navTo('books')">کتاب‌ها</button>
+      <button class="nav-btn" data-nav="courses" onclick="navTo('courses')">دوره‌ها</button>
+      <button class="nav-btn" data-nav="search" onclick="navTo('search')">جستجو</button>
+    </nav>
+    <div class="header-search">
+      <span class="header-search-icon">🔍</span>
+      <input type="text" id="headerSearchInput" placeholder="جستجو..." onkeyup="if(event.key==='Enter'){navTo('search');document.getElementById('searchPageInput').value=this.value;doSearch(this.value)}">
+    </div>
+    <div class="header-offline-badge" id="offlineBadge"></div>
+  </header>
+  <main id="mainView"></main>
+</div>
+
+<div class="offline-indicator" id="offlineIndicator">
+  <span>⚠️</span>
+  <span>حالت آفلاین — داده‌ها از cache استفاده می‌شود</span>
+</div>
+
+<script>
+/* =============== STATE =============== */
+var DATA=null,curBook=null,curCourse=null,curChapter=null,curSection=null;
+var curSectionIndex=-1,curChapterIndex=-1,curType=null;
+var window_searchResults=[];
+
+/* =============== SERVICE WORKER =============== */
+if('serviceWorker' in navigator){
+  // Force reload when SW updates to get fresh data
+  navigator.serviceWorker.register('sw.js').then(function(reg){
+    reg.addEventListener('updatefound', function(){
+      var installingWorker = reg.installing;
+      if (!installingWorker) return;
+      installingWorker.addEventListener('statechange', function(){
+        if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+          // New SW installed - force reload to get fresh data
+          location.reload();
+        }
+      });
+    });
+  }).catch(function(e){console.warn('SW:',e)});
+
+  // Force reload when controller changes (SW activated)
+  navigator.serviceWorker.addEventListener('controllerchange', function(){
+    location.reload();
+  });
+}
+
+/* =============== LOAD DATA =============== */
+function loadData(){
+  var bar=document.getElementById('loadingBar');
+  bar.style.width='20%';
+  fetch('data.json',{cache:'no-cache'})
+    .then(function(r){
+      if(!r.ok)throw new Error('HTTP '+r.status);
+      bar.style.width='60%';
+      return r.json();
+    })
+    .then(function(d){
+      DATA=d;
+      bar.style.width='100%';
+      setTimeout(showApp,400);
+    })
+    .catch(function(err){
+      // Try cache
+      caches.match('data.json').then(function(cached){
+        if(cached){
+          DATA=null;
+          return cached.json().then(function(d){
+            DATA=d;
+            bar.style.width='100%';
+            setTimeout(showApp,400);
+            showOfflineNotice();
+          });
+        }
+        showError(err.message);
+      }).catch(function(){showError(err.message)});
+    });
+}
+
+function showError(msg){
+  document.getElementById('loadingText').textContent='خطا در دانلود داده‌ها';
+  var err=document.getElementById('loadingError');
+  err.textContent=msg+' — لطفاً اینترنت خود را بررسی کرده و دوباره تلاش کنید.';
+  err.style.display='block';
+  document.getElementById('loadingRetry').style.display='block';
+  bar.style.width='0';
+}
+
+function showApp(){
+  document.getElementById('loading').classList.add('hidden');
+  document.getElementById('app').classList.add('show');
+  renderHome();
+  updateOfflineBadge();
+}
+
+function showOfflineNotice(){
+  var ind=document.getElementById('offlineIndicator');
+  ind.classList.add('show');
+  setTimeout(function(){ind.classList.remove('show')},6000);
+}
+
+function updateOfflineBadge(){
+  var badge=document.getElementById('offlineBadge');
+  if(navigator.onLine){
+    badge.className='header-offline-badge show online';
+    badge.textContent='● آنلاین';
+  }else{
+    badge.className='header-offline-badge show offline';
+    badge.textContent='● آفلاین';
+  }
+}
+window.addEventListener('online',function(){updateOfflineBadge();loadData()});
+window.addEventListener('offline',function(){updateOfflineBadge();showOfflineNotice()});
+
+/* =============== NAVIGATION =============== */
+function navTo(view){
+  document.querySelectorAll('.nav-btn').forEach(function(b){
+    b.classList.toggle('active',b.dataset.nav===view);
+  });
+  curBook=null;curCourse=null;curChapter=null;curSection=null;
+  curSectionIndex=-1;curChapterIndex=-1;curType=null;
+  if(view==='home')renderHome();
+  else if(view==='books')renderBooks();
+  else if(view==='courses')renderCourses();
+  else if(view==='search')renderSearchPage();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* =============== HOME =============== */
+function renderHome(){
+  var tc=0,ts=0;
+  (DATA.books||[]).forEach(function(b){
+    (b.chapters||[]).forEach(function(c){tc++;ts+=(c.sections||[]).length;});
+  });
+  (DATA.courses||[]).forEach(function(c){
+    (c.chapters||[]).forEach(function(ch){tc++;ts+=(ch.sections||[]).length;});
+  });
+  document.getElementById('mainView').innerHTML=
+    '<div class="home-hero">'+
+      '<h1>آموزش <span class="accent">هوش مصنوعی</span><br>به زبان فارسی</h1>'+
+      '<p>مجموعه‌ای جامع از کتاب‌ها و دوره‌های آموزشی هوش مصنوعی — با طراحی حرفه‌ای و دسترسی آفلاین</p>'+
+      '<div class="hero-stats">'+
+        '<div class="hero-stat"><div class="hero-stat-num">'+(DATA.books||[]).length+'</div><div class="hero-stat-label">کتاب</div></div>'+
+        '<div class="hero-stat"><div class="hero-stat-num">'+(DATA.courses||[]).length+'</div><div class="hero-stat-label">دوره</div></div>'+
+        '<div class="hero-stat"><div class="hero-stat-num">'+tc+'</div><div class="hero-stat-label">فصل</div></div>'+
+        '<div class="hero-stat"><div class="hero-stat-num">'+ts+'</div><div class="hero-stat-label">بخش</div></div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="home-tabs">'+
+      '<button class="home-tab active" onclick="switchHomeTab(\'books\')">📖 کتاب‌ها ('+(DATA.books||[]).length+')</button>'+
+      '<button class="home-tab" onclick="switchHomeTab(\'courses\')">🎓 دوره‌ها ('+(DATA.courses||[]).length+')</button>'+
+    '</div>'+
+    '<div id="homeGrid" class="content-grid"></div>';
+  renderHomeBooks();
+}
+
+function switchHomeTab(tab){
+  document.querySelectorAll('.home-tab').forEach(function(b){
+    var isBooks=b.textContent.indexOf('کتاب')!==-1;
+    b.classList.toggle('active',(tab==='books'&&isBooks)||(tab==='courses'&&!isBooks));
+  });
+  if(tab==='books')renderHomeBooks();
+  else renderHomeCourses();
+}
+
+function renderHomeBooks(){
+  var html='';
+  (DATA.books||[]).forEach(function(b){
+    var ch=(b.chapters||[]).length,sec=0;
+    (b.chapters||[]).forEach(function(c){sec+=(c.sections||[]).length;});
+    html+=cardHTML(b,ch,sec,'book');
+  });
+  document.getElementById('homeGrid').innerHTML=html;
+}
+
+function renderHomeCourses(){
+  var html='';
+  (DATA.courses||[]).forEach(function(c){
+    var ch=(c.chapters||[]).length,sec=0;
+    (c.chapters||[]).forEach(function(ch2){sec+=(ch2.sections||[]).length;});
+    html+=cardHTML(c,ch,sec,'course');
+  });
+  document.getElementById('homeGrid').innerHTML=html;
+}
+
+function cardHTML(item,chCount,secCount,type){
+  var cover=item.cover?'<img class="book-cover-img" src="'+item.cover+'" alt="" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">'+
+    '<div class="book-cover-placeholder" style="display:none">'+(type==='book'?'📖':'🎓')+'</div>':
+    '<div class="book-cover-placeholder">'+(type==='book'?'📖':'🎓')+'</div>';
+  var author=item.author?'<div class="book-card-author">✍️ '+item.author+'</div>':'';
+  return '<div class="book-card animate-in" onclick="openItem(\''+item.id+'\',\''+type+'\')">'+
+    '<div class="book-card-cover">'+cover+'</div>'+
+    '<div class="book-card-info">'+
+      '<h3>'+item.title+'</h3>'+
+      (item.subtitle?'<div class="book-card-subtitle">'+item.subtitle+'</div>':'')+
+      author+
+      '<div class="book-card-meta">'+
+        '<span>📊 '+chCount+' فصل</span>'+
+        '<span>📚 '+secCount+' بخش</span>'+
+      '</div>'+
+    '</div>'+
+  '</div>';
+}
+
+/* =============== BOOKS =============== */
+function renderBooks(){
+  var html='<div class="view-header"><h2>📖 کتاب‌ها</h2><p>کتاب‌های آموزشی هوش مصنوعی به زبان فارسی</p></div><div class="content-grid">';
+  (DATA.books||[]).forEach(function(b){
+    var ch=(b.chapters||[]).length,sec=0;
+    (b.chapters||[]).forEach(function(c){sec+=(c.sections||[]).length;});
+    html+=cardHTML(b,ch,sec,'book');
+  });
+  html+='</div>';
+  document.getElementById('mainView').innerHTML=html;
+}
+
+function openItem(id,type){
+  if(type==='book'){
+    curBook=(DATA.books||[]).find(function(b){return b.id===id});
+    curCourse=null;curType='book';
+    if(curBook)renderItem(curBook,'book');
+  }else{
+    curCourse=(DATA.courses||[]).find(function(c){return c.id===id});
+    curBook=null;curType='course';
+    if(curCourse)renderItem(curCourse,'course');
+  }
+}
+
+function renderItem(source,type){
+  var backLabel=type==='book'?'کتاب‌ها':'دوره‌ها';
+  var backNav=type==='book'?'books':'courses';
+  var html='<button class="back-btn" onclick="navTo(\''+backNav+'\')">← '+backLabel+'</button>';
+  html+='<div class="view-header"><h2>'+source.title+'</h2>'+
+    (source.subtitle?'<p>'+source.subtitle+'</p>':'')+
+    (source.author?'<p style="margin-top:6px">✍️ '+source.author+'</p>':'')+
+    '</div>';
+  var totalSec=0;
+  (source.chapters||[]).forEach(function(c){totalSec+=(c.sections||[]).length;});
+  html+='<div style="display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap">'+
+    '<span style="padding:4px 12px;border-radius:999px;background:rgba(99,102,241,.1);color:#818cf8;font-size:13px;font-weight:600">'+(source.chapters||[]).length+' فصل</span>'+
+    '<span style="padding:4px 12px;border-radius:999px;background:rgba(6,182,212,.1);color:#22d3ee;font-size:13px;font-weight:600">'+totalSec+' بخش</span>'+
+    '</div>';
+
+  if(!source.chapters||source.chapters.length===0){
+    html+='<div class="empty-content"><div class="icon">📭</div><p>فصلی برای این مجموعه یافت نشد</p></div>';
+  }
+
+  (source.chapters||[]).forEach(function(ch,ci){
+    var secCount=(ch.sections||[]).length;
+    html+='<div class="chapter-card" id="item-ch-'+ci+'">'+
+      '<div class="chapter-header" onclick="toggleChapter(\''+source.id+'\','+ci+')">'+
+        '<div class="chapter-icon">'+(ch.icon||'📋')+'</div>'+
+        '<div class="chapter-info">'+
+          '<div class="chapter-title">'+ch.title+'</div>'+
+          '<div class="chapter-num">فصل '+(ch.num||ci+1)+' · '+secCount+' بخش</div>'+
+        '</div>'+
+        '<div class="chapter-arrow">▼</div>'+
+      '</div>'+
+      '<div class="chapter-body"><div class="chapter-body-inner">';
+    if(secCount===0){
+      html+='<div style="padding:16px;color:var(--text-tertiary);font-size:14px">بخشی در این فصل یافت نشد</div>';
+    }else{
+      (ch.sections||[]).forEach(function(sec,si){
+        html+='<div class="section-item" onclick="openSec(\''+source.id+'\','+ci+','+si+')">'+
+          '<div class="section-item-num">'+(si+1)+'</div>'+
+          '<span>'+sec.title+'</span>'+
+        '</div>';
+      });
+    }
+    html+='</div></div></div>';
+  });
+
+  document.getElementById('mainView').innerHTML=html;
+}
+
+function toggleChapter(id,ci){
+  var el=document.getElementById('item-ch-'+ci);
+  if(el)el.classList.toggle('open');
+}
+
+/* =============== SECTION READER =============== */
+function openSec(id,ci,si){
+  var source=curType==='book'?curBook:curCourse;
+  curChapterIndex=ci;curSectionIndex=si;
+  curChapter=(source.chapters||[])[ci];
+  curSection=(curChapter.sections||[])[si];
+  if(!curSection)return;
+  renderReader(source,curChapter,curSection,ci,si);
+}
+
+function getSource(){return curType==='book'?curBook:curCourse}
+function getChapters(){var s=getSource();return s?(s.chapters||[]):[]}
+
+function renderReader(source,chapter,section,ci,si){
+  window.scrollTo({top:0,behavior:'smooth'});
+  var bookTitle=source.title;
+  var chTitle=chapter.title;
+  var secTitle=section.title;
+  var hasHtml=section.html&&section.html.trim().length>0;
+  var contentHtml=hasHtml?section.html:
+    '<div class="empty-content"><div class="icon">⚠️</div>'+
+    '<p>محتوای این بخش در دسترس نیست.</p>'+
+    '<p style="margin-top:8px;font-size:14px;color:var(--text-tertiary)">این بخش ممکن است در حال آماده‌سازی باشد یا内容ی برای آن وجود ندارد.</p></div>';
+
+  var tocHTML='<div class="reader-toc-header">فهرست</div>';
+  (source.chapters||[]).forEach(function(ch,chi){
+    tocHTML+='<div class="toc-chapter">فصل '+(ch.num||chi+1)+': '+ch.title+'</div>';
+    (ch.sections||[]).forEach(function(sec,si2){
+      var active=(chi===ci&&si2===si);
+      tocHTML+='<div class="toc-section'+(active?' active':'')+'" onclick="openSecById('+chi+','+si2+')">'+sec.title+'</div>';
+    });
+  });
+
+  var backLabel=curType==='book'?'کتاب‌ها':'دوره‌ها';
+  var backNav=curType==='book'?'books':'courses';
+
+  var html='<div class="reader-layout">'+
+    '<div class="reader-toc" id="readerToc">'+tocHTML+'</div>'+
+    '<div class="reader-main">'+
+      '<div class="reader-toolbar">'+
+        '<button class="back-btn" style="margin:0" onclick="navTo(\''+backNav+'\')">← '+backLabel+'</button>'+
+        '<div class="reader-breadcrumb">'+
+          '<span>'+bookTitle+'</span><span class="sep">›</span>'+
+          '<span class="current">'+chTitle+' › '+secTitle+'</span>'+
+        '</div>'+
+        '<div class="reader-nav">'+
+          '<button class="reader-nav-btn" onclick="prevSec()" '+(si===0&&ci===0?'disabled':'')+'>← قبلی</button>'+
+          '<button class="reader-nav-btn" onclick="nextSec()">بعدی →</button>'+
+        '</div>'+
+      '</div>'+
+      '<div class="reader-content">'+contentHtml+'</div>'+
+    '</div>'+
+  '</div>';
+
+  document.getElementById('mainView').innerHTML=html;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function openSecById(ci,si){
+  openSec(getSource().id,ci,si);
+}
+
+function prevSec(){
+  if(curSectionIndex===0){
+    if(curChapterIndex>0){
+      var chs=getChapters();
+      var prevCh=chs[curChapterIndex-1];
+      if(prevCh&&prevCh.sections&&prevCh.sections.length>0){
+        curChapterIndex--;
+        curSectionIndex=prevCh.sections.length-1;
+        curChapter=chs[curChapterIndex];
+        curSection=curChapter.sections[curSectionIndex];
+        renderReader(getSource(),curChapter,curSection,curChapterIndex,curSectionIndex);
+        return;
+      }
+    }
+    return;
+  }
+  curSectionIndex--;
+  curSection=curChapter.sections[curSectionIndex];
+  renderReader(getSource(),curChapter,curSection,curChapterIndex,curSectionIndex);
+}
+
+function nextSec(){
+  var chs=getChapters();
+  var curCh=chs[curChapterIndex];
+  if(!curCh)return;
+  var secs=curCh.sections||[];
+  if(curSectionIndex<secs.length-1){
+    curSectionIndex++;
+    curSection=secs[curSectionIndex];
+    renderReader(getSource(),curChapter,curSection,curChapterIndex,curSectionIndex);
+    return;
+  }
+  if(curChapterIndex<chs.length-1){
+    var nextCh=chs[curChapterIndex+1];
+    if(nextCh.sections&&nextCh.sections.length>0){
+      curChapterIndex++;
+      curSectionIndex=0;
+      curChapter=nextCh;
+      curSection=curChapter.sections[curSectionIndex];
+      renderReader(getSource(),curChapter,curSection,curChapterIndex,curSectionIndex);
+    }
+  }
+}
+
+/* =============== COURSES =============== */
+function renderCourses(){
+  var html='<div class="view-header"><h2>🎓 دوره‌ها</h2><p>دوروه‌های آموزشی هوش مصنوعی به زبان فارسی</p></div><div class="content-grid">';
+  (DATA.courses||[]).forEach(function(c){
+    var ch=(c.chapters||[]).length,sec=0;
+    (c.chapters||[]).forEach(function(ch2){sec+=(ch2.sections||[]).length;});
+    html+=cardHTML(c,ch,sec,'course');
+  });
+  html+='</div>';
+  document.getElementById('mainView').innerHTML=html;
+}
+
+/* =============== SEARCH =============== */
+function renderSearchPage(){
+  document.getElementById('mainView').innerHTML=
+    '<div class="search-page-header"><h2>🔍 جستجو</h2><p>جستجو در تمام کتاب‌ها و دوره‌ها</p></div>'+
+    '<input type="text" class="search-input-large" id="searchPageInput" placeholder="کلیدواژه را وارد کنید..." onkeyup="if(event.key===\'Enter\')doSearch(this.value)">'+
+    '<div id="searchResults"></div>';
+}
+
+function doSearch(query){
+  query=(query||'').trim().toLowerCase();
+  if(!query){document.getElementById('searchResults').innerHTML='';return}
+
+  var results=[];
+  var terms=query.split(/\s+/).filter(function(t){return t.length>0});
+
+  function matchText(text){
+    if(!text)return false;
+    text=text.toLowerCase();
+    return terms.every(function(t){return text.indexOf(t)!==-1});
+  }
+  function stripHtml(html){
+    if(!html)return '';
+    return html.replace(/<[^>]*>/g,' ').replace(/&[a-z]+;/g,' ').trim();
+  }
+
+  (DATA.books||[]).forEach(function(b){
+    (b.chapters||[]).forEach(function(ch,ci){
+      (ch.sections||[]).forEach(function(sec,si){
+        if(matchText(sec.title)||matchText(ch.title)||matchText(b.title)||matchText(stripHtml(sec.html))){
+          results.push({type:'book',bookId:b.id,courseId:null,chapterIdx:ci,sectionIdx:si,title:sec.title,chapterTitle:ch.title,bookTitle:b.title,context:b.title+' › '+ch.title});
+        }
+      });
+    });
+  });
+
+  (DATA.courses||[]).forEach(function(c){
+    (c.chapters||[]).forEach(function(ch,ci){
+      (ch.sections||[]).forEach(function(sec,si){
+        if(matchText(sec.title)||matchText(ch.title)||matchText(c.title)||matchText(stripHtml(sec.html))){
+          results.push({type:'course',bookId:null,courseId:c.id,chapterIdx:ci,sectionIdx:si,title:sec.title,chapterTitle:ch.title,bookTitle:c.title,context:c.title+' › '+ch.title});
+        }
+      });
+    });
+  });
+
+  results.sort(function(a,b){
+    var at=a.title.toLowerCase().indexOf(query)!==-1?0:1;
+    var bt=b.title.toLowerCase().indexOf(query)!==-1?0:1;
+    if(at!==bt)return at-bt;
+    return a.title.localeCompare(b.title,'fa');
+  });
+
+  window_searchResults=results;
+  var html='<div class="search-results-info">'+results.length+' نتیجه برای «'+query+'»</div>';
+  if(results.length===0){
+    html+='<div class="search-no-results"><div class="icon">🔍</div><p>هیچ نتیجه‌ای یافت نشد</p></div>';
+  }else{
+    results.forEach(function(r,ri){
+      html+='<div class="search-result" onclick="openSearchResult('+ri+')">'+
+        '<div class="search-result-title">'+r.title+'</div>'+
+        '<div class="search-result-context">'+r.context+'</div>'+
+        '<span class="search-result-type '+(r.type==='book'?'book':'course')+'">'+(r.type==='book'?'کتاب':'دوره')+'</span>'+
+        '</div>';
+    });
+  }
+  document.getElementById('searchResults').innerHTML=html;
+}
+
+function openSearchResult(ri){
+  var r=window_searchResults[ri];
+  if(!r)return;
+  openItem(r.type==='book'?r.bookId:r.courseId,r.type);
+  setTimeout(function(){openSec(r.type==='book'?r.bookId:r.courseId,r.chapterIdx,r.sectionIdx)},100);
+}
+
+/* =============== INIT =============== */
+loadData();
+</script>
+</body>
+</html>
