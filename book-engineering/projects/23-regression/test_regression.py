@@ -28,5 +28,13 @@ class Tests(unittest.TestCase):
         with self.assertRaises(ValueError): loss_and_gradient(np.ones((1,2)),np.array([2]),np.zeros(2),'logistic')
         with self.assertRaises(ValueError): fit_gradient(np.ones((2,1)),np.ones(2),'linear',steps=0)
         with self.assertRaises(ValueError): loss_and_gradient(np.empty((0,1)),np.array([]),np.zeros(1),'linear')
+    def test_saturation_limits(self):
+        values=sigmoid(np.array([-1000.,0.,1000.]))
+        self.assertTrue(np.isfinite(values).all())
+        self.assertGreater(values[0],0.0)
+        self.assertAlmostEqual(values[1],0.5)
+        self.assertEqual(values[2],1.0)
+        X=np.ones((1,1)); _,g=loss_and_gradient(X,np.array([1.]),np.array([-1000.]),'logistic')
+        self.assertAlmostEqual(g[0],-1.0)  # confidently wrong can have nonzero logit gradient
     def test_stable_sigmoid(self): self.assertTrue(np.isfinite(sigmoid(np.array([-1000.,1000.]))).all())
 if __name__=='__main__': unittest.main()
