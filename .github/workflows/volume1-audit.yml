@@ -1,0 +1,33 @@
+name: Volume 1 audit
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+jobs:
+  cpu-and-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install test dependencies
+        run: python -m pip install numpy==2.3.5 pandas==2.2.3 matplotlib==3.11.2 Pillow==13.0.0 mistune==3.4.0 playwright==1.64.1
+      - name: Install Chromium
+        run: python -m playwright install --with-deps chromium
+      - name: Check volume structure
+        run: python book-engineering/check_volume.py
+      - name: Run each project test suite
+        shell: bash
+        run: |
+          set -euo pipefail
+          for project in book-engineering/projects/*/; do
+            (cd "$project" && python -m unittest discover -v)
+          done
+      - name: Browser and offline smoke checks
+        run: python book-engineering/test_browser_audit.py
+      - name: Mobile layout and navigation checks
+        run: python book-engineering/test_mobile_layout.py
+      - name: Offline volume images and answer keys
+        run: python book-engineering/test_offline_volume.py
