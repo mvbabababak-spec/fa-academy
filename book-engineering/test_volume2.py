@@ -36,6 +36,10 @@ def main():
                 card.click();assert page.locator('.chapter-header').count()==11
                 page.locator('.chapter-header').first.click();page.locator('.section-item').first.click()
                 page.wait_for_selector('.reader-content');assert page.locator('.reader-content').get_by_text('Babak & Ai').count()==1
+                page.evaluate("openSec(getSource().id,0,7)")
+                math=page.locator('.reader-content math').first
+                assert math.count()==1 and math.is_visible() and math.get_attribute('aria-label')
+                assert page.locator('.reader-content').get_by_text('دقت برابر تعداد نمونه‌های درست تقسیم بر کل نمونه‌هاست.').count()==1
                 page.evaluate("openSec(getSource().id,0,8);nextSec()")
                 assert page.evaluate('[curChapterIndex,curSectionIndex]')==[1,0]
                 page.evaluate('prevSec()');assert page.evaluate('[curChapterIndex,curSectionIndex]')==[0,8]

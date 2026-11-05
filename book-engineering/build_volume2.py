@@ -7,7 +7,7 @@ import mistune
 ROOT=Path(__file__).resolve().parent.parent
 file=ROOT/'data.json'
 data=json.loads(file.read_text(encoding='utf8'))
-render=mistune.create_markdown(plugins=['table'])
+render=mistune.create_markdown(escape=False,plugins=['table'])
 specs=[(1,'22-learning-paradigms','شیوه‌های یادگیری ماشین و صورت‌بندی مسئله','◈'),
        (2,'23-regression','رگرسیون خطی و لجستیک از پایه','▣'),
        (3,'24-classical-models','درخت، جنگل، SVM و نزدیک‌ترین همسایه‌ها','✦')]
