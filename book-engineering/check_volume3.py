@@ -81,12 +81,14 @@ for image in inspector.images:
         assert all(term in alt for term in ("Self-Attention", "Q/K/V", "j≤i", "j>i")), alt
     if "v3-ch04-position-block.webp" in src:
         assert all(term in alt for term in ("PE", "RoPE", "LayerNorm", "FFN")), alt
+    if "v3-ch05-architecture-matrix.webp" in src:
+        assert all(term in alt for term in ("Encoder-only", "Decoder-only", "Encoder–Decoder", "cross-attention", "True=مسدود")), alt
     path = ROOT / src
     assert path.is_file(), path
     with Image.open(path) as im:
         assert im.format == "WEBP" and im.width >= 1000 and im.height >= 600, (src, im.format, im.size)
 
-minimum_math = {1: 5, 2: 7, 3: 10, 4: 15}.get(len(chapters), 15)
+minimum_math = {1: 5, 2: 7, 3: 10, 4: 15, 5: 18}.get(len(chapters), 18)
 assert len(inspector.math) >= minimum_math, f"expected at least {minimum_math} MathML blocks, found {len(inspector.math)}"
 assert all((math.get("aria-label") or "").strip() for math in inspector.math)
 
@@ -144,6 +146,17 @@ if len(chapters) >= 4:
         assert (project / project_file).is_file(), project_file
     assert (ROOT / "book-engineering/create_v3_ch04_image.py").is_file()
     assert (ROOT / "book-engineering/chapters/36-audit-report-fa.md").is_file()
+
+if len(chapters) >= 5:
+    source = ROOT / "book-engineering/chapters/37-encoder-decoder.md"
+    project = ROOT / "book-engineering/projects/37-encoder-decoder"
+    code = (project / "transformer_architectures.py").read_text(encoding="utf-8").rstrip()
+    blocks = re.findall(r"```python\n(.*?)\n```", source.read_text(encoding="utf-8"), flags=re.DOTALL)
+    assert blocks and blocks[-1] == code, "chapter 37 executable architecture code differs from tested project"
+    for project_file in ["transformer_architectures.py", "test_transformer_architectures.py", "README.md"]:
+        assert (project / project_file).is_file(), project_file
+    assert (ROOT / "book-engineering/create_v3_ch05_image.py").is_file()
+    assert (ROOT / "book-engineering/chapters/37-audit-report-fa.md").is_file()
 
 full_text = ROOT / "volume-3-full-fa.md"
 assert full_text.is_file()
