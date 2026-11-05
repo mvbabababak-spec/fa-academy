@@ -1,4 +1,4 @@
-"""Insert chapters 14, 15 and 16 without changing prior app content (mistune 3)."""
+"""Insert chapters 17, 18 and 19 without changing prior app content (mistune 3)."""
 import json
 from pathlib import Path
 import re
@@ -10,12 +10,12 @@ data = json.loads(path.read_text(encoding='utf-8'))
 books = [b for b in data['books'] if b['id'] == 'art-science-intelligence-v1']
 assert len(books) == 1
 book = books[0]
-assert {c['num'] for c in book['chapters']} >= set(range(1,14))
+assert {c['num'] for c in book['chapters']} >= set(range(1,17))
 render = mistune.create_markdown(plugins=['table'])
 for number, slug, title, icon, expected in [
-    (14, '14-debug-testing-sql-security', 'عیب‌یابی، آزمون، طراحی نرم‌افزار، SQL و امنیت', '◈', 11),
-    (15, '15-data-analysis', 'NumPy، Pandas، Matplotlib و Jupyter', '▣', 11),
-    (16, '16-algebra-functions', 'جبر، معادله، تابع، توان، لگاریتم و نمودار', '✦', 11),
+    (17, '17-linear-algebra', 'بردار، ماتریس، ابعاد و مقادیر ویژه', '◈', 10),
+    (18, '18-calculus', 'مشتق، انتگرال، قاعده زنجیره‌ای و گرادیان', '▣', 10),
+    (19, '19-probability-statistics', 'احتمال، آمار، توزیع‌ها، نمونه‌گیری و بیز', '✦', 10),
 ]:
     source = f'book-engineering/chapters/{slug}.md'
     text = (root / source).read_text(encoding='utf-8')
@@ -35,5 +35,5 @@ for number, slug, title, icon, expected in [
     else: book['chapters'].append(chapter)
     print(f'Chapter {number}: {len(sections)} sections')
 book['chapters'].sort(key=lambda c: c['num'])
-book['subtitle']='از صفر مطلق تا طراحی هوش مصنوعی | ۲۱ فصل برنامه‌ریزی‌شده · فصل‌های ۱ تا ۱۶ منتشر شده'
+book['subtitle']='از صفر مطلق تا طراحی هوش مصنوعی | ۲۱ فصل برنامه‌ریزی‌شده · فصل‌های ۱ تا ۱۹ منتشر شده'
 path.write_text(json.dumps(data,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')

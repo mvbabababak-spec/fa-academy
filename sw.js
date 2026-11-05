@@ -1,5 +1,5 @@
-// ===== فا-اکدمی Service Worker v15 =====
-const CACHE_NAME = 'fa-academy-v15';
+// ===== فا-اکدمی Service Worker v16 =====
+const CACHE_NAME = 'fa-academy-v16';
 const CORE_FILES = [
   './',
   './index.html',
@@ -32,7 +32,10 @@ const CORE_FILES = [
   './assets/images/babak-ai/ch16-graph.webp',
   './assets/images/babak-ai/ch14-testing.webp',
   './assets/images/babak-ai/ch15-study.webp',
-  './assets/images/babak-ai/ch16-linear.webp'
+  './assets/images/babak-ai/ch16-linear.webp',
+  './assets/images/babak-ai/ch17-matrix.webp',
+  './assets/images/babak-ai/ch18-derivative.webp',
+  './assets/images/babak-ai/ch19-bayes.webp'
 ];
 
 // ===== INSTALL: Cache core files =====
