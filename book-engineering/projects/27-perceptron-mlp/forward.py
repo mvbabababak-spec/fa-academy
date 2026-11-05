@@ -31,11 +31,11 @@ def forward(X):
     return hidden,p.ravel()
 
 
-def library_forward(X):
+def library_forward(X, training_X, training_y):
     # fit initializes sklearn's documented learned attributes; replace them with
     # fixed educational weights. This is not a claim of training convergence.
     model=MLPClassifier(hidden_layer_sizes=(2,),activation='relu',solver='lbfgs',max_iter=1000,random_state=42)
-    model.fit(globals()['X'],XOR)
+    model.fit(training_X,training_y)
     model.coefs_=[W1.copy(),W2.copy()];model.intercepts_=[B1.copy(),B2.copy()]
     return model.predict_proba(X)[:,1]
 
@@ -48,7 +48,7 @@ def main():
     print('AND_library=',lib.predict(X).tolist())
     print('XOR_hidden=',hidden.tolist())
     print('XOR_manual_probabilities=',np.round(p,6).tolist())
-    print('XOR_library_probabilities=',np.round(library_forward(X),6).tolist())
+    print('XOR_library_probabilities=',np.round(library_forward(X,X,XOR),6).tolist())
     print('XOR_decisions=',(p>=0.5).astype(int).tolist())
     print('all_examples=truth_table_only, no independent generalization test')
 

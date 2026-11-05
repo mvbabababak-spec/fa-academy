@@ -8,7 +8,9 @@ class Tests(unittest.TestCase):
     def test_xor_hidden(self):
         h,p=forward(X);np.testing.assert_array_equal(h,[[0,0],[1,0],[1,0],[2,1]])
         np.testing.assert_array_equal((p>=.5).astype(int),XOR)
-    def test_library_probabilities(self):np.testing.assert_allclose(forward(X)[1],library_forward(X),atol=1e-12)
+    def test_library_probabilities(self):np.testing.assert_allclose(forward(X)[1],library_forward(X,X,XOR),atol=1e-12)
+    def test_library_one_query_row(self):
+        np.testing.assert_allclose(forward(X[:1])[1],library_forward(X[:1],X,XOR),atol=1e-12)
     def test_one_row_shape(self):self.assertEqual(forward([[1,0]])[0].shape,(1,2))
     def test_reject_bad_inputs(self):
         with self.assertRaises(ValueError):forward([[1,2,3]])
