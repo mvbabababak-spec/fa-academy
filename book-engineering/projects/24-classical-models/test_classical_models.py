@@ -13,6 +13,9 @@ class Tests(unittest.TestCase):
     def test_bad_input(self):
         for rows,q,k in [([], [0],1),([([1],1)],[1],2),([([1,2],0)],[1],1)]:
             with self.assertRaises(ValueError): knn_predict(rows,q,k)
+    def test_invalid_knn_label(self):
+        for label in ['one', 1.5, np.int64(1)]:
+            with self.assertRaises(ValueError): knn_predict([([1.],label)],[1.],1)
     def test_search_and_train_scaler(self):
         Xtr,Xte,ytr,yte=split_data();s=build_search().fit(Xtr,ytr)
         np.testing.assert_allclose(s.best_estimator_.named_steps['scale'].mean_,Xtr.mean(axis=0))
