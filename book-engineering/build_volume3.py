@@ -1,11 +1,13 @@
 """Safely append authored volume 3 chapters; never rewrite a published chapter.
 
 Only contiguous chapter sources present in chapters/ are eligible for append.
-The source document remains authoritative; a mismatch with existing data.json is
-an error that requires explicit review rather than silent replacement.
+Published chapters are immutable. After independently confirming that the final
+existing chapter is still absent from the remote branch, --refresh-last-draft
+may replace only that local draft and only when all of its stable IDs are intact.
 """
 from __future__ import annotations
 
+import argparse
 import json
 import re
 from pathlib import Path
@@ -23,7 +25,7 @@ SPECS = [
     (1, 33, "33-tokenization", "توکن‌سازی، واژگان و توکن‌های ویژه", "◈"),
     (2, 34, "34-attention", "Attention، Query/Key/Value و پیاده‌سازی ماتریسی", "⌘"),
     (3, 35, "35-self-attention", "Self-Attention، چندسری و ماسک علّی", "◉"),
-    (4, 36, "36-position-normalization", "موقعیت، RoPE، اتصال باقیمانده و LayerNorm", "↔"),
+    (4, 36, "36-position-normalization", "موقعیت، RoPE، اتصال باقیمانده، LayerNorm و FFN", "↔"),
     (5, 37, "37-encoder-decoder", "Encoder، Decoder و مدل‌های Encoder–Decoder", "⇄"),
     (6, 38, "38-long-context", "زمینه بلند، KV Cache، GQA، Sparse Attention و MoE", "⤢"),
     (7, 39, "39-multimodal-transformer", "Transformer چندوجهی و هم‌ترازی تصویر و صوت", "▧"),
@@ -71,6 +73,14 @@ def build_chapter(spec: tuple[int, int, str, str, str]) -> dict:
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description="Safely build authored volume 3 chapters")
+    parser.add_argument(
+        "--refresh-last-draft",
+        action="store_true",
+        help=("refresh only the last existing chapter after verifying it is not "
+              "present on the remote branch; stable chapter/section IDs must match"),
+    )
+    args = parser.parse_args()
     data = json.loads(DATA_PATH.read_text(encoding="utf-8"))
     available = [spec for spec in SPECS if (ROOT / "book-engineering/chapters" / f"{spec[2]}.md").is_file()]
     if not available:
@@ -85,6 +95,7 @@ def main() -> None:
         raise RuntimeError("duplicate volume 3 book records")
     subtitle = f"Transformer و مهندسی مدل زبانی | ۱۴ فصل در نقشه؛ {len(chapters)} فصل منتشرشده"
     changed = False
+    refreshed_draft = None
     if matches:
         book = matches[0]
         existing = book.get("chapters", [])
@@ -92,7 +103,22 @@ def main() -> None:
             raise RuntimeError("a published chapter source is missing; refusing to remove it")
         for index, old_chapter in enumerate(existing):
             if old_chapter != chapters[index]:
-                raise RuntimeError(f"published chapter {index + 1} differs from its source; refusing to overwrite")
+                same_stable_ids = (
+                    old_chapter.get("id") == chapters[index].get("id")
+                    and [section.get("id") for section in old_chapter.get("sections", [])]
+                    == [section.get("id") for section in chapters[index]["sections"]]
+                )
+                is_last_existing_and_authored = (
+                    index == len(existing) - 1 and index == len(chapters) - 1
+                )
+                if not (args.refresh_last_draft and same_stable_ids and is_last_existing_and_authored):
+                    raise RuntimeError(
+                        f"chapter {index + 1} differs from its source; only an explicitly refreshed "
+                        "last local draft with unchanged stable IDs may be replaced"
+                    )
+                book["chapters"][index] = chapters[index]
+                changed = True
+                refreshed_draft = index + 1
         if len(existing) < len(chapters):
             book["chapters"] = existing + chapters[len(existing):]
             changed = True
@@ -140,6 +166,8 @@ def main() -> None:
         full_path.write_text(output, encoding="utf-8")
     action = "updated" if changed else "already matches"
     print(f"Volume 3 {action}: {len(chapters)}/{PLANNED_CHAPTERS} chapters; sections={[len(c['sections']) for c in chapters]}")
+    if refreshed_draft is not None:
+        print(f"Refreshed only local draft chapter {refreshed_draft}; chapter and section IDs were unchanged.")
 
 
 if __name__ == "__main__":

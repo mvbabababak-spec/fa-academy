@@ -79,12 +79,15 @@ for image in inspector.images:
         assert all(term in alt for term in ("Q/K/V", "Lq×Lk", "Lq×dv")), alt
     if "v3-ch03-self-attention.webp" in src:
         assert all(term in alt for term in ("Self-Attention", "Q/K/V", "j≤i", "j>i")), alt
+    if "v3-ch04-position-block.webp" in src:
+        assert all(term in alt for term in ("PE", "RoPE", "LayerNorm", "FFN")), alt
     path = ROOT / src
     assert path.is_file(), path
     with Image.open(path) as im:
         assert im.format == "WEBP" and im.width >= 1000 and im.height >= 600, (src, im.format, im.size)
 
-assert len(inspector.math) >= 5, f"expected at least 5 MathML blocks, found {len(inspector.math)}"
+minimum_math = {1: 5, 2: 7, 3: 10, 4: 15}.get(len(chapters), 15)
+assert len(inspector.math) >= minimum_math, f"expected at least {minimum_math} MathML blocks, found {len(inspector.math)}"
 assert all((math.get("aria-label") or "").strip() for math in inspector.math)
 
 answer_paths = [
@@ -130,6 +133,17 @@ if len(chapters) >= 3:
         assert (project / project_file).is_file(), project_file
     assert (ROOT / "book-engineering/create_v3_ch03_image.py").is_file()
     assert (ROOT / "book-engineering/chapters/35-audit-report-fa.md").is_file()
+
+if len(chapters) >= 4:
+    source = ROOT / "book-engineering/chapters/36-position-normalization.md"
+    project = ROOT / "book-engineering/projects/36-position-normalization"
+    code = (project / "transformer_block.py").read_text(encoding="utf-8").rstrip()
+    blocks = re.findall(r"```python\n(.*?)\n```", source.read_text(encoding="utf-8"), flags=re.DOTALL)
+    assert blocks and blocks[-1] == code, "chapter 36 executable code differs from tested project"
+    for project_file in ["transformer_block.py", "test_transformer_block.py", "README.md"]:
+        assert (project / project_file).is_file(), project_file
+    assert (ROOT / "book-engineering/create_v3_ch04_image.py").is_file()
+    assert (ROOT / "book-engineering/chapters/36-audit-report-fa.md").is_file()
 
 full_text = ROOT / "volume-3-full-fa.md"
 assert full_text.is_file()
