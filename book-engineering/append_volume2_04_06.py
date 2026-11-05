@@ -22,5 +22,5 @@ for n,slug,title,icon in specs:
     else:
         assert [c['num'] for c in book['chapters']]==list(range(1,n)), 'Chapters must be appended in order'
         book['chapters'].append(chapter);print('Added:',n,len(sections),'sections')
-book['subtitle']='یادگیری ماشین و شبکه‌های عصبی | فصل‌های ۱ تا ۶ منتشر شده‌اند'
+if len(book['chapters'])==6:book['subtitle']='یادگیری ماشین و شبکه‌های عصبی | فصل‌های ۱ تا ۶ منتشر شده‌اند'
 path.write_text(json.dumps(data,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf8')

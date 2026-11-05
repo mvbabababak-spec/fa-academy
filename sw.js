@@ -1,5 +1,5 @@
-// ===== فا-اکدمی Service Worker v43 =====
-const CACHE_NAME = 'fa-academy-v43';
+// ===== فا-اکدمی Service Worker v45 =====
+const CACHE_NAME = 'fa-academy-v45';
 const CORE_FILES = [
   './',
   './index.html',
@@ -16,6 +16,16 @@ const CORE_FILES = [
   './assets/icons/apple-touch-icon.png',
   './assets/icons/favicon-32.png',
   './assets/images/art-science-cover.webp',
+  './assets/images/babak-ai/v2-ch07-backprop.webp',
+  './assets/images/babak-ai/v2-ch10-cnn.webp',
+  './assets/images/babak-ai/v2-ch11-representations.webp',
+  './book-engineering/answers/31-cnn-sequences-fa.md',
+  './book-engineering/answers/32-representations-fa.md',
+  './assets/images/babak-ai/v2-ch08-optimizers.webp',
+  './assets/images/babak-ai/v2-ch09-network.webp',
+  './book-engineering/answers/28-backprop-fa.md',
+  './book-engineering/answers/29-optimizers-fa.md',
+  './book-engineering/answers/30-neural-network-fa.md',
   './assets/images/babak-ai/v2-ch04-unsupervised.webp',
   './assets/images/babak-ai/v2-ch05-validation.webp',
   './assets/images/babak-ai/v2-ch06-mlp.webp',
