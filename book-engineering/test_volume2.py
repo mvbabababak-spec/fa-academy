@@ -45,6 +45,8 @@ def main():
                 page.evaluate("openSec(getSource().id,1,3)")
                 assert page.locator('.reader-content math').count()==3
                 assert all(page.locator('.reader-content math').nth(i).is_visible() for i in range(3))
+                page.evaluate("openSec(getSource().id,4,2)")
+                assert page.locator('.reader-content math').count()==1 and page.locator('.reader-content math').first.is_visible()
                 page.evaluate("openSec(getSource().id,0,8);nextSec()")
                 assert page.evaluate('[curChapterIndex,curSectionIndex]')==[1,0]
                 page.evaluate('prevSec()');assert page.evaluate('[curChapterIndex,curSectionIndex]')==[0,8]

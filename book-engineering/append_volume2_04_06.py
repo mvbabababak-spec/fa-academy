@@ -6,7 +6,7 @@ ROOT=Path(__file__).resolve().parent.parent
 path=ROOT/'data.json';data=json.loads(path.read_text(encoding='utf8'))
 books=[b for b in data['books'] if b['id']=='art-science-intelligence-v2'];assert len(books)==1
 book=books[0];assert [c['num'] for c in book['chapters'][:3]]==[1,2,3]
-render=mistune.create_markdown(plugins=['table'])
+render=mistune.create_markdown(escape=False,plugins=['table'])
 specs=[(4,'25-unsupervised','خوشه‌بندی و تحلیل مؤلفه‌های اصلی','◈'),(5,'26-validation','تعمیم، منظم‌سازی و اعتبارسنجی','▣'),(6,'27-perceptron-mlp','پرسپترون، شبکه چندلایه و عبور رو به جلو','✦')]
 for n,slug,title,icon in specs:
     source=f'book-engineering/chapters/{slug}.md';text=(ROOT/source).read_text(encoding='utf8')
