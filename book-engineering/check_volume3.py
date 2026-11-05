@@ -89,6 +89,8 @@ for image in inspector.images:
         assert all(term in alt for term in ("ViT", "log-Mel", "InfoNCE", "embedding", "cross-attention")), alt
     if "v3-ch08-data-pipeline.webp" in src:
         assert all(term in alt for term in ("مجوز", "manifest", "group_id", "train", "validation", "test", "tokenizer")), alt
+    if "v3-ch09-training-loop.webp" in src:
+        assert all(term in alt for term in ("شکل ۳-۹-۱", "train", "validation", "test", "Embedding", "MLP", "logits", "cross-entropy", "گرادیان")), alt
     path = ROOT / src
     assert path.is_file(), path
     with Image.open(path) as im:
@@ -196,6 +198,18 @@ if len(chapters) >= 8:
         assert (project / project_file).is_file(), project_file
     assert (ROOT / "book-engineering/create_v3_ch08_image.py").is_file()
     assert (ROOT / "book-engineering/chapters/40-audit-report-fa.md").is_file()
+
+if len(chapters) >= 9:
+    source = ROOT / "book-engineering/chapters/41-first-language-model.md"
+    project = ROOT / "book-engineering/projects/41-first-language-model"
+    code = (project / "tiny_lm.py").read_text(encoding="utf-8").rstrip()
+    blocks = re.findall(r"```python\n(.*?)\n```", source.read_text(encoding="utf-8"), flags=re.DOTALL)
+    assert blocks and blocks[-1] == code, "chapter 41 executable code differs from tested project"
+    for project_file in ["tiny_lm.py", "test_tiny_lm.py", "README.md", ".gitignore"]:
+        assert (project / project_file).is_file(), project_file
+    assert (ROOT / "book-engineering/create_v3_ch09_image.py").is_file()
+    assert (ROOT / "book-engineering/diagrams/v3-ch09-training-loop.svg").is_file()
+    assert (ROOT / "book-engineering/chapters/41-audit-report-fa.md").is_file()
 
 full_text = ROOT / "volume-3-full-fa.md"
 assert full_text.is_file()

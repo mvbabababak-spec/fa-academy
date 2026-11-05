@@ -9,6 +9,15 @@ from playwright.sync_api import sync_playwright
 
 ROOT=Path(__file__).resolve().parent.parent
 
+def assert_image_loaded(page):
+    image=page.locator('.reader-content img').first
+    image.scroll_into_view_if_needed()
+    page.wait_for_function(
+        '(img) => Boolean(img && img.complete && img.naturalWidth > 0)',
+        arg=image.element_handle(),
+        timeout=10000,
+    )
+
 def main():
     data=json.loads((ROOT/'data.json').read_text())
     matches=[b for b in data['books'] if b['id']=='art-science-intelligence-v2']
@@ -82,10 +91,10 @@ def main():
                 result=page.evaluate('''async () => {let paths=[];for(let c of getSource().chapters) for(let s of c.sections){let el=document.createElement('div');el.innerHTML=s.html; for(let i of el.querySelectorAll('img'))paths.push(i.getAttribute('src'));for(let a of el.querySelectorAll('a[href*="book-engineering/answers/"]'))paths.push(a.getAttribute('href'));} let bad=[];for(let path of [...new Set(paths)]){try{let r=await fetch(path);if(!r.ok||!(await r.arrayBuffer()).byteLength)bad.push(path)}catch(e){bad.push(path)}}return {count:new Set(paths).size,bad}}''')
                 assert result=={'count':22,'bad':[]},result
                 page.evaluate("openSec(getSource().id,2,6)")
-                assert page.locator('.reader-content img').evaluate('e=>e.complete && e.naturalWidth>0')
+                assert_image_loaded(page)
                 for chapter,section in [(3,2),(4,1),(5,4),(6,2),(7,1),(8,2),(9,1),(10,2)]:
                     page.evaluate(f"openSec(getSource().id,{chapter},{section})")
-                    assert page.locator('.reader-content img').evaluate('e=>e.complete && e.naturalWidth>0')
+                    assert_image_loaded(page)
                 assert not errors,errors
                 print(f'PASS volume 2 {width}px: 101 sections, home, navigation, hash, search and 22 offline assets')
                 ctx.close()
