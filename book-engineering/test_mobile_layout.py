@@ -63,9 +63,10 @@ def main():
                       count++;
                     }));
                   }));
-                  return {count,bad};
+                  const expected=DATA.books.concat(DATA.courses).reduce((total,item)=>total+(item.chapters||[]).reduce((n,ch)=>n+(ch.sections||[]).length,0),0);
+                  return {count,expected,bad};
                 }''')
-                assert result['count'] == 540 and not result['bad'], result
+                assert result['count'] == result['expected'] and not result['bad'], result
                 page.evaluate('navigator.serviceWorker.ready')
                 page.wait_for_timeout(250)
                 context.set_offline(True)

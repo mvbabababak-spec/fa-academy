@@ -1,0 +1,112 @@
+"""Structural, accessibility, source, image, answer-key and code-sync checks."""
+from __future__ import annotations
+
+from html.parser import HTMLParser
+from pathlib import Path
+import json
+import re
+
+from PIL import Image
+
+ROOT = Path(__file__).resolve().parent.parent
+BOOK_ID = "art-science-intelligence-v3"
+PLANNED = 14
+
+
+class Inspector(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.images: list[dict[str, str | None]] = []
+        self.math: list[dict[str, str | None]] = []
+        self.links: list[dict[str, str | None]] = []
+
+    def handle_starttag(self, tag, attrs):
+        values = dict(attrs)
+        if tag == "img":
+            self.images.append(values)
+        elif tag == "math":
+            self.math.append(values)
+        elif tag == "a":
+            self.links.append(values)
+
+
+data = json.loads((ROOT / "data.json").read_text(encoding="utf-8"))
+books = [book for book in data["books"] if book.get("id") == BOOK_ID]
+assert len(books) == 1, "exactly one volume 3 book record is required"
+book = books[0]
+chapters = book.get("chapters", [])
+assert 1 <= len(chapters) <= PLANNED
+assert [chapter.get("num") for chapter in chapters] == list(range(1, len(chapters) + 1))
+assert book.get("author") == "Babak & Ai"
+assert "۱۴ فصل" in book.get("subtitle", "")
+
+all_ids: list[str] = []
+inspector = Inspector()
+section_count = 0
+source_files: set[str] = set()
+for local_number, chapter in enumerate(chapters, 1):
+    global_number = local_number + 32
+    assert chapter.get("id") == f"art-science-v3-ch{local_number:02}"
+    all_ids.append(chapter["id"])
+    assert chapter.get("sections"), chapter["id"]
+    file_names = {section.get("file") for section in chapter["sections"]}
+    assert len(file_names) == 1, (chapter["id"], file_names)
+    relative_source = next(iter(file_names))
+    assert relative_source.startswith(f"book-engineering/chapters/{global_number}-"), relative_source
+    source = ROOT / relative_source
+    assert source.is_file(), source
+    source_text = source.read_text(encoding="utf-8")
+    source_files.add(relative_source)
+    expected_sections = len(re.findall(r"^## .+$", source_text, flags=re.MULTILINE))
+    assert len(chapter["sections"]) == expected_sections
+    for section_index, section in enumerate(chapter["sections"], 1):
+        assert section["id"] == f"art-science-v3-ch{local_number:02}-s{section_index:02}"
+        assert section.get("html", "").strip(), section["id"]
+        all_ids.append(section["id"])
+        inspector.feed(section["html"])
+        section_count += 1
+
+assert len(all_ids) == len(set(all_ids)), "duplicate chapter or section ID"
+assert len(inspector.images) >= len(chapters), "each current chapter must have a checked image"
+for image in inspector.images:
+    src = image.get("src") or ""
+    alt = image.get("alt") or ""
+    assert src.startswith("assets/images/") and src.endswith(".webp") and ".." not in Path(src).parts, src
+    assert alt.strip() and "شکل" in alt, alt
+    if "v3-ch01-tokenization.webp" in src:
+        assert "BPE" in alt and "تعبیه" in alt, alt
+    path = ROOT / src
+    assert path.is_file(), path
+    with Image.open(path) as im:
+        assert im.format == "WEBP" and im.width >= 1000 and im.height >= 600, (src, im.format, im.size)
+
+assert len(inspector.math) >= 5, f"expected at least 5 MathML blocks, found {len(inspector.math)}"
+assert all((math.get("aria-label") or "").strip() for math in inspector.math)
+
+answer_paths = [
+    href for link in inspector.links
+    if (href := link.get("href")) and "book-engineering/answers/" in href
+]
+assert len(answer_paths) == len(chapters), answer_paths
+for chapter, href in zip(chapters, answer_paths):
+    source_stem = Path(chapter["sections"][0]["file"]).stem
+    expected = f"book-engineering/answers/{source_stem}-fa.md"
+    assert href == expected, (href, expected)
+    answer = ROOT / href
+    assert answer.is_file() and len(re.findall(r"\S+", answer.read_text(encoding="utf-8"))) >= 300, href
+
+source = ROOT / "book-engineering/chapters/33-tokenization.md"
+code = (ROOT / "book-engineering/projects/33-tokenization/tokenizer_bpe.py").read_text(encoding="utf-8").rstrip()
+blocks = re.findall(r"```python\n(.*?)\n```", source.read_text(encoding="utf-8"), flags=re.DOTALL)
+assert blocks and blocks[-1] == code, "chapter's executable tokenizer code differs from the tested project"
+for project_file in [
+    "tokenizer_bpe.py", "test_tokenizer_bpe.py", "test_embedding_lookup.py", "README.md"
+]:
+    assert (ROOT / "book-engineering/projects/33-tokenization" / project_file).is_file(), project_file
+
+full_text = ROOT / "volume-3-full-fa.md"
+assert full_text.is_file()
+full_text_value = full_text.read_text(encoding="utf-8")
+for relative_source in source_files:
+    assert (ROOT / relative_source).read_text(encoding="utf-8").strip() in full_text_value
+print(f"PASS volume 3: {len(chapters)}/{PLANNED} chapters, {section_count} sections, {len(inspector.images)} local WebP images with semantic alt, {len(answer_paths)} detailed answer keys, {len(inspector.math)} accessible MathML blocks")

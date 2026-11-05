@@ -1,5 +1,5 @@
-// ===== فا-اکدمی Service Worker v58 =====
-const CACHE_NAME = 'fa-academy-v58';
+// ===== فا-اکدمی Service Worker v59 =====
+const CACHE_NAME = 'fa-academy-v59';
 const CORE_FILES = [
   './',
   './index.html',
@@ -16,6 +16,14 @@ const CORE_FILES = [
   './assets/icons/apple-touch-icon.png',
   './assets/icons/favicon-32.png',
   './assets/images/art-science-cover.webp',
+  './volume-3-full-fa.md',
+  './assets/images/babak-ai/v3-ch01-tokenization.webp',
+  './book-engineering/chapters/33-tokenization.md',
+  './book-engineering/answers/33-tokenization-fa.md',
+  './book-engineering/projects/33-tokenization/README.md',
+  './book-engineering/projects/33-tokenization/tokenizer_bpe.py',
+  './book-engineering/projects/33-tokenization/test_tokenizer_bpe.py',
+  './book-engineering/projects/33-tokenization/test_embedding_lookup.py',
   './assets/images/babak-ai/v2-ch07-backprop.webp',
   './assets/images/babak-ai/v2-ch10-cnn.webp',
   './assets/images/babak-ai/v2-ch11-representations.webp',
