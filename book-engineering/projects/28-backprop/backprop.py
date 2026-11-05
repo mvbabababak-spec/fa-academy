@@ -19,7 +19,7 @@ def loss_grad(X,y,p):
     return loss,{'W1':X.T@dhidden,'b1':dhidden.sum(axis=0),'W2':dW2,'b2':db2}
 
 def numerical(X,y,p,eps=1e-6):
-    if eps<=0:raise ValueError('eps must be positive')
+    if not np.isscalar(eps) or not np.isfinite(eps) or not 0 < eps <= 1e-2:raise ValueError('eps must be finite and in (0, 1e-2]')
     gradients={}
     for name,param in p.items():
         g=np.zeros_like(param)

@@ -6,7 +6,7 @@ ROOT=Path(__file__).resolve().parent.parent
 path=ROOT/'data.json';data=json.loads(path.read_text(encoding='utf8'))
 books=[b for b in data['books'] if b['id']=='art-science-intelligence-v2'];assert len(books)==1
 book=books[0];assert [c['num'] for c in book['chapters'][:6]]==list(range(1,7))
-render=mistune.create_markdown(plugins=['table'])
+render=mistune.create_markdown(escape=False,plugins=['table'])
 specs=[(7,'28-backprop','تابع زیان، پس‌انتشار و بررسی گرادیان','◈'),(8,'29-optimizers','SGD، Adam، AdamW، نرمال‌سازی و Dropout','▣'),(9,'30-neural-network','ساخت و بازتولید شبکه عصبی با NumPy و PyTorch','✦')]
 for n,slug,title,icon in specs:
     source=f'book-engineering/chapters/{slug}.md';text=(ROOT/source).read_text(encoding='utf8')

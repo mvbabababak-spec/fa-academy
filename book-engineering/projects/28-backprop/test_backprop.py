@@ -23,5 +23,6 @@ class Tests(unittest.TestCase):
         p=parameters();before={k:v.copy() for k,v in p.items()};numerical(X,y,p)
         for k in p:np.testing.assert_array_equal(p[k],before[k])
     def test_bad_epsilon(self):
-        with self.assertRaises(ValueError):numerical(X,y,parameters(),0)
+        for bad in [0,-1,float('nan'),float('inf'),float('-inf'),0.1]:
+            with self.subTest(eps=bad), self.assertRaises(ValueError):numerical(X,y,parameters(),bad)
 if __name__=='__main__':unittest.main()
