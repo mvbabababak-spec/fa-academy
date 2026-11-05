@@ -26,7 +26,7 @@ book={'id':'art-science-intelligence-v2','title':'هنر و علم ساخت هو
       'author':'Babak & Ai','cover':'assets/images/art-science-cover.webp','chapters':chapters}
 found=[b for b in data['books'] if b['id']==book['id']]
 if found:
-    assert len(found)==1 and found[0]==book,'Volume 2 already exists; refusing to replace it'
+    assert len(found)==1 and found[0]['chapters'][:3]==chapters, 'Existing chapters 1–3 differ; refusing to replace them'
     print('Volume 2 already exists and matches; no change')
 else:
     i=next(i for i,b in enumerate(data['books']) if b['id']=='art-science-intelligence-v1')

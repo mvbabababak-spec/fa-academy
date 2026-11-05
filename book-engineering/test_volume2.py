@@ -13,12 +13,12 @@ def main():
     data=json.loads((ROOT/'data.json').read_text())
     matches=[b for b in data['books'] if b['id']=='art-science-intelligence-v2']
     assert len(matches)==1
-    b=matches[0]; assert [c['num'] for c in b['chapters']]==[1,2,3]
-    assert [len(c['sections']) for c in b['chapters']]==[9,9,11]
+    b=matches[0]; assert [c['num'] for c in b['chapters']]==[1,2,3,4,5,6]
+    assert [len(c['sections']) for c in b['chapters']]==[9,9,11,9,9,9]
     ids=[s['id'] for c in b['chapters'] for s in c['sections']]
-    assert len(ids)==len(set(ids))==29
+    assert len(ids)==len(set(ids))==56
     assert all(s['html'] and (ROOT/s['file']).is_file() for c in b['chapters'] for s in c['sections'])
-    for img in ['v2-ch01-split.webp','v2-ch02-regression.webp','v2-ch03-cross-validation.webp']:
+    for img in ['v2-ch01-split.webp','v2-ch02-regression.webp','v2-ch03-cross-validation.webp','v2-ch04-unsupervised.webp','v2-ch05-validation.webp','v2-ch06-mlp.webp']:
         with Image.open(ROOT/'assets/images/babak-ai'/img) as im: assert im.format=='WEBP' and im.width>=1000
     server=ThreadingHTTPServer(('127.0.0.1',0),partial(SimpleHTTPRequestHandler,directory=str(ROOT.parent)))
     Thread(target=server.serve_forever,daemon=True).start()
@@ -32,18 +32,22 @@ def main():
                 page.goto(url,wait_until='networkidle');page.wait_for_selector('#loading.hidden')
                 assert page.get_by_text('هنر و علم ساخت هوش — جلد دوم',exact=True).count()==1
                 card=page.locator('.book-card').filter(has_text='هنر و علم ساخت هوش — جلد دوم')
-                assert '3 فصل' in card.inner_text() and '29 بخش' in card.inner_text()
-                card.click();assert page.locator('.chapter-header').count()==3
+                assert '6 فصل' in card.inner_text() and '56 بخش' in card.inner_text()
+                card.click();assert page.locator('.chapter-header').count()==6
                 page.locator('.chapter-header').first.click();page.locator('.section-item').first.click()
                 page.wait_for_selector('.reader-content');assert page.locator('.reader-content').get_by_text('Babak & Ai').count()==1
                 page.evaluate("openSec(getSource().id,0,8);nextSec()")
                 assert page.evaluate('[curChapterIndex,curSectionIndex]')==[1,0]
                 page.evaluate('prevSec()');assert page.evaluate('[curChapterIndex,curSectionIndex]')==[0,8]
-                page.evaluate("openSec(getSource().id,2,10)")
-                page.reload(wait_until='networkidle');assert page.evaluate('[curChapterIndex,curSectionIndex]')==[2,10]
+                page.evaluate("openSec(getSource().id,2,10);nextSec()")
+                assert page.evaluate('[curChapterIndex,curSectionIndex]')==[3,0]
+                page.evaluate("openSec(getSource().id,5,8)")
+                page.reload(wait_until='networkidle');assert page.evaluate('[curChapterIndex,curSectionIndex]')==[5,8]
                 assert page.locator('button[onclick="nextSec()"]').is_disabled()
                 page.evaluate("navTo('search');doSearch('ناخالصی جینی')")
                 assert page.evaluate("window_searchResults.some(r=>r.sourceId==='art-science-intelligence-v2' || JSON.stringify(r).includes('art-science-intelligence-v2'))")
+                page.evaluate("doSearch('پرسپترون')")
+                assert page.evaluate("window_searchResults.some(r=>JSON.stringify(r).includes('art-science-intelligence-v2'))")
                 page.evaluate("openItem('art-science-intelligence-v2','book')")
                 bad=page.evaluate('''() => {let bad=[];getSource().chapters.forEach((c,ci)=>c.sections.forEach((s,si)=>{openSec(getSource().id,ci,si);let e=document.querySelector('.reader-content'); if (document.documentElement.scrollWidth>innerWidth||e.scrollWidth>e.clientWidth+2)bad.push(s.id)}));return bad}''')
                 assert not bad,(width,bad)
@@ -53,11 +57,14 @@ def main():
                 assert page.get_by_text('هنر و علم ساخت هوش — جلد دوم',exact=True).count()==1
                 page.evaluate("openItem('art-science-intelligence-v2','book')")
                 result=page.evaluate('''async () => {let paths=[];for(let c of getSource().chapters) for(let s of c.sections){let el=document.createElement('div');el.innerHTML=s.html; for(let i of el.querySelectorAll('img'))paths.push(i.getAttribute('src'));for(let a of el.querySelectorAll('a[href*="book-engineering/answers/"]'))paths.push(a.getAttribute('href'));} let bad=[];for(let path of [...new Set(paths)]){try{let r=await fetch(path);if(!r.ok||!(await r.arrayBuffer()).byteLength)bad.push(path)}catch(e){bad.push(path)}}return {count:new Set(paths).size,bad}}''')
-                assert result=={'count':6,'bad':[]},result
+                assert result=={'count':12,'bad':[]},result
                 page.evaluate("openSec(getSource().id,2,6)")
                 assert page.locator('.reader-content img').evaluate('e=>e.complete && e.naturalWidth>0')
+                for chapter,section in [(3,2),(4,1),(5,4)]:
+                    page.evaluate(f"openSec(getSource().id,{chapter},{section})")
+                    assert page.locator('.reader-content img').evaluate('e=>e.complete && e.naturalWidth>0')
                 assert not errors,errors
-                print(f'PASS volume 2 {width}px: 29 sections, home, navigation, hash, search and 6 offline assets')
+                print(f'PASS volume 2 {width}px: 56 sections, home, navigation, hash, search and 12 offline assets')
                 ctx.close()
             browser.close()
     finally: server.shutdown()

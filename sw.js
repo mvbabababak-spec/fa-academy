@@ -1,5 +1,5 @@
-// ===== فا-اکدمی Service Worker v42 =====
-const CACHE_NAME = 'fa-academy-v42';
+// ===== فا-اکدمی Service Worker v43 =====
+const CACHE_NAME = 'fa-academy-v43';
 const CORE_FILES = [
   './',
   './index.html',
@@ -16,6 +16,12 @@ const CORE_FILES = [
   './assets/icons/apple-touch-icon.png',
   './assets/icons/favicon-32.png',
   './assets/images/art-science-cover.webp',
+  './assets/images/babak-ai/v2-ch04-unsupervised.webp',
+  './assets/images/babak-ai/v2-ch05-validation.webp',
+  './assets/images/babak-ai/v2-ch06-mlp.webp',
+  './book-engineering/answers/25-unsupervised-fa.md',
+  './book-engineering/answers/26-validation-fa.md',
+  './book-engineering/answers/27-perceptron-mlp-fa.md',
   './assets/images/babak-ai/v2-ch01-split.webp',
   './assets/images/babak-ai/v2-ch02-regression.webp',
   './assets/images/babak-ai/v2-ch03-cross-validation.webp',
