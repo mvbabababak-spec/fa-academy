@@ -1,5 +1,5 @@
-// ===== فا-اکدمی Service Worker v26 =====
-const CACHE_NAME = 'fa-academy-v26';
+// ===== فا-اکدمی Service Worker v27 =====
+const CACHE_NAME = 'fa-academy-v27';
 const CORE_FILES = [
   './',
   './index.html',
@@ -19,6 +19,7 @@ const CORE_FILES = [
   './book-engineering/answers/05-computer-foundations-answers-fa.md',
   './book-engineering/answers/06-gpu-parallelism-answers-fa.md',
   './book-engineering/answers/07-compute-ecosystems-answers-fa.md',
+  './book-engineering/answers/08-distributed-infrastructure-answers-fa.md',
   './assets/images/babak-ai/ch02-families.webp',
   './assets/images/babak-ai/ch02-token-cycle.webp',
   './assets/images/babak-ai/ch03-lifecycle.webp',
