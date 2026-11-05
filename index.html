@@ -87,6 +87,8 @@
 /* ========== RESET ========== */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+/* Lock the document, not scrollable content such as code blocks and tables. */
+html,body{width:100%;max-width:100%;overflow-x:hidden;overflow-x:clip;overscroll-behavior-x:none}
 body{
   font-family:var(--font-sans);
   background:var(--bg-base);
@@ -450,11 +452,13 @@ main{
 
 /* ========== GRID & CARDS ========== */
 .content-grid{
+  min-width:0;max-width:100%;
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
   gap:var(--space-6);
 }
 .book-card{
+  min-width:0;max-width:100%;
   background:var(--bg-surface);
   backdrop-filter:blur(12px);
   border:1px solid var(--border-subtle);
@@ -472,6 +476,9 @@ main{
   box-shadow:var(--shadow-lg),0 0 24px var(--accent-glow);
 }
 .book-card:hover .book-cover-img{transform:scale(1.05)}
+.book-card--volume1 .book-card-cover{height:auto;aspect-ratio:1 / 1}
+.book-card--volume1 .book-cover-img{object-fit:contain}
+.book-card-english{direction:ltr;text-align:center;color:var(--text-secondary);font-size:var(--font-size-sm);line-height:1.45;padding:var(--space-3) var(--space-4) 0;overflow-wrap:anywhere}
 .book-card-cover{
   height:180px;
   position:relative;
@@ -492,6 +499,7 @@ main{
   opacity:.6;
 }
 .book-card-info{
+  min-width:0;max-width:100%;overflow:hidden;overflow-wrap:anywhere;
   padding:var(--space-5);
   flex:1;
   display:flex;
@@ -733,7 +741,7 @@ main{
 .reader-breadcrumb a:hover{color:var(--text-primary)}
 .reader-breadcrumb .sep{color:var(--text-faded)}
 .reader-breadcrumb .current{color:var(--text-primary);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.reader-nav{display:flex;gap:var(--space-2)}
+.reader-nav{display:flex;flex-wrap:wrap;min-width:0;max-width:100%;gap:var(--space-2)}
 .reader-nav-btn{
   display:flex;
   align-items:center;
@@ -755,6 +763,7 @@ main{
 .reader-nav-btn:disabled{opacity:.3;cursor:not-allowed}
 
 .reader-content{
+  min-width:0;max-width:100%;overflow-wrap:anywhere;
   background:var(--bg-surface);
   backdrop-filter:blur(12px);
   border:1px solid var(--border-subtle);
@@ -806,6 +815,7 @@ main{
   color:#f0abfc;
 }
 .reader-content pre{
+  max-width:100%;
   direction:ltr;
   text-align:left;
   unicode-bidi:plaintext;
@@ -833,12 +843,14 @@ main{
   color:var(--text-secondary);
 }
 .reader-content blockquote p{margin:0}
-.reader-content img{
+.reader-content img,.reader-content video,.reader-content iframe{
+  max-width:100%;height:auto;
   border-radius:var(--radius-lg);
   margin:var(--space-6) 0;
   border:1px solid var(--border-subtle);
 }
 .reader-content table{
+  display:block;max-width:100%;overflow-x:auto;
   width:100%;
   border-collapse:collapse;
   margin:var(--space-6) 0;
@@ -986,10 +998,27 @@ main{
   .home-hero p{font-size:var(--font-size-md)}
   .hero-stats{gap:var(--space-2)}
   .hero-stat{min-width:100px;padding:var(--space-4)}
-  .content-grid{grid-template-columns:1fr}
+  .content-grid{grid-template-columns:minmax(0,1fr)}
   .reader-content{padding:var(--space-6)}
   .reader-toolbar{flex-wrap:wrap;padding:var(--space-3) var(--space-4)}
   .reader-nav-btn{font-size:var(--font-size-xs)}
+}
+
+/* Reader controls, keyboard access, and overflow containment */
+.reader-toc-toggle{display:none}
+.toc-section,.section-item,.search-result,.chapter-header{width:100%;font:inherit;text-align:right;border:0;background:transparent}
+.reader-toc-toggle,.copy-code{cursor:pointer;color:var(--text-primary);background:var(--bg-input);border:1px solid var(--border-default);border-radius:6px;padding:.4rem .7rem}
+:focus-visible{outline:3px solid #a5b4fc;outline-offset:2px}
+.book-card-subtitle pre,.book-card-subtitle table{max-width:100%;overflow:auto}
+@media(max-width:1024px){.reader-toc-toggle{display:inline-block}}
+@media(max-width:768px){
+  header{gap:4px}
+  .header-logo,.header-search{display:none}
+  .header-nav{min-width:0;gap:0}
+  .nav-btn{padding:var(--space-2) 5px}
+  .header-offline-badge{flex-shrink:0}
+  main,.reader-layout,.reader-main{min-width:0;max-width:100%}
+  .reader-content pre{max-width:100%}
 }
 
 /* ========== OFFLINE BADGE ========== */
@@ -1070,23 +1099,11 @@ var window_searchResults=[];
 
 /* =============== SERVICE WORKER =============== */
 if('serviceWorker' in navigator){
-  // Force reload when SW updates to get fresh data
-  navigator.serviceWorker.register('sw.js').then(function(reg){
-    reg.addEventListener('updatefound', function(){
-      var installingWorker = reg.installing;
-      if (!installingWorker) return;
-      installingWorker.addEventListener('statechange', function(){
-        if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
-          // New SW installed - force reload to get fresh data
-          location.reload();
-        }
-      });
-    });
-  }).catch(function(e){console.warn('SW:',e)});
-
-  // Force reload when controller changes (SW activated)
-  navigator.serviceWorker.addEventListener('controllerchange', function(){
-    location.reload();
+  var hadController=!!navigator.serviceWorker.controller;
+  var didReload=false;
+  navigator.serviceWorker.register('sw.js').catch(function(e){console.warn('SW:',e)});
+  navigator.serviceWorker.addEventListener('controllerchange',function(){
+    if(hadController && !didReload){didReload=true;location.reload()}
   });
 }
 
@@ -1128,13 +1145,14 @@ function showError(msg){
   err.textContent=msg+' — لطفاً اینترنت خود را بررسی کرده و دوباره تلاش کنید.';
   err.style.display='block';
   document.getElementById('loadingRetry').style.display='block';
-  bar.style.width='0';
+  document.getElementById('loadingBar').style.width='0';
 }
 
 function showApp(){
   document.getElementById('loading').classList.add('hidden');
   document.getElementById('app').classList.add('show');
   renderHome();
+  restoreSectionFromHash();
   updateOfflineBadge();
 }
 
@@ -1159,6 +1177,7 @@ window.addEventListener('offline',function(){updateOfflineBadge();showOfflineNot
 
 /* =============== NAVIGATION =============== */
 function navTo(view){
+  if(location.hash.indexOf('#section=')===0)history.replaceState(null,'',location.pathname+location.search);
   document.querySelectorAll('.nav-btn').forEach(function(b){
     b.classList.toggle('active',b.dataset.nav===view);
   });
@@ -1229,12 +1248,18 @@ function renderHomeCourses(){
 }
 
 function cardHTML(item,chCount,secCount,type){
-  var cover=item.cover?'<img class="book-cover-img" src="'+item.cover+'" alt="" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">'+
+  // Some imported covers contain an entire HTML fragment, not a URL.
+  // Only a local WebP path is permitted as a cover source.
+  var candidate=String(item.cover||'');
+  var found=candidate.match(/assets\/images\/[a-zA-Z0-9_./-]+\.webp/);
+  var coverPath=found && found[0].indexOf('..')===-1 ? found[0] : '';
+  var cover=coverPath?'<img class="book-cover-img" src="'+coverPath+'" alt="" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">'+
     '<div class="book-cover-placeholder" style="display:none">'+(type==='book'?'📖':'🎓')+'</div>':
     '<div class="book-cover-placeholder">'+(type==='book'?'📖':'🎓')+'</div>';
   var author=item.author?'<div class="book-card-author">✍️ '+item.author+'</div>':'';
-  return '<div class="book-card animate-in" onclick="openItem(\''+item.id+'\',\''+type+'\')">'+
+  return '<div class="book-card animate-in'+(item.id==='art-science-intelligence-v1'?' book-card--volume1':'')+'" role="button" tabindex="0" onkeydown="activateOnKey(event)" onclick="openItem(\''+item.id+'\',\''+type+'\')">'+
     '<div class="book-card-cover">'+cover+'</div>'+
+    (item.id==='art-science-intelligence-v1'?'<div class="book-card-english" lang="en">The Art &amp; Science of Building Intelligence</div>':'')+
     '<div class="book-card-info">'+
       '<h3>'+item.title+'</h3>'+
       (item.subtitle?'<div class="book-card-subtitle">'+item.subtitle+'</div>':'')+
@@ -1293,7 +1318,7 @@ function renderItem(source,type){
   (source.chapters||[]).forEach(function(ch,ci){
     var secCount=(ch.sections||[]).length;
     html+='<div class="chapter-card" id="item-ch-'+ci+'">'+
-      '<div class="chapter-header" onclick="toggleChapter(\''+source.id+'\','+ci+')">'+
+      '<div class="chapter-header" role="button" tabindex="0" aria-expanded="false" onkeydown="activateOnKey(event)" onclick="toggleChapter(\''+source.id+'\','+ci+')">'+
         '<div class="chapter-icon">'+(ch.icon||'📋')+'</div>'+
         '<div class="chapter-info">'+
           '<div class="chapter-title">'+ch.title+'</div>'+
@@ -1306,10 +1331,10 @@ function renderItem(source,type){
       html+='<div style="padding:16px;color:var(--text-tertiary);font-size:14px">بخشی در این فصل یافت نشد</div>';
     }else{
       (ch.sections||[]).forEach(function(sec,si){
-        html+='<div class="section-item" onclick="openSec(\''+source.id+'\','+ci+','+si+')">'+
+        html+='<button type="button" class="section-item" onclick="openSec(\''+source.id+'\','+ci+','+si+')">'+
           '<div class="section-item-num">'+(si+1)+'</div>'+
           '<span>'+sec.title+'</span>'+
-        '</div>';
+        '</button>';
       });
     }
     html+='</div></div></div>';
@@ -1320,7 +1345,7 @@ function renderItem(source,type){
 
 function toggleChapter(id,ci){
   var el=document.getElementById('item-ch-'+ci);
-  if(el)el.classList.toggle('open');
+  if(el){var open=el.classList.toggle('open');el.querySelector('.chapter-header').setAttribute('aria-expanded',String(open))}
 }
 
 /* =============== SECTION READER =============== */
@@ -1352,7 +1377,7 @@ function renderReader(source,chapter,section,ci,si){
     tocHTML+='<div class="toc-chapter">فصل '+(ch.num||chi+1)+': '+ch.title+'</div>';
     (ch.sections||[]).forEach(function(sec,si2){
       var active=(chi===ci&&si2===si);
-      tocHTML+='<div class="toc-section'+(active?' active':'')+'" onclick="openSecById('+chi+','+si2+')">'+sec.title+'</div>';
+      tocHTML+='<button type="button" class="toc-section'+(active?' active':'')+'" '+(active?'aria-current="location" ':'')+'onclick="openSecById('+chi+','+si2+')">'+sec.title+'</button>';
     });
   });
 
@@ -1360,6 +1385,7 @@ function renderReader(source,chapter,section,ci,si){
   var backNav=curType==='book'?'books':'courses';
 
   var html='<div class="reader-layout">'+
+    '<button type="button" class="reader-toc-toggle" aria-controls="readerToc" aria-expanded="false" onclick="toggleReaderToc(this)">فهرست فصل‌ها</button>'+
     '<div class="reader-toc" id="readerToc">'+tocHTML+'</div>'+
     '<div class="reader-main">'+
       '<div class="reader-toolbar">'+
@@ -1369,8 +1395,11 @@ function renderReader(source,chapter,section,ci,si){
           '<span class="current">'+chTitle+' › '+secTitle+'</span>'+
         '</div>'+
         '<div class="reader-nav">'+
-          '<button class="reader-nav-btn" onclick="prevSec()" '+(si===0&&ci===0?'disabled':'')+'>← قبلی</button>'+
-          '<button class="reader-nav-btn" onclick="nextSec()">بعدی →</button>'+
+          '<button class="reader-nav-btn" onclick="nextSec()" '+(si===chapter.sections.length-1&&!source.chapters.slice(ci+1).some(function(c){return (c.sections||[]).length})?'disabled':'')+'>بعدی →</button>'+
+          '<button class="reader-nav-btn" onclick="prevSec()" '+(si===0&&!source.chapters.slice(0,ci).some(function(c){return (c.sections||[]).length})?'disabled':'')+'>← قبلی</button>'+
+          '<button class="reader-nav-btn" onclick="changeReaderFont(-1)" aria-label="کوچک کردن متن">A−</button>'+
+          '<button class="reader-nav-btn" onclick="changeReaderFont(1)" aria-label="بزرگ کردن متن">A+</button>'+
+          '<a class="reader-nav-btn" id="sectionLink" href="#section='+encodeURIComponent(source.id+'|'+section.id)+'">پیوند بخش</a>'+
         '</div>'+
       '</div>'+
       '<div class="reader-content">'+contentHtml+'</div>'+
@@ -1378,54 +1407,50 @@ function renderReader(source,chapter,section,ci,si){
   '</div>';
 
   document.getElementById('mainView').innerHTML=html;
+  history.replaceState(null,'','#section='+encodeURIComponent(source.id+'|'+section.id));
+  var content=document.querySelector('.reader-content');
+  content.style.fontSize=readerFontSize+'px';
+  content.querySelectorAll('pre').forEach(function(pre){
+    var copy=document.createElement('button');copy.type='button';copy.className='copy-code';copy.textContent='کپی کد';
+    copy.addEventListener('click',async function(){try{await navigator.clipboard.writeText(pre.innerText);copy.textContent='کپی شد'}catch(e){copy.textContent='کپی ممکن نشد'}});
+    pre.before(copy);
+  });
   window.scrollTo({top:0,behavior:'smooth'});
 }
+var readerFontSize=16;
+function changeReaderFont(delta){readerFontSize=Math.max(12,Math.min(24,readerFontSize+delta));var el=document.querySelector('.reader-content');if(el)el.style.fontSize=readerFontSize+'px'}
+function restoreSectionFromHash(){
+  if(location.hash.indexOf('#section=')!==0)return;
+  try{
+    var parts=decodeURIComponent(location.hash.slice(9)).split('|');
+    var source=(DATA.books||[]).find(function(b){return b.id===parts[0]});var type='book';
+    if(!source){source=(DATA.courses||[]).find(function(c){return c.id===parts[0]});type='course'}
+    if(!source)return;var ci=-1,si=-1;
+    (source.chapters||[]).some(function(ch,i){var j=(ch.sections||[]).findIndex(function(sec){return sec.id===parts[1]});if(j>=0){ci=i;si=j;return true}return false});
+    if(ci>=0){openItem(source.id,type);openSec(source.id,ci,si)}
+  }catch(e){console.warn('Invalid section link',e)}
+}
+
+function toggleReaderToc(button){var el=document.getElementById('readerToc');var open=el.classList.toggle('show');button.setAttribute('aria-expanded',String(open));}
+function activateOnKey(event){if(event.key==='Enter'||event.key===' '){event.preventDefault();event.currentTarget.click()}}
 
 function openSecById(ci,si){
   openSec(getSource().id,ci,si);
 }
 
 function prevSec(){
-  if(curSectionIndex===0){
-    if(curChapterIndex>0){
-      var chs=getChapters();
-      var prevCh=chs[curChapterIndex-1];
-      if(prevCh&&prevCh.sections&&prevCh.sections.length>0){
-        curChapterIndex--;
-        curSectionIndex=prevCh.sections.length-1;
-        curChapter=chs[curChapterIndex];
-        curSection=curChapter.sections[curSectionIndex];
-        renderReader(getSource(),curChapter,curSection,curChapterIndex,curSectionIndex);
-        return;
-      }
-    }
-    return;
+  var chapters=getChapters();
+  if(curSectionIndex>0){openSec(getSource().id,curChapterIndex,curSectionIndex-1);return}
+  for(var i=curChapterIndex-1;i>=0;i--){
+    var sections=chapters[i].sections||[];
+    if(sections.length){openSec(getSource().id,i,sections.length-1);return}
   }
-  curSectionIndex--;
-  curSection=curChapter.sections[curSectionIndex];
-  renderReader(getSource(),curChapter,curSection,curChapterIndex,curSectionIndex);
 }
-
 function nextSec(){
-  var chs=getChapters();
-  var curCh=chs[curChapterIndex];
-  if(!curCh)return;
-  var secs=curCh.sections||[];
-  if(curSectionIndex<secs.length-1){
-    curSectionIndex++;
-    curSection=secs[curSectionIndex];
-    renderReader(getSource(),curChapter,curSection,curChapterIndex,curSectionIndex);
-    return;
-  }
-  if(curChapterIndex<chs.length-1){
-    var nextCh=chs[curChapterIndex+1];
-    if(nextCh.sections&&nextCh.sections.length>0){
-      curChapterIndex++;
-      curSectionIndex=0;
-      curChapter=nextCh;
-      curSection=curChapter.sections[curSectionIndex];
-      renderReader(getSource(),curChapter,curSection,curChapterIndex,curSectionIndex);
-    }
+  var chapters=getChapters(),sections=(chapters[curChapterIndex].sections||[]);
+  if(curSectionIndex+1<sections.length){openSec(getSource().id,curChapterIndex,curSectionIndex+1);return}
+  for(var i=curChapterIndex+1;i<chapters.length;i++){
+    if((chapters[i].sections||[]).length){openSec(getSource().id,i,0);return}
   }
 }
 
@@ -1449,8 +1474,11 @@ function renderSearchPage(){
     '<div id="searchResults"></div>';
 }
 
+function normalizeFa(s){return String(s).normalize('NFKC').toLowerCase().replace(/[يك]/g,function(c){return c==='ي'?'ی':'ک'}).replace(/[\u064b-\u065f\u0670\u0640]/g,'').replace(/[\u200c\u200d\s]+/g,' ').trim()}
+function escapeText(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+
 function doSearch(query){
-  query=(query||'').trim().toLowerCase();
+  query=normalizeFa(query||'');
   if(!query){document.getElementById('searchResults').innerHTML='';return}
 
   var results=[];
@@ -1458,7 +1486,7 @@ function doSearch(query){
 
   function matchText(text){
     if(!text)return false;
-    text=text.toLowerCase();
+    text=normalizeFa(text);
     return terms.every(function(t){return text.indexOf(t)!==-1});
   }
   function stripHtml(html){
@@ -1487,23 +1515,23 @@ function doSearch(query){
   });
 
   results.sort(function(a,b){
-    var at=a.title.toLowerCase().indexOf(query)!==-1?0:1;
-    var bt=b.title.toLowerCase().indexOf(query)!==-1?0:1;
+    var at=normalizeFa(a.title).indexOf(query)!==-1?0:1;
+    var bt=normalizeFa(b.title).indexOf(query)!==-1?0:1;
     if(at!==bt)return at-bt;
     return a.title.localeCompare(b.title,'fa');
   });
 
   window_searchResults=results;
-  var html='<div class="search-results-info">'+results.length+' نتیجه برای «'+query+'»</div>';
+  var html='<div class="search-results-info">'+results.length+' نتیجه برای «'+escapeText(query)+'»</div>';
   if(results.length===0){
     html+='<div class="search-no-results"><div class="icon">🔍</div><p>هیچ نتیجه‌ای یافت نشد</p></div>';
   }else{
     results.forEach(function(r,ri){
-      html+='<div class="search-result" onclick="openSearchResult('+ri+')">'+
+      html+='<button type="button" class="search-result" onclick="openSearchResult('+ri+')">'+
         '<div class="search-result-title">'+r.title+'</div>'+
         '<div class="search-result-context">'+r.context+'</div>'+
         '<span class="search-result-type '+(r.type==='book'?'book':'course')+'">'+(r.type==='book'?'کتاب':'دوره')+'</span>'+
-        '</div>';
+        '</button>';
     });
   }
   document.getElementById('searchResults').innerHTML=html;

@@ -1,5 +1,5 @@
-// ===== فا-اکدمی Service Worker v17 =====
-const CACHE_NAME = 'fa-academy-v17';
+// ===== فا-اکدمی Service Worker v20 =====
+const CACHE_NAME = 'fa-academy-v20';
 const CORE_FILES = [
   './',
   './index.html',
@@ -11,6 +11,8 @@ const CORE_FILES = [
   './assets/icons/apple-touch-icon.png',
   './assets/icons/favicon-32.png',
   './assets/images/art-science-cover.webp',
+  './book-engineering/LEARNING_PATH_FA.md',
+  './book-engineering/answers/01-intelligence-answers-fa.md',
   './assets/images/babak-ai/ch02-families.webp',
   './assets/images/babak-ai/ch02-token-cycle.webp',
   './assets/images/babak-ai/ch03-lifecycle.webp',
@@ -45,13 +47,12 @@ self.addEventListener('install', function(event) {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(function(cache) {
-        return Promise.allSettled(
-          CORE_FILES.map(function(url) {
-            return cache.add(url).catch(function(err) {
-              console.warn('Failed to cache:', url, err);
-            });
-          })
-        );
+        // Keep the previous worker active if the offline shell cannot be cached.
+        return cache.addAll(['./', './index.html', './data.json']).then(function() {
+          return Promise.allSettled(CORE_FILES.slice(3).map(function(url) {
+            return cache.add(url).catch(function(err) { console.warn('Failed to cache:', url, err); });
+          }));
+        });
       })
       .then(function() {
         return self.skipWaiting();
@@ -66,7 +67,7 @@ self.addEventListener('activate', function(event) {
     caches.keys().then(function(keys) {
       return Promise.all(
         keys.map(function(key) {
-          if (cacheWhitelist.indexOf(key) === -1) {
+          if (key.indexOf('fa-academy-') === 0 && cacheWhitelist.indexOf(key) === -1) {
             return caches.delete(key);
           }
         })
@@ -102,8 +103,9 @@ self.addEventListener('fetch', function(event) {
           return response;
         })
         .catch(function(err) {
-          return caches.match(event.request).then(function(cached) {
+          return caches.match(event.request, {ignoreSearch:true}).then(function(cached) {
             if (cached) return cached;
+            if (url.pathname.endsWith('/data.json')) return caches.match('./data.json');
             if (event.request.mode === 'navigate') {
               return caches.match('./index.html').then(function(r) {
                 if (r) return r;
