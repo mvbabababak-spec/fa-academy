@@ -28,7 +28,7 @@ SPECS = [
     (4, 36, "36-position-normalization", "موقعیت، RoPE، اتصال باقیمانده، LayerNorm و FFN", "↔"),
     (5, 37, "37-encoder-decoder", "Encoder، Decoder و مدل‌های Encoder–Decoder", "⇄"),
     (6, 38, "38-long-context", "زمینه بلند، KV Cache، GQA، Sparse Attention و MoE", "⤢"),
-    (7, 39, "39-multimodal-transformer", "Transformer چندوجهی و هم‌ترازی تصویر و صوت", "▧"),
+    (7, 39, "39-multimodal-transformer", "Transformer چندوجهی: اتصال رمزگذارهای تصویر و صوت", "▧"),
     (8, 40, "40-small-data-project", "پروژه داده کوچک و آماده‌سازی مجاز متن", "▤"),
     (9, 41, "41-first-language-model", "نخستین مدل زبانی کوچک: آموزش، ارزیابی و تولید", "✦"),
     (10, 42, "42-mini-gpt", "طراحی Mini GPT و بودجه آموزش", "◌"),
