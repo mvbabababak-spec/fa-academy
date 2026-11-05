@@ -13,9 +13,9 @@ book = books[0]
 assert {c['num'] for c in book['chapters']} >= set(range(1,14))
 render = mistune.create_markdown(plugins=['table'])
 for number, slug, title, icon, expected in [
-    (14, '14-debug-testing-sql-security', 'عیب‌یابی، آزمون، طراحی نرم‌افزار، SQL و امنیت', '◈', 10),
-    (15, '15-data-analysis', 'NumPy، Pandas، Matplotlib و Jupyter', '▣', 10),
-    (16, '16-algebra-functions', 'جبر، معادله، تابع، توان، لگاریتم و نمودار', '✦', 10),
+    (14, '14-debug-testing-sql-security', 'عیب‌یابی، آزمون، طراحی نرم‌افزار، SQL و امنیت', '◈', 11),
+    (15, '15-data-analysis', 'NumPy، Pandas، Matplotlib و Jupyter', '▣', 11),
+    (16, '16-algebra-functions', 'جبر، معادله، تابع، توان، لگاریتم و نمودار', '✦', 11),
 ]:
     source = f'book-engineering/chapters/{slug}.md'
     text = (root / source).read_text(encoding='utf-8')

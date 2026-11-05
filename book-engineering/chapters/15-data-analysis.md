@@ -163,3 +163,176 @@ if __name__ == '__main__':
 NumPy، Array، Shape، dtype، View، DataFrame، Series، Missing Value، Aggregation، Figure، Axes، Kernel، Notebook.
 
 **منابع؛ مراجعه ۵ نوامبر ۲۰۲۶:** [۱] NumPy، «Absolute basics for beginners»، [منبع](https://numpy.org/doc/stable/user/absolute_beginners.html). [۲] pandas، «What kind of data does pandas handle?»، [منبع](https://pandas.pydata.org/docs/getting_started/intro_tutorials/01_table_oriented.html). [۳] pandas، «Summary statistics»، [منبع](https://pandas.pydata.org/docs/getting_started/intro_tutorials/06_calculate_statistics.html). [۴] Matplotlib، «Quick start guide»، [منبع](https://matplotlib.org/stable/users/explain/quick_start.html). [۵] Jupyter، «Running Code»، [منبع](https://jupyter-notebook.readthedocs.io/en/stable/examples/Notebook/Running%20Code.html). تاریخ صفحه‌ها متغیر یا نامشخص است.
+
+## پیوست تکمیلی: آموزش، پروژه و آزمون‌های بیشتر
+
+### فصل ۱۵ — NumPy، Pandas، Matplotlib و Jupyter
+
+**هنر و علم ساخت هوش | جلد اول | Babak & Ai**  
+**بررسی منابع: ۵ نوامبر ۲۰۲۶**
+
+### ۱. تبدیل داده خام به پرسش پاسخ‌پذیر
+
+تحلیل داده صرفاً کشیدن نمودار نیست. ابتدا پرسش را روشن کنید: «در داده ساختگی تمرین، مجموع زمان مطالعه هر موضوع چقدر است؟» سپس منشأ داده، تعریف ستون‌ها، خطا و مقادیر گمشده را بررسی، محاسبه را بازتولید و محدودیت نتیجه را بیان کنید. این نمونه آموزشی یک مشاهده کوچک ساختگی است و درباره رفتار جمعیت، علت موفقیت یا دقت یک مدل نتیجه‌گیری نمی‌کند.
+
+**پیش‌نیاز:** توابع، فایل، محیط مجازی و آزمون. **هدف:** فهم آرایه، شکل و محور در NumPy؛ جدول و گروه‌بندی در Pandas؛ نمودار در Matplotlib؛ و اجرای منظم نوت‌بوک Jupyter.
+
+### ۲. نصب و محیط قابل بازتولید
+
+در محیط مجازی اختصاصی، با توجه به سیستم و منبع رسمی بسته‌ها را نصب کنید: `python -m pip install numpy pandas matplotlib pillow jupyterlab`. این فرمان نیازمند شبکه است؛ قبل از نصب، مجوز، منبع و نسخه‌های سازگار را بررسی کنید. `python -m pip --version` کمک می‌کند pip همان مفسر را صدا بزنید.
+
+**محیط آزمایش واقعی این فصل:** Python 3.13.16، NumPy 2.3.5، Pandas 2.2.3، Matplotlib 3.11.2 و Pillow 13.0.0. نسخه‌ها را برای بازتولید ثبت کنید؛ این فهرست به‌تنهایی قفل کامل زنجیره وابستگی یا تضمین سازگاری همه سیستم‌ها نیست. نوت‌بوک با nbformat 5.11.1 و nbclient اجرا شد؛ آزمون رابط گرافیکی JupyterLab انجام نشده است.
+
+### ۳. NumPy: آرایه، نوع و شکل
+
+NumPy آرایه چندبعدی `ndarray` و عملیات عددی را فراهم می‌کند [۱]. در مثال `a = np.array([[1, 2, 3], [4, 5, 6]])` شکل `a.shape` برابر `(2, 3)` است: دو سطر و سه ستون؛ `a.ndim` برابر ۲ و `a.size` برابر ۶ است. `dtype` نوع داده عناصر را مشخص می‌کند و انتخاب آن بر دقت و حافظه اثر دارد.
+
+`a.sum(axis=0)` سطرها را در امتداد محور صفر کاهش می‌دهد و خروجی `[5, 7, 9]` است؛ `a.sum(axis=1)` برای هر سطر `[6, 15]` می‌دهد. عملیات `a * 2` عنصر به عنصر است؛ برای ضرب ماتریسی از `@` با شکل سازگار استفاده می‌شود. broadcasting قواعد خاص سازگاری ابعاد دارد؛ همیشه شکل ورودی و خروجی را بررسی کنید.
+
+### ۴. Pandas: جدول و پرس‌وجو
+
+`Series` یک ساختار یک‌بعدی دارای برچسب و `DataFrame` جدول دارای ستون‌های نام‌دار است. `pd.read_csv` CSV را می‌خواند؛ `head()`، `dtypes` و `isna().sum()` برای بازرسی اولیه مفیدند. نوع و معنای هر ستون را تأیید کنید: «دقیقه» باید عدد معتبر و یکای اندازه‌گیری مشخص باشد.
+
+در `df.groupby('topic')['minutes'].sum()` داده بر اساس موضوع گروه‌بندی و مجموع هر گروه محاسبه می‌شود [۲]. گروه‌بندی نتیجه را خلاصه می‌کند و ترتیب، مقدارهای گمشده و داده‌های تکراری ممکن است بر پاسخ اثر بگذارند. مقادیر گمشده برابر صفر نیستند: در پروژه یک ردیف بدون دقیقه را **گزارش و فقط برای محاسبه حذف** می‌کنیم؛ این تصمیم به مسئله وابسته است و ممکن است سوگیری ایجاد کند [۳].
+
+### ۵. Matplotlib: نمودار و تفسیر
+
+برای مقایسه مجموع گروه‌های گسسته از نمودار میله‌ای استفاده می‌کنیم. عنوان، نام محور و واحد لازم‌اند. شکل ۱۵-۱ داده ساختگی ما را نشان می‌دهد: Python برابر ۷۵ دقیقه و math برابر ۶۰ دقیقه؛ یک ردیف با دقیقه ناموجود کنار گذاشته شده است. نسبت ۷۵ به ۶۰ برابر ۱٫۲۵ است، اما از آن درباره جامعه یا رابطه علّی نتیجه نمی‌گیریم.
+
+![شکل ۱۵-۱: مجموع دقیقه‌های معتبر برای دو موضوع مصنوعی، Python برابر ۷۵ و math برابر ۶۰.](assets/images/babak-ai/ch15-study.webp)
+
+**شکل ۱۵-۱ — خلاصه داده ساختگی.** نمودار با Matplotlib ساخته و WebP ذخیره شده است. محور عمودی از صفر آغاز می‌شود؛ واحد دقیقه است. ساخت `Figure` بدون رابط گرافیکی برای خروجی فایل مناسب است [۴].
+
+### ۶. Jupyter و خطر وضعیت پنهان
+
+نوت‌بوک `.ipynb` سلول‌های کد، متن و خروجی را ذخیره می‌کند؛ **kernel** برنامه اجراکننده را نگه می‌دارد و متغیرها بین اجرای سلول‌ها باقی می‌مانند [۵]. اگر سلول‌ها را نامرتب اجرا کنید، خروجی ممکن است به متغیر قدیمی وابسته باشد. پیش از تحویل، kernel را restart و همه سلول‌ها را از بالا اجرا و خروجی‌ها را بررسی کنید.
+
+فقط نوت‌بوک قابل اعتماد را اجرا کنید؛ کد نوت‌بوک مانند هر برنامه Python می‌تواند به فایل‌ها یا شبکه دسترسی پیدا کند. نوت‌بوک و خروجی‌ها ممکن است حاوی داده حساس باشند. در پروژه ما `study.ipynb` کنار `analyze.py` قرار دارد؛ از همان پوشه با `jupyter lab` باز کنید و سلول‌ها را به‌ترتیب اجرا کنید. اجرای نوت‌بوک با nbclient آزمایش شده، نه رابط JupyterLab.
+
+### ۷. پروژه تحلیل داده ساختگی
+
+فایل `analyze.py` را بسازید. داده داخلی چهار ردیف دارد: سه دقیقه معتبر ۳۰، ۴۵، ۶۰ و یک مقدار ناموجود. تحلیل دقیقه ناموجود را صفر فرض نمی‌کند. توابع از رشته CSV دریافت می‌کنند و نمودار در پوشه موقت ذخیره و پس از اجرا پاک می‌شود؛ برای نگهداری نمودار، با آگاهی مسیر خروجی دیگری به `make_plot` بدهید.
+
+```python
+"""Analyze synthetic study sessions, with explicit missing-data policy."""
+from io import StringIO
+from pathlib import Path
+from tempfile import TemporaryDirectory
+import numpy as np
+import pandas as pd
+from matplotlib.figure import Figure
+
+DATA = '''topic,minutes
+python,30
+python,45
+math,60
+math,
+'''
+
+
+def analyze(csv_text):
+    frame = pd.read_csv(StringIO(csv_text))
+    if not {'topic', 'minutes'}.issubset(frame.columns):
+        raise ValueError('missing required columns')
+    frame['minutes'] = pd.to_numeric(frame['minutes'], errors='raise')
+    if frame['topic'].isna().any() or frame['topic'].str.strip().eq('').any():
+        raise ValueError('topic missing')
+    present = frame['minutes'].dropna().to_numpy()
+    if not np.isfinite(present).all() or (present < 0).any():
+        raise ValueError('minutes must be finite and nonnegative')
+    clean = frame.dropna(subset=['minutes']).copy()
+    if clean.empty:
+        raise ValueError('no measured minutes')
+    totals = clean.groupby('topic')['minutes'].sum().sort_index()
+    return clean, totals, int(frame['minutes'].isna().sum())
+
+
+def make_plot(totals, filename):
+    fig = Figure(figsize=(7, 4), layout='constrained')
+    ax = fig.subplots()
+    ax.bar(totals.index, totals.values, color='#627bd2')
+    ax.set(title='Study minutes by topic', ylabel='Minutes', xlabel='Topic')
+    fig.savefig(filename, format='webp', dpi=140)
+
+
+def main():
+    clean, totals, missing = analyze(DATA)
+    print('valid_rows=', len(clean), 'missing_rows=', missing)
+    print('mean_minutes=', float(np.mean(clean['minutes'].to_numpy())))
+    print('totals=', {key: float(value) for key, value in totals.items()})
+    with TemporaryDirectory() as directory:
+        output = Path(directory) / 'study.webp'
+        make_plot(totals, output)
+        print('webp_created=', output.is_file())
+
+
+if __name__ == '__main__':
+    main()
+```
+
+اجرا: `python analyze.py`. خروجی آزمایش‌شده:
+
+```text
+valid_rows= 3 missing_rows= 1
+mean_minutes= 45.0
+totals= {'math': 60.0, 'python': 75.0}
+webp_created= True
+```
+
+`np.isfinite` مقدار بی‌نهایت را رد می‌کند. ورودی منفی، موضوع ناموجود و نبود همه دقیقه‌ها رد می‌شوند. این مثال همه مشکلات داده مثل نام‌های تکراری با فاصله یا اختلاف واحد را حل نمی‌کند؛ برای داده واقعی طرح اعتبارسنجی باید کامل‌تر باشد.
+
+### ۸. آزمون و بازبینی
+
+فایل زیر را کنار برنامه ذخیره و از همان پوشه `python -m unittest -v test_analyze` اجرا کنید. فایل آزمون به Pillow نیاز دارد و محتوا و فرمت WebP را بررسی می‌کند:
+
+```python
+import unittest
+from pathlib import Path
+from tempfile import TemporaryDirectory
+from PIL import Image
+from analyze import DATA, analyze, make_plot
+
+
+class AnalysisTests(unittest.TestCase):
+    def test_summary(self):
+        clean, totals, missing = analyze(DATA)
+        self.assertEqual((len(clean), missing), (3, 1))
+        self.assertEqual(totals.to_dict(), {'math': 60.0, 'python': 75.0})
+        self.assertEqual(clean['minutes'].mean(), 45.0)
+
+    def test_invalid(self):
+        for data in ('topic,minutes\nx,-1\n', 'topic,minutes\nx,inf\n',
+                     'topic,minutes\nx,\n', 'topic,minutes\n,5\n'):
+            with self.subTest(data=data), self.assertRaises(ValueError):
+                analyze(data)
+
+    def test_webp(self):
+        _, totals, _ = analyze(DATA)
+        with TemporaryDirectory() as folder:
+            p = Path(folder) / 'chart.webp'
+            make_plot(totals, p)
+            with Image.open(p) as image:
+                self.assertEqual(image.format, 'WEBP')
+                image.verify()
+
+
+if __name__ == '__main__':
+    unittest.main()
+```
+
+سه تست اجرا شده‌اند: خلاصه، چهار ورودی نامعتبر و تولید تصویر. نتیجه سه آزمون `OK` است؛ این آزمون‌ها کیفیت علمی تمام داده‌ها یا کارکرد همه نسخه‌ها را تضمین نمی‌کنند. خطای `ModuleNotFoundError` معمولاً نشان‌دهنده نصب نبودن بسته در مفسر فعال است؛ مسیر Python و محیط را بررسی کنید. اگر خروجی WebP ساخته نشد، پشتیبانی WebP در Pillow و مجوز پوشه موقت را بررسی کنید.
+
+### ۹. تمرین و ارزیابی
+
+**پرسش:** ۱) shape آرایه ۲×۳ چیست؟ ۲) `axis=0` در جمع این آرایه چه می‌کند؟ ۳) آیا مقدار گمشده همان صفر است؟ ۴) groupby چه می‌کند؟ ۵) میانگین ۳۰، ۴۵، ۶۰ چیست؟ ۶) چرا اجرای نامرتب نوت‌بوک خطرناک است؟ ۷) آیا نمودار فوق علّیت ثابت می‌کند؟ ۸) چرا نسخه محیط را ثبت می‌کنیم؟
+
+**تمرین:** آرایه دو سطری مثال را بسازید و جمع محورهای ۰ و ۱ را بررسی کنید. سپس مقدار ناموجود را گزارش کرده، سیاست جایگزین مانند حذف یا تکمیل را با دلیل و محدودیت مقایسه کنید؛ به‌صورت خودکار صفرگذاری نکنید. **مینی‌پروژه:** داده ساختگی دیگری با دست‌کم دو گروه، یک داده گمشده، گزارش تعداد، آزمون مجموع و نمودار WebP همراه واحد تهیه کنید. برای قبولی ۷ پاسخ درست و سه آزمون موفق لازم است.
+
+پاسخ‌ها: ۱) `(2, 3)`؛ ۲) جمع در امتداد سطرها؛ ۳) خیر؛ ۴) تقسیم و تجمیع؛ ۵) ۴۵؛ ۶) وضعیت پنهان kernel؛ ۷) خیر؛ ۸) کمک به تکرارپذیری.
+
+### ۱۰. منابع و ادامه
+
+واژه‌ها: ndarray، shape، axis، dtype، DataFrame، missing data، groupby، visualization، kernel و notebook. فصل ۱۶ ورود به جبر، توابع و لگاریتم است.
+
+**منابع؛ بررسی ۵ نوامبر ۲۰۲۶:** [۱] NumPy، [Quickstart](https://numpy.org/doc/stable/user/quickstart.html). [۲] Pandas، [10 minutes to pandas](https://pandas.pydata.org/docs/user_guide/10min.html). [۳] Pandas، [Missing data](https://pandas.pydata.org/docs/user_guide/missing_data.html). [۴] Matplotlib، [FAQ](https://matplotlib.org/stable/users/faq.html). [۵] Project Jupyter، [What is Jupyter?](https://docs.jupyter.org/en/latest/what_is_jupyter.html). تاریخ صفحات متغیر است؛ نسخه آزمایش‌شده بالا مشخص شده است.
+
