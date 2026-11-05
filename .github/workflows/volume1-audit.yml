@@ -31,3 +31,5 @@ jobs:
         run: python book-engineering/test_mobile_layout.py
       - name: Offline volume images and answer keys
         run: python book-engineering/test_offline_volume.py
+      - name: Home-screen icon and manifest
+        run: python book-engineering/test_pwa_icon.py

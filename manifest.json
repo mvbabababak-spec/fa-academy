@@ -1,31 +1,25 @@
 {
-  "name": "فا-اکدمی — آموزش هوش مصنوعی به فارسی",
-  "short_name": "فا-اکدمی",
+  "name": "The Art & Science of Building Intelligence",
+  "short_name": "The Art & Science of Building Intelligence",
   "description": "مجموعه کتاب‌ها و دوره‌های آموزشی هوش مصنوعی به زبان فارسی",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#0f0f1e",
   "theme_color": "#1a1a2e",
   "lang": "fa",
-  "dir": "rtl",
+  "dir": "ltr",
   "icons": [
     {
-      "src": "assets/icons/icon-192.png",
+      "src": "assets/icons/intelligence-192-v2.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "assets/icons/icon-512.png",
+      "src": "assets/icons/intelligence-512-v2.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
-    },
-    {
-      "src": "assets/icons/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
     }
   ]
 }

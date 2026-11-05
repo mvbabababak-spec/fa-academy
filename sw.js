@@ -1,10 +1,15 @@
-// ===== فا-اکدمی Service Worker v40 =====
-const CACHE_NAME = 'fa-academy-v40';
+// ===== فا-اکدمی Service Worker v41 =====
+const CACHE_NAME = 'fa-academy-v41';
 const CORE_FILES = [
   './',
   './index.html',
   './data.json',
   './manifest.json',
+  './manifest.json?v=2',
+  './assets/icons/intelligence-180-v2.png',
+  './assets/icons/intelligence-192-v2.png',
+  './assets/icons/intelligence-512-v2.png',
+  './assets/icons/intelligence-favicon-v2.webp',
   './sw.js',
   './assets/icons/icon-192.png',
   './assets/icons/icon-512.png',
