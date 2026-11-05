@@ -1,4 +1,4 @@
-"""Structural, accessibility, source, image, answer-key and code-sync checks."""
+"""Structural, accessibility, source, image, answer-key and project-sync checks."""
 from __future__ import annotations
 
 from html.parser import HTMLParser
@@ -75,6 +75,8 @@ for image in inspector.images:
     assert alt.strip() and "شکل" in alt, alt
     if "v3-ch01-tokenization.webp" in src:
         assert "BPE" in alt and "تعبیه" in alt, alt
+    if "v3-ch02-attention.webp" in src:
+        assert all(term in alt for term in ("Q/K/V", "Lq×Lk", "Lq×dv")), alt
     path = ROOT / src
     assert path.is_file(), path
     with Image.open(path) as im:
@@ -95,14 +97,26 @@ for chapter, href in zip(chapters, answer_paths):
     answer = ROOT / href
     assert answer.is_file() and len(re.findall(r"\S+", answer.read_text(encoding="utf-8"))) >= 300, href
 
+# Chapter 33's source code remains byte-for-byte aligned with its tested project.
 source = ROOT / "book-engineering/chapters/33-tokenization.md"
 code = (ROOT / "book-engineering/projects/33-tokenization/tokenizer_bpe.py").read_text(encoding="utf-8").rstrip()
 blocks = re.findall(r"```python\n(.*?)\n```", source.read_text(encoding="utf-8"), flags=re.DOTALL)
-assert blocks and blocks[-1] == code, "chapter's executable tokenizer code differs from the tested project"
+assert blocks and blocks[-1] == code, "chapter 33 executable tokenizer differs from tested project"
 for project_file in [
     "tokenizer_bpe.py", "test_tokenizer_bpe.py", "test_embedding_lookup.py", "README.md"
 ]:
     assert (ROOT / "book-engineering/projects/33-tokenization" / project_file).is_file(), project_file
+
+if len(chapters) >= 2:
+    source = ROOT / "book-engineering/chapters/34-attention.md"
+    project = ROOT / "book-engineering/projects/34-attention"
+    code = (project / "attention.py").read_text(encoding="utf-8").rstrip()
+    blocks = re.findall(r"```python\n(.*?)\n```", source.read_text(encoding="utf-8"), flags=re.DOTALL)
+    assert blocks and blocks[-1] == code, "chapter 34 executable attention code differs from tested project"
+    for project_file in ["attention.py", "test_attention.py", "README.md"]:
+        assert (project / project_file).is_file(), project_file
+    assert (ROOT / "book-engineering/create_v3_ch02_image.py").is_file()
+    assert (ROOT / "book-engineering/chapters/34-audit-report-fa.md").is_file()
 
 full_text = ROOT / "volume-3-full-fa.md"
 assert full_text.is_file()

@@ -1,4 +1,4 @@
-"""Chromium checks for volume 3 chapter 1, responsive layout, search and offline files."""
+"""Chromium checks for volume 3 chapters, MathML, responsive layout and offline files."""
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -9,15 +9,24 @@ from playwright.sync_api import sync_playwright
 ROOT = Path(__file__).resolve().parent.parent
 BOOK_ID = "art-science-intelligence-v3"
 TITLE = "هنر و علم ساخت هوش — جلد سوم"
+CACHE_NAME = "fa-academy-v60"
 OFFLINE_PATHS = [
     "volume-3-full-fa.md",
     "assets/images/babak-ai/v3-ch01-tokenization.webp",
-    "book-engineering/answers/33-tokenization-fa.md",
     "book-engineering/chapters/33-tokenization.md",
+    "book-engineering/chapters/33-audit-report-fa.md",
+    "book-engineering/answers/33-tokenization-fa.md",
     "book-engineering/projects/33-tokenization/README.md",
     "book-engineering/projects/33-tokenization/tokenizer_bpe.py",
     "book-engineering/projects/33-tokenization/test_tokenizer_bpe.py",
     "book-engineering/projects/33-tokenization/test_embedding_lookup.py",
+    "assets/images/babak-ai/v3-ch02-attention.webp",
+    "book-engineering/chapters/34-attention.md",
+    "book-engineering/chapters/34-audit-report-fa.md",
+    "book-engineering/answers/34-attention-fa.md",
+    "book-engineering/projects/34-attention/README.md",
+    "book-engineering/projects/34-attention/attention.py",
+    "book-engineering/projects/34-attention/test_attention.py",
 ]
 
 
@@ -38,15 +47,19 @@ def main():
                 assert page.get_by_text(TITLE, exact=True).count() == 1
                 assert page.get_by_text("نسخه PDF و EPUB تولید نشده است.", exact=False).count() == 1
                 card = page.locator(".book-card").filter(has_text=TITLE)
-                assert card.count() == 1 and "1 فصل" in card.inner_text() and "11 بخش" in card.inner_text()
+                assert card.count() == 1 and "2 فصل" in card.inner_text() and "24 بخش" in card.inner_text()
                 assert page.locator(".book-card").count() >= 3
 
                 page.evaluate(f"openItem('{BOOK_ID}','book')")
-                assert page.locator(".chapter-header").count() == 1
-                assert "فصل 1" in page.locator(".chapter-header").first.inner_text()
-                assert page.locator(".section-item").count() == 11
-                page.locator(".chapter-header").first.click()
-                page.locator(".section-item").first.click()
+                headers = page.locator(".chapter-header")
+                assert headers.count() == 2
+                assert "فصل 1" in headers.nth(0).inner_text()
+                assert "11 بخش" in headers.nth(0).inner_text()
+                assert "فصل 2" in headers.nth(1).inner_text()
+                assert "13 بخش" in headers.nth(1).inner_text()
+                headers.nth(0).click()
+                assert page.locator("#item-ch-0 .section-item").count() == 11
+                page.locator("#item-ch-0 .section-item").first.click()
                 page.wait_for_selector(".reader-content")
                 assert page.locator(".reader-content math").count() == 1
                 assert page.locator(".reader-content math").first.get_attribute("aria-label")
@@ -56,7 +69,18 @@ def main():
                     const img=document.querySelector('.reader-content img');
                     return img && img.complete && img.naturalWidth === 1600 && img.naturalHeight === 1000;
                 }""")
-                assert image.evaluate("e => e.complete && e.naturalWidth === 1600 && e.naturalHeight === 1000")
+
+                # Chapter 34's matrix figure and accessible MathML must render locally.
+                page.evaluate(f"openSec('{BOOK_ID}',1,2)")
+                assert page.locator(".reader-content math").count() == 1
+                math_label = page.locator(".reader-content math").first.get_attribute("aria-label")
+                assert math_label and "کیو" in math_label and "وی" in math_label
+                image = page.locator(".reader-content img").first
+                assert all(term in image.get_attribute("alt") for term in ("شکل ۳-۲-۱", "Q/K/V", "Lq×Lk", "Lq×dv"))
+                page.wait_for_function("""() => {
+                    const img=document.querySelector('.reader-content img');
+                    return img && img.complete && img.naturalWidth === 1600 && img.naturalHeight === 1000;
+                }""")
 
                 # Visit every section to check MathML exposure and horizontal overflow.
                 result = page.evaluate(f'''() => {{
@@ -69,26 +93,37 @@ def main():
                     }}));
                     return {{count:book.chapters.reduce((n,c)=>n+c.sections.length,0),math,bad}};
                 }}''')
-                assert result["count"] == 11 and not result["bad"], (width, result)
-                assert len(result["math"]) >= 5 and all(item["label"] and item["visible"] for item in result["math"]), result["math"]
+                assert result["count"] == 24 and not result["bad"], (width, result)
+                assert len(result["math"]) >= 7 and all(item["label"] and item["visible"] for item in result["math"]), result["math"]
 
-                page.evaluate(f"openItem('{BOOK_ID}','book');openSec('{BOOK_ID}',0,0);nextSec()")
-                assert page.evaluate("[curChapterIndex,curSectionIndex]") == [0, 1]
+                # Test navigation across the chapter boundary in both directions.
+                page.evaluate(f"openItem('{BOOK_ID}','book');openSec('{BOOK_ID}',0,10);nextSec()")
+                assert page.evaluate("[curChapterIndex,curSectionIndex]") == [1, 0]
                 page.evaluate("prevSec()")
-                assert page.evaluate("[curChapterIndex,curSectionIndex]") == [0, 0]
+                assert page.evaluate("[curChapterIndex,curSectionIndex]") == [0, 10]
+
+                # A stable section ID must survive reload.
+                page.evaluate(f"openItem('{BOOK_ID}','book');openSec('{BOOK_ID}',1,2)")
                 page.reload(wait_until="networkidle")
                 page.wait_for_selector(".reader-content")
-                assert page.evaluate("[curChapterIndex,curSectionIndex]") == [0, 0]
+                assert page.evaluate("[curChapterIndex,curSectionIndex]") == [1, 2]
                 page.evaluate("navTo('search');doSearch('توکن‌سازی')")
                 assert page.evaluate(f"window_searchResults.some(r=>JSON.stringify(r).includes('{BOOK_ID}'))")
 
+                # Wait for all explicit chapter assets to be stored before going offline.
                 page.evaluate("navigator.serviceWorker.ready")
-                page.wait_for_timeout(900)
+                page.wait_for_function("""paths => caches.open('fa-academy-v60').then(async cache => {
+                    for (const path of paths) {
+                      const response = await cache.match(new URL(path, location.href).href);
+                      if (!response) return false;
+                    }
+                    return true;
+                })""", arg=OFFLINE_PATHS, timeout=30000)
                 context.set_offline(True)
                 page.goto(url, wait_until="domcontentloaded")
                 page.wait_for_selector("#loading.hidden")
                 assert page.get_by_text(TITLE, exact=True).count() == 1
-                page.evaluate(f"openItem('{BOOK_ID}','book');openSec('{BOOK_ID}',0,0)")
+                page.evaluate(f"openItem('{BOOK_ID}','book');openSec('{BOOK_ID}',1,2)")
                 assert page.locator(".reader-content img").first.evaluate("e => e.complete && e.naturalWidth === 1600")
                 offline = page.evaluate('''async paths => {
                     const bad=[];
@@ -96,13 +131,14 @@ def main():
                       try { const response=await fetch(path); if(!response.ok || !(await response.arrayBuffer()).byteLength) bad.push(path); }
                       catch(error) { bad.push(path); }
                     }
-                    const answer=await (await fetch(paths[2])).text();
+                    const answer33=await (await fetch(paths[4])).text();
+                    const answer34=await (await fetch(paths[12])).text();
                     const markdown=await (await fetch(paths[0])).text();
-                    return {bad,answer:answer.includes('پاسخ‌نامه تشریحی جلد سوم'),markdown:markdown.includes('بازبینی شدند')};
+                    return {bad,answer33:answer33.includes('پاسخ‌نامه تشریحی جلد سوم'),answer34:answer34.includes('جواب‌نامهٔ تشریحی'),markdown:markdown.includes('بازبینی شدند')};
                 }''', OFFLINE_PATHS)
-                assert offline == {"bad": [], "answer": True, "markdown": True}, offline
+                assert offline == {"bad": [], "answer33": True, "answer34": True, "markdown": True}, offline
                 assert not errors, errors
-                print(f"PASS volume 3 chapter 1 at {width}px: 11 sections, MathML, WebP, search, hash, navigation and {len(OFFLINE_PATHS)} offline files")
+                print(f"PASS volume 3 chapters 1–2 at {width}px: 24 sections, accessible MathML, both WebP figures, search, cross-chapter navigation and {len(OFFLINE_PATHS)} offline files")
                 context.close()
             browser.close()
     finally:

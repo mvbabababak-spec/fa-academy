@@ -1,5 +1,5 @@
-// ===== فا-اکدمی Service Worker v59 =====
-const CACHE_NAME = 'fa-academy-v59';
+// ===== فا-اکدمی Service Worker v60 =====
+const CACHE_NAME = 'fa-academy-v60';
 const CORE_FILES = [
   './',
   './index.html',
@@ -19,11 +19,19 @@ const CORE_FILES = [
   './volume-3-full-fa.md',
   './assets/images/babak-ai/v3-ch01-tokenization.webp',
   './book-engineering/chapters/33-tokenization.md',
+  './book-engineering/chapters/33-audit-report-fa.md',
   './book-engineering/answers/33-tokenization-fa.md',
   './book-engineering/projects/33-tokenization/README.md',
   './book-engineering/projects/33-tokenization/tokenizer_bpe.py',
   './book-engineering/projects/33-tokenization/test_tokenizer_bpe.py',
   './book-engineering/projects/33-tokenization/test_embedding_lookup.py',
+  './assets/images/babak-ai/v3-ch02-attention.webp',
+  './book-engineering/chapters/34-attention.md',
+  './book-engineering/chapters/34-audit-report-fa.md',
+  './book-engineering/answers/34-attention-fa.md',
+  './book-engineering/projects/34-attention/README.md',
+  './book-engineering/projects/34-attention/attention.py',
+  './book-engineering/projects/34-attention/test_attention.py',
   './assets/images/babak-ai/v2-ch07-backprop.webp',
   './assets/images/babak-ai/v2-ch10-cnn.webp',
   './assets/images/babak-ai/v2-ch11-representations.webp',
