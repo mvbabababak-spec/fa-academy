@@ -1,4 +1,4 @@
-"""Insert chapters 4 and 5 without changing earlier app content (mistune 3)."""
+"""Insert chapters 6 and 7 without changing earlier app content (mistune 3)."""
 import json
 from pathlib import Path
 import re
@@ -10,11 +10,11 @@ data = json.loads(path.read_text(encoding='utf-8'))
 books = [b for b in data['books'] if b['id'] == 'art-science-intelligence-v1']
 assert len(books) == 1
 book = books[0]
-assert {c['num'] for c in book['chapters']} >= {1, 2, 3}
+assert {c['num'] for c in book['chapters']} >= {1, 2, 3, 4, 5}
 render = mistune.create_markdown(plugins=['table'])
 for number, slug, title, icon, expected in [
-    (4, '04-history', 'تاریخ هوش مصنوعی: از پرسپترون تا مدل‌های مدرن', '◈', 12),
-    (5, '05-computer-foundations', 'کامپیوتر از درون: CPU، حافظه و ذخیره‌سازی', '▣', 13),
+    (6, '06-gpu-parallelism', 'GPU و NPU: محاسبات موازی و حافظه مدل', '◈', 13),
+    (7, '07-compute-ecosystems', 'اکوسیستم‌های محاسبات هوش مصنوعی: CUDA، ROCm، TPU و Apple Silicon', '▣', 13),
 ]:
     source = f'book-engineering/chapters/{slug}.md'
     text = (root / source).read_text(encoding='utf-8')
@@ -34,5 +34,5 @@ for number, slug, title, icon, expected in [
     else: book['chapters'].append(chapter)
     print(f'Chapter {number}: {len(sections)} sections')
 book['chapters'].sort(key=lambda c: c['num'])
-book['subtitle']='از صفر مطلق تا طراحی هوش مصنوعی | ۲۱ فصل برنامه‌ریزی‌شده · فصل‌های ۱ تا ۵ منتشر شده'
+book['subtitle']='از صفر مطلق تا طراحی هوش مصنوعی | ۲۱ فصل برنامه‌ریزی‌شده · فصل‌های ۱ تا ۷ منتشر شده'
 path.write_text(json.dumps(data,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
