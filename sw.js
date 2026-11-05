@@ -1,5 +1,5 @@
-// ===== فا-اکدمی Service Worker v41 =====
-const CACHE_NAME = 'fa-academy-v41';
+// ===== فا-اکدمی Service Worker v42 =====
+const CACHE_NAME = 'fa-academy-v42';
 const CORE_FILES = [
   './',
   './index.html',
@@ -16,6 +16,12 @@ const CORE_FILES = [
   './assets/icons/apple-touch-icon.png',
   './assets/icons/favicon-32.png',
   './assets/images/art-science-cover.webp',
+  './assets/images/babak-ai/v2-ch01-split.webp',
+  './assets/images/babak-ai/v2-ch02-regression.webp',
+  './assets/images/babak-ai/v2-ch03-cross-validation.webp',
+  './book-engineering/answers/22-learning-paradigms-fa.md',
+  './book-engineering/answers/23-regression-fa.md',
+  './book-engineering/answers/24-classical-models-fa.md',
   './book-engineering/LEARNING_PATH_FA.md',
   './book-engineering/answers/01-intelligence-answers-fa.md',
   './book-engineering/answers/21-information-theory-answers-fa.md',

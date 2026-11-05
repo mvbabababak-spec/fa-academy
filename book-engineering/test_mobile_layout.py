@@ -65,7 +65,7 @@ def main():
                   }));
                   return {count,bad};
                 }''')
-                assert result['count'] == 439 and not result['bad'], result
+                assert result['count'] == 468 and not result['bad'], result
                 page.evaluate('navigator.serviceWorker.ready')
                 page.wait_for_timeout(250)
                 context.set_offline(True)
