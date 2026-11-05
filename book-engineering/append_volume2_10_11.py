@@ -6,7 +6,7 @@ ROOT=Path(__file__).resolve().parent.parent
 path=ROOT/'data.json';data=json.loads(path.read_text(encoding='utf8'))
 books=[b for b in data['books'] if b['id']=='art-science-intelligence-v2'];assert len(books)==1
 book=books[0];assert [c['num'] for c in book['chapters'][:9]]==list(range(1,10))
-render=mistune.create_markdown(plugins=['table'])
+render=mistune.create_markdown(escape=False,plugins=['table'])
 specs=[(10,'31-cnn-sequences','شبکه‌های کانولوشنی و بازگشتی','◈'),(11,'32-representations','نمایش‌ها و مدل‌های مولد','✦')]
 for n,slug,title,icon in specs:
     source=f'book-engineering/chapters/{slug}.md';text=(ROOT/source).read_text(encoding='utf8')

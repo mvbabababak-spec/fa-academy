@@ -53,6 +53,8 @@ def main():
                 for section in [1,2,3]:
                     page.evaluate(f"openSec(getSource().id,7,{section})")
                     assert page.locator('.reader-content math').count()==1 and page.locator('.reader-content math').first.is_visible()
+                page.evaluate("openSec(getSource().id,9,1)")
+                assert page.locator('.reader-content math').count()==1 and page.locator('.reader-content math').first.is_visible()
                 page.evaluate("openSec(getSource().id,0,8);nextSec()")
                 assert page.evaluate('[curChapterIndex,curSectionIndex]')==[1,0]
                 page.evaluate('prevSec()');assert page.evaluate('[curChapterIndex,curSectionIndex]')==[0,8]
