@@ -83,12 +83,14 @@ for image in inspector.images:
         assert all(term in alt for term in ("PE", "RoPE", "LayerNorm", "FFN")), alt
     if "v3-ch05-architecture-matrix.webp" in src:
         assert all(term in alt for term in ("Encoder-only", "Decoder-only", "Encoder–Decoder", "cross-attention", "True=مسدود")), alt
+    if "v3-ch06-efficiency-map.webp" in src:
+        assert all(term in alt for term in ("KV Cache", "GQA", "Sparse Attention", "FlashAttention", "MoE", "RULER", "NoLiMa", "OOLONG")), alt
     path = ROOT / src
     assert path.is_file(), path
     with Image.open(path) as im:
         assert im.format == "WEBP" and im.width >= 1000 and im.height >= 600, (src, im.format, im.size)
 
-minimum_math = {1: 5, 2: 7, 3: 10, 4: 15, 5: 18}.get(len(chapters), 18)
+minimum_math = {1: 5, 2: 7, 3: 10, 4: 15, 5: 18}.get(len(chapters), 24)
 assert len(inspector.math) >= minimum_math, f"expected at least {minimum_math} MathML blocks, found {len(inspector.math)}"
 assert all((math.get("aria-label") or "").strip() for math in inspector.math)
 
@@ -157,6 +159,17 @@ if len(chapters) >= 5:
         assert (project / project_file).is_file(), project_file
     assert (ROOT / "book-engineering/create_v3_ch05_image.py").is_file()
     assert (ROOT / "book-engineering/chapters/37-audit-report-fa.md").is_file()
+
+if len(chapters) >= 6:
+    source = ROOT / "book-engineering/chapters/38-long-context.md"
+    project = ROOT / "book-engineering/projects/38-long-context"
+    code = (project / "efficient_attention.py").read_text(encoding="utf-8").rstrip()
+    blocks = re.findall(r"```python\n(.*?)\n```", source.read_text(encoding="utf-8"), flags=re.DOTALL)
+    assert blocks and blocks[-1] == code, "chapter 38 executable code differs from tested project"
+    for project_file in ["efficient_attention.py", "test_efficient_attention.py", "README.md"]:
+        assert (project / project_file).is_file(), project_file
+    assert (ROOT / "book-engineering/create_v3_ch06_image.py").is_file()
+    assert (ROOT / "book-engineering/chapters/38-audit-report-fa.md").is_file()
 
 full_text = ROOT / "volume-3-full-fa.md"
 assert full_text.is_file()

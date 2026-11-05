@@ -32,6 +32,7 @@ jobs:
           (cd book-engineering/projects/35-self-attention && python -m unittest discover -v)
           (cd book-engineering/projects/36-position-normalization && python -m unittest discover -v)
           (cd book-engineering/projects/37-encoder-decoder && python -m unittest discover -v)
+          (cd book-engineering/projects/38-long-context && python -m unittest discover -v)
       - name: Confirm volume 3 builder idempotence
         run: |
           cp data.json /tmp/v3-data-before.json

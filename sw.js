@@ -1,5 +1,5 @@
-// ===== فا-اکدمی Service Worker v63 =====
-const CACHE_NAME = 'fa-academy-v63';
+// ===== فا-اکدمی Service Worker v64 =====
+const CACHE_NAME = 'fa-academy-v64';
 const CORE_FILES = [
   './',
   './index.html',
@@ -53,6 +53,13 @@ const CORE_FILES = [
   './book-engineering/projects/37-encoder-decoder/README.md',
   './book-engineering/projects/37-encoder-decoder/transformer_architectures.py',
   './book-engineering/projects/37-encoder-decoder/test_transformer_architectures.py',
+  './assets/images/babak-ai/v3-ch06-efficiency-map.webp',
+  './book-engineering/chapters/38-long-context.md',
+  './book-engineering/chapters/38-audit-report-fa.md',
+  './book-engineering/answers/38-long-context-fa.md',
+  './book-engineering/projects/38-long-context/README.md',
+  './book-engineering/projects/38-long-context/efficient_attention.py',
+  './book-engineering/projects/38-long-context/test_efficient_attention.py',
   './assets/images/babak-ai/v2-ch07-backprop.webp',
   './assets/images/babak-ai/v2-ch10-cnn.webp',
   './assets/images/babak-ai/v2-ch11-representations.webp',
