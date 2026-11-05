@@ -55,6 +55,8 @@ def main():
                     assert page.locator('.reader-content math').count()==1 and page.locator('.reader-content math').first.is_visible()
                 page.evaluate("openSec(getSource().id,9,1)")
                 assert page.locator('.reader-content math').count()==1 and page.locator('.reader-content math').first.is_visible()
+                page.evaluate("openSec(getSource().id,9,5)")
+                assert page.locator('.reader-content math').count()==2 and page.locator('.reader-content math').first.is_visible()
                 page.evaluate("openSec(getSource().id,10,2)")
                 assert page.locator('.reader-content math').count()==1 and page.locator('.reader-content math').first.is_visible()
                 page.evaluate("openSec(getSource().id,0,8);nextSec()")

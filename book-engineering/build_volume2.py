@@ -1,4 +1,4 @@
-"""Append the first three chapters of volume 2; never overwrite existing work."""
+"""Initialize volume 2 with chapters 1–3; follow with the incremental builders for chapters 4–11."""
 import json
 import re
 from pathlib import Path

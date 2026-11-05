@@ -1338,6 +1338,14 @@ if __name__=='__main__':main()
 
 LSTM حالت سلولی `c_t` و حالت پنهان `h_t` را با دروازه‌های ورودی، فراموشی و خروجی کنترل می‌کند: `c_t=f_t⊙c_(t−1)+i_t⊙g_t` و `h_t=o_t⊙tanh(c_t)` [۳]. GRU حالت پنهان را با دروازه‌های reset و update ترکیب می‌کند و حالت سلولی جدا ندارد [۴]. این سازوکارها می‌توانند انتقال اطلاعات و گرادیان را بهتر کنند، ولی حافظه بی‌نهایت یا عملکرد بهتر در هر مسئله تضمین نیست.
 
+**معادله حالت LSTM؛ متن جایگزین:** حالت سلولی تازه برابر دروازه فراموشی ضرب عنصری حالت قبلی، به علاوه دروازه ورودی ضرب عنصری نامزد است؛ حالت پنهان برابر دروازه خروجی ضرب عنصری تانژانت هذلولوی حالت سلولی است.
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block" aria-label="حالت سلولی ال اس تی ام"><mrow><msub><mi>c</mi><mi>t</mi></msub><mo>=</mo><msub><mi>f</mi><mi>t</mi></msub><mo>⊙</mo><msub><mi>c</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>+</mo><msub><mi>i</mi><mi>t</mi></msub><mo>⊙</mo><msub><mi>g</mi><mi>t</mi></msub><mo>,</mo><mspace width="1em"/><msub><mi>h</mi><mi>t</mi></msub><mo>=</mo><msub><mi>o</mi><mi>t</mi></msub><mo>⊙</mo><mi>tanh</mi><mo>(</mo><msub><mi>c</mi><mi>t</mi></msub><mo>)</mo></mrow></math>
+
+**معادله ترکیب GRU در قرارداد PyTorch؛ متن جایگزین:** حالت تازه برابر یک منهای دروازه به‌روزرسانی ضرب نامزد، به علاوه دروازه به‌روزرسانی ضرب حالت قبلی است. z دروازه به‌روزرسانی و n نامزد است و ضرب‌ها عنصری‌اند.
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block" aria-label="ترکیب حالت جی آر یو"><mrow><msub><mi>h</mi><mi>t</mi></msub><mo>=</mo><mo>(</mo><mn>1</mn><mo>−</mo><msub><mi>z</mi><mi>t</mi></msub><mo>)</mo><mo>⊙</mo><msub><mi>n</mi><mi>t</mi></msub><mo>+</mo><msub><mi>z</mi><mi>t</mi></msub><mo>⊙</mo><msub><mi>h</mi><mrow><mi>t</mi><mo>−</mo><mn>1</mn></mrow></msub></mrow></math>
+
 آزمون پروژه شکل خروجی RNN، LSTM و GRU را برای ورودی `(3,5,2)` و hidden=4 می‌سنجد: خروجی `(3,5,4)` و حالت پنهان `(1,3,4)`؛ LSTM علاوه بر آن حالت سلولی دارد. این تست صرفاً قرارداد شکل را بررسی می‌کند، نه یادگیری، کیفیت پیش‌بینی یا برتری معماری.
 
 ## ۷. انتخاب، خطاها و کاربرد مسئولانه
