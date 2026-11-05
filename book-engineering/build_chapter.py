@@ -1,4 +1,4 @@
-"""Insert chapters 17, 18 and 19 without changing prior app content (mistune 3)."""
+"""Insert chapters 20 and 21 without changing prior app content (mistune 3)."""
 import json
 from pathlib import Path
 import re
@@ -10,12 +10,11 @@ data = json.loads(path.read_text(encoding='utf-8'))
 books = [b for b in data['books'] if b['id'] == 'art-science-intelligence-v1']
 assert len(books) == 1
 book = books[0]
-assert {c['num'] for c in book['chapters']} >= set(range(1,17))
+assert {c['num'] for c in book['chapters']} >= set(range(1,20))
 render = mistune.create_markdown(plugins=['table'])
 for number, slug, title, icon, expected in [
-    (17, '17-linear-algebra', 'بردار، ماتریس، ابعاد و مقادیر ویژه', '◈', 10),
-    (18, '18-calculus', 'مشتق، انتگرال، قاعده زنجیره‌ای و گرادیان', '▣', 10),
-    (19, '19-probability-statistics', 'احتمال، آمار، توزیع‌ها، نمونه‌گیری و بیز', '✦', 10),
+    (20, '20-optimization', 'بهینه‌سازی، گرادیان‌کاهشی و پایداری عددی', '◈', 10),
+    (21, '21-information-theory', 'نظریه اطلاعات: آنتروپی، آنتروپی متقاطع و KL', '▣', 10),
 ]:
     source = f'book-engineering/chapters/{slug}.md'
     text = (root / source).read_text(encoding='utf-8')
@@ -31,9 +30,13 @@ for number, slug, title, icon, expected in [
                'icon': icon, 'sections': sections}
     indices = [i for i,c in enumerate(book['chapters']) if c['id']==chapter['id']]
     assert len(indices)<=1
-    if indices: book['chapters'][indices[0]]=chapter
-    else: book['chapters'].append(chapter)
+    if indices:
+        assert book['chapters'][indices[0]] == chapter, 'Chapter exists; refusing to replace it'
+        print(f'Chapter {number} already present, unchanged')
+    else:
+        assert all(c['num'] != number for c in book['chapters']), 'Chapter number already exists'
+        book['chapters'].append(chapter)
     print(f'Chapter {number}: {len(sections)} sections')
 book['chapters'].sort(key=lambda c: c['num'])
-book['subtitle']='از صفر مطلق تا طراحی هوش مصنوعی | ۲۱ فصل برنامه‌ریزی‌شده · فصل‌های ۱ تا ۱۹ منتشر شده'
+book['subtitle']='از صفر مطلق تا طراحی هوش مصنوعی | ۲۱ فصل برنامه‌ریزی‌شده · فصل‌های ۱ تا ۲۱ در مخزن انتشار'
 path.write_text(json.dumps(data,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf-8')
