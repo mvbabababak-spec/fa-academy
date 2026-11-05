@@ -9,7 +9,7 @@ from playwright.sync_api import sync_playwright
 ROOT = Path(__file__).resolve().parent.parent
 BOOK_ID = "art-science-intelligence-v3"
 TITLE = "هنر و علم ساخت هوش — جلد سوم"
-CACHE_NAME = "fa-academy-v60"
+CACHE_NAME = "fa-academy-v61"
 OFFLINE_PATHS = [
     "volume-3-full-fa.md",
     "assets/images/babak-ai/v3-ch01-tokenization.webp",
@@ -27,6 +27,13 @@ OFFLINE_PATHS = [
     "book-engineering/projects/34-attention/README.md",
     "book-engineering/projects/34-attention/attention.py",
     "book-engineering/projects/34-attention/test_attention.py",
+    "assets/images/babak-ai/v3-ch03-self-attention.webp",
+    "book-engineering/chapters/35-self-attention.md",
+    "book-engineering/chapters/35-audit-report-fa.md",
+    "book-engineering/answers/35-self-attention-fa.md",
+    "book-engineering/projects/35-self-attention/README.md",
+    "book-engineering/projects/35-self-attention/causal_multihead.py",
+    "book-engineering/projects/35-self-attention/test_causal_multihead.py",
 ]
 
 
@@ -47,16 +54,15 @@ def main():
                 assert page.get_by_text(TITLE, exact=True).count() == 1
                 assert page.get_by_text("نسخه PDF و EPUB تولید نشده است.", exact=False).count() == 1
                 card = page.locator(".book-card").filter(has_text=TITLE)
-                assert card.count() == 1 and "2 فصل" in card.inner_text() and "24 بخش" in card.inner_text()
+                assert card.count() == 1 and "3 فصل" in card.inner_text() and "37 بخش" in card.inner_text()
                 assert page.locator(".book-card").count() >= 3
 
                 page.evaluate(f"openItem('{BOOK_ID}','book')")
                 headers = page.locator(".chapter-header")
-                assert headers.count() == 2
-                assert "فصل 1" in headers.nth(0).inner_text()
-                assert "11 بخش" in headers.nth(0).inner_text()
-                assert "فصل 2" in headers.nth(1).inner_text()
-                assert "13 بخش" in headers.nth(1).inner_text()
+                assert headers.count() == 3
+                for index, count in enumerate((11, 13, 13)):
+                    assert f"فصل {index + 1}" in headers.nth(index).inner_text()
+                    assert f"{count} بخش" in headers.nth(index).inner_text()
                 headers.nth(0).click()
                 assert page.locator("#item-ch-0 .section-item").count() == 11
                 page.locator("#item-ch-0 .section-item").first.click()
@@ -82,6 +88,18 @@ def main():
                     return img && img.complete && img.naturalWidth === 1600 && img.naturalHeight === 1000;
                 }""")
 
+                # Chapter 35: causal diagram, accessible equation, and explicit false future weights.
+                page.evaluate(f"openSec('{BOOK_ID}',2,0)")
+                image = page.locator(".reader-content img").first
+                assert all(term in image.get_attribute("alt") for term in ("شکل ۳-۳-۱", "Self-Attention", "Q/K/V", "j≤i", "j>i"))
+                page.wait_for_function("""() => {
+                    const img=document.querySelector('.reader-content img');
+                    return img && img.complete && img.naturalWidth === 1600 && img.naturalHeight === 1000;
+                }""")
+                page.evaluate(f"openSec('{BOOK_ID}',2,1)")
+                assert page.locator(".reader-content math").count() == 1
+                assert page.locator(".reader-content math").first.get_attribute("aria-label")
+
                 # Visit every section to check MathML exposure and horizontal overflow.
                 result = page.evaluate(f'''() => {{
                     const book=DATA.books.find(b=>b.id==="{BOOK_ID}"), math=[], bad=[];
@@ -93,26 +111,30 @@ def main():
                     }}));
                     return {{count:book.chapters.reduce((n,c)=>n+c.sections.length,0),math,bad}};
                 }}''')
-                assert result["count"] == 24 and not result["bad"], (width, result)
-                assert len(result["math"]) >= 7 and all(item["label"] and item["visible"] for item in result["math"]), result["math"]
+                assert result["count"] == 37 and not result["bad"], (width, result)
+                assert len(result["math"]) >= 10 and all(item["label"] and item["visible"] for item in result["math"]), result["math"]
 
-                # Test navigation across the chapter boundary in both directions.
+                # Test navigation across chapter boundaries in both directions.
                 page.evaluate(f"openItem('{BOOK_ID}','book');openSec('{BOOK_ID}',0,10);nextSec()")
                 assert page.evaluate("[curChapterIndex,curSectionIndex]") == [1, 0]
                 page.evaluate("prevSec()")
                 assert page.evaluate("[curChapterIndex,curSectionIndex]") == [0, 10]
+                page.evaluate(f"openSec('{BOOK_ID}',1,12);nextSec()")
+                assert page.evaluate("[curChapterIndex,curSectionIndex]") == [2, 0]
+                page.evaluate("prevSec()")
+                assert page.evaluate("[curChapterIndex,curSectionIndex]") == [1, 12]
 
-                # A stable section ID must survive reload.
-                page.evaluate(f"openItem('{BOOK_ID}','book');openSec('{BOOK_ID}',1,2)")
+                # Stable section IDs must survive reload.
+                page.evaluate(f"openItem('{BOOK_ID}','book');openSec('{BOOK_ID}',2,1)")
                 page.reload(wait_until="networkidle")
                 page.wait_for_selector(".reader-content")
-                assert page.evaluate("[curChapterIndex,curSectionIndex]") == [1, 2]
+                assert page.evaluate("[curChapterIndex,curSectionIndex]") == [2, 1]
                 page.evaluate("navTo('search');doSearch('توکن‌سازی')")
                 assert page.evaluate(f"window_searchResults.some(r=>JSON.stringify(r).includes('{BOOK_ID}'))")
 
                 # Wait for all explicit chapter assets to be stored before going offline.
                 page.evaluate("navigator.serviceWorker.ready")
-                page.wait_for_function("""paths => caches.open('fa-academy-v60').then(async cache => {
+                page.wait_for_function("""paths => caches.open('fa-academy-v61').then(async cache => {
                     for (const path of paths) {
                       const response = await cache.match(new URL(path, location.href).href);
                       if (!response) return false;
@@ -123,7 +145,7 @@ def main():
                 page.goto(url, wait_until="domcontentloaded")
                 page.wait_for_selector("#loading.hidden")
                 assert page.get_by_text(TITLE, exact=True).count() == 1
-                page.evaluate(f"openItem('{BOOK_ID}','book');openSec('{BOOK_ID}',1,2)")
+                page.evaluate(f"openItem('{BOOK_ID}','book');openSec('{BOOK_ID}',2,0)")
                 assert page.locator(".reader-content img").first.evaluate("e => e.complete && e.naturalWidth === 1600")
                 offline = page.evaluate('''async paths => {
                     const bad=[];
@@ -133,12 +155,13 @@ def main():
                     }
                     const answer33=await (await fetch(paths[4])).text();
                     const answer34=await (await fetch(paths[12])).text();
+                    const answer35=await (await fetch(paths[19])).text();
                     const markdown=await (await fetch(paths[0])).text();
-                    return {bad,answer33:answer33.includes('پاسخ‌نامه تشریحی جلد سوم'),answer34:answer34.includes('جواب‌نامهٔ تشریحی'),markdown:markdown.includes('بازبینی شدند')};
+                    return {bad,answer33:answer33.includes('پاسخ‌نامه تشریحی جلد سوم'),answer34:answer34.includes('جواب‌نامهٔ تشریحی'),answer35:answer35.includes('جواب‌نامهٔ تشریحی'),markdown:markdown.includes('بازبینی شدند')};
                 }''', OFFLINE_PATHS)
-                assert offline == {"bad": [], "answer33": True, "answer34": True, "markdown": True}, offline
+                assert offline == {"bad": [], "answer33": True, "answer34": True, "answer35": True, "markdown": True}, offline
                 assert not errors, errors
-                print(f"PASS volume 3 chapters 1–2 at {width}px: 24 sections, accessible MathML, both WebP figures, search, cross-chapter navigation and {len(OFFLINE_PATHS)} offline files")
+                print(f"PASS volume 3 chapters 1–3 at {width}px: 37 sections, accessible MathML, three WebP figures, navigation, search and {len(OFFLINE_PATHS)} offline files")
                 context.close()
             browser.close()
     finally:

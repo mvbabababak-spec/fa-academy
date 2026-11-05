@@ -1,5 +1,5 @@
-// ===== فا-اکدمی Service Worker v60 =====
-const CACHE_NAME = 'fa-academy-v60';
+// ===== فا-اکدمی Service Worker v61 =====
+const CACHE_NAME = 'fa-academy-v61';
 const CORE_FILES = [
   './',
   './index.html',
@@ -32,6 +32,13 @@ const CORE_FILES = [
   './book-engineering/projects/34-attention/README.md',
   './book-engineering/projects/34-attention/attention.py',
   './book-engineering/projects/34-attention/test_attention.py',
+  './assets/images/babak-ai/v3-ch03-self-attention.webp',
+  './book-engineering/chapters/35-self-attention.md',
+  './book-engineering/chapters/35-audit-report-fa.md',
+  './book-engineering/answers/35-self-attention-fa.md',
+  './book-engineering/projects/35-self-attention/README.md',
+  './book-engineering/projects/35-self-attention/causal_multihead.py',
+  './book-engineering/projects/35-self-attention/test_causal_multihead.py',
   './assets/images/babak-ai/v2-ch07-backprop.webp',
   './assets/images/babak-ai/v2-ch10-cnn.webp',
   './assets/images/babak-ai/v2-ch11-representations.webp',
