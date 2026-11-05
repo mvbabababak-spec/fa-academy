@@ -3341,6 +3341,10 @@ B = [[1, 0], [0, 1], [1, 1]]  # 3 × 2
 AB = [[4, 5], [10, 11]]        # 2 × 2
 ```
 
+**معادله ۱۷-۱** — C حاصل AB و r تعداد مؤلفه‌های سطر A و ستون B است.
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block" dir="ltr" aria-label="matrix product element sum over k"><msub><mi>C</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>=</mo><munderover><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>1</mn></mrow><mi>r</mi></munderover><msub><mi>A</mi><mrow><mi>i</mi><mi>k</mi></mrow></msub><msub><mi>B</mi><mrow><mi>k</mi><mi>j</mi></mrow></msub></math>
+
 برای نمونه، عضو بالا-چپ `1×1+2×0+3×1=4` است. ضرب ماتریسی عموماً جابه‌جاپذیر نیست: `AB` و `BA` ممکن است متفاوت یا یکی تعریف‌نشده باشند. در NumPy، `@` ضرب ماتریسی و `*` برای آرایه‌های سازگار ضرب عضو به عضو است.
 
 ![شکل ۱۷-۱: ضرب ماتریس دو در سه در ماتریس سه در دو، حاصل دو در دو تولید می‌کند.](https://raw.githubusercontent.com/mvbabababak-spec/fa-academy/gh-pages/assets/images/babak-ai/ch17-matrix.webp)
@@ -3450,7 +3454,7 @@ if __name__ == '__main__':
 
 **پروژه کوچک:** با ورودی دو نمونه و سه ویژگی و وزن سه‌در‌دو، خروجی batch را دستی و با NumPy محاسبه کنید؛ شکل‌ها را بنویسید و ورودی ناسازگار را بیازمایید. **چالش مهندسی:** ضرب دستی و NumPy را از نظر خوانایی و مقیاس‌پذیری مقایسه کنید؛ بنچمارک انجام‌نشده را ادعا نکنید. **قبولی:** دست‌کم ۸ پاسخ درست از ۱۰ و اجرای چهار تست.
 
-پاسخ: ۱) `3×2`؛ ۲) بله `2×4`؛ ۳) ۱۱؛ ۴) عضو به عضو/ماتریسی؛ ۵) `3×2`؛ ۶) خیر؛ ۷) ۲؛ ۸) خیر؛ ۹) ۸؛ ۱۰) خیر.
+[پاسخ‌نامه جداگانه فصل 17](book-engineering/answers/17-linear-algebra-answers-fa.md).
 
 ## ۱۰. واژه‌نامه، تحولات و منابع
 
