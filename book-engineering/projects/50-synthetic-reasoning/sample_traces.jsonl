@@ -1,0 +1,12 @@
+{"id":"ex-001","group_id":"seed-easy-ones","difficulty":"easy","prompt":"Compute 2 + 3.","teacher_trace":"2 + 3 = 5","answer":"5","label_source":"synthetic_fixture"}
+{"id":"ex-002","group_id":"seed-easy-ones","difficulty":"easy","prompt":"Compute 4 + 1.","teacher_trace":"4 + 1 = 5","answer":"5","label_source":"synthetic_fixture"}
+{"id":"ex-003","group_id":"seed-easy-zero","difficulty":"easy","prompt":"Compute 0 + 8.","teacher_trace":"0 + 8 = 8","answer":"8","label_source":"synthetic_fixture"}
+{"id":"ex-004","group_id":"seed-easy-zero","difficulty":"easy","prompt":"Compute 9 + 0.","teacher_trace":"9 + 0 = 9","answer":"9","label_source":"synthetic_fixture"}
+{"id":"ex-005","group_id":"seed-medium-no-carry","difficulty":"medium","prompt":"Compute 12 + 24.","teacher_trace":"12 + 24 = 36","answer":"36","label_source":"synthetic_fixture"}
+{"id":"ex-006","group_id":"seed-medium-no-carry","difficulty":"medium","prompt":"Compute 31 + 17.","teacher_trace":"31 + 17 = 48","answer":"48","label_source":"synthetic_fixture"}
+{"id":"ex-007","group_id":"seed-medium-carry","difficulty":"medium","prompt":"Compute 19 + 26.","teacher_trace":"19 + 26 = 45","answer":"45","label_source":"synthetic_fixture"}
+{"id":"ex-008","group_id":"seed-medium-carry","difficulty":"medium","prompt":"Compute 38 + 24.","teacher_trace":"38 + 24 = 62","answer":"62","label_source":"synthetic_fixture"}
+{"id":"ex-009","group_id":"seed-hard-no-carry","difficulty":"hard","prompt":"Compute 52 + 30.","teacher_trace":"52 + 30 = 82","answer":"82","label_source":"synthetic_fixture"}
+{"id":"ex-010","group_id":"seed-hard-no-carry","difficulty":"hard","prompt":"Compute 60 + 19.","teacher_trace":"60 + 19 = 79","answer":"79","label_source":"synthetic_fixture"}
+{"id":"ex-011","group_id":"seed-hard-carry","difficulty":"hard","prompt":"Compute 57 + 68.","teacher_trace":"57 + 68 = 125","answer":"125","label_source":"synthetic_fixture"}
+{"id":"ex-012","group_id":"seed-hard-carry","difficulty":"hard","prompt":"Compute 89 + 76.","teacher_trace":"89 + 76 = 165","answer":"165","label_source":"synthetic_fixture"}

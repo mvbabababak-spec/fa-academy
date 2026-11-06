@@ -9,7 +9,7 @@ from playwright.sync_api import sync_playwright
 ROOT = Path(__file__).resolve().parent.parent
 BOOK_ID = "art-science-intelligence-v4"
 TITLE = "هنر و علم ساخت هوش — جلد چهارم"
-CACHE_NAME = "fa-academy-v79"
+CACHE_NAME = "fa-academy-v80"
 OFFLINE_PATHS = [
     "volume-4-full-fa.md",
     "book-engineering/diagrams/v4-ch01-posttraining.svg",
@@ -38,6 +38,15 @@ OFFLINE_PATHS = [
     "book-engineering/projects/49-preference-lab/test_preference_lab.py",
     "book-engineering/projects/49-preference-lab/sample_preferences.jsonl",
     "book-engineering/projects/49-preference-lab/results.json",
+    "book-engineering/diagrams/v4-ch04-synthetic-reasoning.svg",
+    "book-engineering/chapters/50-synthetic-reasoning.md",
+    "book-engineering/chapters/50-audit-report-fa.md",
+    "book-engineering/answers/50-synthetic-reasoning-fa.md",
+    "book-engineering/projects/50-synthetic-reasoning/README.md",
+    "book-engineering/projects/50-synthetic-reasoning/reasoning_lab.py",
+    "book-engineering/projects/50-synthetic-reasoning/test_reasoning_lab.py",
+    "book-engineering/projects/50-synthetic-reasoning/sample_traces.jsonl",
+    "book-engineering/projects/50-synthetic-reasoning/results.json",
 ]
 
 
@@ -48,6 +57,7 @@ def main():
     project47 = (ROOT / "book-engineering/projects/47-instruction-tuning/sft_experiment.py").read_text(encoding="utf-8").rstrip()
     project48 = (ROOT / "book-engineering/projects/48-peft-lab/peft_lab.py").read_text(encoding="utf-8").rstrip()
     project49 = (ROOT / "book-engineering/projects/49-preference-lab/preference_lab.py").read_text(encoding="utf-8").rstrip()
+    project50 = (ROOT / "book-engineering/projects/50-synthetic-reasoning/reasoning_lab.py").read_text(encoding="utf-8").rstrip()
     try:
         with sync_playwright() as playwright:
             browser = playwright.chromium.launch(args=["--no-sandbox"])
@@ -70,10 +80,10 @@ def main():
                     sectionCount:ch.sections.length
                   }}))}};
                 }}''')
-                assert len(metadata["chapters"]) == 3, metadata
-                c47, c48, c49 = metadata["chapters"]
+                assert len(metadata["chapters"]) == 4, metadata
+                c47, c48, c49, c50 = metadata["chapters"]
                 assert [c["id"] for c in metadata["chapters"]] == [
-                    "art-science-v4-ch01", "art-science-v4-ch02", "art-science-v4-ch03"
+                    "art-science-v4-ch01", "art-science-v4-ch02", "art-science-v4-ch03", "art-science-v4-ch04"
                 ], metadata
                 for chapter in metadata["chapters"]:
                     assert chapter["sectionCount"] >= 15
@@ -83,7 +93,7 @@ def main():
                 # Chapter 47: SFT figure, accessible MathML, answer and exact appendix.
                 page.evaluate(f"openItem('{BOOK_ID}','book')")
                 headers = page.locator(".chapter-header")
-                assert headers.count() == 3
+                assert headers.count() == 4
                 headers.nth(0).click()
                 page.evaluate(f"openSec('{BOOK_ID}',0,0)")
                 page.wait_for_selector(".reader-content")
@@ -111,7 +121,7 @@ def main():
                 # Chapter 48: PEFT figure, MathML, independent answer and exact appendix.
                 page.evaluate(f"openItem('{BOOK_ID}','book')")
                 headers = page.locator(".chapter-header")
-                assert headers.count() == 3
+                assert headers.count() == 4
                 headers.nth(1).click()
                 page.evaluate(f"openSec('{BOOK_ID}',1,0)")
                 image48 = page.locator(".reader-content img").first
@@ -138,7 +148,7 @@ def main():
                 # Chapter 49: preference diagram, MathML, independent answer and exact tested code.
                 page.evaluate(f"openItem('{BOOK_ID}','book')")
                 headers = page.locator(".chapter-header")
-                assert headers.count() == 3
+                assert headers.count() == 4
                 headers.nth(2).click()
                 page.evaluate(f"openSec('{BOOK_ID}',2,0)")
                 image49 = page.locator(".reader-content img").first
@@ -161,6 +171,33 @@ def main():
                 appendix49 = next(i for i, title in enumerate(c49["titles"]) if "پیوست اجرایی" in title)
                 page.evaluate(f"openSec('{BOOK_ID}',2,{appendix49})")
                 assert page.locator(".reader-content pre code").last.text_content().rstrip("\n") == project49
+
+                # Chapter 50: synthetic-data diagram, accessible MathML, answer and exact project code.
+                page.evaluate(f"openItem('{BOOK_ID}','book')")
+                headers = page.locator(".chapter-header")
+                assert headers.count() == 4
+                headers.nth(3).click()
+                page.evaluate(f"openSec('{BOOK_ID}',3,0)")
+                image50 = page.locator(".reader-content img").first
+                alt50 = image50.get_attribute("alt")
+                assert all(term in alt50 for term in ("شکل ۴-۴-۱", "دادهٔ مصنوعی", "teacher", "student", "curriculum")), alt50
+                page.wait_for_function("""() => {
+                    const img=document.querySelector('.reader-content img');
+                    return img && img.complete && img.naturalWidth===1600 && img.naturalHeight===1000;
+                }""")
+                assert len(c50["mathIndexes"]) >= 4, "chapter 50 MathML missing"
+                math50_index = c50["mathIndexes"][0]
+                page.evaluate(f"openSec('{BOOK_ID}',3,{math50_index})")
+                math50 = page.locator(".reader-content math").first
+                assert page.locator(".reader-content math").count() == 2
+                assert math50.get_attribute("aria-label") and "دما" in math50.get_attribute("aria-label")
+                assert page.locator(".reader-content").evaluate("e => e.scrollWidth <= e.clientWidth + 2")
+                assert c50["answerIndexes"], "chapter 50 independent answer link missing"
+                page.evaluate(f"openSec('{BOOK_ID}',3,{c50['answerIndexes'][0]})")
+                assert page.locator(".reader-content a[href='book-engineering/answers/50-synthetic-reasoning-fa.md']").count() == 1
+                appendix50 = next(i for i, title in enumerate(c50["titles"]) if "پیوست اجرایی" in title)
+                page.evaluate(f"openSec('{BOOK_ID}',3,{appendix50})")
+                assert page.locator(".reader-content pre code").last.text_content().rstrip("\n") == project50
                 assert not errors, errors
 
                 assert page.evaluate("navigator.serviceWorker.ready.then(() => true)")
@@ -180,12 +217,16 @@ def main():
                 offline47 = page.evaluate("fetch('book-engineering/answers/47-posttraining-fa.md').then(r => r.ok ? r.text() : '')")
                 offline48 = page.evaluate("fetch('book-engineering/answers/48-peft-fa.md').then(r => r.ok ? r.text() : '')")
                 offline49 = page.evaluate("fetch('book-engineering/answers/49-preference-optimization-fa.md').then(r => r.ok ? r.text() : '')")
+                offline50 = page.evaluate("fetch('book-engineering/answers/50-synthetic-reasoning-fa.md').then(r => r.ok ? r.text() : '')")
                 source49 = page.evaluate("fetch('book-engineering/chapters/49-preference-optimization.md').then(r => r.ok ? r.text() : '')")
+                source50 = page.evaluate("fetch('book-engineering/chapters/50-synthetic-reasoning.md').then(r => r.ok ? r.text() : '')")
                 assert "پاسخ‌نامهٔ تشریحی فصل ۴۷" in offline47
                 assert "پاسخ‌نامهٔ تشریحی فصل ۴۸" in offline48
                 assert "پاسخ‌نامهٔ تشریحی فصل ۴۹" in offline49
+                assert "پاسخ‌نامهٔ تشریحی فصل ۵۰" in offline50
                 assert "DPO" in source49 and "TRL v1.17.1" in source49
-                print(f"PASS volume 4 chapters 47–49 at {width}px: sections={[c47['sectionCount'],c48['sectionCount'],c49['sectionCount']]}, MathML/appendices exact, {len(OFFLINE_PATHS)} offline assets")
+                assert "synthetic_fixture" in source50 and "محاسبهٔ زمان آزمون" in source50
+                print(f"PASS volume 4 chapters 47–50 at {width}px: sections={[c47['sectionCount'],c48['sectionCount'],c49['sectionCount'],c50['sectionCount']]}, MathML/appendices exact, {len(OFFLINE_PATHS)} offline assets")
                 context.close()
             browser.close()
     finally:

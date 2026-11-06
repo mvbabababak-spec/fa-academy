@@ -31,7 +31,7 @@ SPECS = [
     (1, 47, "47-posttraining", "Continued Pretraining، Instruction Tuning و SFT", "↻"),
     (2, 48, "48-peft", "PEFT، Adapter، LoRA و QLoRA", "⌁"),
     (3, 49, "49-preference-optimization", "مدل پاداش، RLHF، PPO، DPO، GRPO و RLAIF", "◇"),
-    (4, 50, "50-synthetic-reasoning", "داده مصنوعی، تقطیر و مدل‌های استدلالی", "∴"),
+    (4, 50, "50-synthetic-reasoning", "دادهٔ مصنوعی، تقطیر و محاسبهٔ زمان آزمون", "∴"),
     (5, 51, "51-vision-models", "مدل‌های تصویر و هم‌ترازی متن–تصویر", "▧"),
     (6, 52, "52-audio-models", "مدل‌های صوت و گفتار", "♫"),
     (7, 53, "53-image-video-generation", "تولید تصویر و ویدئو و Diffusion", "▨"),
@@ -50,6 +50,7 @@ APPENDIX_PROJECTS = {
     47: "book-engineering/projects/47-instruction-tuning/sft_experiment.py",
     48: "book-engineering/projects/48-peft-lab/peft_lab.py",
     49: "book-engineering/projects/49-preference-lab/preference_lab.py",
+    50: "book-engineering/projects/50-synthetic-reasoning/reasoning_lab.py",
 }
 
 

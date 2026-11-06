@@ -57,6 +57,17 @@ jobs:
           python book-engineering/projects/49-preference-lab/preference_lab.py \
             --mode toy-dpo --output /tmp/ch49-ci-toy --steps 80 --seed 49
           python -c "import json; p=json.load(open('/tmp/ch49-ci-toy/run.json')); assert p['status']=='synthetic_demo_completed' and p['model_loaded'] is False and p['model_downloaded'] is False and p['device']=='cpu' and p['final_dpo_loss'] < p['initial_dpo_loss'] and p['policy_chosen_probability'] > 0.5"
+      - name: Chapter 50 synthetic reasoning-data checks
+        run: |
+          (cd book-engineering/projects/50-synthetic-reasoning && python -m unittest discover -v)
+          python book-engineering/projects/50-synthetic-reasoning/reasoning_lab.py \
+            --mode audit --fixture book-engineering/projects/50-synthetic-reasoning/sample_traces.jsonl \
+            --output /tmp/ch50-ci-audit
+          python -c "import json; p=json.load(open('/tmp/ch50-ci-audit/run.json')); assert p['status']=='synthetic_fixture_audit_complete' and p['training_performed'] is False and p['language_model_loaded'] is False and p['model_downloaded'] is False and p['records']==12 and p['groups']==6 and p['sha256']=='1654621020c9dd2175cf0d7f66cb14ed78a3d192667c7e79ce7571219f47a075' and [p['split'][name]['records'] for name in ('train','validation','test')]==[8,2,2]"
+          python book-engineering/projects/50-synthetic-reasoning/reasoning_lab.py \
+            --mode demo --fixture book-engineering/projects/50-synthetic-reasoning/sample_traces.jsonl \
+            --output /tmp/ch50-ci-demo
+          python -c "import json; p=json.load(open('/tmp/ch50-ci-demo/run.json')); assert p['status']=='synthetic_math_helpers_smoke_test' and p['training_performed'] is False and p['language_model_loaded'] is False and p['model_downloaded'] is False and p['student_gradient_is_finite'] is True and p['vote_winner']=='125' and p['candidate_budget']==5"
       - name: Confirm volume 4 builder idempotence
         run: |
           cp data.json /tmp/v4-data-before.json

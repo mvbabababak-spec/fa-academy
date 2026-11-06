@@ -1,5 +1,5 @@
-// ===== فا-اکدمی Service Worker v79 =====
-const CACHE_NAME = 'fa-academy-v79';
+// ===== فا-اکدمی Service Worker v80 =====
+const CACHE_NAME = 'fa-academy-v80';
 const CORE_FILES = [
   './',
   './index.html',
@@ -158,6 +158,15 @@ const CORE_FILES = [
   './book-engineering/projects/49-preference-lab/test_preference_lab.py',
   './book-engineering/projects/49-preference-lab/sample_preferences.jsonl',
   './book-engineering/projects/49-preference-lab/results.json',
+  './book-engineering/diagrams/v4-ch04-synthetic-reasoning.svg',
+  './book-engineering/chapters/50-synthetic-reasoning.md',
+  './book-engineering/chapters/50-audit-report-fa.md',
+  './book-engineering/answers/50-synthetic-reasoning-fa.md',
+  './book-engineering/projects/50-synthetic-reasoning/README.md',
+  './book-engineering/projects/50-synthetic-reasoning/reasoning_lab.py',
+  './book-engineering/projects/50-synthetic-reasoning/test_reasoning_lab.py',
+  './book-engineering/projects/50-synthetic-reasoning/sample_traces.jsonl',
+  './book-engineering/projects/50-synthetic-reasoning/results.json',
   './assets/images/babak-ai/v2-ch07-backprop.webp',
   './assets/images/babak-ai/v2-ch10-cnn.webp',
   './assets/images/babak-ai/v2-ch11-representations.webp',

@@ -1,10 +1,10 @@
 # Fa Academy
 
-اپ وب/PWA فارسی برای مجموعهٔ پنج‌جلدی «هنر و علم ساخت هوش». جلد اول ۲۱ فصل و جلد دوم ۱۱ فصل منتشرشده دارد. جلد سوم ۱۴ فصل محلی (۱–۱۴)، متناظر با فصل‌های سراسری ۳۳–۴۶، منتشر شده است. از جلد چهارم، سه فصل محلی ۱–۳/سراسری ۴۷–۴۹ منتشر شده‌اند و ۱۲ فصل دیگر در نقشه‌اند. متن‌های قابل‌دریافت:
+اپ وب/PWA فارسی برای مجموعهٔ پنج‌جلدی «هنر و علم ساخت هوش». جلد اول ۲۱ فصل و جلد دوم ۱۱ فصل منتشرشده دارد. جلد سوم ۱۴ فصل محلی (۱–۱۴)، متناظر با فصل‌های سراسری ۳۳–۴۶، منتشر شده است. از جلد چهارم، چهار فصل محلی ۱–۴/سراسری ۴۷–۵۰ منتشر شده‌اند و ۱۱ فصل دیگر در نقشه‌اند. متن‌های قابل‌دریافت:
 
 - [جلد دوم — Markdown](volume-2-full-fa.md)
 - [جلد سوم، فصل‌های ۳۳–۴۶ — Markdown](volume-3-full-fa.md)
-- [جلد چهارم، فصل ۴۷ — Markdown](volume-4-full-fa.md)
+- [جلد چهارم، فصل‌های ۴۷–۵۰ — Markdown](volume-4-full-fa.md)
 
 **قالب انتشار فعلی وب/PWA و Markdown است. PDF و EPUB تولید و آزموده نشده‌اند و به milestone بعدی موکول‌اند.** راهنمای اجرا، محدوده و محدودیت پروژه‌ها در [book-engineering/README.md](book-engineering/README.md) آمده است.
 
@@ -17,15 +17,16 @@
 
 برای مرور دیداری، [contact sheet چهارده شکل](review-volume-3/volume-3-contact-sheet.webp) و [راهنمای سبک جلد سوم](book-engineering/VOLUME3_STYLE_GUIDE_FA.md) را ببینید. [گزارش نهایی انتشار و گیت‌ها](book-engineering/VOLUME3_FINAL_RELEASE_FA.md) شمار فصل/بخش/فرمول، نتایج آزمون، وضعیت CI و محدودیت‌های باقی‌مانده را ثبت می‌کند.
 
-## جلد چهارم: فصل‌های محلی ۱–۳ / سراسری ۴۷–۴۹
+## جلد چهارم: فصل‌های محلی ۱–۴ / سراسری ۴۷–۵۰
 
-فصل ۴۷ دربارهٔ **Continued Pretraining، Instruction Tuning و SFT** است: مرز هدف CPT/SFT، label masking، قالب داده، split گروهی و پروتکل validation/test. فصل ۴۸، **PEFT، Adapter، LoRA و QLoRA** را بررسی می‌کند؛ فصل ۴۹ به **مدل پاداش، RLHF/PPO، DPO، GRPO، RLAIF و Constitutional AI** می‌پردازد. هر فصل منبع، پاسخ‌نامه، گزارش ممیزی و پروژهٔ جدا دارد.
+فصل ۴۷ دربارهٔ **Continued Pretraining، Instruction Tuning و SFT** است: مرز هدف CPT/SFT، label masking، قالب داده، split گروهی و پروتکل validation/test. فصل ۴۸، **PEFT، Adapter، LoRA و QLoRA** را بررسی می‌کند؛ فصل ۴۹ به **مدل پاداش، RLHF/PPO، DPO، GRPO، RLAIF و Constitutional AI** می‌پردازد؛ فصل ۵۰ **دادهٔ مصنوعی، تقطیر، Curriculum Learning، محاسبهٔ زمان آزمون و مدل‌های استدلالی** را پوشش می‌دهد. هر فصل منبع، پاسخ‌نامه، گزارش ممیزی و پروژهٔ جدا دارد.
 
 - [فصل ۴۷: متن](book-engineering/chapters/47-posttraining.md) · [پاسخ‌نامه](book-engineering/answers/47-posttraining-fa.md) · [پروژه](book-engineering/projects/47-instruction-tuning/README.md) · [گزارش](book-engineering/chapters/47-audit-report-fa.md)
 - [فصل ۴۸: متن](book-engineering/chapters/48-peft.md) · [پاسخ‌نامه](book-engineering/answers/48-peft-fa.md) · [پروژه](book-engineering/projects/48-peft-lab/README.md) · [گزارش](book-engineering/chapters/48-audit-report-fa.md)
 - [فصل ۴۹: متن](book-engineering/chapters/49-preference-optimization.md) · [پاسخ‌نامه](book-engineering/answers/49-preference-optimization-fa.md) · [پروژه](book-engineering/projects/49-preference-lab/README.md) · [گزارش](book-engineering/chapters/49-audit-report-fa.md)
+- [فصل ۵۰: متن](book-engineering/chapters/50-synthetic-reasoning.md) · [پاسخ‌نامه](book-engineering/answers/50-synthetic-reasoning-fa.md) · [پروژه](book-engineering/projects/50-synthetic-reasoning/README.md) · [گزارش](book-engineering/chapters/50-audit-report-fa.md)
 - سازندهٔ append-safe: `book-engineering/build_volume4.py`؛ checker: `book-engineering/check_volume4.py`؛ خروجی Markdown: `volume-4-full-fa.md`.
-- مثال اختیاری فصل ۴۷ از revision ثابت `EleutherAI/pythia-14m` استفاده می‌کند. کارت مدل آن را انگلیسی‌زبان و پژوهشی معرفی می‌کند و برای deployment یا زبان‌های دیگر توصیه نمی‌کند؛ fixture آن ساختگی انگلیسی است و ادعای کیفیت فارسی یا محصولی ندارد. پروژه‌های فصل‌های ۴۸–۴۹ به مدل pretrained نیاز ندارند.
+- مثال اختیاری فصل ۴۷ از revision ثابت `EleutherAI/pythia-14m` استفاده می‌کند. کارت مدل آن را انگلیسی‌زبان و پژوهشی معرفی می‌کند و برای deployment یا زبان‌های دیگر توصیه نمی‌کند؛ fixture آن ساختگی انگلیسی است و ادعای کیفیت فارسی یا محصولی ندارد. پروژه‌های فصل‌های ۴۸–۵۰ به مدل pretrained نیاز ندارند.
 
 ## گزارش‌های ممیزی جلد سوم
 
