@@ -24,6 +24,7 @@
       .lane-title { font-size: 19px; font-weight: 800; }
       .box-title { font-size: 15px; font-weight: 700; }
       .box-sub { font-size: 12px; fill: #62748a; }
+      .footer { fill: #fff; }
     </style>
   </defs>
   <rect width="1600" height="1000" fill="#f4f7fb"/>
@@ -142,5 +143,5 @@
     <path d="M490 821 H472" stroke="#8c79b8" stroke-width="3" marker-end="url(#arrow)"/>
   </g>
   <rect x="45" y="946" width="1510" height="35" rx="17" fill="#172d49"/>
-  <text class="rtl" x="800" y="970" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">قاعدهٔ مهندسی: ابتدا مرجع و معیار بسازید؛ سپس دقت کمتر را روی workload، backend و سخت‌افزار مقصد اندازه بگیرید.</text>
+  <text class="rtl footer" x="800" y="970" text-anchor="middle" font-size="16" font-weight="700" fill="#fff">قاعدهٔ مهندسی: ابتدا مرجع و معیار بسازید؛ سپس دقت کمتر را روی workload، backend و سخت‌افزار مقصد اندازه بگیرید.</text>
 </svg>
