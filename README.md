@@ -1,10 +1,10 @@
 # Fa Academy
 
-اپ وب/PWA فارسی برای مجموعهٔ پنج‌جلدی «هنر و علم ساخت هوش». جلد اول ۲۱ فصل و جلد دوم ۱۱ فصل منتشرشده دارد. جلد سوم ۱۴ فصل محلی (۱–۱۴)، متناظر با فصل‌های سراسری ۳۳–۴۶، منتشر شده است. جلد چهارم در نقشه ۱۵ فصل محلی (سراسری ۴۷–۶۱) دارد؛ شش فصل محلی ۱–۶/سراسری ۴۷–۵۲ منتشر شده‌اند و ۹ فصل دیگر در نقشه‌اند. متن‌های قابل‌دریافت:
+اپ وب/PWA فارسی برای مجموعهٔ پنج‌جلدی «هنر و علم ساخت هوش». جلد اول ۲۱ فصل و جلد دوم ۱۱ فصل منتشرشده دارد. جلد سوم ۱۴ فصل محلی (۱–۱۴)، متناظر با فصل‌های سراسری ۳۳–۴۶، منتشر شده است. جلد چهارم در نقشه ۱۵ فصل محلی (سراسری ۴۷–۶۱) دارد؛ هفت فصل محلی ۱–۷/سراسری ۴۷–۵۳ منتشر شده‌اند و ۸ فصل دیگر در نقشه‌اند. متن‌های قابل‌دریافت:
 
 - [جلد دوم — Markdown](volume-2-full-fa.md)
 - [جلد سوم، فصل‌های ۳۳–۴۶ — Markdown](volume-3-full-fa.md)
-- [جلد چهارم، فصل‌های ۴۷–۵۲ — Markdown](volume-4-full-fa.md)
+- [جلد چهارم، فصل‌های ۴۷–۵۳ — Markdown](volume-4-full-fa.md)
 
 **قالب انتشار فعلی وب/PWA و Markdown است. PDF و EPUB تولید و آزموده نشده‌اند و به milestone بعدی موکول‌اند.** راهنمای اجرا، محدوده و محدودیت پروژه‌ها در [book-engineering/README.md](book-engineering/README.md) آمده است.
 
@@ -17,9 +17,9 @@
 
 برای مرور دیداری، [contact sheet چهارده شکل](review-volume-3/volume-3-contact-sheet.webp) و [راهنمای سبک جلد سوم](book-engineering/VOLUME3_STYLE_GUIDE_FA.md) را ببینید. [گزارش نهایی انتشار و گیت‌ها](book-engineering/VOLUME3_FINAL_RELEASE_FA.md) شمار فصل/بخش/فرمول، نتایج آزمون، وضعیت CI و محدودیت‌های باقی‌مانده را ثبت می‌کند.
 
-## جلد چهارم: فصل‌های محلی ۱–۶ / سراسری ۴۷–۵۲
+## جلد چهارم: فصل‌های محلی ۱–۷ / سراسری ۴۷–۵۳
 
-فصل ۴۷ دربارهٔ **Continued Pretraining، Instruction Tuning و SFT** است: مرز هدف CPT/SFT، label masking، قالب داده، split گروهی و پروتکل validation/test. فصل ۴۸، **PEFT، Adapter، LoRA و QLoRA** را بررسی می‌کند؛ فصل ۴۹ به **مدل پاداش، RLHF/PPO، DPO، GRPO، RLAIF و Constitutional AI** می‌پردازد؛ فصل ۵۰ **دادهٔ مصنوعی، تقطیر، Curriculum Learning، محاسبهٔ زمان آزمون و مدل‌های استدلالی** را پوشش می‌دهد؛ فصل ۵۱ **رمزگذار تصویر، Vision Transformer، ویژگی‌های وصله‌ای و هم‌ترازی متن–تصویر** را بررسی می‌کند؛ فصل ۵۲ **صوت و گفتار، قرارداد waveform، ASR، TTS، مدل‌های Audio-Language و ارزیابی WER/CER و کیفیت تولید** را پوشش می‌دهد. هر فصل منبع، پاسخ‌نامه، گزارش ممیزی و پروژهٔ جدا دارد.
+فصل ۴۷ دربارهٔ **Continued Pretraining، Instruction Tuning و SFT** است: مرز هدف CPT/SFT، label masking، قالب داده، split گروهی و پروتکل validation/test. فصل ۴۸، **PEFT، Adapter، LoRA و QLoRA** را بررسی می‌کند؛ فصل ۴۹ به **مدل پاداش، RLHF/PPO، DPO، GRPO، RLAIF و Constitutional AI** می‌پردازد؛ فصل ۵۰ **دادهٔ مصنوعی، تقطیر، Curriculum Learning، محاسبهٔ زمان آزمون و مدل‌های استدلالی** را پوشش می‌دهد؛ فصل ۵۱ **رمزگذار تصویر، Vision Transformer، ویژگی‌های وصله‌ای و هم‌ترازی متن–تصویر** را بررسی می‌کند؛ فصل ۵۲ **صوت و گفتار، قرارداد waveform، ASR، TTS، مدل‌های Audio-Language و ارزیابی WER/CER و کیفیت تولید** را پوشش می‌دهد؛ فصل ۵۳ **تولید تصویر و ویدئو، diffusion، sampling، latent، شرط‌دهی چندوجهی، ارزیابی، حقوق و ایمنی محتوا** را با آزمایشگاه CPU صرفاً مصنوعی بررسی می‌کند. هر فصل منبع، پاسخ‌نامه، گزارش ممیزی و پروژهٔ جدا دارد.
 
 - [فصل ۴۷: متن](book-engineering/chapters/47-posttraining.md) · [پاسخ‌نامه](book-engineering/answers/47-posttraining-fa.md) · [پروژه](book-engineering/projects/47-instruction-tuning/README.md) · [گزارش](book-engineering/chapters/47-audit-report-fa.md)
 - [فصل ۴۸: متن](book-engineering/chapters/48-peft.md) · [پاسخ‌نامه](book-engineering/answers/48-peft-fa.md) · [پروژه](book-engineering/projects/48-peft-lab/README.md) · [گزارش](book-engineering/chapters/48-audit-report-fa.md)
@@ -27,8 +27,9 @@
 - [فصل ۵۰: متن](book-engineering/chapters/50-synthetic-reasoning.md) · [پاسخ‌نامه](book-engineering/answers/50-synthetic-reasoning-fa.md) · [پروژه](book-engineering/projects/50-synthetic-reasoning/README.md) · [گزارش](book-engineering/chapters/50-audit-report-fa.md)
 - [فصل ۵۱: متن](book-engineering/chapters/51-vision-models.md) · [پاسخ‌نامه](book-engineering/answers/51-vision-models-fa.md) · [پروژه](book-engineering/projects/51-vision-lab/README.md) · [گزارش](book-engineering/chapters/51-audit-report-fa.md)
 - [فصل ۵۲: متن](book-engineering/chapters/52-audio-models.md) · [پاسخ‌نامه](book-engineering/answers/52-audio-models-fa.md) · [پروژه](book-engineering/projects/52-audio-lab/README.md) · [گزارش](book-engineering/chapters/52-audit-report-fa.md)
+- [فصل ۵۳: متن](book-engineering/chapters/53-image-video-generation.md) · [پاسخ‌نامه](book-engineering/answers/53-image-video-generation-fa.md) · [پروژه](book-engineering/projects/53-diffusion-lab/README.md) · [گزارش](book-engineering/chapters/53-audit-report-fa.md)
 - سازندهٔ append-safe: `book-engineering/build_volume4.py`؛ checker: `book-engineering/check_volume4.py`؛ خروجی Markdown: `volume-4-full-fa.md`.
-- مثال اختیاری فصل ۴۷ از revision ثابت `EleutherAI/pythia-14m` استفاده می‌کند. کارت مدل آن را انگلیسی‌زبان و پژوهشی معرفی می‌کند و برای deployment یا زبان‌های دیگر توصیه نمی‌کند؛ fixture آن ساختگی انگلیسی است و ادعای کیفیت فارسی یا محصولی ندارد. پروژه‌های فصل‌های ۴۸–۵۲ به مدل pretrained نیاز ندارند.
+- مثال اختیاری فصل ۴۷ از revision ثابت `EleutherAI/pythia-14m` استفاده می‌کند. کارت مدل آن را انگلیسی‌زبان و پژوهشی معرفی می‌کند و برای deployment یا زبان‌های دیگر توصیه نمی‌کند؛ fixture آن ساختگی انگلیسی است و ادعای کیفیت فارسی یا محصولی ندارد. پروژه‌های فصل‌های ۴۸–۵۳ به مدل pretrained نیاز ندارند.
 
 ## گزارش‌های ممیزی جلد سوم
 

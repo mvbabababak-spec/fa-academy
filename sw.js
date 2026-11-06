@@ -1,5 +1,5 @@
-// ===== فا-اکدمی Service Worker v85 =====
-const CACHE_NAME = 'fa-academy-v85';
+// ===== فا-اکدمی Service Worker v86 =====
+const CACHE_NAME = 'fa-academy-v86';
 const CORE_FILES = [
   './',
   './index.html',
@@ -193,6 +193,15 @@ const CORE_FILES = [
   './book-engineering/projects/52-audio-lab/test_audio_lab.py',
   './book-engineering/projects/52-audio-lab/sample_transcripts.json',
   './book-engineering/projects/52-audio-lab/results.json',
+  './book-engineering/diagrams/v4-ch07-diffusion.svg',
+  './book-engineering/chapters/53-image-video-generation.md',
+  './book-engineering/chapters/53-audit-report-fa.md',
+  './book-engineering/answers/53-image-video-generation-fa.md',
+  './book-engineering/projects/53-diffusion-lab/README.md',
+  './book-engineering/projects/53-diffusion-lab/diffusion_lab.py',
+  './book-engineering/projects/53-diffusion-lab/test_diffusion_lab.py',
+  './book-engineering/projects/53-diffusion-lab/sample_mixture.json',
+  './book-engineering/projects/53-diffusion-lab/results.json',
   './assets/images/babak-ai/v2-ch07-backprop.webp',
   './assets/images/babak-ai/v2-ch10-cnn.webp',
   './assets/images/babak-ai/v2-ch11-representations.webp',

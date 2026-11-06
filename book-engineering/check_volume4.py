@@ -1,6 +1,7 @@
 """Structural, source, appendix, output and offline-cache checks for volume 4."""
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 import re
@@ -290,6 +291,56 @@ def main() -> None:
     _require(results52["demo"]["analytic_tone"]["sample_count"] == 1600 and results52["demo"]["analytic_tone"]["complete_frames_without_tail_padding"] == 8, "chapter 52 result manifest framing values mismatch")
     _require(results52["demo"]["transcript_metrics"]["wer"]["error_rate"] == 3 / 11 and results52["demo"]["transcript_metrics"]["sentence_macro_wer"] == 0.21666666666666667, "chapter 52 result manifest metric values mismatch")
 
+    source53 = ROOT / "book-engineering/chapters/53-image-video-generation.md"
+    answer53 = ROOT / "book-engineering/answers/53-image-video-generation-fa.md"
+    report53 = ROOT / "book-engineering/chapters/53-audit-report-fa.md"
+    diagram53 = ROOT / "book-engineering/diagrams/v4-ch07-diffusion.svg"
+    project53 = ROOT / "book-engineering/projects/53-diffusion-lab"
+    for path in (source53, answer53, report53, diagram53, project53 / "README.md", project53 / "diffusion_lab.py", project53 / "test_diffusion_lab.py", project53 / "sample_mixture.json", project53 / "results.json"):
+        _require(path.is_file(), f"missing chapter 53 deliverable: {path.relative_to(ROOT)}")
+    source53_text = source53.read_text(encoding="utf-8")
+    _require("فصل محلی ۷ از ۱۵ فصل جلد چهارم = فصل سراسری ۵۳" in source53_text, "chapter 53 local/global mapping or 15-chapter roadmap missing")
+    _require("۱۵ فصل" in source53_text and "تاریخ بازبینی منابع: ۶ نوامبر ۲۰۲۶" in source53_text, "chapter 53 roadmap or source-review date missing")
+    _require("فصل ۵۱" in source53_text and "فصل ۵۲" in source53_text and "فصل ۵۴" in source53_text, "chapter 53 boundaries with adjacent chapters missing")
+    _require(all(term in source53_text for term in ("DDPM", "DDIM", "Classifier-Free Guidance", "Latent Diffusion", "Diffusion Transformer", "Flow Matching", "C2PA", "VBench")), "chapter 53 roadmap topics missing")
+    math53_nodes = re.findall(r"<math\b[^>]*>", source53_text)
+    math53_blocks = re.findall(r"<math\b.*?</math>", source53_text, flags=re.DOTALL)
+    _require(len(math53_nodes) >= 9 and len(math53_blocks) == len(math53_nodes), "chapter 53 core MathML missing or malformed")
+    _require(all("aria-label=" in node for node in math53_nodes), "chapter 53 MathML needs aria-label")
+    _require(source53_text.count("**متن جایگزین فرمول:**") >= len(math53_nodes), "chapter 53 formulas need visible alternatives")
+    for math_markup in math53_blocks:
+        _require(ET.fromstring(math_markup).tag.endswith("math"), "chapter 53 contains invalid MathML XML")
+    figures53 = re.findall(r"!\[([^\]]*)\]\(([^)]+)\)", source53_text)
+    _require(bool(figures53), "chapter 53 figure missing")
+    for alt, image_path in figures53:
+        _require(bool(alt.strip()), "chapter 53 figure alternative text must be non-empty")
+        _require((ROOT / image_path).is_file(), f"missing chapter 53 figure: {image_path}")
+    _require(all(term in figures53[0][0] for term in ("diffusion شرطی", "cross-attention", "provenance")), "chapter 53 figure alt text misses key stages")
+    svg53 = ET.parse(diagram53).getroot()
+    _require(svg53.attrib.get("width") == "1600" and svg53.attrib.get("height") == "1000", "chapter 53 SVG dimensions mismatch")
+    _require("aria-labelledby" in svg53.attrib, "chapter 53 SVG must expose title and description")
+    answer53_text = answer53.read_text(encoding="utf-8")
+    _require("پاسخ‌نامهٔ تشریحی فصل ۵۳" in answer53_text and len(answer53_text.split()) >= 250, "chapter 53 independent answer key missing or too short")
+    report53_text = report53.read_text(encoding="utf-8")
+    _require("نتایج اجرای واقعی" in report53_text and "۴۰/۴۰ آزمون موفق" in report53_text, "chapter 53 report must record actual unit tests")
+    _require("7646ab0c0d8cee8fdbf3e29ac88ce9e37b181859e0ff34935f6af7bbe28b208b" in report53_text, "chapter 53 report must record fixture SHA-256")
+    _require("test_volume4.py" in report53_text and "test_mobile_layout.py" in report53_text and "۷۱ دارایی آفلاین" in report53_text and "۹۷۲ بخش" in report53_text, "chapter 53 report must record browser/mobile results and coverage")
+    _require("مدل واقعی" in report53_text and "کیفیت فارسی" in report53_text and "نتیجهٔ حقوقی" in report53_text, "chapter 53 report must state claim limits")
+    code53 = (project53 / "diffusion_lab.py").read_text(encoding="utf-8").rstrip()
+    blocks53 = re.findall(r"```python\n(.*?)\n```", source53_text, flags=re.DOTALL)
+    _require(bool(blocks53) and blocks53[-1] == code53, "chapter 53 appendix and tested project must be byte-for-byte equal")
+    fixture_path53 = project53 / "sample_mixture.json"
+    fixture53 = json.loads(fixture_path53.read_text(encoding="utf-8"))
+    fixture53_hash = hashlib.sha256(fixture_path53.read_bytes()).hexdigest()
+    _require(fixture53["label_source"] == "synthetic_fixture" and len(fixture53["components"]) == 4, "chapter 53 fixture must remain a four-component synthetic mixture")
+    _require(all(component["weight"] == 0.25 for component in fixture53["components"]), "chapter 53 fixture component weights changed")
+    _require(fixture53["metadata"]["image_files_included"] is False and fixture53["metadata"]["video_files_included"] is False and fixture53["metadata"]["trained_weights_included"] is False, "chapter 53 fixture must disclaim real media and trained weights")
+    results53 = json.loads((project53 / "results.json").read_text(encoding="utf-8"))
+    _require(results53["unit_tests"]["passed"] == 40 and results53["unit_tests"]["failed"] == 0 and results53["unit_tests"]["python"] == "3.13.16", "chapter 53 result manifest test result mismatch")
+    _require(results53["audit"]["fixture"]["sha256"] == fixture53_hash and results53["demo"]["fixture"]["sha256"] == fixture53_hash, "chapter 53 result manifest fixture SHA mismatch")
+    _require(results53["audit"]["training_performed"] is False and results53["audit"]["neural_model_loaded"] is False and results53["demo"]["image_files_loaded"] is False and results53["demo"]["video_files_loaded"] is False, "chapter 53 result manifest must disclaim model training and real media")
+    _require(results53["demo"]["sampling"]["terminal_alpha_bar"] == 0.002080618226191632 and results53["demo"]["nearest_synthetic_center_counts"] == {"southwest": 19, "northwest": 17, "southeast": 16, "northeast": 12}, "chapter 53 deterministic demo values changed")
+
     code = (project / "sft_experiment.py").read_text(encoding="utf-8").rstrip()
     blocks = re.findall(r"```python\n(.*?)\n```", source_text, flags=re.DOTALL)
     _require(bool(blocks) and blocks[-1] == code, "chapter appendix and tested project must be byte-for-byte equal")
@@ -303,7 +354,7 @@ def main() -> None:
     _require(markdown_path.is_file(), "volume-4-full-fa.md missing")
     _require(markdown_path.read_text(encoding="utf-8") == builder.expected_markdown(expected_chapters, specs), "full Markdown does not match chapter sources")
     sw = (ROOT / "sw.js").read_text(encoding="utf-8")
-    _require("fa-academy-v85" in sw and "v84" not in sw.splitlines()[0], "service worker cache version was not advanced")
+    _require("fa-academy-v86" in sw and "v85" not in sw.splitlines()[0], "service worker cache version was not advanced")
     cover_paths = {
         f"art-science-intelligence-v{volume}": f"assets/images/covers/volume-{volume}-cover.webp"
         for volume in range(1, 5)
@@ -378,6 +429,15 @@ def main() -> None:
         "./book-engineering/projects/52-audio-lab/test_audio_lab.py",
         "./book-engineering/projects/52-audio-lab/sample_transcripts.json",
         "./book-engineering/projects/52-audio-lab/results.json",
+        "./book-engineering/diagrams/v4-ch07-diffusion.svg",
+        "./book-engineering/chapters/53-image-video-generation.md",
+        "./book-engineering/chapters/53-audit-report-fa.md",
+        "./book-engineering/answers/53-image-video-generation-fa.md",
+        "./book-engineering/projects/53-diffusion-lab/README.md",
+        "./book-engineering/projects/53-diffusion-lab/diffusion_lab.py",
+        "./book-engineering/projects/53-diffusion-lab/test_diffusion_lab.py",
+        "./book-engineering/projects/53-diffusion-lab/sample_mixture.json",
+        "./book-engineering/projects/53-diffusion-lab/results.json",
     )
     for item in required_cache_paths:
         _require(item in sw, f"service worker does not precache {item}")
@@ -385,7 +445,7 @@ def main() -> None:
     print(
         f"PASS volume 4: {len(book['chapters'])}/{builder.PLANNED_CHAPTERS} chapters, "
         f"{sum(len(ch['sections']) for ch in book['chapters'])} sections, "
-        f"{len(math_nodes) + len(math48) + len(math49) + len(math50) + len(math51) + len(math52)} accessible MathML expressions, exact appendices, reports/answers/fixtures present"
+        f"{len(math_nodes) + len(math48) + len(math49) + len(math50) + len(math51) + len(math52) + len(math53_nodes)} accessible MathML expressions, exact appendices, reports/answers/fixtures present"
     )
 
 

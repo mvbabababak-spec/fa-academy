@@ -90,6 +90,17 @@ jobs:
             --mode demo --fixture book-engineering/projects/52-audio-lab/sample_transcripts.json \
             --output /tmp/ch52-ci-demo
           python -c "import json; p=json.load(open('/tmp/ch52-ci-demo/run.json')); assert p['status']=='synthetic_audio_framing_and_transcript_metric_demo_complete' and p['training_performed'] is False and p['audio_recordings_loaded'] is False and p['speech_model_loaded'] is False and p['model_downloaded'] is False and p['analytic_tone']['sample_count']==1600 and p['analytic_tone']['complete_frames_without_tail_padding']==8 and p['analytic_tone']['first_frame_peak_frequency_hz']==440.0 and p['transcript_metrics']['wer']['error_rate']==3/11 and p['transcript_metrics']['sentence_macro_wer']==0.21666666666666667"
+      - name: Chapter 53 synthetic diffusion fixture and sampler checks
+        run: |
+          (cd book-engineering/projects/53-diffusion-lab && python -m unittest discover -v)
+          python book-engineering/projects/53-diffusion-lab/diffusion_lab.py \
+            --mode audit --fixture book-engineering/projects/53-diffusion-lab/sample_mixture.json \
+            --output /tmp/ch53-ci-audit
+          python -c "import json; p=json.load(open('/tmp/ch53-ci-audit/run.json')); assert p['status']=='synthetic_diffusion_fixture_audit_complete' and p['training_performed'] is False and p['neural_model_loaded'] is False and p['model_downloaded'] is False and p['image_files_loaded'] is False and p['video_files_loaded'] is False and p['fixture']['components']==4 and p['fixture']['sha256']=='7646ab0c0d8cee8fdbf3e29ac88ce9e37b181859e0ff34935f6af7bbe28b208b'"
+          python book-engineering/projects/53-diffusion-lab/diffusion_lab.py \
+            --mode demo --fixture book-engineering/projects/53-diffusion-lab/sample_mixture.json \
+            --output /tmp/ch53-ci-demo --steps 200 --samples 64 --seed 53
+          python -c "import json; p=json.load(open('/tmp/ch53-ci-demo/run.json')); assert p['status']=='analytic_synthetic_mixture_ddpm_demo_complete' and p['training_performed'] is False and p['neural_model_loaded'] is False and p['model_downloaded'] is False and p['image_files_loaded'] is False and p['video_files_loaded'] is False and p['analytic_score_used'] is True and p['sampling']['timesteps']==200 and p['sampling']['sample_count']==64 and p['sampling']['seed']==53 and p['sampling']['terminal_alpha_bar']==0.002080618226191632 and p['nearest_synthetic_center_counts']=={'southwest':19,'northwest':17,'southeast':16,'northeast':12}"
       - name: Confirm volume 4 builder idempotence
         run: |
           cp data.json /tmp/v4-data-before.json
