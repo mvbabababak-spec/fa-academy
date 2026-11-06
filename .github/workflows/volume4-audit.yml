@@ -37,6 +37,16 @@ jobs:
             --mode audit --data book-engineering/projects/47-instruction-tuning/sample_sft.jsonl \
             --output /tmp/ch47-ci-audit
           python -c "import json; p=json.load(open('/tmp/ch47-ci-audit/run.json')); assert p['status']=='validated_only' and p['training_performed'] is False and p['model_downloaded_or_loaded'] is False and p['data']['records']==15 and p['data']['groups']==14"
+      - name: Chapter 48 offline PEFT algebra tests
+        run: |
+          (cd book-engineering/projects/48-peft-lab && python -m unittest discover -v)
+          python book-engineering/projects/48-peft-lab/peft_lab.py \
+            --mode audit --fixture book-engineering/projects/48-peft-lab/sample_layers.json \
+            --output /tmp/ch48-ci-audit
+          python -c "import json; p=json.load(open('/tmp/ch48-ci-audit/run.json')); assert p['status']=='validated_only' and p['training_performed'] is False and p['model_downloaded'] is False and p['totals']['base_weight_parameters_in_fixture']==5120 and p['totals']['lora_trainable_parameters_in_fixture']==832 and p['totals']['quantized_weight_payload_lower_bound_bytes']==2560"
+          python book-engineering/projects/48-peft-lab/peft_lab.py \
+            --mode toy-lora --output /tmp/ch48-ci-toy
+          python -c "import json; p=json.load(open('/tmp/ch48-ci-toy/run.json')); assert p['status']=='synthetic_demo_completed' and p['model_downloaded'] is False and p['device']=='cpu' and p['final_mse'] < p['initial_mse'] and p['base_parameters_trainable'] is False and p['merge_max_abs_error'] < 1e-5"
       - name: Confirm volume 4 builder idempotence
         run: |
           cp data.json /tmp/v4-data-before.json

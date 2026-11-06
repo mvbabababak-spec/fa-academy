@@ -74,6 +74,43 @@ def main() -> None:
     report_text = report.read_text(encoding="utf-8")
     _require("نتایج اجرای واقعی" in report_text, "audit report must distinguish actual test results")
 
+    source48 = ROOT / "book-engineering/chapters/48-peft.md"
+    answer48 = ROOT / "book-engineering/answers/48-peft-fa.md"
+    report48 = ROOT / "book-engineering/chapters/48-audit-report-fa.md"
+    project48 = ROOT / "book-engineering/projects/48-peft-lab"
+    for path in (source48, answer48, report48, project48 / "README.md", project48 / "peft_lab.py", project48 / "test_peft_lab.py", project48 / "sample_layers.json"):
+        _require(path.is_file(), f"missing chapter 48 deliverable: {path.relative_to(ROOT)}")
+    source48_text = source48.read_text(encoding="utf-8")
+    _require("فصل محلی ۲ جلد چهارم = فصل سراسری ۴۸" in source48_text, "chapter 48 local/global mapping missing")
+    _require("تاریخ بازبینی منابع: ۶ نوامبر ۲۰۲۶" in source48_text, "chapter 48 source review date missing")
+    _require(bool(re.search(r"^##\s+.*منابع و تاریخ بازبینی", source48_text, flags=re.MULTILINE)), "chapter 48 dated bibliography missing")
+    _require("PEFT" in source48_text and "Adapter" in source48_text and "QLoRA" in source48_text, "chapter 48 scope terms missing")
+    _require("فصل ۴۷" in source48_text and "فصل ۴۹" in source48_text, "chapter 48 boundaries with adjacent chapters missing")
+    math48 = re.findall(r"<math\b[^>]*>", source48_text)
+    _require(bool(math48), "chapter 48 must include accessible MathML")
+    _require(all("aria-label=" in node for node in math48), "chapter 48 MathML needs aria-label")
+    _require(source48_text.count("**متن جایگزین فرمول:**") >= len(math48), "chapter 48 formulas need visible alternatives")
+    for alt, image_path in re.findall(r"!\[([^\]]*)\]\(([^)]+)\)", source48_text):
+        _require(bool(alt.strip()), "chapter 48 figure alternative text must be non-empty")
+        _require((ROOT / image_path).is_file(), f"missing chapter 48 figure: {image_path}")
+    svg48 = ET.parse(ROOT / "book-engineering/diagrams/v4-ch02-peft.svg").getroot()
+    _require(svg48.attrib.get("width") == "1600" and svg48.attrib.get("height") == "1000", "chapter 48 SVG dimensions mismatch")
+    _require("aria-labelledby" in svg48.attrib, "chapter 48 SVG must have accessible title/description")
+    answer48_text = answer48.read_text(encoding="utf-8")
+    _require("پاسخ‌نامهٔ تشریحی فصل ۴۸" in answer48_text and len(answer48_text.split()) >= 250, "chapter 48 independent answer key missing or too short")
+    report48_text = report48.read_text(encoding="utf-8")
+    _require("نتایج اجرای واقعی" in report48_text, "chapter 48 audit report must distinguish actual tests")
+    _require("۱۴ آزمون از ۱۴ آزمون موفق" in report48_text, "chapter 48 report must record the actual unit-test result")
+    _require(all(value in report48_text for value in ("۵٬۱۲۰", "۸۳۲", "۲٬۵۶۰")), "chapter 48 report must record fixture counts and payload lower bound")
+    _require("1.0780806292132183e-07" in report48_text and "2.086162567138672e-07" in report48_text, "chapter 48 report must record exact synthetic demo outcomes")
+    _require("test_volume4.py" in report48_text and "test_mobile_layout.py" in report48_text, "chapter 48 report must record browser/mobile integration results")
+    _require("GPU/NCCL" in report48_text and "کیفیت" in report48_text, "chapter 48 report must state its claim limits")
+    code48 = (project48 / "peft_lab.py").read_text(encoding="utf-8").rstrip()
+    blocks48 = re.findall(r"```python\n(.*?)\n```", source48_text, flags=re.DOTALL)
+    _require(bool(blocks48) and blocks48[-1] == code48, "chapter 48 appendix and tested project must match byte-for-byte")
+    rows48 = json.loads((project48 / "sample_layers.json").read_text(encoding="utf-8"))
+    _require(len(rows48) == 3, "chapter 48 synthetic shape fixture row count changed")
+
     code = (project / "sft_experiment.py").read_text(encoding="utf-8").rstrip()
     blocks = re.findall(r"```python\n(.*?)\n```", source_text, flags=re.DOTALL)
     _require(bool(blocks) and blocks[-1] == code, "chapter appendix and tested project must be byte-for-byte equal")
@@ -87,7 +124,7 @@ def main() -> None:
     _require(markdown_path.is_file(), "volume-4-full-fa.md missing")
     _require(markdown_path.read_text(encoding="utf-8") == builder.expected_markdown(expected_chapters, specs), "full Markdown does not match chapter sources")
     sw = (ROOT / "sw.js").read_text(encoding="utf-8")
-    _require("fa-academy-v77" in sw and "v76" not in sw.splitlines()[0], "service worker cache version was not advanced")
+    _require("fa-academy-v78" in sw and "v77" not in sw.splitlines()[0], "service worker cache version was not advanced")
     required_cache_paths = (
         "./volume-4-full-fa.md",
         "./book-engineering/diagrams/v4-ch01-posttraining.svg",
@@ -98,6 +135,15 @@ def main() -> None:
         "./book-engineering/projects/47-instruction-tuning/sft_experiment.py",
         "./book-engineering/projects/47-instruction-tuning/test_sft_experiment.py",
         "./book-engineering/projects/47-instruction-tuning/sample_sft.jsonl",
+        "./book-engineering/projects/47-instruction-tuning/requirements-model-demo.txt",
+        "./book-engineering/diagrams/v4-ch02-peft.svg",
+        "./book-engineering/chapters/48-peft.md",
+        "./book-engineering/chapters/48-audit-report-fa.md",
+        "./book-engineering/answers/48-peft-fa.md",
+        "./book-engineering/projects/48-peft-lab/README.md",
+        "./book-engineering/projects/48-peft-lab/peft_lab.py",
+        "./book-engineering/projects/48-peft-lab/test_peft_lab.py",
+        "./book-engineering/projects/48-peft-lab/sample_layers.json",
     )
     for item in required_cache_paths:
         _require(item in sw, f"service worker does not precache {item}")
@@ -105,7 +151,7 @@ def main() -> None:
     print(
         f"PASS volume 4: {len(book['chapters'])}/{builder.PLANNED_CHAPTERS} chapters, "
         f"{sum(len(ch['sections']) for ch in book['chapters'])} sections, "
-        f"{len(math_nodes)} accessible MathML expressions, code appendix exact, report/answer/fixture present"
+        f"{len(math_nodes) + len(math48)} accessible MathML expressions, exact appendices, reports/answers/fixtures present"
     )
 
 

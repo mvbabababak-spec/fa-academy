@@ -46,16 +46,23 @@ SPECS = [
 ]
 
 
+APPENDIX_PROJECTS = {
+    47: "book-engineering/projects/47-instruction-tuning/sft_experiment.py",
+    48: "book-engineering/projects/48-peft-lab/peft_lab.py",
+}
+
+
 def _verify_code_appendix(global_num: int, text: str) -> None:
-    if global_num != 47:
+    relative = APPENDIX_PROJECTS.get(global_num)
+    if relative is None:
         return
-    project_code_path = ROOT / "book-engineering/projects/47-instruction-tuning/sft_experiment.py"
+    project_code_path = ROOT / relative
     if not project_code_path.is_file():
         raise FileNotFoundError(project_code_path)
     code_blocks = re.findall(r"```python\n(.*?)\n```", text, flags=re.DOTALL)
     project_code = project_code_path.read_text(encoding="utf-8").rstrip()
     if not code_blocks or code_blocks[-1] != project_code:
-        raise ValueError("chapter 47 executable appendix must match the tested SFT project byte-for-byte")
+        raise ValueError(f"chapter {global_num} executable appendix must match its tested project byte-for-byte")
 
 
 def build_chapter(spec: tuple[int, int, str, str, str]) -> dict:
