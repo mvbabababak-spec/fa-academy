@@ -303,7 +303,7 @@ def main() -> None:
     _require(markdown_path.is_file(), "volume-4-full-fa.md missing")
     _require(markdown_path.read_text(encoding="utf-8") == builder.expected_markdown(expected_chapters, specs), "full Markdown does not match chapter sources")
     sw = (ROOT / "sw.js").read_text(encoding="utf-8")
-    _require("fa-academy-v83" in sw and "v82" not in sw.splitlines()[0], "service worker cache version was not advanced")
+    _require("fa-academy-v85" in sw and "v84" not in sw.splitlines()[0], "service worker cache version was not advanced")
     cover_paths = {
         f"art-science-intelligence-v{volume}": f"assets/images/covers/volume-{volume}-cover.webp"
         for volume in range(1, 5)
@@ -320,6 +320,10 @@ def main() -> None:
         "./assets/images/covers/volume-2-cover.webp",
         "./assets/images/covers/volume-3-cover.webp",
         "./assets/images/covers/volume-4-cover.webp",
+        "./assets/images/covers/microsoft-ai-for-beginners-cover.webp",
+        "./assets/images/covers/microsoft-generative-ai-for-beginners-cover.webp",
+        "./assets/images/covers/microsoft-ml-for-beginners-cover.webp",
+        "./assets/images/covers/microsoft-data-science-for-beginners-cover.webp",
         "./volume-4-full-fa.md",
         "./book-engineering/diagrams/v4-ch01-posttraining.svg",
         "./book-engineering/chapters/47-posttraining.md",
