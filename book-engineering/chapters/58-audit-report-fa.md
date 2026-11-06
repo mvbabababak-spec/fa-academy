@@ -1,6 +1,6 @@
 # گزارش ممیزی فصل محلی ۱۲ / سراسری ۵۸ — اکوسیستم Hugging Face
 
-**وضعیت:** ممیزی محلی تکمیل؛ آزمون پروژه، checker، build idempotent و آزمون مرورگر/آفلاین جلد موفق شدند. در CI پس از انتشار `091e790`، آزمون‌های جلدهای ۲–۴ و Pages موفق شدند؛ جلد ۱ در sweep عمومی پروژه‌ها شکست خورد. برای اجرای فصل ۵۸ فقط در محیط pinشدهٔ workflow جلد ۴، sweep جلد ۱ اصلاح شد؛ اجرای دوباره پس از push اصلاح هنوز در انتظار است.
+**وضعیت:** ممیزی محلی و راه‌دور تکمیل؛ آزمون پروژه، checker، build idempotent، مرورگر/آفلاین و هر پنج workflow روی push اصلاحی `4e1e305` موفق شدند. push اولیهٔ `091e790` یک شکست در sweep عمومی جلد ۱ داشت؛ علت ادغامی اصلاح شد و آزمون نهایی سبز است.
 
 **تاریخ:** ۶ نوامبر ۲۰۲۶.
 
@@ -29,6 +29,6 @@ fixture `sample_data.jsonl` با `label_source=synthetic_fixture` ساختگی �
 - `build_volume4.py` اجرای دوم را بدون تغییر `data.json` یا `volume-4-full-fa.md` گذراند؛ ۱۲/۱۵ فصل و ۲۷۳ بخش ثبت شد. `check_volume4.py` موفق بود: ۵۵ عبارت MathML دسترس‌پذیر، پیوست دقیق، fixture/hash، پاسخ‌نامه و گزارش.
 - `test_volume4.py` در ۳۲۰، ۳۹۰ و ۱۴۴۰ پیکسل موفق شد؛ ناوبری، فرمول، diagram، پاسخ‌نامه، تطبیق appendix و ۱۲۱ دارایی آفلاین را بررسی کرد.
 - `test_mobile_layout.py` در ۳۲۰، ۳۹۰، ۴۱۴، ۷۶۸ و ۱۴۴۰ پیکسل موفق شد؛ ۱٬۰۷۸ بخش، متن RTL، قفل viewport، و دسترسی آفلاین به فصل/پاسخ‌نامه/نمودار فصل ۵۸ بررسی شدند.
-- workflow `.github/workflows/volume4-audit.yml` یک venv جدا برای snapshot فصل می‌سازد و `pip check`, دوازده آزمون، اجرای مستقیم و `accelerate launch` را آزمون می‌کند؛ اجرای Volume 4 در run `42281543823` موفق شد. در همان push، Pages و جلدهای ۲ و ۳ نیز موفق شدند؛ جلد ۱ به‌علت sweep عمومی پوشه‌های پروژه در گام «Run each project test suite» شکست خورد. چون ch58 به dependencyهای pinشدهٔ جداگانه نیاز دارد، `.github/workflows/volume1-audit.yml` اکنون آن پروژه را از sweep عمومی کنار می‌گذارد؛ جلد ۴ همچنان محیط اختصاصی و آزمون کامل آن را اجرا می‌کند. نتیجهٔ CI پس از push اصلاح در زمان ثبت این گزارش هنوز در انتظار است.
+- workflow `.github/workflows/volume4-audit.yml` یک venv جدا برای snapshot فصل می‌سازد و `pip check`, دوازده آزمون، اجرای مستقیم و `accelerate launch` را آزمون می‌کند؛ اجرای Volume 4 در run `42281543823` موفق شد. در push اولیه `091e790`، Pages و جلدهای ۲ و ۳ نیز موفق شدند؛ جلد ۱ در sweep عمومی پروژه‌ها شکست خورد. به‌دلیل dependencyهای pinشدهٔ جداگانهٔ ch58، `.github/workflows/volume1-audit.yml` اصلاح شد تا پروژهٔ فصل ۵۸ را به workflow اختصاصی جلد ۴ واگذارد. پس از این اصلاح، همهٔ پنج workflow موفق شدند: [جلد ۱](https://github.com/mvbabababak-spec/fa-academy/actions/runs/42282561192)، [جلد ۲](https://github.com/mvbabababak-spec/fa-academy/actions/runs/42282561195)، [جلد ۳](https://github.com/mvbabababak-spec/fa-academy/actions/runs/42282561139)، [جلد ۴](https://github.com/mvbabababak-spec/fa-academy/actions/runs/42282561198) و [Pages](https://github.com/mvbabababak-spec/fa-academy/actions/runs/42282559704) روی commit اصلاحی `4e1e305`.
 
 PDF/EPUB تولید یا آزموده نمی‌شوند؛ خروجی وب/PWA و Markdown است. انتشار فقط در commit مستقل فصل محلی ۱۲/سراسری ۵۸، با push عادی و بدون force انجام می‌شود.
