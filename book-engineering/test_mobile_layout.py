@@ -49,9 +49,14 @@ def main():
                     cdp.send('Input.dispatchTouchEvent', {'type': 'touchEnd', 'touchPoints': []})
                     assert page.evaluate('window.scrollX') == 0
                 result = page.evaluate('''() => {
-                  let bad=[],count=0;
+                  let bad=[],count=0,typographyFailures=[],typography={};
+                  const isVolumeId=id=>/^art-science-intelligence-v[1-5]$/.test(id);
+                  const targetBooks=DATA.books.filter(item=>isVolumeId(item.id));
+                  targetBooks.forEach(item=>typography[item.id]={sections:0,paragraphs:0,justified:0,indented:0,formulas:0,captions:0});
                   ['books','courses'].forEach(type => DATA[type].forEach(item => {
-                    openItem(item.id,type==='books'?'book':'course');
+                    const itemType=type==='books'?'book':'course';
+                    const isTargetBook=itemType==='book'&&isVolumeId(item.id);
+                    openItem(item.id,itemType);
                     (item.chapters||[]).forEach((ch,ci)=>(ch.sections||[]).forEach((sec,si)=>{
                       openSec(item.id,ci,si);
                       const content=document.querySelector('.reader-content');
@@ -60,13 +65,54 @@ def main():
                       if(content.scrollWidth>content.clientWidth+2 || nav.scrollWidth>nav.clientWidth+2 || rect.left < -1 || rect.right > innerWidth+1 || document.documentElement.scrollWidth>innerWidth) {
                         bad.push({id:item.id,chapter:ci+1,section:si+1, content:[content.scrollWidth,content.clientWidth],nav:[nav.scrollWidth,nav.clientWidth],rect:[rect.left,rect.right]});
                       }
+                      const hasProseClass=content.classList.contains('reader-content--book-prose');
+                      if(hasProseClass!==isTargetBook) typographyFailures.push({id:item.id,chapter:ci+1,section:si+1,reason:'scope class'});
+                      if(isTargetBook){
+                        const stats=typography[item.id];stats.sections++;
+                        const paragraphs=Array.from(content.querySelectorAll('p:not(:has(math)):not(.reader-caption)')).filter(p=>p.textContent.trim());
+                        stats.paragraphs+=paragraphs.length;
+                        paragraphs.forEach(p=>{
+                          const s=getComputedStyle(p);
+                          if(s.direction!=='rtl'||s.textAlign!=='justify'||s.textAlignLast!=='start'||s.textJustify!=='inter-word'){
+                            if(typographyFailures.length<30)typographyFailures.push({id:item.id,chapter:ci+1,section:si+1,reason:'prose alignment',direction:s.direction,align:s.textAlign,last:s.textAlignLast,justify:s.textJustify});
+                          }else stats.justified++;
+                          if(parseFloat(s.textIndent)>0)stats.indented++;
+                        });
+                        const headingLeads=content.querySelectorAll('h1+p,h2+p,h3+p,h4+p,h5+p,h6+p');
+                        headingLeads.forEach(p=>{
+                          if(parseFloat(getComputedStyle(p).textIndent)>0&&typographyFailures.length<30)typographyFailures.push({id:item.id,chapter:ci+1,section:si+1,reason:'first paragraph after heading indented'});
+                        });
+                        const formulaParagraphs=content.querySelectorAll('p:has(math)');
+                        formulaParagraphs.forEach(p=>{
+                          if(getComputedStyle(p).textAlign==='justify'&&typographyFailures.length<30)typographyFailures.push({id:item.id,chapter:ci+1,section:si+1,reason:'MathML paragraph was justified'});
+                        });
+                        content.querySelectorAll('math').forEach(math=>{
+                          stats.formulas++;
+                          if(getComputedStyle(math).textAlign==='justify'&&typographyFailures.length<30)typographyFailures.push({id:item.id,chapter:ci+1,section:si+1,reason:'MathML alignment inherited justification'});
+                        });
+                        const captions=content.querySelectorAll('p.reader-caption');
+                        stats.captions+=captions.length;
+                        captions.forEach(p=>{
+                          const s=getComputedStyle(p);
+                          if((s.textAlign==='justify'||parseFloat(s.textIndent)>0)&&typographyFailures.length<30)typographyFailures.push({id:item.id,chapter:ci+1,section:si+1,reason:'caption received prose formatting',align:s.textAlign,indent:s.textIndent});
+                        });
+                        content.querySelectorAll('li:not(:has(math))').forEach(li=>{
+                          const s=getComputedStyle(li);
+                          if((s.textAlign!=='justify'||s.textAlignLast!=='start')&&typographyFailures.length<30)typographyFailures.push({id:item.id,chapter:ci+1,section:si+1,reason:'list alignment',align:s.textAlign,last:s.textAlignLast});
+                        });
+                      }
                       count++;
                     }));
                   }));
                   const expected=DATA.books.concat(DATA.courses).reduce((total,item)=>total+(item.chapters||[]).reduce((n,ch)=>n+(ch.sections||[]).length,0),0);
-                  return {count,expected,bad};
+                  const typographyMissing=targetBooks.filter(item=>{
+                    const t=typography[item.id];
+                    return !t||t.sections===0||t.paragraphs===0||t.paragraphs!==t.justified||t.indented===0||t.formulas===0||t.captions===0;
+                  }).map(item=>({id:item.id,stats:typography[item.id]}));
+                  return {count,expected,bad,typographyFailures,typographyMissing,typography};
                 }''')
                 assert result['count'] == result['expected'] and not result['bad'], result
+                assert not result['typographyFailures'] and not result['typographyMissing'], result
                 page.evaluate('navigator.serviceWorker.ready')
                 page.wait_for_timeout(250)
                 context.set_offline(True)
@@ -77,7 +123,11 @@ def main():
                 assert offline_image.evaluate('e => e.complete && e.naturalWidth === 1000'), 'cover did not load offline'
                 answer = page.evaluate("fetch('book-engineering/answers/01-intelligence-answers-fa.md').then(r => r.ok ? r.text() : '')")
                 assert 'پاسخ‌نامه فصل ۱' in answer, 'answer key unavailable offline'
-                print(f"PASS {width}px: cover online/offline, text, header, RTL navigation, locked viewport and {result['count']} sections")
+                typography_summary=', '.join(
+                    f"{book_id}: {stats['paragraphs']} justified prose paragraphs, {stats['indented']} indented, {stats['formulas']} MathML, {stats['captions']} captions"
+                    for book_id,stats in result['typography'].items()
+                )
+                print(f"PASS {width}px: cover online/offline, text, header, RTL navigation, locked viewport and {result['count']} sections; {typography_summary}")
                 context.close()
             browser.close()
     finally:

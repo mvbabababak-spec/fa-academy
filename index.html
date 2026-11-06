@@ -802,6 +802,34 @@ main{
   margin:var(--space-8) 0 var(--space-3);
 }
 .reader-content p{margin:var(--space-4) 0}
+/* Persian prose typesetting for the five-volume book series only.
+   Paragraphs and list items containing MathML remain outside the justification rule. */
+.reader-content.reader-content--book-prose p:not(:has(math)),
+.reader-content.reader-content--book-prose li:not(:has(math)){
+  text-align:justify;
+  text-align-last:start;
+  text-justify:inter-word;
+  word-spacing:normal;
+  letter-spacing:normal;
+  hyphens:manual;
+}
+.reader-content.reader-content--book-prose p:not(:has(math)){
+  text-indent:1em;
+}
+.reader-content.reader-content--book-prose :is(h1,h2,h3,h4,h5,h6)+p,
+.reader-content.reader-content--book-prose hr+p,
+.reader-content.reader-content--book-prose blockquote p,
+.reader-content.reader-content--book-prose math+p,
+.reader-content.reader-content--book-prose img+p,
+.reader-content.reader-content--book-prose p:has(img){
+  text-indent:0;
+}
+.reader-content.reader-content--book-prose p.reader-caption{
+  text-align:start;
+  text-align-last:start;
+  text-justify:auto;
+  text-indent:0;
+}
 .reader-content ul,.reader-content ol{margin:var(--space-4) 0;padding-right:var(--space-6)}
 .reader-content li{margin:var(--space-2) 0}
 .reader-content li::marker{color:var(--accent-primary)}
@@ -1364,12 +1392,21 @@ function openSec(id,ci,si){
 
 function getSource(){return curType==='book'?curBook:curCourse}
 function getChapters(){var s=getSource();return s?(s.chapters||[]):[]}
+function markBookReaderCaptions(content){
+  if(!content||!content.classList.contains('reader-content--book-prose'))return;
+  var isVisual=function(node){return node&&(node.matches('img,figure,pre,table,svg,video,canvas')||node.querySelector('img,figure,pre,table,svg,video,canvas'))};
+  content.querySelectorAll('p').forEach(function(p){
+    if(!/^(?:شکل|تصویر|نمودار|جدول)\s*[0-9۰-۹]+(?:[.\-–][0-9۰-۹]+)*/.test(p.textContent.trim()))return
+    if(isVisual(p.previousElementSibling)||isVisual(p.nextElementSibling)||isVisual(p))p.classList.add('reader-caption');
+  });
+}
 
 function renderReader(source,chapter,section,ci,si){
   window.scrollTo({top:0,behavior:'smooth'});
   var bookTitle=source.title;
   var chTitle=chapter.title;
   var secTitle=section.title;
+  var bookTypographyClass=curType==='book'&&/^art-science-intelligence-v[1-5]$/.test(String(source.id||''))?' reader-content--book-prose':'';
   var hasHtml=section.html&&section.html.trim().length>0;
   var contentHtml=hasHtml?section.html:
     '<div class="empty-content"><div class="icon">⚠️</div>'+
@@ -1406,13 +1443,14 @@ function renderReader(source,chapter,section,ci,si){
           '<a class="reader-nav-btn" id="sectionLink" href="#section='+encodeURIComponent(source.id+'|'+section.id)+'">پیوند بخش</a>'+
         '</div>'+
       '</div>'+
-      '<div class="reader-content">'+contentHtml+'</div>'+
+      '<div class="reader-content'+bookTypographyClass+'">'+contentHtml+'</div>'+
     '</div>'+
   '</div>';
 
   document.getElementById('mainView').innerHTML=html;
   history.replaceState(null,'','#section='+encodeURIComponent(source.id+'|'+section.id));
   var content=document.querySelector('.reader-content');
+  markBookReaderCaptions(content);
   content.style.fontSize=readerFontSize+'px';
   content.querySelectorAll('pre').forEach(function(pre){
     var copy=document.createElement('button');copy.type='button';copy.className='copy-code';copy.textContent='کپی کد';
