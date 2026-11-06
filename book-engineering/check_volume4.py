@@ -304,8 +304,23 @@ def main() -> None:
     _require(markdown_path.is_file(), "volume-4-full-fa.md missing")
     _require(markdown_path.read_text(encoding="utf-8") == builder.expected_markdown(expected_chapters, specs), "full Markdown does not match chapter sources")
     sw = (ROOT / "sw.js").read_text(encoding="utf-8")
-    _require("fa-academy-v82" in sw and "v81" not in sw.splitlines()[0], "service worker cache version was not advanced")
+    _require("fa-academy-v83" in sw and "v82" not in sw.splitlines()[0], "service worker cache version was not advanced")
+    cover_paths = {
+        f"art-science-intelligence-v{volume}": f"assets/images/covers/volume-{volume}-cover.webp"
+        for volume in range(1, 5)
+    }
+    for volume_id, expected_cover in cover_paths.items():
+        rows = [item for item in data.get("books", []) if item.get("id") == volume_id]
+        _require(len(rows) == 1 and rows[0].get("cover") == expected_cover,
+                 f"{volume_id} must reference its mapped local cover {expected_cover}")
+        cover_file = ROOT / expected_cover
+        _require(cover_file.is_file() and cover_file.stat().st_size > 0,
+                 f"missing cover image {expected_cover}")
     required_cache_paths = (
+        "./assets/images/covers/volume-1-cover.webp",
+        "./assets/images/covers/volume-2-cover.webp",
+        "./assets/images/covers/volume-3-cover.webp",
+        "./assets/images/covers/volume-4-cover.webp",
         "./volume-4-full-fa.md",
         "./book-engineering/diagrams/v4-ch01-posttraining.svg",
         "./book-engineering/chapters/47-posttraining.md",

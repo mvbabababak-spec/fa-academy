@@ -9,8 +9,12 @@ from playwright.sync_api import sync_playwright
 ROOT = Path(__file__).resolve().parent.parent
 BOOK_ID = "art-science-intelligence-v4"
 TITLE = "هنر و علم ساخت هوش — جلد چهارم"
-CACHE_NAME = "fa-academy-v82"
+CACHE_NAME = "fa-academy-v83"
 OFFLINE_PATHS = [
+    "assets/images/covers/volume-1-cover.webp",
+    "assets/images/covers/volume-2-cover.webp",
+    "assets/images/covers/volume-3-cover.webp",
+    "assets/images/covers/volume-4-cover.webp",
     "volume-4-full-fa.md",
     "book-engineering/diagrams/v4-ch01-posttraining.svg",
     "book-engineering/chapters/47-posttraining.md",

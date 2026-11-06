@@ -479,8 +479,8 @@ main{
   box-shadow:var(--shadow-lg),0 0 24px var(--accent-glow);
 }
 .book-card:hover .book-cover-img{transform:scale(1.05)}
-.book-card--volume1 .book-card-cover{height:auto;aspect-ratio:1 / 1}
-.book-card--volume1 .book-cover-img{object-fit:contain}
+.book-card--volume .book-card-cover{height:auto;aspect-ratio:2 / 3}
+.book-card--volume .book-cover-img{object-fit:contain}
 .book-card-english{direction:ltr;text-align:center;color:var(--text-secondary);font-size:var(--font-size-sm);line-height:1.45;padding:var(--space-3) var(--space-4) 0;overflow-wrap:anywhere}
 .book-card-cover{
   height:180px;
@@ -1289,7 +1289,8 @@ function cardHTML(item,chCount,secCount,type){
     '<div class="book-cover-placeholder" style="display:none">'+(type==='book'?'📖':'🎓')+'</div>':
     '<div class="book-cover-placeholder">'+(type==='book'?'📖':'🎓')+'</div>';
   var author=item.author?'<div class="book-card-author">✍️ '+item.author+'</div>':'';
-  return '<div class="book-card animate-in'+(item.id==='art-science-intelligence-v1'?' book-card--volume1':'')+'" role="button" tabindex="0" onkeydown="activateOnKey(event)" onclick="openItem(\''+item.id+'\',\''+type+'\')">'+
+  var volumeClass=/^art-science-intelligence-v[1-4]$/.test(item.id)?' book-card--volume':'';
+  return '<div class="book-card animate-in'+volumeClass+'" role="button" tabindex="0" onkeydown="activateOnKey(event)" onclick="openItem(\''+item.id+'\',\''+type+'\')">'+
     '<div class="book-card-cover">'+cover+'</div>'+
     (item.id==='art-science-intelligence-v1'?'<div class="book-card-english" lang="en">The Art &amp; Science of Building Intelligence</div>':'')+
     '<div class="book-card-info">'+

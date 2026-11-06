@@ -24,9 +24,38 @@ def main():
                 page = context.new_page()
                 page.goto(url, wait_until='networkidle')
                 page.wait_for_selector('#loading.hidden')
-                card = page.locator('.book-card--volume1')
+                page.evaluate("document.querySelectorAll('.book-card--volume img').forEach(img => img.loading='eager')")
+                page.wait_for_function("""() => {
+                  const imgs=Array.from(document.querySelectorAll('.book-card--volume img'));
+                  return imgs.length===4 && imgs.every(img=>img.complete && img.naturalWidth===848 && img.naturalHeight===1264);
+                }""")
+                card = page.locator('.book-card--volume').first
                 assert card.locator('.book-card-english').inner_text() == 'The Art & Science of Building Intelligence'
-                assert card.locator('img').evaluate('e => e.complete && e.naturalWidth === 1000 && e.naturalHeight === 1000')
+                cover_checks = page.evaluate("""() => {
+                  const expected={
+                    'art-science-intelligence-v1':'assets/images/covers/volume-1-cover.webp',
+                    'art-science-intelligence-v2':'assets/images/covers/volume-2-cover.webp',
+                    'art-science-intelligence-v3':'assets/images/covers/volume-3-cover.webp',
+                    'art-science-intelligence-v4':'assets/images/covers/volume-4-cover.webp'
+                  };
+                  return Object.entries(expected).map(([id,path])=>{
+                    const item=DATA.books.find(book=>book.id===id);
+                    const bookCard=Array.from(document.querySelectorAll('.book-card--volume'))
+                      .find(el=>el.getAttribute('onclick')===`openItem('${id}','book')`);
+                    const img=bookCard&&bookCard.querySelector('img');
+                    const cover=bookCard&&bookCard.querySelector('.book-card-cover');
+                    const rect=cover&&cover.getBoundingClientRect();
+                    return {id,path,cover:item&&item.cover,src:img&&new URL(img.currentSrc).pathname,
+                      dimensions:img&&[img.naturalWidth,img.naturalHeight],fit:img&&getComputedStyle(img).objectFit,
+                      ratio:rect&&rect.width/rect.height};
+                  });
+                }""")
+                assert len(cover_checks) == 4, cover_checks
+                for result_cover in cover_checks:
+                    assert result_cover['cover'] == result_cover['path'], result_cover
+                    assert result_cover['src'].endswith(result_cover['path']), result_cover
+                    assert result_cover['dimensions'] == [848, 1264], result_cover
+                    assert result_cover['fit'] == 'contain' and 0.65 < result_cover['ratio'] < 0.68, result_cover
                 dims = page.evaluate('''() => ({viewport: innerWidth, root: document.documentElement.scrollWidth,
                     header: document.querySelector('.header-nav').scrollWidth,
                     headerVisible: document.querySelector('.header-nav').clientWidth})''')
@@ -118,9 +147,13 @@ def main():
                 context.set_offline(True)
                 page.goto(url, wait_until='domcontentloaded')
                 page.wait_for_selector('#loading.hidden')
-                offline_image = page.locator('.book-card--volume1 img')
-                offline_image.wait_for(state='visible')
-                assert offline_image.evaluate('e => e.complete && e.naturalWidth === 1000'), 'cover did not load offline'
+                page.evaluate("document.querySelectorAll('.book-card--volume img').forEach(img => img.loading='eager')")
+                page.wait_for_function("""() => {
+                  const imgs=Array.from(document.querySelectorAll('.book-card--volume img'));
+                  return imgs.length===4 && imgs.every(img=>img.complete && img.naturalWidth===848 && img.naturalHeight===1264);
+                }""")
+                offline_images = page.locator('.book-card--volume img')
+                assert offline_images.count() == 4, 'expected all four book covers offline'
                 answer = page.evaluate("fetch('book-engineering/answers/01-intelligence-answers-fa.md').then(r => r.ok ? r.text() : '')")
                 assert 'پاسخ‌نامه فصل ۱' in answer, 'answer key unavailable offline'
                 typography_summary=', '.join(
