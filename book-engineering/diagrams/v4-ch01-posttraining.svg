@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Two distinct training stages: continued pretraining and supervised fine-tuning</title>
+  <desc id="desc">A conceptual comparison. Continued pretraining continues next-token learning on selected domain text. Supervised fine-tuning masks prompt tokens and computes causal loss on the target response. Both use a held-out evaluation design; this drawing is not a model-quality result.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="14" markerHeight="14" refX="10" refY="7" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L14,7 L0,14 z" fill="#315b70"/></marker>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f8fbff"/><stop offset="1" stop-color="#eef5f4"/></linearGradient>
+    <style>
+      .title{font:700 38px sans-serif;fill:#173042}.head{font:700 27px sans-serif;fill:#173042}
+      .body{font:24px sans-serif;fill:#203a4a}.small{font:20px sans-serif;fill:#395568}
+      .box{stroke:#315b70;stroke-width:3;rx:24}.line{stroke:#315b70;stroke-width:5;fill:none;marker-end:url(#arrow)}
+      .pill{font:700 18px sans-serif;fill:#173042}
+    </style>
+  </defs>
+  <rect width="1600" height="1000" fill="url(#bg)"/>
+  <text x="800" y="83" text-anchor="middle" class="title">CONTINUED PRETRAINING ≠ SUPERVISED FINE-TUNING</text>
+  <text x="800" y="126" text-anchor="middle" class="small">Two objectives, two data contracts — one shared causal language-model backbone</text>
+
+  <rect x="90" y="190" width="650" height="400" class="box" fill="#e4f2f1"/>
+  <rect x="860" y="190" width="650" height="400" class="box" fill="#f2e9d8"/>
+  <text x="415" y="246" text-anchor="middle" class="head">CONTINUED PRETRAINING</text>
+  <text x="1185" y="246" text-anchor="middle" class="head">SUPERVISED FINE-TUNING</text>
+
+  <rect x="145" y="290" width="220" height="126" class="box" fill="#ffffff"/>
+  <text x="255" y="338" text-anchor="middle" class="body">Domain text</text>
+  <text x="255" y="376" text-anchor="middle" class="small">document stream</text>
+  <path d="M380 354 H470" class="line"/>
+  <rect x="490" y="290" width="200" height="126" class="box" fill="#ffffff"/>
+  <text x="590" y="338" text-anchor="middle" class="body">Next-token</text>
+  <text x="590" y="376" text-anchor="middle" class="small">targets across text</text>
+  <text x="415" y="478" text-anchor="middle" class="small">Continue from a checkpoint; retain provenance and held-out domain text.</text>
+
+  <rect x="900" y="290" width="250" height="126" class="box" fill="#ffffff"/>
+  <text x="1025" y="338" text-anchor="middle" class="body">Instruction + context</text>
+  <text x="1025" y="376" text-anchor="middle" class="small">prompt labels = -100</text>
+  <path d="M1165 354 H1240" class="line"/>
+  <rect x="1260" y="290" width="200" height="126" class="box" fill="#ffffff"/>
+  <text x="1360" y="338" text-anchor="middle" class="body">Target response</text>
+  <text x="1360" y="376" text-anchor="middle" class="small">supervised tokens</text>
+  <text x="1185" y="478" text-anchor="middle" class="small">Mask non-target tokens; verify the exact template and loss-bearing span.</text>
+
+  <rect x="225" y="660" width="1150" height="190" class="box" fill="#ffffff"/>
+  <text x="800" y="715" text-anchor="middle" class="head">EVALUATION IS A SEPARATE CONTRACT</text>
+  <text x="800" y="760" text-anchor="middle" class="body">Group-aware train / validation / test · leakage review · fixed metric and prompt protocol</text>
+  <text x="800" y="804" text-anchor="middle" class="small">Use validation for choices; inspect the held-out test only after the protocol is fixed.</text>
+  <text x="800" y="925" text-anchor="middle" class="pill">Conceptual diagram · no benchmark or model-quality result is implied</text>
+</svg>

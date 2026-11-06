@@ -1,9 +1,10 @@
 # Fa Academy
 
-اپ وب/PWA فارسی برای مجموعهٔ پنج‌جلدی «هنر و علم ساخت هوش». جلد اول ۲۱ فصل و جلد دوم ۱۱ فصل منتشرشده دارد. جلد سوم ۱۴ فصل محلی (۱–۱۴)، متناظر با فصل‌های سراسری ۳۳–۴۶ نقشه، منتشر شده است. متن‌های قابل‌دریافت:
+اپ وب/PWA فارسی برای مجموعهٔ پنج‌جلدی «هنر و علم ساخت هوش». جلد اول ۲۱ فصل و جلد دوم ۱۱ فصل منتشرشده دارد. جلد سوم ۱۴ فصل محلی (۱–۱۴)، متناظر با فصل‌های سراسری ۳۳–۴۶، منتشر شده است. از جلد چهارم، فصل محلی ۱/سراسری ۴۷ منتشر شده و ۱۴ فصل دیگر در نقشه‌اند. متن‌های قابل‌دریافت:
 
 - [جلد دوم — Markdown](volume-2-full-fa.md)
 - [جلد سوم، فصل‌های ۳۳–۴۶ — Markdown](volume-3-full-fa.md)
+- [جلد چهارم، فصل ۴۷ — Markdown](volume-4-full-fa.md)
 
 **قالب انتشار فعلی وب/PWA و Markdown است. PDF و EPUB تولید و آزموده نشده‌اند و به milestone بعدی موکول‌اند.** راهنمای اجرا، محدوده و محدودیت پروژه‌ها در [book-engineering/README.md](book-engineering/README.md) آمده است.
 
@@ -15,6 +16,14 @@
 نام‌گذاری ثابت است: منبع فصل در `chapters/{شماره سراسری}-{موضوع}.md`، پاسخ‌نامهٔ همان فصل در `answers/{شماره سراسری}-{موضوع}-fa.md` و پروژهٔ اجرایی در پوشهٔ موضوعی `projects/{شماره سراسری}-{موضوع}/` قرار دارد. پاسخ‌نامه مکمل متن است؛ پروژه نیز تمرین اجرایی مستقل همان فصل است.
 
 برای مرور دیداری، [contact sheet چهارده شکل](review-volume-3/volume-3-contact-sheet.webp) و [راهنمای سبک جلد سوم](book-engineering/VOLUME3_STYLE_GUIDE_FA.md) را ببینید. [گزارش نهایی انتشار و گیت‌ها](book-engineering/VOLUME3_FINAL_RELEASE_FA.md) شمار فصل/بخش/فرمول، نتایج آزمون، وضعیت CI و محدودیت‌های باقی‌مانده را ثبت می‌کند.
+
+## جلد چهارم: فصل محلی ۱ / سراسری ۴۷
+
+**Continued Pretraining، Instruction Tuning و SFT؛ ساخت و ارزیابی داده آموزشی.** فصل بر مرز هدف CPT و SFT، label masking، قالب داده، split گروهی و پروتکل validation/test تمرکز دارد؛ PEFT و LoRA به فصل ۴۸ و روش‌های preference/RL به فصل ۴۹ موکول‌اند.
+
+- [متن فصل ۴۷](book-engineering/chapters/47-posttraining.md) · [پاسخ‌نامهٔ مستقل](book-engineering/answers/47-posttraining-fa.md) · [پروژه و دستورها](book-engineering/projects/47-instruction-tuning/README.md) · [گزارش ممیزی و آزمون](book-engineering/chapters/47-audit-report-fa.md)
+- سازندهٔ append-safe: `book-engineering/build_volume4.py`؛ checker: `book-engineering/check_volume4.py`؛ خروجی Markdown: `volume-4-full-fa.md`.
+- مثال مدل اختیاری از revision ثابت `EleutherAI/pythia-14m` استفاده می‌کند. کارت مدل آن را انگلیسی‌زبان و پژوهشی معرفی می‌کند و برای deployment یا زبان‌های دیگر توصیه نمی‌کند؛ fixture ساختگی انگلیسی است و از آن ادعای کیفیت فارسی یا محصولی نمی‌شود.
 
 ## گزارش‌های ممیزی جلد سوم
 

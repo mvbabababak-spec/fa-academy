@@ -1,5 +1,5 @@
-// ===== فا-اکدمی Service Worker v75 =====
-const CACHE_NAME = 'fa-academy-v75';
+// ===== فا-اکدمی Service Worker v76 =====
+const CACHE_NAME = 'fa-academy-v76';
 const CORE_FILES = [
   './',
   './index.html',
@@ -17,6 +17,7 @@ const CORE_FILES = [
   './assets/icons/favicon-32.png',
   './assets/images/art-science-cover.webp',
   './volume-3-full-fa.md',
+  './volume-4-full-fa.md',
   './assets/images/babak-ai/v3-ch01-tokenization.webp',
   './book-engineering/chapters/33-tokenization.md',
   './book-engineering/chapters/33-audit-report-fa.md',
@@ -131,6 +132,15 @@ const CORE_FILES = [
   './book-engineering/projects/46-scale-training/test_scaling_lab.py',
   './book-engineering/create_v3_ch14_image.py',
   './book-engineering/diagrams/v3-ch14-scale-training.svg',
+  './book-engineering/diagrams/v4-ch01-posttraining.svg',
+  './book-engineering/chapters/47-posttraining.md',
+  './book-engineering/chapters/47-audit-report-fa.md',
+  './book-engineering/answers/47-posttraining-fa.md',
+  './book-engineering/projects/47-instruction-tuning/README.md',
+  './book-engineering/projects/47-instruction-tuning/sft_experiment.py',
+  './book-engineering/projects/47-instruction-tuning/test_sft_experiment.py',
+  './book-engineering/projects/47-instruction-tuning/sample_sft.jsonl',
+  './book-engineering/projects/47-instruction-tuning/requirements-model-demo.txt',
   './assets/images/babak-ai/v2-ch07-backprop.webp',
   './assets/images/babak-ai/v2-ch10-cnn.webp',
   './assets/images/babak-ai/v2-ch11-representations.webp',

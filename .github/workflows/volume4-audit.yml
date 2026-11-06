@@ -1,0 +1,50 @@
+name: Volume 4 audit
+on:
+  push:
+    paths:
+      - '**'
+      - '.github/workflows/volume4-audit.yml'
+  pull_request:
+  workflow_dispatch:
+jobs:
+  volume4-cpu-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install pinned repository dependencies and Chromium
+        run: |
+          python -m pip install -r requirements.txt
+          python -m playwright install --with-deps chromium
+      - name: Check published book structures and immutable builders
+        run: |
+          python book-engineering/check_volume.py
+          python book-engineering/check_volume2.py
+          python book-engineering/rebuild_volume3_targets.py
+          python book-engineering/check_volume3.py
+          python book-engineering/build_volume4.py
+          python book-engineering/check_volume4.py
+      - name: Chapter 47 offline data-contract tests
+        run: |
+          (cd book-engineering/projects/47-instruction-tuning && python -m unittest discover -v)
+          python book-engineering/projects/47-instruction-tuning/sft_experiment.py \
+            --mode audit --data book-engineering/projects/47-instruction-tuning/sample_sft.jsonl \
+            --output /tmp/ch47-ci-audit
+          python -c "import json; p=json.load(open('/tmp/ch47-ci-audit/run.json')); assert p['status']=='validated_only' and p['training_performed'] is False and p['model_downloaded_or_loaded'] is False and p['data']['records']==15 and p['data']['groups']==14"
+      - name: Confirm volume 4 builder idempotence
+        run: |
+          cp data.json /tmp/v4-data-before.json
+          cp volume-4-full-fa.md /tmp/v4-markdown-before.md
+          python book-engineering/build_volume4.py
+          cmp data.json /tmp/v4-data-before.json
+          cmp volume-4-full-fa.md /tmp/v4-markdown-before.md
+      - name: Browser, responsive, exact-appendix and offline checks
+        run: |
+          python book-engineering/test_volume4.py
+          python book-engineering/test_mobile_layout.py

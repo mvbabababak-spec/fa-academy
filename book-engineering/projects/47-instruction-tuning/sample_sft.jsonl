@@ -1,0 +1,15 @@
+{"id":"demo-001","source_id":"synthetic-fixture","group_id":"label-colors","prompt":"Task: Return the requested label. Text: red. Label:","completion":"color"}
+{"id":"demo-002","source_id":"synthetic-fixture","group_id":"label-colors","prompt":"Task: Return the requested label. Text: blue. Label:","completion":"color"}
+{"id":"demo-003","source_id":"synthetic-fixture","group_id":"brief-greeting","prompt":"Write one short greeting for a neighbor.","completion":"Hello, neighbor."}
+{"id":"demo-004","source_id":"synthetic-fixture","group_id":"list-order","prompt":"Sort these words alphabetically: pear, apple, plum. Return only the list.","completion":"apple, pear, plum."}
+{"id":"demo-005","source_id":"synthetic-fixture","group_id":"arithmetic-one","prompt":"What is 2 plus 2? Answer with one number.","completion":"4"}
+{"id":"demo-006","source_id":"synthetic-fixture","group_id":"science-short","prompt":"Answer yes or no: Is water typically liquid at room temperature?","completion":"Yes."}
+{"id":"demo-007","source_id":"synthetic-fixture","group_id":"unit-name","prompt":"Return only the unit used to measure time in seconds.","completion":"second"}
+{"id":"demo-008","source_id":"synthetic-fixture","group_id":"two-ingredients","prompt":"Name exactly two ingredients from this list: oats, apples, basil, rice.","completion":"oats; apples"}
+{"id":"demo-009","source_id":"synthetic-fixture","group_id":"short-summary","prompt":"Summarize in at most five words: The small boat reached the quiet harbor before sunset.","completion":"A boat reached harbor."}
+{"id":"demo-010","source_id":"synthetic-fixture","group_id":"direction-word","prompt":"Return exactly the direction word requested: north.","completion":"north"}
+{"id":"demo-011","source_id":"synthetic-fixture","group_id":"polite-rewrite","prompt":"Rewrite this as a polite request: Give me the report.","completion":"Could you please share the report?"}
+{"id":"demo-012","source_id":"synthetic-fixture","group_id":"simple-category","prompt":"Choose one category for a violin: tool, instrument, fruit. Category:","completion":"instrument"}
+{"id":"demo-013","source_id":"synthetic-fixture","group_id":"date-format","prompt":"Write the date 6 November 2026 in ISO date format only.","completion":"2026-11-06"}
+{"id":"demo-014","source_id":"synthetic-fixture","group_id":"definition-short","prompt":"Define a library in one short sentence.","completion":"A library organizes resources for people to use."}
+{"id":"demo-015","source_id":"synthetic-fixture","group_id":"reverse-order","prompt":"Reverse the order of these words: red green blue. Return only the words.","completion":"blue green red"}
