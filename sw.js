@@ -1,5 +1,5 @@
-// ===== فا-اکدمی Service Worker v91 =====
-const CACHE_NAME = 'fa-academy-v91';
+// ===== فا-اکدمی Service Worker v92 =====
+const CACHE_NAME = 'fa-academy-v92';
 const CORE_FILES = [
   './',
   './index.html',
@@ -299,7 +299,16 @@ const CORE_FILES = [
   './book-engineering/projects/56-ai-compute-budget/budget_model.py',
   './book-engineering/projects/56-ai-compute-budget/test_budget_model.py',
   './book-engineering/projects/56-ai-compute-budget/sample_budget.json',
-  './book-engineering/projects/56-ai-compute-budget/results.json'
+  './book-engineering/projects/56-ai-compute-budget/results.json',
+  './book-engineering/diagrams/v4-ch11-framework-selection.svg',
+  './book-engineering/chapters/57-ml-frameworks.md',
+  './book-engineering/chapters/57-audit-report-fa.md',
+  './book-engineering/answers/57-ml-frameworks-fa.md',
+  './book-engineering/projects/57-framework-lab/README.md',
+  './book-engineering/projects/57-framework-lab/framework_compare.py',
+  './book-engineering/projects/57-framework-lab/test_framework_compare.py',
+  './book-engineering/projects/57-framework-lab/sample_problem.json',
+  './book-engineering/projects/57-framework-lab/results.json'
 ];
 
 // ===== INSTALL: Cache core files =====

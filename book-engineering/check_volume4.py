@@ -496,6 +496,53 @@ def main() -> None:
     _require(results_by_id56["lease-synthetic"]["nominal_tco_usd"] == "14005.14" and results_by_id56["cloud-snapshot-illustration"]["nominal_tco_usd"] == "12149.82", "chapter 56 lease/cloud arithmetic changed")
     _require(results55["scope"]["real_hardware_measured"] is False and results55["scope"]["prices_included"] is False and results55["scope"]["benchmark_performed"] is False and results55["scope"]["installation_performed"] is False, "chapter 55 result manifest scope limits changed")
 
+    source57 = ROOT / "book-engineering/chapters/57-ml-frameworks.md"
+    answer57 = ROOT / "book-engineering/answers/57-ml-frameworks-fa.md"
+    report57 = ROOT / "book-engineering/chapters/57-audit-report-fa.md"
+    diagram57 = ROOT / "book-engineering/diagrams/v4-ch11-framework-selection.svg"
+    project57 = ROOT / "book-engineering/projects/57-framework-lab"
+    for path in (source57, answer57, report57, diagram57, project57 / "README.md", project57 / "framework_compare.py", project57 / "test_framework_compare.py", project57 / "sample_problem.json", project57 / "results.json"):
+        _require(path.is_file(), f"missing chapter 57 deliverable: {path.relative_to(ROOT)}")
+    source57_text = source57.read_text(encoding="utf-8")
+    _require("فصل محلی ۱۱ از ۱۵ جلد چهارم؛ فصل سراسری ۵۷" in source57_text, "chapter 57 local/global mapping missing")
+    _require("تاریخ بازبینی منابع: ۶ نوامبر ۲۰۲۶" in source57_text, "chapter 57 dated review note missing")
+    _require(bool(re.search(r"^##\s+.*منابع و تاریخ بازبینی", source57_text, flags=re.MULTILINE)) and bool(re.search(r"^##\s+.*پیوست اجرایی", source57_text, flags=re.MULTILINE)), "chapter 57 bibliography or executable appendix missing")
+    _require(all(term in source57_text for term in ("فصل ۵۶", "فصل ۵۸", "فصل ۵۹", "PyTorch", "JAX", "TensorFlow", "3.12", "2.15.0", "0.12.0.1", "2.21.0", "CUDA 13", "synthetic_fixture")), "chapter 57 framework/version/scope or adjacent chapter boundary missing")
+    math57_nodes = re.findall(r"<math\b[^>]*>", source57_text)
+    math57_blocks = re.findall(r"<math\b.*?</math>", source57_text, flags=re.DOTALL)
+    _require(len(math57_nodes) >= 1 and len(math57_blocks) == len(math57_nodes), "chapter 57 accessible MathML missing or malformed")
+    _require(all("aria-label=" in node for node in math57_nodes), "chapter 57 MathML needs aria-label")
+    _require(source57_text.count("**متن جایگزین فرمول:**") >= len(math57_nodes), "chapter 57 formula needs a visible alternative")
+    for math_markup in math57_blocks:
+        _require(ET.fromstring(math_markup).tag.endswith("math"), "chapter 57 contains invalid MathML XML")
+    figures57 = re.findall(r"!\[([^\]]*)\]\(([^)]+)\)", source57_text)
+    _require(bool(figures57) and all(term in figures57[0][0] for term in ("شکل ۴-۱۱-۱", "PyTorch", "JAX", "TensorFlow", "benchmark")), "chapter 57 figure alt text misses scope and frameworks")
+    for alt, image_path in figures57:
+        _require(bool(alt.strip()) and (ROOT / image_path).is_file(), f"missing or inaccessible chapter 57 figure: {image_path}")
+    svg57 = ET.parse(diagram57).getroot()
+    _require(svg57.attrib.get("width") == "1600" and svg57.attrib.get("height") == "1000", "chapter 57 SVG dimensions mismatch")
+    _require("aria-labelledby" in svg57.attrib, "chapter 57 SVG must expose title and description")
+    answer57_text = answer57.read_text(encoding="utf-8")
+    _require("پاسخ‌نامهٔ مستقل" in answer57_text and "فصل ۵۷" in answer57_text and len(answer57_text.split()) >= 300, "chapter 57 independent answer key missing or too short")
+    report57_text = report57.read_text(encoding="utf-8")
+    _require("نتایج اجرای واقعی" in report57_text and "test_volume4.py" in report57_text and "test_mobile_layout.py" in report57_text, "chapter 57 audit report is incomplete")
+    _require("framework_compare.py" in report57_text and "sample_problem.json" in report57_text and "synthetic_fixture" in report57_text, "chapter 57 report must identify the tested project and synthetic fixture")
+    _require("سخت‌افزار واقعی" in report57_text and "benchmark" in report57_text and "مدل ازپیش‌آموزش‌دیده" in report57_text, "chapter 57 report must state claim limits")
+    project_code57 = (project57 / "framework_compare.py").read_bytes()
+    appendix_marker57 = b"\n```python\n"
+    _, appendix_found57, appendix_tail57 = source57.read_bytes().rpartition(appendix_marker57)
+    appendix_close57 = appendix_tail57.rfind(b"```")
+    _require(bool(appendix_found57) and appendix_close57 >= 0 and appendix_tail57[:appendix_close57] == project_code57, "chapter 57 appendix and project must match byte-for-byte")
+    fixture_path57 = project57 / "sample_problem.json"
+    fixture57 = json.loads(fixture_path57.read_text(encoding="utf-8"))
+    fixture57_hash = hashlib.sha256(fixture_path57.read_bytes()).hexdigest()
+    _require(fixture57["fixture_id"] == "v4-ch11-synthetic-gradient-v1" and fixture57["label_source"] == "synthetic_fixture" and all(value is False for value in fixture57["metadata"].values()), "chapter 57 fixture identity or scope changed")
+    results57 = json.loads((project57 / "results.json").read_text(encoding="utf-8"))
+    _require(results57["fixture_sha256"] == fixture57_hash and results57["fixture_id"] == fixture57["fixture_id"], "chapter 57 result manifest fixture identity/hash mismatch")
+    _require(results57["reference"] == {"loss": 2.5, "gradient_weight": -2.0, "gradient_bias": -3.0}, "chapter 57 reference arithmetic changed")
+    _require(all(value is False for value in results57["scope"].values()), "chapter 57 result manifest must retain all claim limits")
+    _require(results57["summary"]["failed"] == [], "chapter 57 project reports a failed framework adapter")
+
     code = (project / "sft_experiment.py").read_text(encoding="utf-8").rstrip()
     blocks = re.findall(r"```python\n(.*?)\n```", source_text, flags=re.DOTALL)
     _require(bool(blocks) and blocks[-1] == code, "chapter appendix and tested project must be byte-for-byte equal")
@@ -509,7 +556,7 @@ def main() -> None:
     _require(markdown_path.is_file(), "volume-4-full-fa.md missing")
     _require(markdown_path.read_text(encoding="utf-8") == builder.expected_markdown(expected_chapters, specs), "full Markdown does not match chapter sources")
     sw = (ROOT / "sw.js").read_text(encoding="utf-8")
-    _require("fa-academy-v91" in sw and "v90" not in sw.splitlines()[0], "service worker cache version was not advanced")
+    _require("fa-academy-v92" in sw and "v91" not in sw.splitlines()[0], "service worker cache version was not advanced")
     cover_paths = {
         f"art-science-intelligence-v{volume}": f"assets/images/covers/volume-{volume}-cover.webp"
         for volume in range(1, 5)
@@ -620,6 +667,15 @@ def main() -> None:
         "./book-engineering/projects/56-ai-compute-budget/test_budget_model.py",
         "./book-engineering/projects/56-ai-compute-budget/sample_budget.json",
         "./book-engineering/projects/56-ai-compute-budget/results.json",
+        "./book-engineering/diagrams/v4-ch11-framework-selection.svg",
+        "./book-engineering/chapters/57-ml-frameworks.md",
+        "./book-engineering/chapters/57-audit-report-fa.md",
+        "./book-engineering/answers/57-ml-frameworks-fa.md",
+        "./book-engineering/projects/57-framework-lab/README.md",
+        "./book-engineering/projects/57-framework-lab/framework_compare.py",
+        "./book-engineering/projects/57-framework-lab/test_framework_compare.py",
+        "./book-engineering/projects/57-framework-lab/sample_problem.json",
+        "./book-engineering/projects/57-framework-lab/results.json",
     )
     for item in required_cache_paths:
         _require(item in sw, f"service worker does not precache {item}")
@@ -627,7 +683,7 @@ def main() -> None:
     print(
         f"PASS volume 4: {len(book['chapters'])}/{builder.PLANNED_CHAPTERS} chapters, "
         f"{sum(len(ch['sections']) for ch in book['chapters'])} sections, "
-        f"{len(math_nodes) + len(math48) + len(math49) + len(math50) + len(math51) + len(math52) + len(math53_nodes) + len(math54_nodes) + len(math55_nodes) + len(math56_nodes)} accessible MathML expressions, exact appendices, reports/answers/fixtures present"
+        f"{len(math_nodes) + len(math48) + len(math49) + len(math50) + len(math51) + len(math52) + len(math53_nodes) + len(math54_nodes) + len(math55_nodes) + len(math56_nodes) + len(math57_nodes)} accessible MathML expressions, exact appendices, reports/answers/fixtures present"
     )
 
 

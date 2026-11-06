@@ -139,6 +139,22 @@ jobs:
           assert result['comparison_status']['performance_parity_measured'] is False
           assert result['comparison_status']['complete_invoice_or_cost_estimate'] is False
           PY
+      - name: Chapter 57 cross-framework CPU gradient contract tests
+        run: |
+          (cd book-engineering/projects/57-framework-lab && python -m unittest discover -v)
+          python book-engineering/projects/57-framework-lab/framework_compare.py \
+            --backend all --output /tmp/ch57-ci-results.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          result = json.loads(Path('/tmp/ch57-ci-results.json').read_text())
+          assert result['fixture_id'] == 'v4-ch11-synthetic-gradient-v1'
+          assert result['reference'] == {'loss': 2.5, 'gradient_weight': -2.0, 'gradient_bias': -3.0}
+          assert result['summary']['failed'] == []
+          assert result['framework_results']['torch']['status'] == 'passed'
+          assert result['framework_results']['torch']['device'] == 'cpu'
+          assert all(value is False for value in result['scope'].values())
+          PY
       - name: Confirm volume 4 builder idempotence
         run: |
           cp data.json /tmp/v4-data-before.json
