@@ -68,6 +68,17 @@ jobs:
             --mode demo --fixture book-engineering/projects/50-synthetic-reasoning/sample_traces.jsonl \
             --output /tmp/ch50-ci-demo
           python -c "import json; p=json.load(open('/tmp/ch50-ci-demo/run.json')); assert p['status']=='synthetic_math_helpers_smoke_test' and p['training_performed'] is False and p['language_model_loaded'] is False and p['model_downloaded'] is False and p['student_gradient_is_finite'] is True and p['vote_winner']=='125' and p['candidate_budget']==5"
+      - name: Chapter 51 synthetic vision and alignment checks
+        run: |
+          (cd book-engineering/projects/51-vision-lab && python -m unittest discover -v)
+          python book-engineering/projects/51-vision-lab/vision_lab.py \
+            --mode audit --fixture book-engineering/projects/51-vision-lab/sample_embeddings.json \
+            --output /tmp/ch51-ci-audit
+          python -c "import json; p=json.load(open('/tmp/ch51-ci-audit/run.json')); assert p['status']=='synthetic_image_text_fixture_audit_complete' and p['training_performed'] is False and p['image_files_loaded'] is False and p['pretrained_model_loaded'] is False and p['model_downloaded'] is False and p['image_records']==4 and p['text_records']==4 and p['groups']==4 and p['sha256']=='aba309bb1b3e69443802190b988a21e0432109c01b777f4f58fe11f992936522'"
+          python book-engineering/projects/51-vision-lab/vision_lab.py \
+            --mode demo --fixture book-engineering/projects/51-vision-lab/sample_embeddings.json \
+            --output /tmp/ch51-ci-demo
+          python -c "import json; p=json.load(open('/tmp/ch51-ci-demo/run.json')); assert p['status']=='synthetic_patch_and_embedding_smoke_test' and p['training_performed'] is False and p['image_files_loaded'] is False and p['pretrained_model_loaded'] is False and p['model_downloaded'] is False and p['patch_fixture']['reconstruction_exact'] is True and p['image_gradient_is_finite'] is True and p['image_to_text_retrieval']['recall_at_k']['1']==1.0 and p['text_to_image_retrieval']['recall_at_k']['1']==1.0 and p['attention_pair_ratio_448_to_224']==15.878404493802984"
       - name: Confirm volume 4 builder idempotence
         run: |
           cp data.json /tmp/v4-data-before.json

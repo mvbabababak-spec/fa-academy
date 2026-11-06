@@ -198,6 +198,51 @@ def main() -> None:
     _require(results50["unit_tests"]["passed"] == 26 and results50["unit_tests"]["failed"] == 0, "chapter 50 result manifest test count mismatch")
     _require(results50["fixture"]["sha256"] == "1654621020c9dd2175cf0d7f66cb14ed78a3d192667c7e79ce7571219f47a075", "chapter 50 result manifest fixture hash mismatch")
 
+    source51 = ROOT / "book-engineering/chapters/51-vision-models.md"
+    answer51 = ROOT / "book-engineering/answers/51-vision-models-fa.md"
+    report51 = ROOT / "book-engineering/chapters/51-audit-report-fa.md"
+    diagram51 = ROOT / "book-engineering/diagrams/v4-ch05-vision.svg"
+    project51 = ROOT / "book-engineering/projects/51-vision-lab"
+    for path in (source51, answer51, report51, diagram51, project51 / "README.md", project51 / "vision_lab.py", project51 / "test_vision_lab.py", project51 / "sample_embeddings.json", project51 / "results.json"):
+        _require(path.is_file(), f"missing chapter 51 deliverable: {path.relative_to(ROOT)}")
+    source51_text = source51.read_text(encoding="utf-8")
+    _require("فصل محلی ۵ جلد چهارم = فصل سراسری ۵۱" in source51_text, "chapter 51 local/global mapping missing")
+    _require("تاریخ بازبینی منابع: ۶ نوامبر ۲۰۲۶" in source51_text, "chapter 51 source review date missing")
+    _require(bool(re.search(r"^##\s+.*منابع و تاریخ بازبینی", source51_text, flags=re.MULTILINE)), "chapter 51 dated bibliography missing")
+    _require(all(term in source51_text for term in ("Vision Transformer", "image encoder", "CLIP", "SigLIP", "Recall@k", "DINOv3")), "chapter 51 roadmap topics missing")
+    _require("فصل ۵۰" in source51_text and "فصل ۵۲" in source51_text, "chapter 51 adjacent-chapter boundaries missing")
+    math51 = re.findall(r"<math\b[^>]*>", source51_text)
+    _require(len(math51) >= 4, "chapter 51 should explain core formulas with MathML")
+    _require(all("aria-label=" in node for node in math51), "chapter 51 MathML needs aria-label")
+    _require(source51_text.count("**متن جایگزین فرمول:**") >= len(math51), "chapter 51 formulas need visible alternatives")
+    figures51 = re.findall(r"!\[([^\]]*)\]\(([^)]+)\)", source51_text)
+    _require(bool(figures51), "chapter 51 figure missing")
+    for alt, image_path in figures51:
+        _require(bool(alt.strip()), "chapter 51 figure alternative text must be non-empty")
+        _require((ROOT / image_path).is_file(), f"missing chapter 51 figure: {image_path}")
+    svg51 = ET.parse(diagram51).getroot()
+    _require(svg51.attrib.get("width") == "1600" and svg51.attrib.get("height") == "1000", "chapter 51 SVG dimensions mismatch")
+    _require("aria-labelledby" in svg51.attrib, "chapter 51 SVG must expose title and description")
+    answer51_text = answer51.read_text(encoding="utf-8")
+    _require("پاسخ‌نامهٔ تشریحی فصل ۵۱" in answer51_text and len(answer51_text.split()) >= 250, "chapter 51 independent answer key missing or too short")
+    report51_text = report51.read_text(encoding="utf-8")
+    _require("نتایج اجرای واقعی" in report51_text, "chapter 51 audit report must distinguish actual test results")
+    _require("۲۶/۲۶ آزمون موفق" in report51_text, "chapter 51 report must record the actual unit-test result")
+    _require("aba309bb1b3e69443802190b988a21e0432109c01b777f4f58fe11f992936522" in report51_text, "chapter 51 report must record the fixture hash")
+    _require("0.00024217297323048115" in report51_text and "15.878404493802984" in report51_text, "chapter 51 report must record exact synthetic demo outputs")
+    _require("test_volume4.py" in report51_text and "test_mobile_layout.py" in report51_text, "chapter 51 report must record browser/mobile integration results")
+    _require("GPU" in report51_text and "کیفیت فارسی" in report51_text, "chapter 51 report must state its claim limits")
+    code51 = (project51 / "vision_lab.py").read_text(encoding="utf-8").rstrip()
+    blocks51 = re.findall(r"```python\n(.*?)\n```", source51_text, flags=re.DOTALL)
+    _require(bool(blocks51) and blocks51[-1] == code51, "chapter 51 appendix and tested project must match byte-for-byte")
+    fixture51 = json.loads((project51 / "sample_embeddings.json").read_text(encoding="utf-8"))
+    _require(len(fixture51["images"]) == 4 and len(fixture51["texts"]) == 4, "chapter 51 synthetic fixture row count changed")
+    _require(all(row["label_source"] == "synthetic_fixture" for kind in ("images", "texts") for row in fixture51[kind]), "chapter 51 fixture source labels changed")
+    results51 = json.loads((project51 / "results.json").read_text(encoding="utf-8"))
+    _require(results51["unit_tests"]["passed"] == 26 and results51["unit_tests"]["failed"] == 0, "chapter 51 result manifest test count mismatch")
+    _require(results51["audit"]["sha256"] == "aba309bb1b3e69443802190b988a21e0432109c01b777f4f58fe11f992936522", "chapter 51 result manifest fixture hash mismatch")
+    _require(results51["demo"]["training_performed"] is False and results51["demo"]["image_files_loaded"] is False, "chapter 51 result manifest must disclaim training and image loading")
+
     code = (project / "sft_experiment.py").read_text(encoding="utf-8").rstrip()
     blocks = re.findall(r"```python\n(.*?)\n```", source_text, flags=re.DOTALL)
     _require(bool(blocks) and blocks[-1] == code, "chapter appendix and tested project must be byte-for-byte equal")
@@ -211,7 +256,7 @@ def main() -> None:
     _require(markdown_path.is_file(), "volume-4-full-fa.md missing")
     _require(markdown_path.read_text(encoding="utf-8") == builder.expected_markdown(expected_chapters, specs), "full Markdown does not match chapter sources")
     sw = (ROOT / "sw.js").read_text(encoding="utf-8")
-    _require("fa-academy-v80" in sw and "v79" not in sw.splitlines()[0], "service worker cache version was not advanced")
+    _require("fa-academy-v81" in sw and "v80" not in sw.splitlines()[0], "service worker cache version was not advanced")
     required_cache_paths = (
         "./volume-4-full-fa.md",
         "./book-engineering/diagrams/v4-ch01-posttraining.svg",
@@ -249,6 +294,15 @@ def main() -> None:
         "./book-engineering/projects/50-synthetic-reasoning/test_reasoning_lab.py",
         "./book-engineering/projects/50-synthetic-reasoning/sample_traces.jsonl",
         "./book-engineering/projects/50-synthetic-reasoning/results.json",
+        "./book-engineering/diagrams/v4-ch05-vision.svg",
+        "./book-engineering/chapters/51-vision-models.md",
+        "./book-engineering/chapters/51-audit-report-fa.md",
+        "./book-engineering/answers/51-vision-models-fa.md",
+        "./book-engineering/projects/51-vision-lab/README.md",
+        "./book-engineering/projects/51-vision-lab/vision_lab.py",
+        "./book-engineering/projects/51-vision-lab/test_vision_lab.py",
+        "./book-engineering/projects/51-vision-lab/sample_embeddings.json",
+        "./book-engineering/projects/51-vision-lab/results.json",
     )
     for item in required_cache_paths:
         _require(item in sw, f"service worker does not precache {item}")
@@ -256,7 +310,7 @@ def main() -> None:
     print(
         f"PASS volume 4: {len(book['chapters'])}/{builder.PLANNED_CHAPTERS} chapters, "
         f"{sum(len(ch['sections']) for ch in book['chapters'])} sections, "
-        f"{len(math_nodes) + len(math48) + len(math49) + len(math50)} accessible MathML expressions, exact appendices, reports/answers/fixtures present"
+        f"{len(math_nodes) + len(math48) + len(math49) + len(math50) + len(math51)} accessible MathML expressions, exact appendices, reports/answers/fixtures present"
     )
 
 
