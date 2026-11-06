@@ -1,5 +1,5 @@
-// ===== فا-اکدمی Service Worker v87 =====
-const CACHE_NAME = 'fa-academy-v87';
+// ===== فا-اکدمی Service Worker v88 =====
+const CACHE_NAME = 'fa-academy-v88';
 const CORE_FILES = [
   './',
   './index.html',
@@ -202,6 +202,15 @@ const CORE_FILES = [
   './book-engineering/projects/53-diffusion-lab/test_diffusion_lab.py',
   './book-engineering/projects/53-diffusion-lab/sample_mixture.json',
   './book-engineering/projects/53-diffusion-lab/results.json',
+  './book-engineering/diagrams/v4-ch08-resource-estimation.svg',
+  './book-engineering/chapters/54-resource-estimation.md',
+  './book-engineering/chapters/54-audit-report-fa.md',
+  './book-engineering/answers/54-resource-estimation-fa.md',
+  './book-engineering/projects/54-resource-estimation/README.md',
+  './book-engineering/projects/54-resource-estimation/resource_estimator.py',
+  './book-engineering/projects/54-resource-estimation/test_resource_estimator.py',
+  './book-engineering/projects/54-resource-estimation/sample_profiles.json',
+  './book-engineering/projects/54-resource-estimation/results.json',
   './assets/images/babak-ai/v2-ch07-backprop.webp',
   './assets/images/babak-ai/v2-ch10-cnn.webp',
   './assets/images/babak-ai/v2-ch11-representations.webp',

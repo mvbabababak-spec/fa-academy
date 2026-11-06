@@ -341,6 +341,58 @@ def main() -> None:
     _require(results53["audit"]["training_performed"] is False and results53["audit"]["neural_model_loaded"] is False and results53["demo"]["image_files_loaded"] is False and results53["demo"]["video_files_loaded"] is False, "chapter 53 result manifest must disclaim model training and real media")
     _require(results53["demo"]["sampling"]["terminal_alpha_bar"] == 0.002080618226191632 and results53["demo"]["nearest_synthetic_center_counts"] == {"southwest": 19, "northwest": 17, "southeast": 16, "northeast": 12}, "chapter 53 deterministic demo values changed")
 
+    source54 = ROOT / "book-engineering/chapters/54-resource-estimation.md"
+    answer54 = ROOT / "book-engineering/answers/54-resource-estimation-fa.md"
+    report54 = ROOT / "book-engineering/chapters/54-audit-report-fa.md"
+    diagram54 = ROOT / "book-engineering/diagrams/v4-ch08-resource-estimation.svg"
+    project54 = ROOT / "book-engineering/projects/54-resource-estimation"
+    for path in (source54, answer54, report54, diagram54, project54 / "README.md", project54 / "resource_estimator.py", project54 / "test_resource_estimator.py", project54 / "sample_profiles.json", project54 / "results.json"):
+        _require(path.is_file(), f"missing chapter 54 deliverable: {path.relative_to(ROOT)}")
+    source54_text = source54.read_text(encoding="utf-8")
+    _require("فصل محلی ۸ از ۱۵ فصل جلد چهارم؛ فصل سراسری ۵۴" in source54_text, "chapter 54 local/global mapping or 15-chapter roadmap missing")
+    _require("فصل ۵۳" in source54_text and "فصل ۵۵" in source54_text and "فصل ۵۶" in source54_text, "chapter 54 boundaries with adjacent chapters missing")
+    _require(all(term in source54_text for term in ("Fine-tuning", "KV cache", "gradient", "optimizer", "ZeRO", "6ND", "۴۵/۴۵ آزمون unit موفق", "benchmark نیست")), "chapter 54 scope, methods, results, or limitations missing")
+    math54_nodes = re.findall(r"<math\b[^>]*>", source54_text)
+    math54_blocks = re.findall(r"<math\b.*?</math>", source54_text, flags=re.DOTALL)
+    _require(len(math54_nodes) >= 10 and len(math54_blocks) == len(math54_nodes), "chapter 54 core MathML missing or malformed")
+    _require(all("aria-label=" in node for node in math54_nodes), "chapter 54 MathML needs aria-label")
+    _require(source54_text.count("**متن جایگزین فرمول:**") >= len(math54_nodes), "chapter 54 formulas need visible alternatives")
+    for math_markup in math54_blocks:
+        _require(ET.fromstring(math_markup).tag.endswith("math"), "chapter 54 contains invalid MathML XML")
+    figures54 = re.findall(r"!\[([^\]]*)\]\(([^)]+)\)", source54_text)
+    _require(bool(figures54), "chapter 54 figure missing")
+    for alt, image_path in figures54:
+        _require(bool(alt.strip()), "chapter 54 figure alternative text must be non-empty")
+        _require((ROOT / image_path).is_file(), f"missing chapter 54 figure: {image_path}")
+    _require(all(term in figures54[0][0] for term in ("شکل ۴-۸-۱", "استنتاج", "Fine-tuning", "آموزش از صفر", "activation")), "chapter 54 figure alt text misses workload branches")
+    svg54 = ET.parse(diagram54).getroot()
+    _require(svg54.attrib.get("width") == "1600" and svg54.attrib.get("height") == "1000", "chapter 54 SVG dimensions mismatch")
+    _require("aria-labelledby" in svg54.attrib, "chapter 54 SVG must expose title and description")
+    answer54_text = answer54.read_text(encoding="utf-8")
+    _require("پاسخ‌نامهٔ تشریحی فصل ۵۴" in answer54_text and len(answer54_text.split()) >= 300, "chapter 54 independent answer key missing or too short")
+    report54_text = report54.read_text(encoding="utf-8")
+    _require("نتایج اجرای واقعی" in report54_text and "۴۵/۴۵ آزمون unit موفق" in report54_text, "chapter 54 report must record actual unit tests")
+    _require("9648418ea1cd039a5554d489d79e5d688314240f7c254d2d5215d03e372a4a57" in report54_text, "chapter 54 report must record fixture SHA-256")
+    _require("test_volume4.py" in report54_text and "test_mobile_layout.py" in report54_text and "۸۰ دارایی آفلاین" in report54_text, "chapter 54 report must record integration checks and offline coverage")
+    _require("مدل واقعی" in report54_text and "سخت‌افزار" in report54_text and "benchmark" in report54_text, "chapter 54 report must state claim limits")
+    code54 = (project54 / "resource_estimator.py").read_text(encoding="utf-8").rstrip()
+    blocks54 = re.findall(r"```python\n(.*?)\n```", source54_text, flags=re.DOTALL)
+    _require(bool(blocks54) and blocks54[-1] == code54, "chapter 54 appendix and tested project must be byte-for-byte equal")
+    fixture_path54 = project54 / "sample_profiles.json"
+    fixture54 = json.loads(fixture_path54.read_text(encoding="utf-8"))
+    fixture54_hash = hashlib.sha256(fixture_path54.read_bytes()).hexdigest()
+    _require(fixture54["label_source"] == "synthetic_fixture" and len(fixture54["profiles"]) == 4, "chapter 54 fixture must remain four arithmetic-only scenarios")
+    _require(all(fixture54["metadata"][field] is False for field in ("real_model_weights_included", "real_hardware_measurements_performed", "training_performed", "benchmark_performed")), "chapter 54 fixture must disclaim real models, measurements, training, and benchmarks")
+    results54 = json.loads((project54 / "results.json").read_text(encoding="utf-8"))
+    _require(results54["unit_tests"]["passed"] == 45 and results54["unit_tests"]["failed"] == 0 and results54["unit_tests"]["python"] == "3.13.16", "chapter 54 result manifest test result mismatch")
+    _require(results54["fixture"]["sha256"] == fixture54_hash, "chapter 54 result manifest fixture SHA mismatch")
+    _require(results54["scope"]["real_model_loaded"] is False and results54["scope"]["real_hardware_measured"] is False and results54["scope"]["training_performed"] is False and results54["scope"]["benchmark_performed"] is False, "chapter 54 result manifest must disclaim real model, measurement, training, and benchmark")
+    scenarios54 = {row["profile_id"]: row for row in results54["scenarios"]}
+    _require(scenarios54["synthetic-gqa-inference"]["estimate"]["total_estimate"]["bytes"] == 18364967296, "chapter 54 inference scenario result changed")
+    _require(scenarios54["synthetic-full-training"]["estimate"]["total_estimate_per_rank"]["bytes"] == 130924967296, "chapter 54 full-training scenario result changed")
+    _require(scenarios54["synthetic-adapter-training"]["estimate"]["total_estimate_per_rank"]["bytes"] == 18924967296, "chapter 54 adapter scenario result changed")
+    _require(scenarios54["synthetic-zero-stage3-four-ranks"]["estimate"]["total_estimate_per_rank"]["bytes"] == 35952467296, "chapter 54 ZeRO scenario result changed")
+
     code = (project / "sft_experiment.py").read_text(encoding="utf-8").rstrip()
     blocks = re.findall(r"```python\n(.*?)\n```", source_text, flags=re.DOTALL)
     _require(bool(blocks) and blocks[-1] == code, "chapter appendix and tested project must be byte-for-byte equal")
@@ -354,7 +406,7 @@ def main() -> None:
     _require(markdown_path.is_file(), "volume-4-full-fa.md missing")
     _require(markdown_path.read_text(encoding="utf-8") == builder.expected_markdown(expected_chapters, specs), "full Markdown does not match chapter sources")
     sw = (ROOT / "sw.js").read_text(encoding="utf-8")
-    _require("fa-academy-v87" in sw and "v86" not in sw.splitlines()[0], "service worker cache version was not advanced")
+    _require("fa-academy-v88" in sw and "v87" not in sw.splitlines()[0], "service worker cache version was not advanced")
     cover_paths = {
         f"art-science-intelligence-v{volume}": f"assets/images/covers/volume-{volume}-cover.webp"
         for volume in range(1, 5)
@@ -438,6 +490,15 @@ def main() -> None:
         "./book-engineering/projects/53-diffusion-lab/test_diffusion_lab.py",
         "./book-engineering/projects/53-diffusion-lab/sample_mixture.json",
         "./book-engineering/projects/53-diffusion-lab/results.json",
+        "./book-engineering/diagrams/v4-ch08-resource-estimation.svg",
+        "./book-engineering/chapters/54-resource-estimation.md",
+        "./book-engineering/chapters/54-audit-report-fa.md",
+        "./book-engineering/answers/54-resource-estimation-fa.md",
+        "./book-engineering/projects/54-resource-estimation/README.md",
+        "./book-engineering/projects/54-resource-estimation/resource_estimator.py",
+        "./book-engineering/projects/54-resource-estimation/test_resource_estimator.py",
+        "./book-engineering/projects/54-resource-estimation/sample_profiles.json",
+        "./book-engineering/projects/54-resource-estimation/results.json",
     )
     for item in required_cache_paths:
         _require(item in sw, f"service worker does not precache {item}")
@@ -445,7 +506,7 @@ def main() -> None:
     print(
         f"PASS volume 4: {len(book['chapters'])}/{builder.PLANNED_CHAPTERS} chapters, "
         f"{sum(len(ch['sections']) for ch in book['chapters'])} sections, "
-        f"{len(math_nodes) + len(math48) + len(math49) + len(math50) + len(math51) + len(math52) + len(math53_nodes)} accessible MathML expressions, exact appendices, reports/answers/fixtures present"
+        f"{len(math_nodes) + len(math48) + len(math49) + len(math50) + len(math51) + len(math52) + len(math53_nodes) + len(math54_nodes)} accessible MathML expressions, exact appendices, reports/answers/fixtures present"
     )
 
 

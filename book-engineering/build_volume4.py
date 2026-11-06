@@ -54,6 +54,7 @@ APPENDIX_PROJECTS = {
     51: "book-engineering/projects/51-vision-lab/vision_lab.py",
     52: "book-engineering/projects/52-audio-lab/audio_lab.py",
     53: "book-engineering/projects/53-diffusion-lab/diffusion_lab.py",
+    54: "book-engineering/projects/54-resource-estimation/resource_estimator.py",
 }
 
 
