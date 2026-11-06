@@ -18,6 +18,8 @@ class Images(HTMLParser):
             self.math += 1
 
 book = next(b for b in json.loads((ROOT/'data.json').read_text(encoding='utf-8'))['books'] if b['id'] == 'art-science-intelligence-v1')
+assert book.get('subtitle') == 'از صفر مطلق تا طراحی هوش مصنوعی | ۲۱ فصل'
+assert book.get('author') == 'Babak Moradvand'
 assert [c['num'] for c in book['chapters']] == list(range(1, 22))
 ids = []
 parser = Images()

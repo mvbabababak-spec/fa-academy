@@ -22,12 +22,19 @@ for n,slug,title,icon in specs:
     assert len(sections)>0
     chapters.append({'num':n,'id':f'art-science-v2-ch{n:02}','title':title,'icon':icon,'sections':sections})
 book={'id':'art-science-intelligence-v2','title':'هنر و علم ساخت هوش — جلد دوم',
-      'subtitle':'یادگیری ماشین و شبکه‌های عصبی | فصل‌های ۱ تا ۳ منتشر شده‌اند',
-      'author':'Babak & Ai','cover':'assets/images/art-science-cover.webp','chapters':chapters}
+      'subtitle':'یادگیری ماشین و شبکه‌های عصبی | جلد دوم: ۱۱ فصل',
+      'author':'Babak Moradvand','cover':'assets/images/art-science-cover.webp','chapters':chapters}
 found=[b for b in data['books'] if b['id']==book['id']]
 if found:
     assert len(found)==1 and found[0]['chapters'][:3]==chapters, 'Existing chapters 1–3 differ; refusing to replace them'
-    print('Volume 2 already exists and matches; no change')
+    existing=found[0]
+    metadata_changed=False
+    if existing.get('subtitle')!='یادگیری ماشین و شبکه‌های عصبی | جلد دوم: ۱۱ فصل':
+        existing['subtitle']='یادگیری ماشین و شبکه‌های عصبی | جلد دوم: ۱۱ فصل';metadata_changed=True
+    if existing.get('author')!='Babak Moradvand':
+        existing['author']='Babak Moradvand';metadata_changed=True
+    if metadata_changed:file.write_text(json.dumps(data,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf8')
+    print('Volume 2 already exists and matches; metadata '+('updated' if metadata_changed else 'already matches'))
 else:
     i=next(i for i,b in enumerate(data['books']) if b['id']=='art-science-intelligence-v1')
     data['books'].insert(i+1,book)

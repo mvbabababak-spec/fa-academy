@@ -154,6 +154,8 @@ def main():
                 assert page.get_by_text("نسخه PDF و EPUB تولید نشده است.", exact=False).count() == 1
                 card = page.locator(".book-card").filter(has_text=TITLE)
                 assert card.count() == 1 and "14 فصل" in card.inner_text() and "265 بخش" in card.inner_text()
+                assert card.locator(".book-card-subtitle").inner_text() == "Transformer و مهندسی مدل زبانی | ۱۴ فصل"
+                assert card.locator(".book-card-author").inner_text() == "✍️ Babak Moradvand"
                 assert page.locator(".book-card").count() >= 3
 
                 page.evaluate(f"openItem('{BOOK_ID}','book')")

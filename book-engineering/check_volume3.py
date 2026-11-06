@@ -40,8 +40,8 @@ book = books[0]
 chapters = book.get("chapters", [])
 assert len(chapters) == PLANNED, f"expected all {PLANNED} local chapters"
 assert [chapter.get("num") for chapter in chapters] == list(range(1, len(chapters) + 1))
-assert book.get("author") == "Babak & Ai"
-assert "۱۴ فصل" in book.get("subtitle", "")
+assert book.get("author") == "Babak Moradvand"
+assert book.get("subtitle") == "Transformer و مهندسی مدل زبانی | ۱۴ فصل"
 
 all_ids: list[str] = []
 inspector = Inspector()

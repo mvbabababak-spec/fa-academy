@@ -41,6 +41,8 @@ def main():
                 page.goto(url,wait_until='networkidle');page.wait_for_selector('#loading.hidden')
                 assert page.get_by_text('هنر و علم ساخت هوش — جلد دوم',exact=True).count()==1
                 card=page.locator('.book-card').filter(has_text='هنر و علم ساخت هوش — جلد دوم')
+                assert card.locator('.book-card-subtitle').inner_text() == 'یادگیری ماشین و شبکه‌های عصبی | جلد دوم: ۱۱ فصل'
+                assert card.locator('.book-card-author').inner_text() == '✍️ Babak Moradvand'
                 assert '11 فصل' in card.inner_text() and '101 بخش' in card.inner_text()
                 card.click();assert page.locator('.chapter-header').count()==11
                 page.locator('.chapter-header').first.click();page.locator('.section-item').first.click()

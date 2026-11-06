@@ -25,7 +25,7 @@ def main() -> None:
     _require(len(books) == 1, "data.json must contain exactly one volume 4 record")
     book = books[0]
     _require(book.get("title") == "هنر و علم ساخت هوش — جلد چهارم", "volume 4 title mismatch")
-    _require(book.get("author") == "Babak & Ai", "volume 4 author metadata mismatch")
+    _require(book.get("author") == "Babak Moradvand", "volume 4 author metadata mismatch")
     v3_index = next((i for i, item in enumerate(data["books"]) if item.get("id") == "art-science-intelligence-v3"), None)
     v4_index = next((i for i, item in enumerate(data["books"]) if item.get("id") == BOOK_ID), None)
     _require(v3_index is not None and v4_index == v3_index + 1, "volume 4 must follow volume 3 in the reader")
@@ -35,8 +35,7 @@ def main() -> None:
     _require(bool(specs), "at least one volume 4 chapter must be authored")
     _require(book.get("chapters") == expected_chapters, "volume 4 data chapters do not match immutable Markdown sources")
     _require(len(book["chapters"]) <= builder.PLANNED_CHAPTERS, "more chapters than the roadmap defines")
-    _require("۱۵ فصل در نقشه" in book.get("subtitle", ""), "volume 4 roadmap count missing")
-    _require(f"{builder.fa_digits(len(book['chapters']))} فصل منتشرشده" in book.get("subtitle", ""), "published chapter count mismatch")
+    _require(book.get("subtitle") == "پس‌آموزش، چندوجهی و زیرساخت | ۱۵ فصل", "volume 4 card subtitle mismatch")
 
     source = ROOT / "book-engineering/chapters/47-posttraining.md"
     answer = ROOT / "book-engineering/answers/47-posttraining-fa.md"

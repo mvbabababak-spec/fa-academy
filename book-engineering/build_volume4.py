@@ -148,7 +148,7 @@ def main() -> None:
     matches = [book for book in data["books"] if book.get("id") == VOLUME_ID]
     if len(matches) > 1:
         raise RuntimeError("duplicate volume 4 book records")
-    subtitle = f"پس‌آموزش، چندوجهی و زیرساخت | ۱۵ فصل در نقشه؛ {fa_digits(len(chapters))} فصل منتشرشده"
+    subtitle = "پس‌آموزش، چندوجهی و زیرساخت | ۱۵ فصل"
     changed = False
     refreshed_draft = None
     if matches:
@@ -177,6 +177,9 @@ def main() -> None:
         if book.get("subtitle") != subtitle:
             book["subtitle"] = subtitle
             changed = True
+        if book.get("author") != "Babak Moradvand":
+            book["author"] = "Babak Moradvand"
+            changed = True
     else:
         v3_index = next(
             (index for index, book in enumerate(data["books"])
@@ -189,7 +192,7 @@ def main() -> None:
             "id": VOLUME_ID,
             "title": "هنر و علم ساخت هوش — جلد چهارم",
             "subtitle": subtitle,
-            "author": "Babak & Ai",
+            "author": "Babak Moradvand",
             "cover": "assets/images/art-science-cover.webp",
             "chapters": chapters,
         }

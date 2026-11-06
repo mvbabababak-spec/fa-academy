@@ -33,19 +33,21 @@ def main():
                 assert card.locator('.book-card-english').inner_text() == 'The Art & Science of Building Intelligence'
                 cover_checks = page.evaluate("""() => {
                   const expected={
-                    'art-science-intelligence-v1':'assets/images/covers/volume-1-cover.webp',
-                    'art-science-intelligence-v2':'assets/images/covers/volume-2-cover.webp',
-                    'art-science-intelligence-v3':'assets/images/covers/volume-3-cover.webp',
-                    'art-science-intelligence-v4':'assets/images/covers/volume-4-cover.webp'
+                    'art-science-intelligence-v1':{path:'assets/images/covers/volume-1-cover.webp',subtitle:'از صفر مطلق تا طراحی هوش مصنوعی | ۲۱ فصل'},
+                    'art-science-intelligence-v2':{path:'assets/images/covers/volume-2-cover.webp',subtitle:'یادگیری ماشین و شبکه‌های عصبی | جلد دوم: ۱۱ فصل'},
+                    'art-science-intelligence-v3':{path:'assets/images/covers/volume-3-cover.webp',subtitle:'Transformer و مهندسی مدل زبانی | ۱۴ فصل'},
+                    'art-science-intelligence-v4':{path:'assets/images/covers/volume-4-cover.webp',subtitle:'پس‌آموزش، چندوجهی و زیرساخت | ۱۵ فصل'}
                   };
-                  return Object.entries(expected).map(([id,path])=>{
+                  return Object.entries(expected).map(([id,copy])=>{
+                    const path=copy.path;
                     const item=DATA.books.find(book=>book.id===id);
                     const bookCard=Array.from(document.querySelectorAll('.book-card--volume'))
                       .find(el=>el.getAttribute('onclick')===`openItem('${id}','book')`);
                     const img=bookCard&&bookCard.querySelector('img');
                     const cover=bookCard&&bookCard.querySelector('.book-card-cover');
                     const rect=cover&&cover.getBoundingClientRect();
-                    return {id,path,cover:item&&item.cover,src:img&&new URL(img.currentSrc).pathname,
+                    return {id,path,expectedSubtitle:copy.subtitle,subtitle:item&&item.subtitle,author:item&&item.author,
+                      cover:item&&item.cover,src:img&&new URL(img.currentSrc).pathname,
                       dimensions:img&&[img.naturalWidth,img.naturalHeight],fit:img&&getComputedStyle(img).objectFit,
                       ratio:rect&&rect.width/rect.height};
                   });
@@ -53,6 +55,8 @@ def main():
                 assert len(cover_checks) == 4, cover_checks
                 for result_cover in cover_checks:
                     assert result_cover['cover'] == result_cover['path'], result_cover
+                    assert result_cover['subtitle'] == result_cover['expectedSubtitle'], result_cover
+                    assert result_cover['author'] == 'Babak Moradvand', result_cover
                     assert result_cover['src'].endswith(result_cover['path']), result_cover
                     assert result_cover['dimensions'] == [848, 1264], result_cover
                     assert result_cover['fit'] == 'contain' and 0.65 < result_cover['ratio'] < 0.68, result_cover

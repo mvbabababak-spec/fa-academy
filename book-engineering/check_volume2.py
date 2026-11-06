@@ -13,7 +13,10 @@ class Inspector(HTMLParser):
 
 books=[b for b in json.loads((ROOT/'data.json').read_text(encoding='utf8'))['books'] if b['id']=='art-science-intelligence-v2']
 assert len(books)==1
-chapters=books[0]['chapters']; assert [c['num'] for c in chapters]==list(range(1,12))
+book=books[0]
+assert book.get('subtitle')=='یادگیری ماشین و شبکه‌های عصبی | جلد دوم: ۱۱ فصل'
+assert book.get('author')=='Babak Moradvand'
+chapters=book['chapters']; assert [c['num'] for c in chapters]==list(range(1,12))
 ids=[]; parser=Inspector(); count=0
 for c in chapters:
     ids.append(c['id']); assert c['sections']
