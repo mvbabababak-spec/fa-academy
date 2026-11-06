@@ -23,6 +23,10 @@ jobs:
         run: |
           set -euo pipefail
           for project in book-engineering/projects/*/; do
+            if [[ "$project" == "book-engineering/projects/58-huggingface-stack/" ]]; then
+              echo "Chapter 58 runs in its pinned offline environment in volume4-audit.yml"
+              continue
+            fi
             (cd "$project" && python -m unittest discover -v)
           done
       - name: Browser and offline smoke checks
