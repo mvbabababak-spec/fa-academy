@@ -24,12 +24,12 @@ def main():
                 page = context.new_page()
                 page.goto(url, wait_until='networkidle')
                 page.wait_for_selector('#loading.hidden')
-                chapter55 = page.evaluate("""() => {
+                chapter56 = page.evaluate("""() => {
                   const book=DATA.books.find(item=>item.id==='art-science-intelligence-v4');
-                  const chapter=book&&book.chapters[8];
+                  const chapter=book&&book.chapters[9];
                   return {count:book&&book.chapters.length,id:chapter&&chapter.id,sections:chapter&&chapter.sections.length};
                 }""")
-                assert chapter55 == {'count':9,'id':'art-science-v4-ch09','sections':21}, chapter55
+                assert chapter56 == {'count':10,'id':'art-science-v4-ch10','sections':21}, chapter56
                 assert page.locator('.home-hero > p').first.inner_text() == 'مجموعه‌ای جامع از کتاب‌ها و دوره‌های آموزشی هوش مصنوعی — با دسترسی آفلاین'
                 page.evaluate("document.querySelectorAll('.book-card--volume img,.book-card--microsoft img').forEach(img => img.loading='eager')")
                 page.wait_for_function("""() => {
@@ -201,14 +201,20 @@ def main():
                 chapter55_offline = page.evaluate("fetch('book-engineering/chapters/55-ai-lab-design.md').then(r => r.ok ? r.text() : '')")
                 answer55_offline = page.evaluate("fetch('book-engineering/answers/55-ai-lab-design.md').then(r => r.ok ? r.text() : '')")
                 diagram55_offline = page.evaluate("fetch('book-engineering/diagrams/v4-ch09-lab-design.svg').then(r => r.ok ? r.text() : '')")
+                chapter56_offline = page.evaluate("fetch('book-engineering/chapters/56-ai-compute-budget.md').then(r => r.ok ? r.text() : '')")
+                answer56_offline = page.evaluate("fetch('book-engineering/answers/56-ai-compute-budget-fa.md').then(r => r.ok ? r.text() : '')")
+                diagram56_offline = page.evaluate("fetch('assets/images/babak-ai/v4-ch10-tco-timeline.svg').then(r => r.ok ? r.text() : '')")
                 assert 'طراحی آزمایشگاه' in chapter55_offline, 'chapter 55 unavailable offline'
                 assert 'پاسخ‌نامهٔ مستقل' in answer55_offline, 'chapter 55 answer key unavailable offline'
                 assert '<svg' in diagram55_offline, 'chapter 55 diagram unavailable offline'
+                assert 'بودجه و هزینهٔ مالکیت' in chapter56_offline, 'chapter 56 unavailable offline'
+                assert 'پاسخ‌نامهٔ مستقل' in answer56_offline, 'chapter 56 answer key unavailable offline'
+                assert '<svg' in diagram56_offline, 'chapter 56 diagram unavailable offline'
                 typography_summary=', '.join(
                     f"{book_id}: {stats['paragraphs']} justified prose paragraphs, {stats['indented']} indented, {stats['formulas']} MathML, {stats['captions']} captions"
                     for book_id,stats in result['typography'].items()
                 )
-                print(f"PASS {width}px: cover online/offline, chapter 55 source/answer/diagram offline, text, header, RTL navigation, locked viewport and {result['count']} sections; {typography_summary}")
+                print(f"PASS {width}px: cover online/offline, chapter 56 source/answer/diagram offline, text, header, RTL navigation, locked viewport and {result['count']} sections; {typography_summary}")
                 context.close()
             browser.close()
     finally:

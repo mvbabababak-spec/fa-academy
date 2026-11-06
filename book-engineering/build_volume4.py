@@ -56,6 +56,7 @@ APPENDIX_PROJECTS = {
     53: "book-engineering/projects/53-diffusion-lab/diffusion_lab.py",
     54: "book-engineering/projects/54-resource-estimation/resource_estimator.py",
     55: "book-engineering/projects/55-ai-lab-design/lab_design_planner.py",
+    56: "book-engineering/projects/56-ai-compute-budget/budget_model.py",
 }
 
 
@@ -66,7 +67,7 @@ def _verify_code_appendix(global_num: int, text: str) -> None:
     project_code_path = ROOT / relative
     if not project_code_path.is_file():
         raise FileNotFoundError(project_code_path)
-    if global_num == 55:
+    if global_num in {55, 56}:
         # New chapter appendix check includes every source byte and final newline.
         marker = b"\n```python\n"
         _, found, tail = text.encode("utf-8").rpartition(marker)

@@ -1,5 +1,5 @@
-// ===== فا-اکدمی Service Worker v90 =====
-const CACHE_NAME = 'fa-academy-v90';
+// ===== فا-اکدمی Service Worker v91 =====
+const CACHE_NAME = 'fa-academy-v91';
 const CORE_FILES = [
   './',
   './index.html',
@@ -290,7 +290,16 @@ const CORE_FILES = [
   './assets/images/babak-ai/ch18-derivative.webp',
   './assets/images/babak-ai/ch19-bayes.webp',
   './assets/images/babak-ai/ch20-descent.webp',
-  './assets/images/babak-ai/ch21-entropy.webp'
+  './assets/images/babak-ai/ch21-entropy.webp',
+  './assets/images/babak-ai/v4-ch10-tco-timeline.svg',
+  './book-engineering/chapters/56-ai-compute-budget.md',
+  './book-engineering/chapters/56-audit-report-fa.md',
+  './book-engineering/answers/56-ai-compute-budget-fa.md',
+  './book-engineering/projects/56-ai-compute-budget/README.md',
+  './book-engineering/projects/56-ai-compute-budget/budget_model.py',
+  './book-engineering/projects/56-ai-compute-budget/test_budget_model.py',
+  './book-engineering/projects/56-ai-compute-budget/sample_budget.json',
+  './book-engineering/projects/56-ai-compute-budget/results.json'
 ];
 
 // ===== INSTALL: Cache core files =====

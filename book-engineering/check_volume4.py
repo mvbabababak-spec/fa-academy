@@ -443,6 +443,57 @@ def main() -> None:
     _require(results55["unit_tests"]["passed"] == 57 and results55["unit_tests"]["failed"] == 0 and results55["unit_tests"]["python"] == "3.13.16", "chapter 55 result manifest test result mismatch")
     _require(results55["fixture"]["sha256"] == fixture55_hash, "chapter 55 result manifest fixture hash mismatch")
     _require(results55["summary"] == {"profiles": 4, "paper_feasible": 3, "needs_revision": 1}, "chapter 55 deterministic screen summary changed")
+
+    source56 = ROOT / "book-engineering/chapters/56-ai-compute-budget.md"
+    answer56 = ROOT / "book-engineering/answers/56-ai-compute-budget-fa.md"
+    report56 = ROOT / "book-engineering/chapters/56-audit-report-fa.md"
+    diagram56 = ROOT / "assets/images/babak-ai/v4-ch10-tco-timeline.svg"
+    project56 = ROOT / "book-engineering/projects/56-ai-compute-budget"
+    for path in (source56, answer56, report56, diagram56, project56 / "README.md", project56 / "budget_model.py", project56 / "test_budget_model.py", project56 / "sample_budget.json", project56 / "results.json"):
+        _require(path.is_file(), f"missing chapter 56 deliverable: {path.relative_to(ROOT)}")
+    source56_text = source56.read_text(encoding="utf-8")
+    _require("فصل محلی ۱۰ از ۱۵ فصل جلد چهارم؛ فصل سراسری ۵۶" in source56_text, "chapter 56 local/global mapping missing")
+    _require("تاریخ بازبینی منابع: ۶ نوامبر ۲۰۲۶" in source56_text, "chapter 56 dated review note missing")
+    _require(bool(re.search(r"^##\s+.*منابع و تاریخ بازبینی", source56_text, flags=re.MULTILINE)) and bool(re.search(r"^##\s+.*پیوست اجرایی", source56_text, flags=re.MULTILINE)), "chapter 56 bibliography or executable appendix missing")
+    _require("فصل ۵۴" in source56_text and "فصل ۵۵" in source56_text and "فصل ۵۷" in source56_text, "chapter 56 boundaries with adjacent chapters missing")
+    _require(all(term in source56_text for term in ("TCO", "NPV", "خرید", "اجاره", "Iowa", "us-central1", "Texas statewide", "synthetic_fixture", "NIST SP 1326", "GAO-20-195G")), "chapter 56 budget, market, or supply-risk scope missing")
+    math56_nodes = re.findall(r"<math\b[^>]*>", source56_text)
+    math56_blocks = re.findall(r"<math\b.*?</math>", source56_text, flags=re.DOTALL)
+    _require(len(math56_nodes) >= 5 and len(math56_blocks) == len(math56_nodes), "chapter 56 core MathML missing or malformed")
+    _require(all("aria-label=" in node for node in math56_nodes), "chapter 56 MathML needs aria-label")
+    _require(source56_text.count("**متن جایگزین فرمول:**") >= len(math56_nodes), "chapter 56 formulas need visible alternatives")
+    for math_markup in math56_blocks:
+        _require(ET.fromstring(math_markup).tag.endswith("math"), "chapter 56 contains invalid MathML XML")
+    figures56 = re.findall(r"!\[([^\]]*)\]\(([^)]+)\)", source56_text)
+    _require(bool(figures56) and all(term in figures56[0][0] for term in ("شکل ۴-۱۰-۱", "خرید", "اجاره", "ابر", "TCO")), "chapter 56 figure alt text misses TCO decision boundaries")
+    for alt, image_path in figures56:
+        _require(bool(alt.strip()) and (ROOT / image_path).is_file(), f"missing or inaccessible chapter 56 figure: {image_path}")
+    svg56 = ET.parse(diagram56).getroot()
+    _require(svg56.attrib.get("width") == "1600" and svg56.attrib.get("height") == "1000", "chapter 56 SVG dimensions mismatch")
+    _require("aria-labelledby" in svg56.attrib, "chapter 56 SVG must expose title and description")
+    answer56_text = answer56.read_text(encoding="utf-8")
+    _require("پاسخ‌نامهٔ مستقل" in answer56_text and "فصل ۵۶" in answer56_text and len(answer56_text.split()) >= 300, "chapter 56 independent answer key missing or too short")
+    report56_text = report56.read_text(encoding="utf-8")
+    _require("13/13 آزمون unit موفق" in report56_text and "Ran 13 tests" in report56_text, "chapter 56 audit report must record the actual project test result")
+    _require("test_volume4.py" in report56_text and "test_mobile_layout.py" in report56_text and "۹۸ دارایی آفلاین" in report56_text, "chapter 56 report must record browser/mobile and offline checks")
+    _require("benchmark" in report56_text and "سخت‌افزار واقعی" in report56_text and "تضمین ایمنی" in report56_text, "chapter 56 report must state actual claim limits")
+    project_code56 = (project56 / "budget_model.py").read_bytes()
+    appendix_marker56 = b"\n```python\n"
+    _, appendix_found56, appendix_tail56 = source56.read_bytes().rpartition(appendix_marker56)
+    appendix_close56 = appendix_tail56.rfind(b"```")
+    _require(bool(appendix_found56) and appendix_close56 >= 0 and appendix_tail56[:appendix_close56] == project_code56, "chapter 56 appendix and project must match byte-for-byte")
+    fixture_path56 = project56 / "sample_budget.json"
+    fixture56 = json.loads(fixture_path56.read_text(encoding="utf-8"))
+    fixture56_hash = hashlib.sha256(fixture_path56.read_bytes()).hexdigest()
+    _require(fixture56["fixture_id"] == "v4-ch10-synthetic-budget-v1" and fixture56["label_source"] == "synthetic_fixture" and len(fixture56["scenarios"]) == 3, "chapter 56 fixture identity or scenario count changed")
+    _require(all(row["quote_status"] == "synthetic_not_a_vendor_quote" for row in fixture56["scenarios"]), "chapter 56 purchase/lease rows must remain synthetic")
+    _require(fixture56["assumptions"]["performance_parity_measured"] is False and fixture56["market_snapshot"]["cloud_compute"]["region"] == "us-central1 (Iowa, US)" and fixture56["market_snapshot"]["electricity"]["region"] == "Texas statewide; not Dallas-specific", "chapter 56 fixture market or parity boundary changed")
+    results56 = json.loads((project56 / "results.json").read_text(encoding="utf-8"))
+    _require(results56["fixture_sha256"] == fixture56_hash and results56["horizon_years"] == 3 and results56["annual_discount_rate"] == "0.05", "chapter 56 result manifest fixture or assumptions mismatch")
+    _require(results56["comparison_status"]["performance_parity_measured"] is False and results56["comparison_status"]["complete_invoice_or_cost_estimate"] is False and results56["comparison_status"]["purchase_and_lease_amounts_are_vendor_quotes"] is False, "chapter 56 result manifest must retain scope limitations")
+    results_by_id56 = {row["id"]: row for row in results56["scenarios"]}
+    _require(results_by_id56["buy-synthetic"]["nominal_tco_usd"] == "8595.14" and results_by_id56["buy-synthetic"]["npv_tco_usd"] == "8577.77", "chapter 56 buy arithmetic changed")
+    _require(results_by_id56["lease-synthetic"]["nominal_tco_usd"] == "14005.14" and results_by_id56["cloud-snapshot-illustration"]["nominal_tco_usd"] == "12149.82", "chapter 56 lease/cloud arithmetic changed")
     _require(results55["scope"]["real_hardware_measured"] is False and results55["scope"]["prices_included"] is False and results55["scope"]["benchmark_performed"] is False and results55["scope"]["installation_performed"] is False, "chapter 55 result manifest scope limits changed")
 
     code = (project / "sft_experiment.py").read_text(encoding="utf-8").rstrip()
@@ -458,7 +509,7 @@ def main() -> None:
     _require(markdown_path.is_file(), "volume-4-full-fa.md missing")
     _require(markdown_path.read_text(encoding="utf-8") == builder.expected_markdown(expected_chapters, specs), "full Markdown does not match chapter sources")
     sw = (ROOT / "sw.js").read_text(encoding="utf-8")
-    _require("fa-academy-v90" in sw and "v89" not in sw.splitlines()[0], "service worker cache version was not advanced")
+    _require("fa-academy-v91" in sw and "v90" not in sw.splitlines()[0], "service worker cache version was not advanced")
     cover_paths = {
         f"art-science-intelligence-v{volume}": f"assets/images/covers/volume-{volume}-cover.webp"
         for volume in range(1, 5)
@@ -560,6 +611,15 @@ def main() -> None:
         "./book-engineering/projects/55-ai-lab-design/test_lab_design_planner.py",
         "./book-engineering/projects/55-ai-lab-design/sample_labs.json",
         "./book-engineering/projects/55-ai-lab-design/results.json",
+        "./assets/images/babak-ai/v4-ch10-tco-timeline.svg",
+        "./book-engineering/chapters/56-ai-compute-budget.md",
+        "./book-engineering/chapters/56-audit-report-fa.md",
+        "./book-engineering/answers/56-ai-compute-budget-fa.md",
+        "./book-engineering/projects/56-ai-compute-budget/README.md",
+        "./book-engineering/projects/56-ai-compute-budget/budget_model.py",
+        "./book-engineering/projects/56-ai-compute-budget/test_budget_model.py",
+        "./book-engineering/projects/56-ai-compute-budget/sample_budget.json",
+        "./book-engineering/projects/56-ai-compute-budget/results.json",
     )
     for item in required_cache_paths:
         _require(item in sw, f"service worker does not precache {item}")
@@ -567,7 +627,7 @@ def main() -> None:
     print(
         f"PASS volume 4: {len(book['chapters'])}/{builder.PLANNED_CHAPTERS} chapters, "
         f"{sum(len(ch['sections']) for ch in book['chapters'])} sections, "
-        f"{len(math_nodes) + len(math48) + len(math49) + len(math50) + len(math51) + len(math52) + len(math53_nodes) + len(math54_nodes)} accessible MathML expressions, exact appendices, reports/answers/fixtures present"
+        f"{len(math_nodes) + len(math48) + len(math49) + len(math50) + len(math51) + len(math52) + len(math53_nodes) + len(math54_nodes) + len(math55_nodes) + len(math56_nodes)} accessible MathML expressions, exact appendices, reports/answers/fixtures present"
     )
 
 

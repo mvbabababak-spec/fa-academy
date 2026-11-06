@@ -119,6 +119,26 @@ jobs:
           assert result['scope']['benchmark_performed'] is False
           assert result['scope']['installation_performed'] is False
           PY
+      - name: Chapter 56 synthetic compute-budget model tests
+        run: |
+          (cd book-engineering/projects/56-ai-compute-budget && python -m unittest discover -v)
+          python book-engineering/projects/56-ai-compute-budget/budget_model.py \
+            --fixture book-engineering/projects/56-ai-compute-budget/sample_budget.json \
+            --output /tmp/ch56-ci-results.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          result = json.loads(Path('/tmp/ch56-ci-results.json').read_text())
+          rows = {row['id']: row for row in result['scenarios']}
+          assert result['fixture_sha256'] == '1a536faa4dfd1f75d5b8bd07181cfb726a6ddaf9f781e88b7dc0d1ae9edc1424'
+          assert result['market_snapshot']['cloud_compute']['region'] == 'us-central1 (Iowa, US)'
+          assert result['market_snapshot']['electricity']['region'] == 'Texas statewide; not Dallas-specific'
+          assert rows['buy-synthetic']['nominal_tco_usd'] == '8595.14'
+          assert rows['lease-synthetic']['nominal_tco_usd'] == '14005.14'
+          assert rows['cloud-snapshot-illustration']['nominal_tco_usd'] == '12149.82'
+          assert result['comparison_status']['performance_parity_measured'] is False
+          assert result['comparison_status']['complete_invoice_or_cost_estimate'] is False
+          PY
       - name: Confirm volume 4 builder idempotence
         run: |
           cp data.json /tmp/v4-data-before.json
