@@ -49,6 +49,7 @@ SPECS = [
 APPENDIX_PROJECTS = {
     47: "book-engineering/projects/47-instruction-tuning/sft_experiment.py",
     48: "book-engineering/projects/48-peft-lab/peft_lab.py",
+    49: "book-engineering/projects/49-preference-lab/preference_lab.py",
 }
 
 

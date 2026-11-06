@@ -1,0 +1,62 @@
+{
+  "runtime": {
+    "python": "3.13.16",
+    "torch": "2.6.0+cpu",
+    "device": "cpu",
+    "dtype": "float32"
+  },
+  "unit_tests": {
+    "passed": 22,
+    "failed": 0,
+    "command": "python -m unittest -v test_preference_lab.py"
+  },
+  "audit": {
+    "schema_version": 1,
+    "status": "validated_only",
+    "training_performed": false,
+    "model_loaded": false,
+    "model_downloaded": false,
+    "fixture": "sample_preferences.jsonl",
+    "fixture_kind": "synthetic prompt and pairwise choice records; not human or model feedback",
+    "records": 12,
+    "group_count": 6,
+    "label_source_counts": {
+      "synthetic_fixture": 12
+    },
+    "split_counts": {
+      "train": {
+        "records": 8,
+        "groups": 4
+      },
+      "validation": {
+        "records": 2,
+        "groups": 1
+      },
+      "test": {
+        "records": 2,
+        "groups": 1
+      }
+    },
+    "sha256": "629b48e6a9c3f3a8d6c336eadbb1f3833b988348c1b11f1022221db121fc21bb",
+    "claim_boundary": "does not validate preference correctness, annotator agreement, language quality, safety, rights, privacy, or a trained model"
+  },
+  "toy_dpo": {
+    "schema_version": 1,
+    "status": "synthetic_demo_completed",
+    "training_performed": true,
+    "model_loaded": false,
+    "model_downloaded": false,
+    "fixture_kind": "generated two-action categorical policy; not a language model",
+    "seed": 49,
+    "steps": 80,
+    "device": "cpu",
+    "dtype": "float32",
+    "beta": 0.2,
+    "initial_dpo_loss": 0.6931471824645996,
+    "final_dpo_loss": 0.12939360737800598,
+    "reference_chosen_probability": 0.5,
+    "policy_chosen_probability": 0.9999496936798096,
+    "policy_rejected_probability": 5.029730891692452e-05,
+    "claim_boundary": "implementation smoke test only; not human preference, language quality, safety, RLHF, or model-alignment evidence"
+  }
+}

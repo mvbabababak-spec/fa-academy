@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="svg-title svg-desc" lang="fa" direction="rtl">
+  <title id="svg-title">مقایسهٔ مفهومی مسیرهای RLHF/PPO، DPO، GRPO و بازخورد AI</title>
+  <desc id="svg-desc">چهار ستون مستقل، ورودی و گام‌های معمول هر مسیر را نشان می‌دهند. RLHF از جفت ترجیح، reward model و PPO استفاده می‌کند؛ DPO جفت ثابت و policy مرجع را مستقیماً وارد loss می‌کند؛ GRPO چند پاسخ برای یک prompt را با reward گروهی مقایسه می‌کند؛ RLAIF و Constitutional AI از feedback یا اصول مبتنی بر AI استفاده می‌کنند. شکل، کیفیت یا ایمنی روش‌ها را رتبه‌بندی نمی‌کند.</desc>
+  <defs>
+    <marker id="arrow-navy" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M1,1 L11,6 L1,11 Z" fill="#26465e"/></marker>
+    <marker id="arrow-purple" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M1,1 L11,6 L1,11 Z" fill="#65479b"/></marker>
+    <marker id="arrow-teal" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M1,1 L11,6 L1,11 Z" fill="#087f78"/></marker>
+    <marker id="arrow-amber" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M1,1 L11,6 L1,11 Z" fill="#a26311"/></marker>
+    <style>
+      text { font-family: Tahoma, Arial, sans-serif; fill: #162c3b; }
+      .title { font-size: 34px; font-weight: 700; }
+      .subtitle { font-size: 20px; fill: #415a6c; }
+      .head { font-size: 25px; font-weight: 700; }
+      .lead { font-size: 17px; fill: #425b6c; }
+      .box { font-size: 19px; font-weight: 600; }
+      .note { font-size: 16px; fill: #334c5d; }
+      .small { font-size: 15px; fill: #344e60; }
+      .panel { fill: #ffffff; stroke-width: 2; }
+      .step { stroke-width: 1.5; }
+      .arrow { fill: none; stroke-width: 3; }
+    </style>
+  </defs>
+  <rect width="1600" height="1000" fill="#f3f7fa"/>
+  <text class="title" x="800" y="54" text-anchor="middle" direction="rtl">از ترجیح تا به‌روزرسانی سیاست</text>
+  <text class="subtitle" x="800" y="92" text-anchor="middle" direction="rtl">منبع بازخورد، مدل پاداش و الگوریتم بهینه‌سازی را جداگانه بخوانید</text>
+
+  <g direction="rtl">
+    <rect class="panel" x="40" y="132" width="365" height="744" rx="22" stroke="#9a6b28"/>
+    <path d="M62 132 H383 Q405 132 405 154 V212 H40 V154 Q40 132 62 132Z" fill="#fff1d8"/>
+    <text class="head" x="222" y="174" text-anchor="middle">۱. RLHF با PPO</text>
+    <text class="lead" x="222" y="201" text-anchor="middle">بازخورد انسانی + RL</text>
+    <rect class="step" x="75" y="232" width="295" height="68" rx="14" fill="#f8fbfd" stroke="#9a6b28"/>
+    <text class="box" x="222" y="273" text-anchor="middle">مدل آغازین SFT</text>
+    <path class="arrow" d="M222 300 V321" stroke="#a26311" marker-end="url(#arrow-amber)"/>
+    <rect class="step" x="75" y="329" width="295" height="75" rx="14" fill="#fff8ec" stroke="#d6aa67"/>
+    <text class="box" x="222" y="360" text-anchor="middle">تولید چند پاسخ</text>
+    <text class="note" x="222" y="385" text-anchor="middle">برای promptهای نمونه‌گیری‌شده</text>
+    <path class="arrow" d="M222 404 V424" stroke="#a26311" marker-end="url(#arrow-amber)"/>
+    <rect class="step" x="75" y="432" width="295" height="74" rx="14" fill="#fff8ec" stroke="#d6aa67"/>
+    <text class="box" x="222" y="463" text-anchor="middle">مقایسهٔ انسانی</text>
+    <text class="note" x="222" y="488" text-anchor="middle">chosen / rejected + معیار</text>
+    <path class="arrow" d="M222 506 V526" stroke="#a26311" marker-end="url(#arrow-amber)"/>
+    <rect class="step" x="75" y="534" width="295" height="72" rx="14" fill="#fff8ec" stroke="#d6aa67"/>
+    <text class="box" x="222" y="577" text-anchor="middle">آموزش reward model</text>
+    <path class="arrow" d="M222 606 V626" stroke="#a26311" marker-end="url(#arrow-amber)"/>
+    <rect class="step" x="75" y="634" width="295" height="75" rx="14" fill="#fff1d8" stroke="#9a6b28"/>
+    <text class="box" x="222" y="666" text-anchor="middle">به‌روزرسانی policy با PPO</text>
+    <text class="note" x="222" y="692" text-anchor="middle">rollout، advantage، clipping</text>
+    <rect x="65" y="735" width="315" height="92" rx="14" fill="#f8fbfd" stroke="#d6aa67"/>
+    <text class="note" x="222" y="772" text-anchor="middle">reference / KL ممکن است باشد؛</text>
+    <text class="note" x="222" y="798" text-anchor="middle">ارزیابی مستقل همچنان لازم است.</text>
+  </g>
+
+  <g direction="rtl">
+    <rect class="panel" x="425" y="132" width="365" height="744" rx="22" stroke="#7356a5"/>
+    <path d="M447 132 H768 Q790 132 790 154 V212 H425 V154 Q425 132 447 132Z" fill="#eee8f8"/>
+    <text class="head" x="607" y="174" text-anchor="middle">۲. DPO آفلاین</text>
+    <text class="lead" x="607" y="201" text-anchor="middle">جفت ترجیحی → loss مستقیم</text>
+    <rect class="step" x="460" y="242" width="295" height="92" rx="14" fill="#faf8fd" stroke="#aa98ca"/>
+    <text class="box" x="607" y="277" text-anchor="middle">prompt + جفت پاسخ</text>
+    <text class="note" x="607" y="306" text-anchor="middle">chosen / rejected</text>
+    <path class="arrow" d="M607 334 V362" stroke="#65479b" marker-end="url(#arrow-purple)"/>
+    <rect class="step" x="460" y="370" width="295" height="105" rx="14" fill="#faf8fd" stroke="#aa98ca"/>
+    <text class="box" x="607" y="405" text-anchor="middle">سیاست فعلی + مرجع</text>
+    <text class="note" x="607" y="435" text-anchor="middle">log-probability پاسخ‌ها</text>
+    <text class="note" x="607" y="458" text-anchor="middle">با prompt و reference ثابت</text>
+    <path class="arrow" d="M607 475 V504" stroke="#65479b" marker-end="url(#arrow-purple)"/>
+    <rect class="step" x="460" y="512" width="295" height="85" rx="14" fill="#f3eefb" stroke="#7356a5"/>
+    <text class="box" x="607" y="548" text-anchor="middle">اختلاف log-ratio</text>
+    <text class="note" x="607" y="576" text-anchor="middle">جفت‌ها در loss ترجیحی</text>
+    <path class="arrow" d="M607 597 V627" stroke="#65479b" marker-end="url(#arrow-purple)"/>
+    <rect class="step" x="460" y="635" width="295" height="83" rx="14" fill="#eee8f8" stroke="#7356a5"/>
+    <text class="box" x="607" y="671" text-anchor="middle">گرادیان policy</text>
+    <text class="note" x="607" y="699" text-anchor="middle">بدون RM جدا در این گام</text>
+    <rect x="450" y="744" width="315" height="83" rx="14" fill="#faf8fd" stroke="#aa98ca"/>
+    <text class="note" x="607" y="780" text-anchor="middle">دادهٔ آفلاین و فرض‌های مدل</text>
+    <text class="note" x="607" y="806" text-anchor="middle">همچنان تعیین‌کننده‌اند.</text>
+  </g>
+
+  <g direction="rtl">
+    <rect class="panel" x="810" y="132" width="365" height="744" rx="22" stroke="#16857c"/>
+    <path d="M832 132 H1153 Q1175 132 1175 154 V212 H810 V154 Q810 132 832 132Z" fill="#dcf4f0"/>
+    <text class="head" x="992" y="174" text-anchor="middle">۳. GRPO آنلاین</text>
+    <text class="lead" x="992" y="201" text-anchor="middle">مقایسه درون گروه prompt</text>
+    <rect class="step" x="845" y="232" width="295" height="70" rx="14" fill="#f5fcfb" stroke="#72bcb4"/>
+    <text class="box" x="992" y="275" text-anchor="middle">نمونه‌گیری یک prompt</text>
+    <path class="arrow" d="M992 302 V322" stroke="#087f78" marker-end="url(#arrow-teal)"/>
+    <rect class="step" x="845" y="330" width="295" height="76" rx="14" fill="#f5fcfb" stroke="#72bcb4"/>
+    <text class="box" x="992" y="362" text-anchor="middle">تولید K پاسخ</text>
+    <text class="note" x="992" y="389" text-anchor="middle">گروه از یک سیاست</text>
+    <path class="arrow" d="M992 406 V427" stroke="#087f78" marker-end="url(#arrow-teal)"/>
+    <rect class="step" x="845" y="435" width="295" height="78" rx="14" fill="#f5fcfb" stroke="#72bcb4"/>
+    <text class="box" x="992" y="468" text-anchor="middle">امتیاز هر پاسخ</text>
+    <text class="note" x="992" y="495" text-anchor="middle">مدل، rule یا ترکیب</text>
+    <path class="arrow" d="M992 513 V534" stroke="#087f78" marker-end="url(#arrow-teal)"/>
+    <rect class="step" x="845" y="542" width="295" height="82" rx="14" fill="#e8f8f5" stroke="#16857c"/>
+    <text class="box" x="992" y="575" text-anchor="middle">advantage نسبی گروه</text>
+    <text class="note" x="992" y="603" text-anchor="middle">نرمال‌سازی rewardها</text>
+    <path class="arrow" d="M992 624 V645" stroke="#087f78" marker-end="url(#arrow-teal)"/>
+    <rect class="step" x="845" y="653" width="295" height="78" rx="14" fill="#dcf4f0" stroke="#16857c"/>
+    <text class="box" x="992" y="686" text-anchor="middle">policy update</text>
+    <text class="note" x="992" y="713" text-anchor="middle">objective clipped / KL*</text>
+    <rect x="835" y="750" width="315" height="77" rx="14" fill="#f5fcfb" stroke="#72bcb4"/>
+    <text class="note" x="992" y="783" text-anchor="middle">critic جدا حذف می‌شود؛ اما</text>
+    <text class="note" x="992" y="809" text-anchor="middle">reward و reference لزوماً نه.</text>
+  </g>
+
+  <g direction="rtl">
+    <rect class="panel" x="1195" y="132" width="365" height="744" rx="22" stroke="#416984"/>
+    <path d="M1217 132 H1538 Q1560 132 1560 154 V212 H1195 V154 Q1195 132 1217 132Z" fill="#e6f0f6"/>
+    <text class="head" x="1377" y="174" text-anchor="middle">۴. RLAIF / CAI</text>
+    <text class="lead" x="1377" y="201" text-anchor="middle">منبع feedback و اصول</text>
+    <rect class="step" x="1230" y="238" width="295" height="83" rx="14" fill="#f7fbfd" stroke="#91aec0"/>
+    <text class="box" x="1377" y="273" text-anchor="middle">معیار یا اصول انسانی</text>
+    <text class="note" x="1377" y="301" text-anchor="middle">برای قضاوت/بازبینی</text>
+    <path class="arrow" d="M1377 321 V349" stroke="#416984" marker-end="url(#arrow-navy)"/>
+    <rect class="step" x="1230" y="357" width="295" height="89" rx="14" fill="#f7fbfd" stroke="#91aec0"/>
+    <text class="box" x="1377" y="392" text-anchor="middle">AI critique / ranking</text>
+    <text class="note" x="1377" y="422" text-anchor="middle">با دستور و مدل ثبت‌شده</text>
+    <path class="arrow" d="M1377 446 V474" stroke="#416984" marker-end="url(#arrow-navy)"/>
+    <rect class="step" x="1230" y="482" width="295" height="83" rx="14" fill="#f7fbfd" stroke="#91aec0"/>
+    <text class="box" x="1377" y="517" text-anchor="middle">ترجیح / پاسخ بازبینی‌شده</text>
+    <text class="note" x="1377" y="545" text-anchor="middle">feedback منبع AI</text>
+    <path class="arrow" d="M1377 565 V594" stroke="#416984" marker-end="url(#arrow-navy)"/>
+    <rect class="step" x="1230" y="602" width="295" height="89" rx="14" fill="#e6f0f6" stroke="#416984"/>
+    <text class="box" x="1377" y="637" text-anchor="middle">RM + RL یا روش مستقیم</text>
+    <text class="note" x="1377" y="667" text-anchor="middle">CAI یکی از فرایندهای خاص است</text>
+    <rect x="1220" y="714" width="315" height="113" rx="14" fill="#f7fbfd" stroke="#91aec0"/>
+    <text class="note" x="1377" y="751" text-anchor="middle">اصول انسانی و ارزیابی انسانی</text>
+    <text class="note" x="1377" y="779" text-anchor="middle">حذف نمی‌شوند؛ کیفیت یا</text>
+    <text class="note" x="1377" y="807" text-anchor="middle">ایمنی از شکل تضمین نمی‌شود.</text>
+  </g>
+
+  <text x="800" y="928" text-anchor="middle" direction="rtl" font-size="20" font-weight="700" fill="#213c4d">* شکل ساده‌شده است؛ جزئیات trainer، reward و KL به مقاله و نسخه وابسته‌اند.</text>
+  <text x="800" y="963" text-anchor="middle" direction="rtl" font-size="17" fill="#465e6e">نمودار مفهومی است؛ معیار کیفیت، نتیجهٔ benchmark یا تضمین حقوقی/ایمنی نیست.</text>
+</svg>

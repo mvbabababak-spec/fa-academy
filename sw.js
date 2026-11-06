@@ -1,5 +1,5 @@
-// ===== فا-اکدمی Service Worker v78 =====
-const CACHE_NAME = 'fa-academy-v78';
+// ===== فا-اکدمی Service Worker v79 =====
+const CACHE_NAME = 'fa-academy-v79';
 const CORE_FILES = [
   './',
   './index.html',
@@ -149,6 +149,15 @@ const CORE_FILES = [
   './book-engineering/projects/48-peft-lab/peft_lab.py',
   './book-engineering/projects/48-peft-lab/test_peft_lab.py',
   './book-engineering/projects/48-peft-lab/sample_layers.json',
+  './book-engineering/diagrams/v4-ch03-preference.svg',
+  './book-engineering/chapters/49-preference-optimization.md',
+  './book-engineering/chapters/49-audit-report-fa.md',
+  './book-engineering/answers/49-preference-optimization-fa.md',
+  './book-engineering/projects/49-preference-lab/README.md',
+  './book-engineering/projects/49-preference-lab/preference_lab.py',
+  './book-engineering/projects/49-preference-lab/test_preference_lab.py',
+  './book-engineering/projects/49-preference-lab/sample_preferences.jsonl',
+  './book-engineering/projects/49-preference-lab/results.json',
   './assets/images/babak-ai/v2-ch07-backprop.webp',
   './assets/images/babak-ai/v2-ch10-cnn.webp',
   './assets/images/babak-ai/v2-ch11-representations.webp',

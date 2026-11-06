@@ -111,6 +111,50 @@ def main() -> None:
     rows48 = json.loads((project48 / "sample_layers.json").read_text(encoding="utf-8"))
     _require(len(rows48) == 3, "chapter 48 synthetic shape fixture row count changed")
 
+    source49 = ROOT / "book-engineering/chapters/49-preference-optimization.md"
+    answer49 = ROOT / "book-engineering/answers/49-preference-optimization-fa.md"
+    report49 = ROOT / "book-engineering/chapters/49-audit-report-fa.md"
+    diagram49 = ROOT / "book-engineering/diagrams/v4-ch03-preference.svg"
+    project49 = ROOT / "book-engineering/projects/49-preference-lab"
+    for path in (source49, answer49, report49, diagram49, project49 / "README.md", project49 / "preference_lab.py", project49 / "test_preference_lab.py", project49 / "sample_preferences.jsonl", project49 / "results.json"):
+        _require(path.is_file(), f"missing chapter 49 deliverable: {path.relative_to(ROOT)}")
+    source49_text = source49.read_text(encoding="utf-8")
+    _require("فصل محلی ۳ جلد چهارم = فصل سراسری ۴۹" in source49_text, "chapter 49 local/global mapping missing")
+    _require("تاریخ بازبینی منابع: ۶ نوامبر ۲۰۲۶" in source49_text, "chapter 49 source review date missing")
+    _require(bool(re.search(r"^##\s+.*منابع و تاریخ بازبینی", source49_text, flags=re.MULTILINE)), "chapter 49 dated bibliography missing")
+    _require(all(term in source49_text for term in ("RLHF", "PPO", "DPO", "GRPO", "RLAIF", "Constitutional AI")), "chapter 49 roadmap topics missing")
+    _require("فصل ۴۸" in source49_text and "فصل بعد" in source49_text, "chapter 49 adjacent-chapter boundaries missing")
+    _require("TRL v1.17.1" in source49_text and "PPOTrainer" in source49_text and "v1.13.0" in source49_text, "chapter 49 versioned TRL caveat missing")
+    _require("GPU/NCCL" in source49_text and "کیفیت" in source49_text, "chapter 49 claim boundaries missing")
+    math49 = re.findall(r"<math\b[^>]*>", source49_text)
+    _require(len(math49) >= 4, "chapter 49 should explain the core objectives with MathML")
+    _require(all("aria-label=" in node for node in math49), "chapter 49 MathML needs aria-label")
+    _require(source49_text.count("**متن جایگزین فرمول:**") >= len(math49), "chapter 49 formulas need visible alternatives")
+    figure49 = re.findall(r"!\[([^\]]*)\]\(([^)]+)\)", source49_text)
+    _require(bool(figure49), "chapter 49 figure missing")
+    for alt, image_path in figure49:
+        _require(bool(alt.strip()), "chapter 49 figure alternative text must be non-empty")
+        _require((ROOT / image_path).is_file(), f"missing chapter 49 figure: {image_path}")
+    svg49 = ET.parse(diagram49).getroot()
+    _require(svg49.attrib.get("width") == "1600" and svg49.attrib.get("height") == "1000", "chapter 49 SVG dimensions mismatch")
+    _require("aria-labelledby" in svg49.attrib, "chapter 49 SVG must expose title and description")
+    answer49_text = answer49.read_text(encoding="utf-8")
+    _require("پاسخ‌نامهٔ تشریحی فصل ۴۹" in answer49_text and len(answer49_text.split()) >= 250, "chapter 49 independent answer key missing or too short")
+    report49_text = report49.read_text(encoding="utf-8")
+    _require("نتایج اجرای واقعی" in report49_text, "chapter 49 audit report must distinguish actual tests")
+    _require("۲۲/۲۲ آزمون موفق" in report49_text, "chapter 49 report must record the actual unit-test result")
+    _require("629b48e6a9c3f3a8d6c336eadbb1f3833b988348c1b11f1022221db121fc21bb" in report49_text, "chapter 49 report must record the fixture hash")
+    _require("0.12939360737800598" in report49_text and "0.9999496936798096" in report49_text, "chapter 49 report must record exact toy outcomes")
+    _require("test_volume4.py" in report49_text and "test_mobile_layout.py" in report49_text, "chapter 49 report must record browser/mobile results")
+    code49 = (project49 / "preference_lab.py").read_text(encoding="utf-8").rstrip()
+    blocks49 = re.findall(r"```python\n(.*?)\n```", source49_text, flags=re.DOTALL)
+    _require(bool(blocks49) and blocks49[-1] == code49, "chapter 49 appendix and tested project must match byte-for-byte")
+    rows49 = [json.loads(line) for line in (project49 / "sample_preferences.jsonl").read_text(encoding="utf-8").splitlines() if line.strip()]
+    _require(len(rows49) == 12 and all(row["label_source"] == "synthetic_fixture" for row in rows49), "chapter 49 synthetic preference fixture changed")
+    results49 = json.loads((project49 / "results.json").read_text(encoding="utf-8"))
+    _require(results49["unit_tests"]["passed"] == 22 and results49["unit_tests"]["failed"] == 0, "chapter 49 result manifest test count mismatch")
+    _require(results49["audit"]["sha256"] == "629b48e6a9c3f3a8d6c336eadbb1f3833b988348c1b11f1022221db121fc21bb", "chapter 49 result manifest fixture hash mismatch")
+
     code = (project / "sft_experiment.py").read_text(encoding="utf-8").rstrip()
     blocks = re.findall(r"```python\n(.*?)\n```", source_text, flags=re.DOTALL)
     _require(bool(blocks) and blocks[-1] == code, "chapter appendix and tested project must be byte-for-byte equal")
@@ -124,7 +168,7 @@ def main() -> None:
     _require(markdown_path.is_file(), "volume-4-full-fa.md missing")
     _require(markdown_path.read_text(encoding="utf-8") == builder.expected_markdown(expected_chapters, specs), "full Markdown does not match chapter sources")
     sw = (ROOT / "sw.js").read_text(encoding="utf-8")
-    _require("fa-academy-v78" in sw and "v77" not in sw.splitlines()[0], "service worker cache version was not advanced")
+    _require("fa-academy-v79" in sw and "v78" not in sw.splitlines()[0], "service worker cache version was not advanced")
     required_cache_paths = (
         "./volume-4-full-fa.md",
         "./book-engineering/diagrams/v4-ch01-posttraining.svg",
@@ -144,6 +188,15 @@ def main() -> None:
         "./book-engineering/projects/48-peft-lab/peft_lab.py",
         "./book-engineering/projects/48-peft-lab/test_peft_lab.py",
         "./book-engineering/projects/48-peft-lab/sample_layers.json",
+        "./book-engineering/diagrams/v4-ch03-preference.svg",
+        "./book-engineering/chapters/49-preference-optimization.md",
+        "./book-engineering/chapters/49-audit-report-fa.md",
+        "./book-engineering/answers/49-preference-optimization-fa.md",
+        "./book-engineering/projects/49-preference-lab/README.md",
+        "./book-engineering/projects/49-preference-lab/preference_lab.py",
+        "./book-engineering/projects/49-preference-lab/test_preference_lab.py",
+        "./book-engineering/projects/49-preference-lab/sample_preferences.jsonl",
+        "./book-engineering/projects/49-preference-lab/results.json",
     )
     for item in required_cache_paths:
         _require(item in sw, f"service worker does not precache {item}")
@@ -151,7 +204,7 @@ def main() -> None:
     print(
         f"PASS volume 4: {len(book['chapters'])}/{builder.PLANNED_CHAPTERS} chapters, "
         f"{sum(len(ch['sections']) for ch in book['chapters'])} sections, "
-        f"{len(math_nodes) + len(math48)} accessible MathML expressions, exact appendices, reports/answers/fixtures present"
+        f"{len(math_nodes) + len(math48) + len(math49)} accessible MathML expressions, exact appendices, reports/answers/fixtures present"
     )
 
 

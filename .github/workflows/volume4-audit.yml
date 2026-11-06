@@ -47,6 +47,16 @@ jobs:
           python book-engineering/projects/48-peft-lab/peft_lab.py \
             --mode toy-lora --output /tmp/ch48-ci-toy
           python -c "import json; p=json.load(open('/tmp/ch48-ci-toy/run.json')); assert p['status']=='synthetic_demo_completed' and p['model_downloaded'] is False and p['device']=='cpu' and p['final_mse'] < p['initial_mse'] and p['base_parameters_trainable'] is False and p['merge_max_abs_error'] < 1e-5"
+      - name: Chapter 49 offline preference objective tests
+        run: |
+          (cd book-engineering/projects/49-preference-lab && python -m unittest discover -v)
+          python book-engineering/projects/49-preference-lab/preference_lab.py \
+            --mode audit --fixture book-engineering/projects/49-preference-lab/sample_preferences.jsonl \
+            --output /tmp/ch49-ci-audit
+          python -c "import json; p=json.load(open('/tmp/ch49-ci-audit/run.json')); assert p['status']=='validated_only' and p['training_performed'] is False and p['model_loaded'] is False and p['model_downloaded'] is False and p['records']==12 and p['group_count']==6 and p['sha256']=='629b48e6a9c3f3a8d6c336eadbb1f3833b988348c1b11f1022221db121fc21bb'"
+          python book-engineering/projects/49-preference-lab/preference_lab.py \
+            --mode toy-dpo --output /tmp/ch49-ci-toy --steps 80 --seed 49
+          python -c "import json; p=json.load(open('/tmp/ch49-ci-toy/run.json')); assert p['status']=='synthetic_demo_completed' and p['model_loaded'] is False and p['model_downloaded'] is False and p['device']=='cpu' and p['final_dpo_loss'] < p['initial_dpo_loss'] and p['policy_chosen_probability'] > 0.5"
       - name: Confirm volume 4 builder idempotence
         run: |
           cp data.json /tmp/v4-data-before.json
