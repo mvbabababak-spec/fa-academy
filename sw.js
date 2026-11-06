@@ -1,5 +1,5 @@
-// ===== فا-اکدمی Service Worker v68 =====
-const CACHE_NAME = 'fa-academy-v68';
+// ===== فا-اکدمی Service Worker v69 =====
+const CACHE_NAME = 'fa-academy-v69';
 const CORE_FILES = [
   './',
   './index.html',
@@ -93,6 +93,17 @@ const CORE_FILES = [
   './book-engineering/projects/42-mini-gpt-design/test_mini_gpt_design.py',
   './book-engineering/create_v3_ch10_image.py',
   './book-engineering/diagrams/v3-ch10-mini-gpt-budget.svg',
+  './assets/images/babak-ai/v3-ch11-corpus-audit.webp',
+  './book-engineering/chapters/43-corpus.md',
+  './book-engineering/chapters/43-audit-report-fa.md',
+  './book-engineering/answers/43-corpus-fa.md',
+  './book-engineering/projects/43-corpus-audit/README.md',
+  './book-engineering/projects/43-corpus-audit/corpus_audit.py',
+  './book-engineering/projects/43-corpus-audit/test_corpus_audit.py',
+  './book-engineering/projects/43-corpus-audit/sample_corpus.jsonl',
+  './book-engineering/projects/43-corpus-audit/sample_evaluation.jsonl',
+  './book-engineering/create_v3_ch11_image.py',
+  './book-engineering/diagrams/v3-ch11-corpus-audit.svg',
   './assets/images/babak-ai/v2-ch07-backprop.webp',
   './assets/images/babak-ai/v2-ch10-cnn.webp',
   './assets/images/babak-ai/v2-ch11-representations.webp',
