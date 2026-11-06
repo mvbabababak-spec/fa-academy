@@ -543,6 +543,54 @@ def main() -> None:
     _require(all(value is False for value in results57["scope"].values()), "chapter 57 result manifest must retain all claim limits")
     _require(results57["summary"]["failed"] == [], "chapter 57 project reports a failed framework adapter")
 
+    source58 = ROOT / "book-engineering/chapters/58-huggingface-stack.md"
+    answer58 = ROOT / "book-engineering/answers/58-huggingface-stack-fa.md"
+    report58 = ROOT / "book-engineering/chapters/58-audit-report-fa.md"
+    diagram58 = ROOT / "book-engineering/diagrams/v4-ch12-huggingface-stack.svg"
+    project58 = ROOT / "book-engineering/projects/58-huggingface-stack"
+    for path in (source58, answer58, report58, diagram58, project58 / "README.md", project58 / "pipeline_demo.py", project58 / "test_pipeline_demo.py", project58 / "sample_data.jsonl", project58 / "fixture_manifest.json", project58 / "environment.json", project58 / "results.json", project58 / "requirements.txt", project58 / "requirements-cpu.txt", project58 / "requirements-lock-linux-py313.txt"):
+        _require(path.is_file(), f"missing chapter 58 deliverable: {path.relative_to(ROOT)}")
+    source58_text = source58.read_text(encoding="utf-8")
+    _require("فصل محلی ۱۲ از ۱۵ جلد چهارم؛ فصل سراسری ۵۸" in source58_text, "chapter 58 local/global mapping missing")
+    _require("تاریخ بازبینی منابع و آزمون محیط: ۶ نوامبر ۲۰۲۶" in source58_text, "chapter 58 dated review note missing")
+    _require(all(term in source58_text for term in ("فصل ۵۷", "فصل ۵۹", "Transformers", "Datasets", "Tokenizers", "Accelerate", "5.22.2", "5.1.0", "0.23.3", "1.15.0", "trust_remote_code", "safetensors", "synthetic_fixture", "Trainer", "Accelerator")), "chapter 58 package/version/security/scope boundary missing")
+    _require(len(re.findall(r"^##\s+", source58_text, flags=re.MULTILINE)) >= 20, "chapter 58 needs a complete section structure")
+    math58_nodes = re.findall(r"<math\b[^>]*>", source58_text)
+    math58_blocks = re.findall(r"<math\b.*?</math>", source58_text, flags=re.DOTALL)
+    _require(len(math58_nodes) >= 1 and len(math58_blocks) == len(math58_nodes), "chapter 58 accessible MathML missing or malformed")
+    _require(all("aria-label=" in node for node in math58_nodes) and source58_text.count("**متن جایگزین فرمول:**") >= len(math58_nodes), "chapter 58 MathML needs aria-label and a visible alternative")
+    for math_markup in math58_blocks:
+        _require(ET.fromstring(math_markup).tag.endswith("math"), "chapter 58 contains invalid MathML XML")
+    figures58 = re.findall(r"!\[([^\]]*)\]\(([^)]+)\)", source58_text)
+    _require(bool(figures58) and all(term in figures58[0][0] for term in ("شکل ۴-۱۲-۱", "Hugging Face", "benchmark")), "chapter 58 diagram alt text misses identity or claim boundary")
+    for alt, image_path in figures58:
+        _require(bool(alt.strip()) and (ROOT / image_path).is_file(), f"missing or inaccessible chapter 58 figure: {image_path}")
+    svg58 = ET.parse(diagram58).getroot()
+    _require(svg58.attrib.get("width") == "1600" and svg58.attrib.get("height") == "1000" and "aria-labelledby" in svg58.attrib, "chapter 58 SVG dimensions/accessibility mismatch")
+    answer58_text = answer58.read_text(encoding="utf-8")
+    _require("پاسخ‌نامهٔ مستقل" in answer58_text and "فصل ۵۸" in answer58_text and len(answer58_text.split()) >= 300, "chapter 58 independent answer key missing or too short")
+    report58_text = report58.read_text(encoding="utf-8")
+    _require("نتایج اجرای واقعی" in report58_text and "12" in report58_text and "pip check" in report58_text and "accelerate launch" in report58_text, "chapter 58 audit report is incomplete")
+    _require("model quality" in report58_text.lower() and "pretrained" in report58_text.lower() and "synthetic_fixture" in report58_text, "chapter 58 audit report must retain data/model/quality limits")
+    project_code58 = (project58 / "pipeline_demo.py").read_bytes()
+    appendix_marker58 = b"\n```python\n"
+    _, appendix_found58, appendix_tail58 = source58.read_bytes().rpartition(appendix_marker58)
+    appendix_close58 = appendix_tail58.rfind(b"```")
+    _require(bool(appendix_found58) and appendix_close58 >= 0 and appendix_tail58[:appendix_close58] == project_code58, "chapter 58 appendix and project must match byte-for-byte")
+    rows58 = [json.loads(line) for line in (project58 / "sample_data.jsonl").read_text(encoding="utf-8").splitlines() if line.strip()]
+    manifest58 = json.loads((project58 / "fixture_manifest.json").read_text(encoding="utf-8"))
+    fixture58_hash = hashlib.sha256((project58 / "sample_data.jsonl").read_bytes()).hexdigest()
+    _require(len(rows58) == 12 and manifest58["fixture_id"] == "v4-ch12-synthetic-text-pipeline-v1" and manifest58["label_source"] == "synthetic_fixture" and manifest58["sha256"] == fixture58_hash, "chapter 58 fixture identity/hash/count changed")
+    _require(manifest58["split_record_counts"] == {"train": 8, "validation": 4} and manifest58["split_group_counts"] == {"train": 4, "validation": 2}, "chapter 58 fixture split/group counts changed")
+    results58 = json.loads((project58 / "results.json").read_text(encoding="utf-8"))
+    _require(results58["fixture_id"] == manifest58["fixture_id"] and results58["fixture_sha256"] == fixture58_hash and results58["data"]["group_overlap"] == [], "chapter 58 result fixture hash or group-split contract mismatch")
+    _require(results58["environment"]["packages"] == {"torch": "2.15.0+cpu", "transformers": "5.22.2", "datasets": "5.1.0", "tokenizers": "0.23.3", "accelerate": "1.15.0"} and results58["environment"]["accelerator_device"] == "cpu", "chapter 58 tested environment versions/device changed")
+    _require(results58["tokenizer"]["trained_on_split"] == "train" and len(results58["tokenizer"]["training_example_ids"]) == 8 and results58["model"]["pretrained_weights_loaded"] is False, "chapter 58 tokenizer/model provenance boundary changed")
+    _require(results58["training"]["steps"] == 2 and results58["training"]["all_gradients_finite"] is True and len(results58["training"]["validation_loss_smoke_only"]) == 2, "chapter 58 CPU smoke run changed")
+    _require(all(value is False for value in results58["scope"].values()), "chapter 58 result manifest must retain all claim limits")
+    environment58 = json.loads((project58 / "environment.json").read_text(encoding="utf-8"))
+    _require(environment58["pip_check"].startswith("passed") and environment58["fixture_sha256"] == fixture58_hash and environment58["device"] == "CPU only", "chapter 58 environment manifest mismatch")
+
     code = (project / "sft_experiment.py").read_text(encoding="utf-8").rstrip()
     blocks = re.findall(r"```python\n(.*?)\n```", source_text, flags=re.DOTALL)
     _require(bool(blocks) and blocks[-1] == code, "chapter appendix and tested project must be byte-for-byte equal")
@@ -556,7 +604,7 @@ def main() -> None:
     _require(markdown_path.is_file(), "volume-4-full-fa.md missing")
     _require(markdown_path.read_text(encoding="utf-8") == builder.expected_markdown(expected_chapters, specs), "full Markdown does not match chapter sources")
     sw = (ROOT / "sw.js").read_text(encoding="utf-8")
-    _require("fa-academy-v92" in sw and "v91" not in sw.splitlines()[0], "service worker cache version was not advanced")
+    _require("fa-academy-v93" in sw and "v92" not in sw.splitlines()[0], "service worker cache version was not advanced")
     cover_paths = {
         f"art-science-intelligence-v{volume}": f"assets/images/covers/volume-{volume}-cover.webp"
         for volume in range(1, 5)
@@ -676,6 +724,20 @@ def main() -> None:
         "./book-engineering/projects/57-framework-lab/test_framework_compare.py",
         "./book-engineering/projects/57-framework-lab/sample_problem.json",
         "./book-engineering/projects/57-framework-lab/results.json",
+        "./book-engineering/diagrams/v4-ch12-huggingface-stack.svg",
+        "./book-engineering/chapters/58-huggingface-stack.md",
+        "./book-engineering/chapters/58-audit-report-fa.md",
+        "./book-engineering/answers/58-huggingface-stack-fa.md",
+        "./book-engineering/projects/58-huggingface-stack/README.md",
+        "./book-engineering/projects/58-huggingface-stack/pipeline_demo.py",
+        "./book-engineering/projects/58-huggingface-stack/test_pipeline_demo.py",
+        "./book-engineering/projects/58-huggingface-stack/sample_data.jsonl",
+        "./book-engineering/projects/58-huggingface-stack/fixture_manifest.json",
+        "./book-engineering/projects/58-huggingface-stack/environment.json",
+        "./book-engineering/projects/58-huggingface-stack/results.json",
+        "./book-engineering/projects/58-huggingface-stack/requirements.txt",
+        "./book-engineering/projects/58-huggingface-stack/requirements-cpu.txt",
+        "./book-engineering/projects/58-huggingface-stack/requirements-lock-linux-py313.txt",
     )
     for item in required_cache_paths:
         _require(item in sw, f"service worker does not precache {item}")
@@ -683,7 +745,7 @@ def main() -> None:
     print(
         f"PASS volume 4: {len(book['chapters'])}/{builder.PLANNED_CHAPTERS} chapters, "
         f"{sum(len(ch['sections']) for ch in book['chapters'])} sections, "
-        f"{len(math_nodes) + len(math48) + len(math49) + len(math50) + len(math51) + len(math52) + len(math53_nodes) + len(math54_nodes) + len(math55_nodes) + len(math56_nodes) + len(math57_nodes)} accessible MathML expressions, exact appendices, reports/answers/fixtures present"
+        f"{len(math_nodes) + len(math48) + len(math49) + len(math50) + len(math51) + len(math52) + len(math53_nodes) + len(math54_nodes) + len(math55_nodes) + len(math56_nodes) + len(math57_nodes) + len(math58_nodes)} accessible MathML expressions, exact appendices, reports/answers/fixtures present"
     )
 
 

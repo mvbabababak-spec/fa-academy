@@ -1,5 +1,5 @@
-// ===== فا-اکدمی Service Worker v92 =====
-const CACHE_NAME = 'fa-academy-v92';
+// ===== فا-اکدمی Service Worker v93 =====
+const CACHE_NAME = 'fa-academy-v93';
 const CORE_FILES = [
   './',
   './index.html',
@@ -308,7 +308,21 @@ const CORE_FILES = [
   './book-engineering/projects/57-framework-lab/framework_compare.py',
   './book-engineering/projects/57-framework-lab/test_framework_compare.py',
   './book-engineering/projects/57-framework-lab/sample_problem.json',
-  './book-engineering/projects/57-framework-lab/results.json'
+  './book-engineering/projects/57-framework-lab/results.json',
+  './book-engineering/diagrams/v4-ch12-huggingface-stack.svg',
+  './book-engineering/chapters/58-huggingface-stack.md',
+  './book-engineering/chapters/58-audit-report-fa.md',
+  './book-engineering/answers/58-huggingface-stack-fa.md',
+  './book-engineering/projects/58-huggingface-stack/README.md',
+  './book-engineering/projects/58-huggingface-stack/pipeline_demo.py',
+  './book-engineering/projects/58-huggingface-stack/test_pipeline_demo.py',
+  './book-engineering/projects/58-huggingface-stack/sample_data.jsonl',
+  './book-engineering/projects/58-huggingface-stack/fixture_manifest.json',
+  './book-engineering/projects/58-huggingface-stack/environment.json',
+  './book-engineering/projects/58-huggingface-stack/results.json',
+  './book-engineering/projects/58-huggingface-stack/requirements.txt',
+  './book-engineering/projects/58-huggingface-stack/requirements-cpu.txt',
+  './book-engineering/projects/58-huggingface-stack/requirements-lock-linux-py313.txt'
 ];
 
 // ===== INSTALL: Cache core files =====

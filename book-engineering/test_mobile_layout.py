@@ -24,12 +24,13 @@ def main():
                 page = context.new_page()
                 page.goto(url, wait_until='networkidle')
                 page.wait_for_selector('#loading.hidden')
-                chapter57 = page.evaluate("""() => {
+                chapter58 = page.evaluate("""() => {
                   const book=DATA.books.find(item=>item.id==='art-science-intelligence-v4');
-                  const chapter=book&&book.chapters[10];
-                  return {count:book&&book.chapters.length,id:chapter&&chapter.id,sections:chapter&&chapter.sections.length};
+                  const chapter=book&&book.chapters[11];
+                  const previous=book&&book.chapters[10];
+                  return {count:book&&book.chapters.length,id:chapter&&chapter.id,sections:chapter&&chapter.sections.length,previousId:previous&&previous.id,previousSections:previous&&previous.sections.length};
                 }""")
-                assert chapter57 == {'count':11,'id':'art-science-v4-ch11','sections':20}, chapter57
+                assert chapter58 == {'count':12,'id':'art-science-v4-ch12','sections':22,'previousId':'art-science-v4-ch11','previousSections':20}, chapter58
                 assert page.locator('.home-hero > p').first.inner_text() == 'مجموعه‌ای جامع از کتاب‌ها و دوره‌های آموزشی هوش مصنوعی — با دسترسی آفلاین'
                 page.evaluate("document.querySelectorAll('.book-card--volume img,.book-card--microsoft img').forEach(img => img.loading='eager')")
                 page.wait_for_function("""() => {
@@ -207,6 +208,9 @@ def main():
                 chapter57_offline = page.evaluate("fetch('book-engineering/chapters/57-ml-frameworks.md').then(r => r.ok ? r.text() : '')")
                 answer57_offline = page.evaluate("fetch('book-engineering/answers/57-ml-frameworks-fa.md').then(r => r.ok ? r.text() : '')")
                 diagram57_offline = page.evaluate("fetch('book-engineering/diagrams/v4-ch11-framework-selection.svg').then(r => r.ok ? r.text() : '')")
+                chapter58_offline = page.evaluate("fetch('book-engineering/chapters/58-huggingface-stack.md').then(r => r.ok ? r.text() : '')")
+                answer58_offline = page.evaluate("fetch('book-engineering/answers/58-huggingface-stack-fa.md').then(r => r.ok ? r.text() : '')")
+                diagram58_offline = page.evaluate("fetch('book-engineering/diagrams/v4-ch12-huggingface-stack.svg').then(r => r.ok ? r.text() : '')")
                 assert 'طراحی آزمایشگاه' in chapter55_offline, 'chapter 55 unavailable offline'
                 assert 'پاسخ‌نامهٔ مستقل' in answer55_offline, 'chapter 55 answer key unavailable offline'
                 assert '<svg' in diagram55_offline, 'chapter 55 diagram unavailable offline'
@@ -216,11 +220,14 @@ def main():
                 assert 'Python' in chapter57_offline and 'PyTorch' in chapter57_offline, 'chapter 57 unavailable offline'
                 assert 'پاسخ‌نامهٔ مستقل' in answer57_offline, 'chapter 57 answer key unavailable offline'
                 assert '<svg' in diagram57_offline, 'chapter 57 diagram unavailable offline'
+                assert 'Transformers' in chapter58_offline and 'Accelerate' in chapter58_offline, 'chapter 58 unavailable offline'
+                assert 'پاسخ‌نامهٔ مستقل' in answer58_offline, 'chapter 58 answer key unavailable offline'
+                assert '<svg' in diagram58_offline, 'chapter 58 diagram unavailable offline'
                 typography_summary=', '.join(
                     f"{book_id}: {stats['paragraphs']} justified prose paragraphs, {stats['indented']} indented, {stats['formulas']} MathML, {stats['captions']} captions"
                     for book_id,stats in result['typography'].items()
                 )
-                print(f"PASS {width}px: cover online/offline, chapters 56–57 source/answer/diagram offline, text, header, RTL navigation, locked viewport and {result['count']} sections; {typography_summary}")
+                print(f"PASS {width}px: cover online/offline, chapters 56–58 source/answer/diagram offline, text, header, RTL navigation, locked viewport and {result['count']} sections; {typography_summary}")
                 context.close()
             browser.close()
     finally:

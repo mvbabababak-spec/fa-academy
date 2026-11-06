@@ -1,0 +1,124 @@
+{
+  "schema_version": 1,
+  "fixture_id": "v4-ch12-synthetic-text-pipeline-v1",
+  "fixture_sha256": "eb21fe6a41dcd4dc828c00a7dc0293370087bb77fc6df022078fc16a20d750a2",
+  "label_source": "synthetic_fixture",
+  "environment": {
+    "python": "3.13.16",
+    "platform": "Linux-6.1.189+-x86_64-with-glibc2.41",
+    "packages": {
+      "torch": "2.15.0+cpu",
+      "transformers": "5.22.2",
+      "datasets": "5.1.0",
+      "tokenizers": "0.23.3",
+      "accelerate": "1.15.0"
+    },
+    "accelerator_device": "cpu",
+    "distributed_type": "DistributedType.NO"
+  },
+  "data": {
+    "splits": {
+      "train": {
+        "records": 8,
+        "groups": 4,
+        "group_ids": [
+          "train-01",
+          "train-02",
+          "train-03",
+          "train-04"
+        ],
+        "label_counts": {
+          "0": 4,
+          "1": 4
+        }
+      },
+      "validation": {
+        "records": 4,
+        "groups": 2,
+        "group_ids": [
+          "validation-01",
+          "validation-02"
+        ],
+        "label_counts": {
+          "0": 2,
+          "1": 2
+        }
+      }
+    },
+    "group_overlap": [],
+    "dataset_columns_after_tokenization": {
+      "train": [
+        "label",
+        "input_ids",
+        "attention_mask"
+      ],
+      "validation": [
+        "label",
+        "input_ids",
+        "attention_mask"
+      ]
+    }
+  },
+  "tokenizer": {
+    "implementation": "tokenizers BPE wrapped by PreTrainedTokenizerFast",
+    "trained_on_split": "train",
+    "training_example_ids": [
+      "tr-01-a",
+      "tr-01-b",
+      "tr-02-a",
+      "tr-02-b",
+      "tr-03-a",
+      "tr-03-b",
+      "tr-04-a",
+      "tr-04-b"
+    ],
+    "training_text_sha256": "5b9d48937ecdfe9b3bd92bca042242943c7efb53c95c68b564d30fb514dac43d",
+    "vocab_size": 96,
+    "special_token_ids": {
+      "[PAD]": 0,
+      "[UNK]": 1,
+      "[CLS]": 2,
+      "[SEP]": 3,
+      "[MASK]": 4
+    },
+    "max_length": 24
+  },
+  "model": {
+    "class": "BertForSequenceClassification",
+    "weights": "randomly_initialized_from_config",
+    "pretrained_weights_loaded": false,
+    "trainable_parameters": 4642,
+    "hidden_size": 16,
+    "layers": 1,
+    "num_labels": 2
+  },
+  "training": {
+    "performed": true,
+    "seed": 58,
+    "optimizer": "torch.optim.AdamW",
+    "learning_rate": 0.001,
+    "batch_size": 2,
+    "steps": 2,
+    "training_losses": [
+      0.6931532621383667,
+      0.6891556978225708
+    ],
+    "all_gradients_finite": true,
+    "validation_loss_smoke_only": [
+      0.6838436722755432,
+      0.7025372982025146
+    ],
+    "validation_used_for_optimization": false,
+    "device": "cpu"
+  },
+  "scope": {
+    "real_user_or_public_data_used": false,
+    "hub_access_or_download": false,
+    "pretrained_weights_used": false,
+    "validation_used_for_optimization": false,
+    "gpu_used": false,
+    "benchmark_performed": false,
+    "model_quality_claim": false,
+    "generalization_established": false
+  }
+}

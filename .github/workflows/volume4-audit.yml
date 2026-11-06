@@ -155,6 +155,36 @@ jobs:
           assert result['framework_results']['torch']['device'] == 'cpu'
           assert all(value is False for value in result['scope'].values())
           PY
+      - name: Chapter 58 offline Hugging Face CPU pipeline tests
+        run: |
+          python -m venv /tmp/ch58-venv
+          /tmp/ch58-venv/bin/python -m pip install -r book-engineering/projects/58-huggingface-stack/requirements-cpu.txt
+          /tmp/ch58-venv/bin/python -m pip install -r book-engineering/projects/58-huggingface-stack/requirements-lock-linux-py313.txt
+          /tmp/ch58-venv/bin/python -m pip check
+          (cd book-engineering/projects/58-huggingface-stack && /tmp/ch58-venv/bin/python -m unittest discover -v)
+          /tmp/ch58-venv/bin/python book-engineering/projects/58-huggingface-stack/pipeline_demo.py \
+            --max-steps 2 --seed 58 --output /tmp/ch58-ci-results.json
+          HF_HUB_OFFLINE=1 HF_DATASETS_OFFLINE=1 /tmp/ch58-venv/bin/accelerate launch \
+            --cpu --num_processes 1 --num_machines 1 --mixed_precision no --dynamo_backend no \
+            book-engineering/projects/58-huggingface-stack/pipeline_demo.py \
+            --max-steps 2 --seed 58 --output /tmp/ch58-ci-accelerate-results.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          expected = {
+              'torch': '2.15.0+cpu', 'transformers': '5.22.2', 'datasets': '5.1.0',
+              'tokenizers': '0.23.3', 'accelerate': '1.15.0'
+          }
+          for path in ('/tmp/ch58-ci-results.json', '/tmp/ch58-ci-accelerate-results.json'):
+              result = json.loads(Path(path).read_text())
+              assert result['fixture_sha256'] == 'eb21fe6a41dcd4dc828c00a7dc0293370087bb77fc6df022078fc16a20d750a2'
+              assert result['environment']['packages'] == expected
+              assert result['environment']['accelerator_device'] == 'cpu'
+              assert result['data']['group_overlap'] == []
+              assert result['training']['steps'] == 2 and result['training']['all_gradients_finite'] is True
+              assert result['model']['pretrained_weights_loaded'] is False
+              assert all(value is False for value in result['scope'].values())
+          PY
       - name: Confirm volume 4 builder idempotence
         run: |
           cp data.json /tmp/v4-data-before.json
