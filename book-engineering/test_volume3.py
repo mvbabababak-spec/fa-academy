@@ -151,7 +151,9 @@ def main():
                 page.goto(url, wait_until="networkidle")
                 page.wait_for_selector("#loading.hidden")
                 assert page.get_by_text(TITLE, exact=True).count() == 1
-                assert page.get_by_text("نسخه PDF و EPUB تولید نشده است.", exact=False).count() == 1
+                hero_paragraphs = page.locator(".home-hero > p")
+                assert hero_paragraphs.count() == 1
+                assert hero_paragraphs.first.inner_text() == "مجموعه‌ای جامع از کتاب‌ها و دوره‌های آموزشی هوش مصنوعی — با دسترسی آفلاین"
                 card = page.locator(".book-card").filter(has_text=TITLE)
                 assert card.count() == 1 and "14 فصل" in card.inner_text() and "265 بخش" in card.inner_text()
                 assert card.locator(".book-card-subtitle").inner_text() == "Transformer و مهندسی مدل زبانی | ۱۴ فصل"
