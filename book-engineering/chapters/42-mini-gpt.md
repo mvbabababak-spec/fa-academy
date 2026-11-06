@@ -1,6 +1,6 @@
 # جلد سوم، فصل ۱۰ — طراحی Mini GPT: ابعاد، پارامتر و بودجه
 
-**نگاشت:** فصل محلی ۱۰ جلد سوم = فصل سراسری ۴۲. **تاریخ مرجع و بازبینی منابع: ۵ نوامبر ۲۰۲۶.** فصل ۳۷ یک Decoder-only آزموده‌شده با ماسک علّی ساخت؛ فصل ۴۱ یک مدل feed-forward را آموزش داد. این فصل معماری Decoder را از نو تعریف نمی‌کند و مدل را هم آموزش نمی‌دهد: هدف، تبدیل خواستهٔ مبهم «یک Mini GPT بساز» به پیکربندی، شمار پارامتر و بودجه‌ای قابل‌آزمون است. آماده‌سازی corpus و مجوز در فصل‌های ۴۰ و ۴۳ می‌آیند؛ حلقهٔ پیش‌آموزش در فصل ۴۴.
+**نگاشت:** فصل محلی ۱۰ جلد سوم = فصل سراسری ۴۲. **تاریخ بازبینی منابع: ۵ نوامبر ۲۰۲۶.** فصل ۳۷ یک Decoder-only آزموده‌شده با ماسک علّی ساخت؛ فصل ۴۱ یک مدل feed-forward را آموزش داد. این فصل معماری Decoder را از نو تعریف نمی‌کند و مدل را هم آموزش نمی‌دهد: هدف، تبدیل خواستهٔ مبهم «یک Mini GPT بساز» به پیکربندی، شمار پارامتر و بودجه‌ای قابل‌آزمون است. آماده‌سازی corpus و مجوز در فصل‌های ۴۰ و ۴۳ می‌آیند؛ حلقهٔ پیش‌آموزش در فصل ۴۴.
 
 **پیش‌نیاز:** شکل‌های Self-Attention و بلوک Transformer از فصل‌های ۳۵–۳۷؛ مرز رکورد و واژگان train-only از فصل ۴۰؛ next-token و splitهای train/validation/test از فصل ۴۱. **قرارداد:** `V` اندازهٔ واژگان، `C` بیشینهٔ زمینه، `T` طول واقعی دنباله در یک batch، `N` اندازهٔ batch، `d` عرض مدل، `h` تعداد head، `f` عرض FFN و `L` تعداد بلوک‌هاست. `T` با تعداد واژه‌ها یکی نیست؛ واحد آن token پس از tokenizer است.
 
@@ -49,6 +49,8 @@ logits موقعیت `t` با توکن بعدی سنجیده می‌شود؛ ور
   <mrow><msub><mi>P</mi><mi>total</mi></msub><mo>=</mo><mi>V</mi><mi>d</mi><mo>+</mo><mi>C</mi><mi>d</mi><mo>+</mo><mi>L</mi><mo>(</mo><mn>4</mn><msup><mi>d</mi><mn>2</mn></msup><mo>+</mo><mn>9</mn><mi>d</mi><mo>+</mo><mn>2</mn><mi>d</mi><mi>f</mi><mo>+</mo><mi>f</mi><mo>)</mo><mo>+</mo><mn>2</mn><mi>d</mi><mo>+</mo><mi>d</mi><mi>V</mi><mo>+</mo><mi>V</mi></mrow>
 </math>
 
+**متن جایگزین فرمول:** تعداد پارامتر Mini GPT پروژه برابر Vd به‌علاوه Cd به‌علاوه L ضرب در چهار d به توان دو به‌علاوه نه d به‌علاوه دو d f به‌علاوه f، به‌علاوه دو d، به‌علاوه dV به‌علاوه V است.
+
 اگر `f=4d` باشد، عبارت هر بلوک `12d²+13d` می‌شود. این شمار، سطر padding را هم در جدول embedding می‌شمارد؛ `padding_idx` می‌تواند گرادیان آن سطر را متوقف کند، ولی تعداد خانه‌های پارامتر را کوچک نمی‌کند [۵]. این فرمول را برای هر GPT دیگری کپی نکنید: tying وزن ورودی/خروجی، حذف bias، RMSNorm یا اندازه‌های projection متفاوت آن را عوض می‌کنند.
 
 ## ۵. نمونه را دستی و با ماژول تطبیق دهیم
@@ -58,6 +60,8 @@ logits موقعیت `t` با توکن بعدی سنجیده می‌شود؛ ور
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" aria-label="نمونهٔ شمار پارامتر برابر ۶۵۲۸ embedding توکن به‌علاوه ۴۰۹۶ موقعیت به‌علاوه ۹۹۹۶۸ دو بلوک به‌علاوه ۱۲۸ نرمال‌سازی نهایی به‌علاوه ۶۶۳۰ سر خروجی، در مجموع ۱۱۷۳۵۰ است">
   <mrow><mn>6,528</mn><mo>+</mo><mn>4,096</mn><mo>+</mo><mn>99,968</mn><mo>+</mo><mn>128</mn><mo>+</mo><mn>6,630</mn><mo>=</mo><mn>117,350</mn></mrow>
 </math>
+
+**متن جایگزین فرمول:** نمونهٔ شمار پارامتر برابر ۶۵۲۸ embedding توکن به‌علاوه ۴۰۹۶ موقعیت به‌علاوه ۹۹۹۶۸ دو بلوک به‌علاوه ۱۲۸ نرمال‌سازی نهایی به‌علاوه ۶۶۳۰ سر خروجی، در مجموع ۱۱۷۳۵۰ است.
 
 اسکریپت پروژه این مقدار را با `sum(p.numel() for p in model.parameters())` تطبیق می‌دهد؛ اگر فرمول با همان مدل برابر نباشد، گزارش متوقف می‌شود. همچنین `h` در این پیاده‌سازی با ثابت‌بودن `d` تعداد وزن‌های projection را تغییر نمی‌دهد؛ تعداد head بیشتر، پارامتر بیشتر را به‌طور خودکار معنی نمی‌دهد. البته شکل هر head و محاسبات attention تغییر می‌کند.
 
@@ -75,6 +79,8 @@ logits موقعیت `t` با توکن بعدی سنجیده می‌شود؛ ور
   <mrow><msub><mi>S</mi><mi>score</mi></msub><mo>=</mo><mi>N</mi><mi>L</mi><mi>h</mi><msup><mi>T</mi><mn>2</mn></msup><mi>b</mi><mo>,</mo><mspace width="0.7em"/><msub><mi>S</mi><mi>FFN</mi></msub><mo>=</mo><mi>N</mi><mi>L</mi><mi>T</mi><mi>f</mi><mi>b</mi><mo>,</mo><mspace width="0.7em"/><msub><mi>S</mi><mi>logits</mi></msub><mo>=</mo><mi>N</mi><mi>T</mi><mi>V</mi><mi>b</mi></mrow>
 </math>
 
+**متن جایگزین فرمول:** اندازهٔ مرجع score توجه برابر N L h T به توان دو b؛ اندازهٔ activation پنهان FFN برابر N L T f b؛ اندازهٔ logits برابر N T V b است.
+
 این‌ها **اندازهٔ tensor مرجع** هستند، نه پیش‌بینی مصرف peak. PyTorch ممکن است در `need_weights=False` از مسیرهای بهینهٔ scaled-dot-product استفاده کند؛ بنابراین score-equivalent لزوماً به شکل یک ماتریس کامل در حافظه ساخته نمی‌شود [۴]. جمع tensorها همزمانی عمرشان، activationهای باقیمانده، Q/K/V، mask، workspace، allocator و گرادیان را مدل نمی‌کند. برای تصمیم دستگاه، تخمین را با profiler یا شمارندهٔ حافظه روی همان نسخه، batch، dtype و kernel بررسی کنید [۷].
 
 ## ۸. حافظهٔ وزن با حافظهٔ آموزش یکی نیست
@@ -84,6 +90,8 @@ logits موقعیت `t` با توکن بعدی سنجیده می‌شود؛ ور
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" aria-label="حافظهٔ پایدار نمونه برابر تعداد پارامتر ضرب در چهار بایت وزن، چهار بایت گرادیان و هشت بایت برای دو moment آدام دبلیو است؛ یعنی شانزده P بایت">
   <mrow><msub><mi>M</mi><mi>persistent</mi></msub><mo>≈</mo><mi>P</mi><mo>(</mo><mn>4</mn><mo>+</mo><mn>4</mn><mo>+</mo><mn>8</mn><mo>)</mo><mo>=</mo><mn>16</mn><mi>P</mi><mspace width="0.3em"/><mi>bytes</mi></mrow>
 </math>
+
+**متن جایگزین فرمول:** حافظهٔ پایدار نمونه برابر تعداد پارامتر ضرب در چهار بایت وزن، چهار بایت گرادیان و هشت بایت برای دو moment آدام دبلیو است؛ یعنی شانزده P بایت.
 
 برای `P=117,350`، وزن‌ها `469,400` بایت، گرادیان‌ها `469,400` و دو moment `938,800` بایت می‌شوند؛ مجموع `1,877,600` بایت یا `1.790619 MiB` است (`1 MiB=1,048,576` بایت). این عدد optimizer state ساخته‌شده را فرض می‌کند؛ AdamW در آغاز می‌تواند state را lazy بسازد [۶]. خود PyTorch، dtype پارامتر/گرادیان و حالت optimizer نیز مهم‌اند. در BF16/FP16 لزوماً همهٔ اجزا نصف نمی‌شوند؛ master weights، optimizer state و activation ممکن است dtype متفاوت داشته باشند. فصل ۴۵ آن مصالحه را جدا می‌کند.
 
@@ -115,6 +123,8 @@ logits موقعیت `t` با توکن بعدی سنجیده می‌شود؛ ور
   <mrow><msub><mi>tokens</mi><mi>seen</mi></msub><mo>≤</mo><mi>steps</mi><mo>×</mo><mi>N</mi><mo>×</mo><mi>T</mi></mrow>
 </math>
 
+**متن جایگزین فرمول:** سقف targetهای دیده‌شده برابر گام‌های آموزش ضرب در batch و طول دنباله است، اگر همهٔ targetها معتبر باشند.
+
 برابری فقط وقتی برقرار است که همهٔ جایگاه‌های هدف معتبر باشند. تجمع گرادیان می‌تواند چند microbatch را پیش از یک update ترکیب کند، اما هزینهٔ خواندن داده، dropout، clipping و ترتیب به‌روزرسانی را در هر مقایسه ثبت کنید؛ فصل ۴۴ این موضوع را در حلقهٔ پیش‌آموزش عملی می‌کند. برای نمونهٔ ۱۶رکوردی فصل ۴۰، ساخت Mini GPT بزرگ‌تر از پیکره فقط ظرفیت را بالا می‌برد؛ کمبود تنوع/گروه مستقل را رفع نمی‌کند.
 
 ## ۱۲. Context را از توزیع طول و وظیفه انتخاب کنیم
@@ -145,7 +155,7 @@ python -m unittest discover -v
 python mini_gpt_design.py --context-sweep
 ```
 
-برای یک پیکربندی دیگر، flagهای `--vocab-size`, `--block-size`, `--d-model`, `--heads`, `--ff-dim`, `--layers`, `--batch-size` و `--sequence-length` را بدهید. برای مثال اگر `--sequence-length` از `--block-size` بزرگ‌تر باشد، اسکریپت باید با خطای پیکربندی متوقف شود. flagهای `--parameter-bytes`, `--gradient-bytes`, `--optimizer-state-bytes` و `--activation-bytes` فرض‌های byte estimate را آشکار می‌کنند؛ تغییرشان اندازه‌گیری واقعی را جایگزین نمی‌کند.
+برای یک پیکربندی دیگر، flagهای `--vocab-size`, `--block-size`, `--d-model`, `--heads`, `--ff-dim`, `--layers`, `--batch-size` و `--sequence-length` را بدهید. برای مثال اگر `--sequence-length` از `--block-size` بزرگ‌تر باشد، اسکریپت باید با خطای پیکربندی متوقف شود. تابع `context_sweep` نیز فقط طول‌های صحیحِ مثبت و یکتا می‌پذیرد؛ مقدار اعشاری، صفر، منفی و بولی را پیش از محاسبه رد می‌کند. flagهای `--parameter-bytes`, `--gradient-bytes`, `--optimizer-state-bytes` و `--activation-bytes` فرض‌های byte estimate را آشکار می‌کنند؛ تغییرشان اندازه‌گیری واقعی را جایگزین نمی‌کند.
 
 در smoke test، نخستین token هر ردیف عمداً غیر-padding است. این نکته مهم است: اگر query جایگاه صفر هم با ماسک علّی به آینده بسته و هم به‌عنوان padding از attention حذف شود، ممکن است برای آن query هیچ key مجازی نماند. در اجرای محلی PyTorch 2.6.0+cpu، ورودی تصادفی که با `pad_id` آغاز می‌شد، logits غیرمتناهی تولید کرد. wrapper همین پروژه ردیف‌های چپ‌pad/all-pad و ماسک‌شدن BOS را رد می‌کند؛ right-padding با پیشوند معتبر مجاز است. دادهٔ خودرگرسیو را با `BOS`/پیشوند معتبر آغاز کنید و finite بودن را روی نسخه/backend خود بسنجید؛ ماژول پایهٔ فصل ۳۷ به‌تنهایی این edge case را خودکار اصلاح نمی‌کند.
 
@@ -188,6 +198,14 @@ python mini_gpt_design.py --context-sweep
 ۸. فرض کنید ۵۰۰ update با batch=16 و T=64 دارید و همهٔ targetها معتبرند. حداکثر چند target دیده می‌شود؟ چه چیزی در صورت padding یا تکرار نمونه‌ها از این عدد قابل استنتاج نیست؟
 
 **معیار عبور:** دست‌کم ۶ پاسخ از ۸ باید هم واحد و هم فرض را روشن کند؛ فرمول پارامتر با شمار واقعی پروژه برابر باشد؛ آزمون shape و عدم نشت آینده موفق بماند؛ sweep را به‌عنوان تخمین tensor، نه GPU benchmark، تفسیر کنید؛ و برای دادهٔ واقعی، مرز اسناد و targetهای padding را جداگانه توضیح دهید. پاسخ تشریحی در [پاسخ‌نامهٔ فصل ۴۲](book-engineering/answers/42-mini-gpt-fa.md) است؛ ابتدا بدون نگاه‌کردن حل کنید.
+
+### واژه‌نامهٔ کوتاه
+
+- **پارامتر (parameter):** مقدار آموختنی در ماژول مدل، مانند وزن یا bias.
+- **Context length:** شمار tokenهای واقعی در یک نمونه؛ با واژه یا پنجرهٔ اسمی یکی نیست.
+- **بودجه (budget):** فرض‌های شمارشی/بایتی که پیش از آزمایش ثبت می‌شوند.
+- **Score-equivalent:** اندازهٔ مرجع یک tensor بر اساس شکل، نه مصرف peak حافظه.
+- **Padding mask:** نشانهٔ موقعیت‌های padding برای بستن کلیدهای نامعتبر.
 
 ## ۱۹. منابع و وضعیت دانسته‌ها تا ۵ نوامبر ۲۰۲۶
 
@@ -439,6 +457,8 @@ def context_sweep(
     """Compare configurations whose maximum and actual sequence lengths match."""
     if not context_lengths:
         raise ValueError("context_lengths must not be empty")
+    if any(isinstance(length, bool) or not isinstance(length, int) or length < 1 for length in context_lengths):
+        raise ValueError("context_lengths must contain positive integers")
     if len(set(context_lengths)) != len(context_lengths):
         raise ValueError("context_lengths must be unique")
     rows = []

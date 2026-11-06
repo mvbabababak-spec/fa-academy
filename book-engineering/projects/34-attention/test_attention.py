@@ -79,6 +79,12 @@ class ScaledDotProductAttentionTests(unittest.TestCase):
             scaled_dot_product_attention(q, torch.ones(1, 4, 3), torch.ones(1, 5, 6))
         with self.assertRaisesRegex(ValueError, "batch dimensions"):
             scaled_dot_product_attention(q, torch.ones(2, 4, 3), torch.ones(2, 4, 6))
+        with self.assertRaisesRegex(ValueError, "batch dimension must be non-empty"):
+            scaled_dot_product_attention(torch.empty(0, 2, 3), torch.empty(0, 4, 3), torch.empty(0, 4, 5))
+        with self.assertRaisesRegex(ValueError, "query sequence"):
+            scaled_dot_product_attention(torch.empty(1, 0, 3), torch.ones(1, 4, 3), torch.ones(1, 4, 5))
+        with self.assertRaisesRegex(ValueError, "key/value sequence"):
+            scaled_dot_product_attention(torch.ones(1, 2, 3), torch.empty(1, 0, 3), torch.empty(1, 0, 5))
 
     def test_rejects_non_floating_input(self):
         with self.assertRaisesRegex(TypeError, "floating-point"):

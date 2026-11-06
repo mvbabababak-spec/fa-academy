@@ -225,6 +225,8 @@ def context_sweep(
     """Compare configurations whose maximum and actual sequence lengths match."""
     if not context_lengths:
         raise ValueError("context_lengths must not be empty")
+    if any(isinstance(length, bool) or not isinstance(length, int) or length < 1 for length in context_lengths):
+        raise ValueError("context_lengths must contain positive integers")
     if len(set(context_lengths)) != len(context_lengths):
         raise ValueError("context_lengths must be unique")
     rows = []

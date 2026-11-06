@@ -2,7 +2,7 @@
 
 **The Art & Science of Building Intelligence | Babak & Ai | فصل سراسری ۳۴ از نقشهٔ پنج‌جلدی**
 
-**تاریخ مرجع: ۵ نوامبر ۲۰۲۶؛ مستندات و منابع برخط در همین تاریخ بازبینی شدند.**
+**تاریخ بازبینی منابع: ۵ نوامبر ۲۰۲۶؛ مستندات و منابع برخط در همین تاریخ بازبینی شدند.**
 
 ## ۱. مسئله: کدام بخش از دنباله برای این خروجی لازم است؟
 
@@ -97,7 +97,7 @@ o = 0.66976 × [10, 0] + 0.33024 × [0, 10]
 
 در کد آموزشی، محاسبه را صریح نگه می‌داریم: `Q @ Kᵀ`، تقسیم بر `√dk`، `torch.softmax(..., dim=-1)` و سپس ضرب در `V`. خروجی دوم تابع وزن‌های `A` است تا بتوانیم شکل و مجموع هر ردیف را آزمایش کنیم. تابع تولیدی PyTorch خروجی توجه را می‌دهد و الزاماً خود ماتریس وزن را برنمی‌گرداند.
 
-فایل آزموده‌شده در `book-engineering/projects/34-attention/attention.py` است؛ کد کامل آن در پایان همین فصل آمده است. تابع برای روشن‌بودن درس، ورودی سه‌بعدی، dtype شناور و شکل‌های سازگار را بررسی می‌کند. این نمونه یک سر دارد؛ projectionهای `W_Q/W_K/W_V` را باید مدل پیرامونی فراهم کند. پیاده‌سازی ماسک و dropout ندارد و جایگزین API کامل تولیدی نیست.
+فایل آزموده‌شده در `book-engineering/projects/34-attention/attention.py` است؛ کد کامل آن در پایان همین فصل آمده است. تابع برای روشن‌بودن درس، ورودی سه‌بعدی، dtype شناور، شکل‌های سازگار و batch/دنبالهٔ پرس‌وجوی غیرخالی را بررسی می‌کند؛ ورودی خالی را به‌جای تولید خروجی تهی، صریح رد می‌کند. این نمونه یک سر دارد؛ projectionهای `W_Q/W_K/W_V` را باید مدل پیرامونی فراهم کند. پیاده‌سازی ماسک و dropout ندارد و جایگزین API کامل تولیدی نیست.
 
 اجرای نمونهٔ کوچک:
 
@@ -158,6 +158,14 @@ Jain و Wallace در ۲۰۱۹ در چند مدل زبانی، شواهدی گز�
 - در حالت پایه، وزن هر ردیف مجموعاً ۱ است و خروجی جمع وزن‌دار Valueهاست؛ تفسیر معنایی/توضیحیِ وزن‌ها نیازمند شواهد جداگانه است.
 - API، dropout، backend و دقت عددی به نسخه و ورودی وابسته‌اند. این فصل ماسک علّی و Multi-Head را پوشش نمی‌دهد.
 
+### واژه‌نامهٔ کوتاه
+
+- **پرس‌وجو (Query, Q):** برداری که سازگاری‌اش با کلیدها امتیاز می‌گیرد.
+- **کلید (Key, K):** برداری که در محاسبهٔ امتیاز هر موقعیت منبع شرکت می‌کند.
+- **مقدار (Value, V):** برداری که بر پایهٔ وزن‌های توجه در خروجی ترکیب می‌شود.
+- **مقیاس‌گذاری (scaling):** تقسیم امتیاز ضرب‌داخلی بر `√dk` در صورت‌بندی این فصل.
+- **Softmax:** نگاشت امتیازهای یک ردیف به وزن‌های نامنفی با مجموع ۱.
+
 [جواب‌نامهٔ تشریحی فصل ۳۴](book-engineering/answers/34-attention-fa.md) · [پروژهٔ اجرایی و هشت آزمون](book-engineering/projects/34-attention/README.md)
 
 ## ۱۲. منابع بیرونی
@@ -207,6 +215,10 @@ def scaled_dot_product_attention(
         raise TypeError("query, key, and value must use the same dtype")
     if not (query.device == key.device == value.device):
         raise ValueError("query, key, and value must be on the same device")
+    if query.size(0) == 0:
+        raise ValueError("batch dimension must be non-empty")
+    if query.size(1) == 0:
+        raise ValueError("query sequence must contain at least one position")
     if query.size(0) != key.size(0) or key.size(0) != value.size(0):
         raise ValueError("batch dimensions must match")
     if query.size(-1) != key.size(-1):

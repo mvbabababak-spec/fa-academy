@@ -11,6 +11,9 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parent.parent
 BOOK_ID = "art-science-intelligence-v3"
 PLANNED = 14
+EXPECTED_SECTIONS = 265
+EXPECTED_MATHML = 60
+CJK_PATTERN = re.compile(r"[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]")
 
 
 class Inspector(HTMLParser):
@@ -35,7 +38,7 @@ books = [book for book in data["books"] if book.get("id") == BOOK_ID]
 assert len(books) == 1, "exactly one volume 3 book record is required"
 book = books[0]
 chapters = book.get("chapters", [])
-assert 1 <= len(chapters) <= PLANNED
+assert len(chapters) == PLANNED, f"expected all {PLANNED} local chapters"
 assert [chapter.get("num") for chapter in chapters] == list(range(1, len(chapters) + 1))
 assert book.get("author") == "Babak & Ai"
 assert "۱۴ فصل" in book.get("subtitle", "")
@@ -56,6 +59,17 @@ for local_number, chapter in enumerate(chapters, 1):
     source = ROOT / relative_source
     assert source.is_file(), source
     source_text = source.read_text(encoding="utf-8")
+    opening = "\n".join(source_text.splitlines()[:8])
+    assert "**تاریخ بازبینی منابع:" in opening, relative_source
+    assert "### واژه‌نامهٔ کوتاه" in source_text, relative_source
+    source_without_code = re.sub(r"```.*?```", "", source_text, flags=re.DOTALL)
+    assert not CJK_PATTERN.search(source_without_code), f"CJK character in Persian chapter text: {relative_source}"
+    math_blocks = list(re.finditer(r"<math\b.*?</math>", source_text, flags=re.DOTALL))
+    for math_index, math_match in enumerate(math_blocks):
+        next_start = math_blocks[math_index + 1].start() if math_index + 1 < len(math_blocks) else len(source_text)
+        following = source_text[math_match.end():next_start]
+        assert "متن جایگزین فرمول" in following, f"MathML lacks visible text alternative in {relative_source}"
+        assert re.search(r'aria-label="[^"]+"', math_match.group(0)), f"MathML lacks aria-label in {relative_source}"
     source_files.add(relative_source)
     expected_sections = len(re.findall(r"^## .+$", source_text, flags=re.MULTILINE))
     assert len(chapter["sections"]) == expected_sections
@@ -67,7 +81,8 @@ for local_number, chapter in enumerate(chapters, 1):
         section_count += 1
 
 assert len(all_ids) == len(set(all_ids)), "duplicate chapter or section ID"
-assert len(inspector.images) >= len(chapters), "each current chapter must have a checked image"
+assert len(inspector.images) == PLANNED, f"expected one checked figure per chapter; found {len(inspector.images)}"
+assert section_count == EXPECTED_SECTIONS, f"expected {EXPECTED_SECTIONS} sections, found {section_count}"
 for image in inspector.images:
     src = image.get("src") or ""
     alt = image.get("alt") or ""
@@ -106,8 +121,13 @@ for image in inspector.images:
     with Image.open(path) as im:
         assert im.format == "WEBP" and im.width >= 1000 and im.height >= 600, (src, im.format, im.size)
 
-minimum_math = {1: 5, 2: 7, 3: 10, 4: 15, 5: 18}.get(len(chapters), 24)
-assert len(inspector.math) >= minimum_math, f"expected at least {minimum_math} MathML blocks, found {len(inspector.math)}"
+figure46_svg = (ROOT / "book-engineering/diagrams/v3-ch14-scale-training.svg").read_text(encoding="utf-8")
+for label in (
+    "مقیاس‌پذیری آموزش", "هم‌جمعی گرادیان", "بازمحاسبهٔ فعال‌سازی",
+    "گزارش اجرا", "run record · artifacts",
+):
+    assert label in figure46_svg, f"chapter 46 diagram is missing bilingual label {label!r}"
+assert len(inspector.math) == EXPECTED_MATHML, f"expected {EXPECTED_MATHML} MathML blocks, found {len(inspector.math)}"
 assert all((math.get("aria-label") or "").strip() for math in inspector.math)
 
 answer_paths = [

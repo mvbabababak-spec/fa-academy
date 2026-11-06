@@ -18,6 +18,13 @@ ROOT = Path(__file__).resolve().parent.parent
 DATA_PATH = ROOT / "data.json"
 VOLUME_ID = "art-science-intelligence-v3"
 PLANNED_CHAPTERS = 14
+PERSIAN_DIGITS = str.maketrans("0123456789", "۰۱۲۳۴۵۶۷۸۹")
+
+
+def fa_digits(value: int) -> str:
+    return str(value).translate(PERSIAN_DIGITS)
+
+
 RENDER = mistune.create_markdown(escape=False, plugins=["table"])
 
 # Local volume numbering 1–14 maps exactly to global roadmap chapters 33–46.
@@ -117,7 +124,7 @@ def main() -> None:
     matches = [book for book in data["books"] if book.get("id") == VOLUME_ID]
     if len(matches) > 1:
         raise RuntimeError("duplicate volume 3 book records")
-    subtitle = f"Transformer و مهندسی مدل زبانی | ۱۴ فصل در نقشه؛ {len(chapters)} فصل منتشرشده"
+    subtitle = f"Transformer و مهندسی مدل زبانی | ۱۴ فصل در نقشه؛ {fa_digits(len(chapters))} فصل منتشرشده"
     changed = False
     refreshed_draft = None
     if matches:
@@ -172,14 +179,14 @@ def main() -> None:
         "",
         "**The Art & Science of Building Intelligence | Babak & Ai**",
         "",
-        f"وضعیت: ۱۴ فصل در نقشه؛ {len(chapters)} فصل از ۱۴ فصل تا این انتشار نگارش و آزموده شده‌اند. این فایل Markdown است؛ PDF و EPUB تولید نشده‌اند.",
+        f"وضعیت: ۱۴ فصل در نقشه؛ {fa_digits(len(chapters))} فصل از ۱۴ فصل تا این انتشار نگارش و آزموده شده‌اند. این فایل Markdown است؛ PDF و EPUB تولید نشده‌اند.",
         "",
         "## فهرست فصل‌های منتشرشده",
         "",
     ]
     for chapter in chapters:
         _, global_num, slug, title, _ = SPECS[chapter["num"] - 1]
-        contents.append(f"- فصل {chapter['num']} (سراسری {global_num}) — {title}")
+        contents.append(f"- فصل {fa_digits(chapter['num'])} (سراسری {fa_digits(global_num)}) — {title}")
     contents.append("")
     for chapter, spec in zip(chapters, available):
         source_path = ROOT / "book-engineering/chapters" / f"{spec[2]}.md"

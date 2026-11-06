@@ -1,6 +1,6 @@
 # جلد سوم، فصل ۱۲ — پیش‌آموزش: schedule، warmup، batch و checkpoint
 
-**نگاشت:** فصل محلی ۱۲ جلد سوم = فصل سراسری ۴۴. **تاریخ مرجع و بازبینی منابع: ۶ نوامبر ۲۰۲۶.** فصل ۴۱ یک مدل feed-forward کوچک را روی splitهای مستقل آموزش داد؛ فصل ۴۲ اندازه و بودجهٔ Mini GPT را برآورد کرد؛ فصل ۴۳ provenance و مجوز corpus را ممیزی کرد. اکنون همان مدل و همان دادهٔ نمونه را reuse می‌کنیم تا «چطور یک run را برنامه‌ریزی، پایش، checkpoint و بدون تغییر پنهان ادامه دهیم؟» را ببینیم. این **پیش‌آموزش صنعتی یا Transformer تازه نیست**؛ پروژهٔ CPU، حلقهٔ تمرینی و بازیابی خرابی را می‌آموزد.
+**نگاشت:** فصل محلی ۱۲ جلد سوم = فصل سراسری ۴۴. **تاریخ بازبینی منابع: ۶ نوامبر ۲۰۲۶.** فصل ۴۱ یک مدل feed-forward کوچک را روی splitهای مستقل آموزش داد؛ فصل ۴۲ اندازه و بودجهٔ Mini GPT را برآورد کرد؛ فصل ۴۳ provenance و مجوز corpus را ممیزی کرد. اکنون همان مدل و همان دادهٔ نمونه را reuse می‌کنیم تا «چطور یک run را برنامه‌ریزی، پایش، checkpoint و بدون تغییر پنهان ادامه دهیم؟» را ببینیم. این **پیش‌آموزش صنعتی یا Transformer تازه نیست**؛ پروژهٔ CPU، حلقهٔ تمرینی و بازیابی خرابی را می‌آموزد.
 
 **پیش‌نیاز:** مدل و splitهای فصل‌های ۴۰–۴۱، شکل‌ها و token budget فصل ۴۲، نسخه و سیاست corpus فصل ۴۳. **خروجی:** بتوانید unit هر schedule را تعریف کنید، targetهای update را درست بشمارید، وضعیت لازم برای resume را ذخیره کنید و ثابت کنید resume با همان داده و config، مسیر run را ادامه می‌دهد.
 
@@ -24,6 +24,8 @@
   <mrow><msub><mi>N</mi><mi>update</mi></msub><mo>=</mo><munderover><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mi>G</mi></munderover><msub><mi>n</mi><mi>j</mi></msub></mrow>
 </math>
 
+**متن جایگزین فرمول:** تعداد targetهای معتبر در optimizer update برابر مجموع targetهای معتبر microbatchهای تجمع‌یافته است.
+
 اگر هر microbatch دقیقاً `B` نمونه و هر نمونه `T` target داشته باشد، سقف آن `B×G×T` است؛ برای `D` replica داده‌موازی، batch سراسری با ضریب `D` زیاد می‌شود. این رابطه تعداد **جایگاه‌های هدف معتبر** را می‌شمارد، نه لزوماً tokenهای یکتای corpus: داده در epochهای بعد دوباره دیده می‌شود.
 
 ## ۳. Microbatch با optimizer batch یکی نیست
@@ -40,6 +42,8 @@
   <mrow><msub><mi>η</mi><mi>t</mi></msub><mo>=</mo><msup><msub><mi>d</mi><mi>model</mi></msub><mrow><mo>−</mo><mn>1</mn><mo>/</mo><mn>2</mn></mrow></msup><mo>·</mo><mi>min</mi><mo>(</mo><msup><mi>t</mi><mrow><mo>−</mo><mn>1</mn><mo>/</mo><mn>2</mn></mrow></msup><mo>,</mo><mspace width="0.4em"/><mi>t</mi><mo>·</mo><msup><mi>W</mi><mrow><mo>−</mo><mn>3</mn><mo>/</mo><mn>2</mn></mrow></msup><mo>)</mo></mrow>
 </math>
 
+**متن جایگزین فرمول:** در schedule اصلی Transformer نرخ یادگیری برابر d مدل به توان منفی یک دوم ضربدر کمینهٔ t به توان منفی یک دوم و t ضربدر W به توان منفی سه دوم است.
+
 `d_model` و `W` در این معادله به خود فرمول وابسته‌اند؛ peak LR یک knob مستقل نیست. این schedule، optimizer و وظیفهٔ همان paper را توصیف می‌کند، نه نسخهٔ اجباری همهٔ LLMها.
 
 ## ۵. Warmup + cosine: پیاده‌سازی فصل
@@ -49,6 +53,8 @@
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" aria-label="نرخ یادگیری در warmup برابر peak ضربدر t تقسیم بر W است؛ پس از آن برابر eta کمینه به‌علاوهٔ نصف اختلاف peak و eta کمینه ضربدر یک به‌علاوهٔ cosine پی‌ ضربدر t منهای W تقسیم بر U منهای W">
   <mrow><msub><mi>η</mi><mi>t</mi></msub><mo>=</mo><mfenced open="{" close=""><mtable><mtr><mtd><msub><mi>η</mi><mi>peak</mi></msub><mfrac><mi>t</mi><mi>W</mi></mfrac></mtd><mtd><mtext>اگر </mtext><mi>t</mi><mo>≤</mo><mi>W</mi></mtd></mtr><mtr><mtd><msub><mi>η</mi><mi>min</mi></msub><mo>+</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mo>(</mo><msub><mi>η</mi><mi>peak</mi></msub><mo>−</mo><msub><mi>η</mi><mi>min</mi></msub><mo>)</mo><mo>(</mo><mn>1</mn><mo>+</mo><mi>cos</mi><mo>(</mo><mi>π</mi><mfrac><mrow><mi>t</mi><mo>−</mo><mi>W</mi></mrow><mrow><mi>U</mi><mo>−</mo><mi>W</mi></mrow></mfrac><mo>)</mo><mo>)</mo></mtd><mtd><mtext>اگر </mtext><mi>W</mi><mo>&lt;</mo><mi>t</mi><mo>≤</mo><mi>U</mi></mtd></mtr></mtable></mfenced></mrow>
 </math>
+
+**متن جایگزین فرمول:** نرخ یادگیری در warmup برابر peak ضربدر t تقسیم بر W است؛ پس از آن برابر eta کمینه به‌علاوهٔ نصف اختلاف peak و eta کمینه ضربدر یک به‌علاوهٔ cosine پی‌ ضربدر t منهای W تقسیم بر U منهای W.
 
 در پروژه، `W>0` در update شمارهٔ `W` به peak می‌رسد و update نهایی به `ρ × peak`؛ اگر warmup صفر باشد، update نخست با peak آغاز می‌شود. برنامه برحسب **optimizer update** است، نه هر microbatch و نه epoch. مقدار `U` باید پیش از انتخاب cosine معلوم باشد؛ اگر کل budget را عوض کنید، منحنی هم عوض می‌شود.
 
@@ -71,6 +77,8 @@ Cosine، linear decay، inverse-square-root، ثابت و warmup-stable-decay ش
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" aria-label="loss میانگین update برابر مجموع lossهای targetها در همهٔ microbatchها تقسیم بر مجموع targetهای معتبر همان update است">
   <mrow><msub><mi>L</mi><mi>update</mi></msub><mo>=</mo><mfrac><mrow><munderover><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mi>G</mi></munderover><msub><mi>S</mi><mi>j</mi></msub></mrow><mrow><munderover><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mi>G</mi></munderover><msub><mi>n</mi><mi>j</mi></msub></mrow></mfrac></mrow>
 </math>
+
+**متن جایگزین فرمول:** loss میانگین update برابر مجموع lossهای targetها در همهٔ microbatchها تقسیم بر مجموع targetهای معتبر همان update است.
 
 کد ابتدا پنجره را می‌گیرد تا denominator دقیق بداند؛ سپس هر microbatch را با reduction برابر `sum` محاسبه و بر تعداد کل targetهای پنجره تقسیم می‌کند. در این مدل هر نمونه یک next-token target است و padding فقط در context قرار دارد؛ مدل واقعی باید mask target، sequence packing و مرز سند را جداگانه مدیریت کند. Clip کردن هر microbatch جدا می‌تواند جهت گرادیان نهایی را عوض کند؛ این پروژه clip را بعد از accumulation اعمال می‌کند.
 
@@ -160,6 +168,14 @@ python book-engineering/projects/44-pretraining/pretraining_run.py \
 در Python 3.13.16 و PyTorch 2.6.0+cpu، ورودی فصل ۴۰ با ۱۶ رکورد و ۱۵۱ نمونهٔ target آموزشی ساخته شد. با تنظیم پیش‌فرض بالا، پروژه ۱۲ update را کامل کرد؛ در کل **۱۹۱ target exposure** ثبت شد. چون windowها در مرز گذر از داده ممکن است microbatch ناقص داشته باشند، عدد را با `8×2×12` برابر نمی‌گیریم.
 
 Validation پایانی ۲۳ target داشت: NLL `4.845976` nat/target و perplexity `127.23`. Test پایانی ۲۸ target داشت: NLL `4.929508` و perplexity `138.31`; test دقیقاً یک بار ارزیابی شد. یک اجرای جدا در update ۶ متوقف و با checkpoint ادامه یافت؛ `metrics.json` و تاریخچهٔ run کامل، با اجرای uninterrupted عیناً برابر شدند. هر اجرا در پوشهٔ خروجی `history.json`, `metrics.json`, `run_card.md` و `loss_curve.svg` می‌سازد. SVG مستقیم از batch mean NLL و validationهای همان `history.json` رسم می‌شود؛ validationهای دوره‌ای جدا علامت‌گذاری شده‌اند و test روی منحنی انتخابی استفاده نمی‌شود. به کتابخانهٔ رسم اضافه یا دادهٔ ساختگی نیاز ندارد. این fixture برای آزمودن state و schedule است؛ ۲۳/۲۸ target برای نتیجهٔ آماری، کیفیت فارسی یا انتخاب یک schedule واقعی کافی نیست.
+
+### واژه‌نامهٔ کوتاه
+
+- **Optimizer update:** یک گام بهینه‌ساز پس از جمع گرادیان‌های لازم.
+- **Warmup:** افزایش برنامه‌ریزی‌شدهٔ نرخ یادگیری در آغاز run.
+- **Gradient accumulation:** جمع گرادیان چند microbatch پیش از یک update.
+- **Checkpoint:** snapshot نسخه‌دار از وضعیت لازم برای توقف/ادامهٔ run.
+- **Resume:** ادامه از وضعیت ذخیره‌شده با همان هویت داده و پیکربندی.
 
 ## ۱۹. منابع و وضعیت دانش تا ۶ نوامبر ۲۰۲۶
 

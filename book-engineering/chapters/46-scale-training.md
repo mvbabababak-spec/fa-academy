@@ -65,6 +65,8 @@ Checkpoint کردن هر بخش می‌تواند بیش از حد محاسبه�
   <mrow><msub><mi>L</mi><mi>r</mi></msub><mo>=</mo><mfrac><mi>W</mi><mi>N</mi></mfrac><msub><mi>S</mi><mi>r</mi></msub><mo>;</mo><mspace width="0.7em"/><mfrac><mn>1</mn><mi>W</mi></mfrac><munderover><mo>∑</mo><mrow><mi>r</mi><mo>=</mo><mn>0</mn></mrow><mrow><mi>W</mi><mo>−</mo><mn>1</mn></mrow></munderover><mo>∇</mo><msub><mi>L</mi><mi>r</mi></msub><mo>=</mo><mfrac><mn>1</mn><mi>N</mi></mfrac><munderover><mo>∑</mo><mrow><mi>r</mi><mo>=</mo><mn>0</mn></mrow><mrow><mi>W</mi><mo>−</mo><mn>1</mn></mrow></munderover><mo>∇</mo><msub><mi>S</mi><mi>r</mi></msub></mrow>
 </math>
 
+**متن جایگزین فرمول:** اگر هر rank مجموع loss محلی S r داشته باشد، میانگین گرادیان سراسری برابر یک تقسیم بر N ضربدر مجموع گرادیان مجموع lossهای rankها است؛ برای DDP میانگین‌گیر، loss هر rank در W تقسیم بر N وزن داده می‌شود.
+
 در پروژهٔ CPU این فصل rankها ۳ و ۲ نمونه دارند. هر worker `local_loss_sum × world_size / global_sample_count` را backpropagate می‌کند. پس از همگام‌سازی، گرادیان DDP باید با backward روی پنج نمونه در یک process برابر باشد؛ در fixture نتیجهٔ هر دو `−33` است. اگر تعداد نمونه‌ها برابر باشد، فرمول به میانگین معمول محلی تبدیل می‌شود. در workflow واقعی برای padding و targetهای نامعتبر، مخرج را بر مبنای targetهای واقعاً داخل loss انتخاب کنید.
 
 ## ۸. Batch سراسری، accumulation و تعداد token
@@ -74,6 +76,8 @@ Checkpoint کردن هر بخش می‌تواند بیش از حد محاسبه�
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" aria-label="batch مؤثر تقریبی برابر microbatch در هر rank ضربدر گام‌های accumulation ضربدر تعداد replicaهای data parallel است؛ targetهای معتبر باید جدا شمرده شوند">
   <mrow><msub><mi>B</mi><mi>global</mi></msub><mo>≈</mo><msub><mi>B</mi><mi>micro</mi></msub><mo>×</mo><mi>G</mi><mo>×</mo><mi>D</mi></mrow>
 </math>
+
+**متن جایگزین فرمول:** batch مؤثر تقریبی برابر microbatch در هر rank ضربدر گام‌های accumulation ضربدر تعداد replicaهای data parallel است؛ targetهای معتبر باید جدا شمرده شوند.
 
 اگر `D` را زیاد کنید و microbatch و accumulation ثابت بمانند، دادهٔ هر update بزرگ‌تر می‌شود؛ همان LR و همان تعداد update الزاماً همان run نیست. اگر می‌خواهید دو پیکربندی را مقایسه کنید، روشن کنید چه چیزی ثابت است: global valid-token batch، کل tokenهای دیده‌شده، تعداد update، optimizer schedule یا wall-clock budget. همه را هم‌زمان ثابت نگه‌داشتن ممکن نیست.
 
@@ -171,6 +175,8 @@ OOM ناشی از batch بزرگ، NaN ناشی از مسیر عددی، `rank` 
   <mrow><mi>overhead</mi><mo>≈</mo><mfrac><mi>C</mi><mi>I</mi></mfrac><mo>+</mo><mfrac><mrow><mi>λ</mi><mi>I</mi></mrow><mn>2</mn></mfrac></mrow>
 </math>
 
+**متن جایگزین فرمول:** تقریب سهم سربار برابر زمان نوشتن checkpoint تقسیم بر فاصلهٔ checkpointها به‌علاوهٔ نرخ شکست ضربدر نصف فاصله است؛ این تقریب restart، هزینهٔ بازیابی و شکست‌های هم‌بسته را نادیده می‌گیرد.
+
 این تقریب فرض می‌کند شکست‌ها کم‌تعداد و مستقل‌اند، زمان write ثابت است، و شکست به‌طور میانگین نیمهٔ interval را از دست می‌دهد؛ زمان restart، contention ذخیره‌سازی و خرابی‌های correlated داخل آن نیست. برای نمونهٔ فرضی، `C=2 min`, `I=1 h`, `λ=0.01 /h`: سهم نوشتن حدود ۳٫۳٪ و اتلاف مورد انتظار حدود ۰٫۵٪ است. مقدار failure rate را از سابقهٔ job/storage خود بگیرید؛ این اعداد نسخهٔ همگانی برای هر cluster نیستند. در run واقعی checkpoint duration و bytes را هم به experiment tracker بفرستید.
 
 ## ۲۱. مشاهده‌پذیری: چه چیزی را در log جدا کنیم؟
@@ -231,6 +237,14 @@ python book-engineering/projects/46-scale-training/scaling_lab.py \
 ۸. پروژه را اجرا کنید و بگویید چه چیزی را واقعاً می‌سنجد و چه ادعایی از آن نمی‌شود کرد. [پاسخ‌نامهٔ فصل ۴۶](book-engineering/answers/46-scale-training-fa.md).
 
 **معیار عبور:** دست‌کم ۶ تمرین از ۸ با فرض و واحد درست؛ تشخیص تفاوت دو checkpoint؛ loss weighting صحیح برای shardهای نابرابر؛ run record با کد/داده/نسخه/config؛ و صریح‌بودن مرز بین fixture CPU و آموزش/benchmark چند GPU واقعی.
+
+### واژه‌نامهٔ کوتاه
+
+- **Activation recomputation:** محاسبهٔ دوبارهٔ activationهای انتخاب‌شده در backward.
+- **Sharding:** تقسیم بخشی از پارامترها، گرادیان‌ها یا وضعیت optimizer میان workerها.
+- **Rank:** شناسهٔ یک process در گروه پردازش توزیع‌شده.
+- **AllReduce:** عملیات جمع/میانگین و همگام‌سازی tensorها میان rankها.
+- **Snapshot هماهنگ:** ذخیرهٔ هم‌زمان وضعیت‌های لازم برای بازیابی یک run.
 
 ## ۲۶. منابع فنی و تاریخ بازبینی
 

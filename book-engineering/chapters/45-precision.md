@@ -1,6 +1,6 @@
 # جلد سوم، فصل ۱۳ — دقت عددی، BF16، FP16، FP8 و Quantization
 
-**نگاشت:** فصل محلی ۱۳ جلد سوم = فصل سراسری ۴۵. **تاریخ مرجع و بازبینی منابع: ۶ نوامبر ۲۰۲۶.** فصل ۴۲ شمار پارامترها و بودجهٔ مدل را برآورد کرد؛ فصل ۴۴ یک حلقهٔ پیش‌آموزش FP32 و checkpoint/resume آزمود. این فصل آن‌ها را دوباره پیاده نمی‌کند: می‌پرسد چه وقت و با چه شواهدی می‌توان نمایش عددها و اجرای محاسبات را کم‌دقت‌تر کرد، و کدام وضعیت precision باید همراه یک run بماند. خروجی، انتخاب آگاهانه میان FP32، FP16، BF16، FP8 و quantization بر پایهٔ workload و سخت‌افزار است؛ نه دستور «همیشه ۸ بیت».
+**نگاشت:** فصل محلی ۱۳ جلد سوم = فصل سراسری ۴۵. **تاریخ بازبینی منابع: ۶ نوامبر ۲۰۲۶.** فصل ۴۲ شمار پارامترها و بودجهٔ مدل را برآورد کرد؛ فصل ۴۴ یک حلقهٔ پیش‌آموزش FP32 و checkpoint/resume آزمود. این فصل آن‌ها را دوباره پیاده نمی‌کند: می‌پرسد چه وقت و با چه شواهدی می‌توان نمایش عددها و اجرای محاسبات را کم‌دقت‌تر کرد، و کدام وضعیت precision باید همراه یک run بماند. خروجی، انتخاب آگاهانه میان FP32، FP16، BF16، FP8 و quantization بر پایهٔ workload و سخت‌افزار است؛ نه دستور «همیشه ۸ بیت».
 
 **پیش‌نیاز:** tensor، loss و optimizer از فصل‌های ۴۱–۴۴؛ مفهوم ظرفیت خام از فصل ۴۲؛ جداسازی train/validation/test از فصل ۴۳. **پروژه:** یک آزمایشگاه CPU قطعی که حدود dtypeها را در runtime می‌خواند، underflow/overflow را مشاهده می‌کند، BF16 autocast را با مرجع FP32 می‌سنجد و quantization صحیح را با خطای بازسازی و اشباع مقایسه می‌کند. این پروژه هیچ benchmark مدل یا GPU اجرا نمی‌کند.
 
@@ -22,6 +22,8 @@
   <mrow><mi>x</mi><mo>=</mo><msup><mrow><mo>(</mo><mo>−</mo><mn>1</mn><mo>)</mo></mrow><mi>s</mi></msup><mo>×</mo><msub><mrow><mo>(</mo><mn>1</mn><mo>.</mo><mi>f</mi><mo>)</mo></mrow><mn>2</mn></msub><mo>×</mo><msup><mn>2</mn><mrow><mi>e</mi><mo>−</mo><mi>bias</mi></mrow></msup></mrow>
 </math>
 
+**متن جایگزین فرمول:** عدد شناور نرمال دودویی برابر منفی یک به توان بیت علامت ضربدر یک ممیز fraction در مبنای دو ضربدر دو به توان نمای ذخیره‌شده منهای bias است.
+
 در عددهای نرمال، یک بیت پیشروِ significand معمولاً ضمنی است. عددهای subnormal نزدیک صفر را با معنادهی متفاوت به نما و fraction نمایش می‌دهند؛ این‌ها می‌توانند فاصلهٔ میان صفر و کوچک‌ترین عدد نرمال را پُر کنند، اما همهٔ سخت‌افزارها یا مسیرهای محاسبه رفتار یکسانی با آن‌ها ندارند. الگوهای بیت هم ممکن است برای ±Inf، NaN و صفر علامت‌دار رزرو شوند. جزئیات به استاندارد همان قالب بستگی دارد؛ برای FP8 نباید قواعد FP16 را خودکار تعمیم داد.
 
 این نمایش یک **تقریب محدود** است. بیشتر اعداد ده‌دهی مثل `0.1` در نمایش دودویی finite دقیق نیستند؛ چند عمل پشت‌سرهم گرد می‌شوند. حتی FP32 هم «حساب حقیقی دقیق» نیست، بلکه یک baseline عملی رایج با دامنه و fraction بزرگ‌تر از قالب‌های کم‌بیت است.
@@ -35,6 +37,8 @@
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" aria-label="فاصلهٔ ماشین نزدیک یک برای m بیت fraction تقریباً دو به توان منفی m است">
   <mrow><mi>ε</mi><mo>≈</mo><msup><mn>2</mn><mrow><mo>−</mo><mi>m</mi></mrow></msup></mrow>
 </math>
+
+**متن جایگزین فرمول:** فاصلهٔ ماشین نزدیک یک برای m بیت fraction تقریباً دو به توان منفی m است.
 
 برای نمونه، FP16 با ۱۰ بیت fraction نزدیک ۱ گام ریزتری از BF16 با ۷ بیت fraction دارد؛ BF16 در عوض تعداد بیت نمای بیشتری دارد. این مقایسه نمی‌گوید یکی برای همهٔ مدل‌ها بهتر است. اگر activation از range بیرون بزند، fraction دقیق‌تر نجاتش نمی‌دهد؛ اگر به‌روزرسانی وزن از گام‌های قالب کوچک‌تر باشد، range بزرگ به‌تنهایی تغییر وزن را حفظ نمی‌کند.
 
@@ -99,6 +103,8 @@ FP16 بیشینهٔ متناهی `65,504` دارد و gradientهای خیلی ک
   <mrow><mi>L</mi><mo>′</mo><mo>=</mo><mi>S</mi><mi>L</mi><mo>,</mo><mspace width="0.5em"/><mfrac><mrow><mi>∂</mi><mi>L</mi><mo>′</mo></mrow><mrow><mi>∂</mi><mi>θ</mi></mrow></mfrac><mo>=</mo><mi>S</mi><mfrac><mrow><mi>∂</mi><mi>L</mi></mrow><mrow><mi>∂</mi><mi>θ</mi></mrow></mfrac></mrow>
 </math>
 
+**متن جایگزین فرمول:** اگر loss در S ضرب شود، gradient آن هم در S ضرب می‌شود و پیش از optimizer باید بر S تقسیم شود.
+
 `GradScaler` می‌تواند وقتی Inf/NaN می‌بیند optimizer step را رد و scale را کاهش دهد؛ پس scale و تعداد stepهای ردشده بخشی از وضعیت قابل‌مشاهده‌اند. Scaling جلو overflow در activation/forward را نمی‌گیرد و هر خطای quantization را هم اصلاح نمی‌کند. PyTorch 2.6 صریحاً هشدار می‌دهد AMP/FP16 برای همهٔ مدل‌ها مناسب نیست: مثلاً مدل‌هایی که در BF16 با دامنهٔ بزرگ آموزش دیده‌اند ممکن است در FP16 overflow کنند؛ scale حتی می‌تواند به زیر ۱ برسد و افزایش همیشگی را تضمین نمی‌کند [۲].
 
 در probe پروژه، `1e-8` با `torch.float16` روی CPU به صفر رفت و `±100000` به ±Inf تبدیل شد. این مشاهده با حدود جدول سازگار است، اما تست cast روی CPU، رفتار تمام kernelها یا training واقعی را ثابت نمی‌کند. اگر loss یا grad غیرمتناهی است، ابتدا ریشه‌یابی کنید؛ scale بزرگ‌تر را بی‌دلیل افزایش ندهید.
@@ -138,6 +144,8 @@ BF16 تعداد بیت نمایی برابر FP32 دارد و تنها ۷ بیت
   <mrow><mi>s</mi><mo>=</mo><mfrac><mi>amax</mi><msub><mi>q</mi><mi>max</mi></msub></mfrac><mo>,</mo><mspace width="0.5em"/><mi>q</mi><mo>=</mo><mi>round</mi><mo>(</mo><mfrac><mi>x</mi><mi>s</mi></mfrac><mo>)</mo><mo>,</mo><mspace width="0.5em"/><mover><mi>x</mi><mo>^</mo></mover><mo>=</mo><mi>s</mi><mi>q</mi></mrow>
 </math>
 
+**متن جایگزین فرمول:** برای scale ذخیره‌شده به‌صورت مقدار اصلی بر کد کم‌بیت، scale برابر amax تقسیم بر qmax است؛ کد با گردکردن x تقسیم بر scale ساخته می‌شود و بازسازی در scale ضرب می‌شود.
+
 بعضی کتابخانه‌ها reciprocal scale را ذخیره می‌کنند؛ پیش از مقایسهٔ عددها قرارداد را بخوانید. `amax` جاری، سابقهٔ چند گام، scale هر tensor یا scale هر row/block از recipeهای ممکن‌اند. scale تانسری سربار کم دارد اما یک outlier می‌تواند دقت بیشتر عناصر را کم کند؛ scale ریزدانه این اثر را محدود می‌کند ولی metadata و kernel پیچیده‌تر می‌شوند. راهنمای NVIDIA Transformer Engine current-iteration amax و delayed scaling بر پایهٔ تاریخچه را به‌عنوان recipeهای متفاوت توضیح می‌دهد؛ آن‌ها API عمومی برای همهٔ سخت‌افزارها نیستند [۶].
 
 جای داده هم مهم است: weights، activations و gradientها شکل توزیع و دامنهٔ متفاوتی دارند؛ برای همهٔ آن‌ها یک scale ثابت یا یک قالب واحد را مفروض نگیرید. در آموزش recipe ممکن است برای backward نیز state یا history مربوط به amax نگه دارد. اگر run قابل resume می‌خواهیم، این state، dtype policy و config باید در checkpoint ثبت شوند؛ فصل ۴۴ چنین AMP/FP8 stateای را در پروژهٔ FP32 خود پیاده نکرده بود.
@@ -156,6 +164,8 @@ BF16 تعداد بیت نمایی برابر FP32 دارد و تنها ۷ بیت
   <mrow><mi>q</mi><mo>=</mo><mi>clamp</mi><mo>(</mo><mi>round</mi><mo>(</mo><mfrac><mi>x</mi><mi>s</mi></mfrac><mo>+</mo><mi>z</mi><mo>)</mo><mo>,</mo><msub><mi>q</mi><mi>min</mi></msub><mo>,</mo><msub><mi>q</mi><mi>max</mi></msub><mo>)</mo><mo>,</mo><mspace width="0.5em"/><mover><mi>x</mi><mo>^</mo></mover><mo>=</mo><mi>s</mi><mo>(</mo><mi>q</mi><mo>−</mo><mi>z</mi><mo>)</mo></mrow>
 </math>
 
+**متن جایگزین فرمول:** کد صحیح q برابر clamp گرد کردن x تقسیم بر scale به‌علاوهٔ zero point میان q کمینه و q بیشینه است و مقدار بازسازی‌شده scale ضربدر q منهای zero point است.
+
 برای symmetric signed INT8 اغلب `z=0` و بازهٔ متقارن انتخاب می‌شود؛ در پروژه `[-127,127]` به‌کار رفته تا صفر دقیقاً در مرکز باشد. affine INT8 می‌تواند کل بازهٔ `[-128,127]` را به min/max کالیبراسیون نگاشت کند. `round` و clamp باعث می‌شود دو خطا را جدا ببینیم: **rounding error** برای مقدار داخل دامنه، و **saturation/clipping** برای مقدار بیرون دامنه. PyTorch `torch.round` در این مثال round-to-nearest, ties-to-even انجام می‌دهد؛ فرمت یا kernel دیگری ممکن است سیاست متفاوت مستندشده داشته باشد.
 
 ## ۱۵. Per-tensor در برابر per-channel، per-row و per-group
@@ -167,6 +177,8 @@ Scale می‌تواند برای کل tensor مشترک باشد، برای هر
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" aria-label="نسبت اشباع تعداد مقدارهای خارج از qmin و qmax پیش از clamp تقسیم بر کل مقدارها است">
   <mrow><mi>r</mi><mo>_</mo><mi>sat</mi><mo>=</mo><mfrac><mrow><mi>count</mi><mo>(</mo><mi>q</mi><mo>&lt;</mo><msub><mi>q</mi><mi>min</mi></msub><mo>∨</mo><mi>q</mi><mo>&gt;</mo><msub><mi>q</mi><mi>max</mi></msub><mo>)</mo></mrow><mi>N</mi></mfrac></mrow>
 </math>
+
+**متن جایگزین فرمول:** نسبت اشباع تعداد مقدارهای خارج از qmin و qmax پیش از clamp تقسیم بر کل مقدارها است.
 
 این شمارش قبل از clamp است؛ اگر فقط کدهای نهایی را ببینید، نمی‌فهمید چند مقدار به یک endpoint فرو ریخته‌اند. کالیبراسیون باید نمایندهٔ ورودی deployment باشد؛ test نهایی را برای تنظیم scale یا انتخاب recipe مصرف نکنید. در پروژه، per-group فقط روی بردار flatten‌شده و گروه‌های چهارتایی تمرین می‌شود؛ این معادل layout کانال‌های یک لایه یا MXFP8 ۳۲تایی نیست.
 
@@ -267,6 +279,14 @@ CLI یک گزارش JSON قطعی می‌سازد: `formats` از runtime، `cas
 8. چک‌لیست checkpoint را برای یک run FP16 و یک recipe FP8 جدا بنویسید: علاوه بر وزن، چه scaler، optimizer، scale/amax history، config و data identity لازم است؟
 
 **معیار قبولی:** دست‌کم ۶ پاسخ از ۸ با واحد، فرض و شواهد؛ ۱۰ آزمون پروژه موفق؛ تفاوت range/precision و AMP/quantization درست توضیح داده شده؛ یک گزارش finite/overflow/saturation و خطای بازسازی ارائه شده؛ هیچ toy output به‌عنوان benchmark معرفی نشده؛ و سازگاری kernel/device جدا از dtype بررسی شده است. پاسخ‌های نمونه در [پاسخ‌نامهٔ تشریحی فصل ۴۵](book-engineering/answers/45-precision-fa.md) آمده‌اند.
+
+### واژه‌نامهٔ کوتاه
+
+- **dtype:** قرارداد قالب و دامنهٔ نمایش هر مقدار عددی.
+- **Range:** کمینه/بیشینهٔ قابل‌نمایش؛ با دقت نسبی یکی نیست.
+- **BF16/FP16:** قالب‌های شناور ۱۶بیتی با مصالحه‌های متفاوت exponent/fraction.
+- **Quantization:** نگاشت عددهای شناور به نمایش کم‌بیت با scale و گاه zero-point.
+- **Calibration:** داده/روش تعیین پارامترهای quantization؛ نه تضمین کیفیت task.
 
 ## ۲۶. منابع، نسخه‌ها و تاریخ دسترسی
 

@@ -108,10 +108,14 @@ class MiniGPTDesignTests(unittest.TestCase):
             estimate_budget(self.config, batch_size=1, sequence_length=16, activation_bytes=0)
 
     def test_context_sweep_rejects_empty_and_duplicate_lengths(self):
-        with self.assertRaises(ValueError):
+        with self.assertRaisesRegex(ValueError, "must not be empty"):
             context_sweep(self.config, ())
-        with self.assertRaises(ValueError):
+        with self.assertRaisesRegex(ValueError, "must be unique"):
             context_sweep(self.config, (32, 32))
+        for invalid_lengths in ((0, 64), (-1, 64), (32.5, 64), (True, 64)):
+            with self.subTest(invalid_lengths=invalid_lengths):
+                with self.assertRaisesRegex(ValueError, "positive integers"):
+                    context_sweep(self.config, invalid_lengths)
 
 
 if __name__ == "__main__":

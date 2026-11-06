@@ -30,6 +30,10 @@ def scaled_dot_product_attention(
         raise TypeError("query, key, and value must use the same dtype")
     if not (query.device == key.device == value.device):
         raise ValueError("query, key, and value must be on the same device")
+    if query.size(0) == 0:
+        raise ValueError("batch dimension must be non-empty")
+    if query.size(1) == 0:
+        raise ValueError("query sequence must contain at least one position")
     if query.size(0) != key.size(0) or key.size(0) != value.size(0):
         raise ValueError("batch dimensions must match")
     if query.size(-1) != key.size(-1):

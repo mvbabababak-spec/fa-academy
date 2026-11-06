@@ -1,6 +1,6 @@
 # جلد سوم، فصل ۱۱ — Corpus، مجوز، کیفیت و جلوگیری از آلودگی ارزیابی
 
-**نگاشت:** فصل محلی ۱۱ جلد سوم = فصل سراسری ۴۳. **تاریخ مرجع و بازبینی منابع: ۶ نوامبر ۲۰۲۶.** فصل ۴۰ یک پیکرهٔ کوچکِ خودنوشته، حذف تکرار دقیق، split گروهی و واژگان train-only ساخت؛ فصل ۴۱ یک baseline زبانی را روی همان نمونه آموزش داد؛ فصل ۴۲ Mini GPT را از نظر شکل و بودجه طراحی کرد. این فصل دروازهٔ «آیا این داده را با شواهد و کیفیت کافی وارد فرایند می‌کنیم؟» را گسترش می‌دهد: زنجیرهٔ منشأ و شروط استفاده، فیلترهای قابل‌دفاع، تکرارهای نزدیک و هم‌پوشانی با ارزیابی. این پروژه نه پیکرهٔ واقعی گردآوری می‌کند، نه داده را برای آموزش صادر می‌کند و نه مجوز صادر می‌کند.
+**نگاشت:** فصل محلی ۱۱ جلد سوم = فصل سراسری ۴۳. **تاریخ بازبینی منابع: ۶ نوامبر ۲۰۲۶.** فصل ۴۰ یک پیکرهٔ کوچکِ خودنوشته، حذف تکرار دقیق، split گروهی و واژگان train-only ساخت؛ فصل ۴۱ یک baseline زبانی را روی همان نمونه آموزش داد؛ فصل ۴۲ Mini GPT را از نظر شکل و بودجه طراحی کرد. این فصل دروازهٔ «آیا این داده را با شواهد و کیفیت کافی وارد فرایند می‌کنیم؟» را گسترش می‌دهد: زنجیرهٔ منشأ و شروط استفاده، فیلترهای قابل‌دفاع، تکرارهای نزدیک و هم‌پوشانی با ارزیابی. این پروژه نه پیکرهٔ واقعی گردآوری می‌کند، نه داده را برای آموزش صادر می‌کند و نه مجوز صادر می‌کند.
 
 **پیش‌نیاز:** manifest و group split فصل ۴۰؛ تفاوت train، validation و test در فصل ۴۱؛ بودجهٔ Mini GPT و طراحی داده در فصل ۴۲. **خروجی:** بتوانید یک ممیزی بازتولیدپذیر بنویسید که برای هر سند «از کجا آمد؟ چه نسخه‌ای است؟ برای چه استفاده‌ای بررسی شده؟ چه چیزی را پرچم زدیم؟ چه چیزی هنوز نامعلوم است؟» را جدا جواب دهد.
 
@@ -15,6 +15,14 @@
 فصل ۴۰ عمدتاً یک مثال کوچک و خودنوشته را آماده کرد. آن را دوباره پیاده نمی‌کنیم. این فصل روی دردسرهایی تمرکز دارد که در مقیاس چند منبعی ظاهر می‌شوند: برچسب مجوزی که از صفحهٔ میزبان به اشتباه به متن‌های upstream تعمیم داده شده؛ فیلتر زبانی که گونه‌ای کم‌منبع را بیش از حد حذف می‌کند؛ دو نسخهٔ نزدیک از یک سند که در دو split می‌افتند؛ یا سؤال benchmark که پیش از ارزیابی در corpus آموزشی آمده است.
 
 «آماده برای بررسی» با «آمادهٔ آموزش» یا «مجاز برای هر کاربرد» یکی نیست. برای نمونهٔ این فصل خروجی پروژه فقط ledger ممیزی است؛ نه split تازه، نه vocabulary، نه مدل و نه تأیید حقوق.
+
+### واژه‌نامهٔ کوتاه
+
+- **Provenance:** زنجیرهٔ منبع، نسخه و تبدیل‌های انجام‌شده روی داده.
+- **شواهد حقوق:** سند یا مرجعی برای بررسی انسانی شروط استفاده؛ نه مجوز خودکار.
+- **تکرار نزدیک (near-duplicate):** نامزد شباهت که به بازبینی نیاز دارد، نه حذف قطعی.
+- **آلودگی ارزیابی:** احتمال هم‌پوشانی ارزیابی با دادهٔ توسعه/آموزش؛ match اثبات مواجهه نیست.
+- **Data card:** خلاصهٔ هدف، منشأ، فرایند، محدودیت و ناشناخته‌های مجموعه.
 
 ## ۲. واحد داده و کاربرد را پیش از انتخاب منبع تعریف کنیم
 
@@ -61,6 +69,8 @@ manifest یک جدول فهرست منابع نیست؛ باید هم نتیجه
   <mrow><msub><mi>p</mi><mi>s</mi></msub><mo>=</mo><mfrac><msub><mi>t</mi><mi>s</mi></msub><mi>T</mi></mfrac><mo>,</mo><mspace width="0.5em"/><mi>T</mi><mo>=</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>N</mi></munderover><msub><mi>t</mi><mi>i</mi></msub></mrow>
 </math>
 
+**متن جایگزین فرمول:** سهم توکنی منبع s برابر مجموع توکن‌های رکوردهای همان منبع تقسیم بر کل توکن‌های corpus است.
+
 این نسبت هم به tokenizer و روش chunking وابسته است؛ آن را همراه با تعداد رکوردها، گروه‌های مستقل، زبان/موضوع، تاریخ و طول‌ها گزارش کنید. هیچ histogramی به‌تنهایی نمایندگی اجتماعی یا کیفیت واقعی corpus را ثابت نمی‌کند.
 
 ## ۷. فیلتر را سیاستی آشکار و برگشت‌پذیر کنیم
@@ -77,6 +87,8 @@ manifest یک جدول فهرست منابع نیست؛ باید هم نتیجه
   <mrow><mi>precision</mi><mo>=</mo><mfrac><mi>TP</mi><mrow><mi>TP</mi><mo>+</mo><mi>FP</mi></mrow></mfrac><mo>,</mo><mspace width="0.7em"/><mi>recall</mi><mo>=</mo><mfrac><mi>TP</mi><mrow><mi>TP</mi><mo>+</mo><mi>FN</mi></mrow></mfrac></mrow>
 </math>
 
+**متن جایگزین فرمول:** precision برابر TP بر TP به‌علاوه FP و recall برابر TP بر TP به‌علاوه FN است.
+
 برای آزمایش مدل نیز در صورت امکان همه‌چیز جز corpus ثابت بماند: معماری، تعداد توکن آموزش، schedule و معیارها. FineWeb و DCLM-LM نمونه‌هایی از کارهای داده‌محورند که انتخاب فیلتر/تکرار را با آزمایش و مقایسه بررسی می‌کنند، نه با فرض «حذف بیشتر همیشه بهتر است» [۴،۵]. نتایج آن‌ها به setup، منبع و مدل همان مطالعه تعلق دارند؛ threshold انگلیسی یا امتیاز classifier آن‌ها نسخهٔ آماده برای فارسی نیست. پیش‌چاپ ۲۰۲۶ «A Bitter Lesson for Data Filtering» نیز در setup پرمحاسبه/کمبود داده نتایجی به نفع فیلترنکردن گزارش می‌کند؛ چون پیش‌چاپ و وابسته به شرایط خاص است، آن را هشدار علیه نسخهٔ واحد می‌خوانیم، نه توصیهٔ عمومی [۱۰].
 
 ## ۹. تکرار دقیق، نسخهٔ تازه و تکرار نزدیک را از هم جدا کنیم
@@ -92,6 +104,8 @@ manifest یک جدول فهرست منابع نیست؛ باید هم نتیجه
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" aria-label="شباهت ژاکارد دو مجموعهٔ شینگل برابر اندازهٔ اشتراک تقسیم بر اندازهٔ اجتماع است">
   <mrow><mi>J</mi><mo>(</mo><msub><mi>A</mi><mi>k</mi></msub><mo>,</mo><msub><mi>B</mi><mi>k</mi></msub><mo>)</mo><mo>=</mo><mfrac><mrow><mo>|</mo><msub><mi>A</mi><mi>k</mi></msub><mo>∩</mo><msub><mi>B</mi><mi>k</mi></msub><mo>|</mo></mrow><mrow><mo>|</mo><msub><mi>A</mi><mi>k</mi></msub><mo>∪</mo><msub><mi>B</mi><mi>k</mi></msub><mo>|</mo></mrow></mfrac></mrow>
 </math>
+
+**متن جایگزین فرمول:** شباهت ژاکارد دو مجموعهٔ شینگل برابر اندازهٔ اشتراک تقسیم بر اندازهٔ اجتماع است.
 
 Jaccard روی کلمات در متن کوتاه یا واژگان پرتکرار حساس است؛ punctuation، ترتیب و paraphrase نیز نتیجه را عوض می‌کنند. MinHash/LSH برای یافتن نامزدها در مجموعه‌های بزرگ‌تر مفید است، اما مرحلهٔ دومِ دقیق و نمونه‌برداری انسانی همچنان لازم‌اند. Embeddingها یا مدل معنایی می‌توانند شباهت معنایی را گسترش دهند، ولی گاهی متن‌های فقط مرتبط را با duplicate اشتباه می‌گیرند و هزینه/محدودیت privacy دارند. threshold را با جفت‌های واقعاً نزدیک و جفت‌های منفی کالیبره کنید؛ یک score خودبه‌خود تصمیم حذف نیست.
 
@@ -120,6 +134,8 @@ Jaccard روی کلمات در متن کوتاه یا واژگان پرتکرا�
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" aria-label="نرخ نامزدهای غربال برابر تعداد موارد پرچم‌خورده تقسیم بر کل موردهای ارزیابی است؛ این نرخ برآورد قطعی آلودگی مدل نیست">
   <mrow><msub><mi>r</mi><mi>screen</mi></msub><mo>=</mo><mfrac><mrow><msub><mi>n</mi><mi>flagged</mi></msub></mrow><mrow><msub><mi>n</mi><mi>evaluation</mi></msub></mrow></mfrac><mo>;</mo><mspace width="0.4em"/><msub><mi>r</mi><mi>screen</mi></msub><mo>≠</mo><msub><mi>r</mi><mi>model-exposed</mi></msub></mrow>
 </math>
+
+**متن جایگزین فرمول:** نرخ نامزدهای غربال برابر تعداد موارد پرچم‌خورده تقسیم بر کل موردهای ارزیابی است؛ این نرخ برآورد قطعی آلودگی مدل نیست.
 
 یک مثبت کاذب می‌تواند عبارتی رایج باشد؛ منفی کاذب می‌تواند ناشی از املای دیگر، ترجمه، بازنویسی یا متن ناقص باشد. برای ادعای میزان آلودگی، denominator، روش تطبیق، نسخهٔ benchmark، حدود دسترسی به دادهٔ آموزش و uncertainty را صریح بنویسید.
 
@@ -152,7 +168,7 @@ python -m unittest discover -v --start-directory book-engineering/projects/43-co
 python book-engineering/projects/43-corpus-audit/corpus_audit.py
 ```
 
-یا از پوشهٔ پروژه، `python -m unittest discover -v` و `python corpus_audit.py` اجرا کنید. CLI به‌طور پیش‌فرض سه artifact را در `build/` می‌نویسد؛ build محلی در `.gitignore` است. آستانهٔ طول، Jaccard، استفادهٔ موردنظر و طول قطعهٔ پیوسته قابل تنظیم‌اند. هیچ URL دریافت نمی‌شود.
+یا از پوشهٔ پروژه، `python -m unittest discover -v` و `python corpus_audit.py` اجرا کنید. CLI به‌طور پیش‌فرض سه artifact را در `build/` می‌نویسد؛ build محلی در `.gitignore` است. آستانه‌های شباهت باید عدد متناهی در `(۰,۱]` و اندازه‌هایی مانند حداقل نویسه/توکن و طول قطعه باید عدد صحیحِ مثبت باشند؛ مقدار بولی یا اعشاری با پیام روشن رد می‌شود، نه آن‌که تا مرحلهٔ برش رشته به خطای مبهم برسد. این اعتبارسنجی فقط قرارداد ورودی را روشن می‌کند و اعتبار علمی threshold را ثابت نمی‌کند. هیچ URL دریافت نمی‌شود.
 
 ## ۱۸. خروجی نمونه را به‌عنوان فهرست کار بخوانیم
 
@@ -320,10 +336,17 @@ def load_evaluation(path: str | Path) -> list[dict]:
     return _load_jsonl(path, validate_evaluation_record)
 
 
+def _validate_integer(name: str, value: object, *, minimum: int = 1) -> int:
+    """Reject booleans and fractional values before they reach range/slicing."""
+    if isinstance(value, bool) or not isinstance(value, int) or value < minimum:
+        qualifier = "non-negative" if minimum == 0 else "positive"
+        raise ValueError(f"{name} must be a {qualifier} integer")
+    return value
+
+
 def quality_flags(text: str, min_characters: int = 64) -> list[str]:
     """Return review signals only; no flag automatically removes a record."""
-    if min_characters < 0:
-        raise ValueError("min_characters must be non-negative")
+    _validate_integer("min_characters", min_characters, minimum=0)
     flags: list[str] = []
     cleaned = normalize_text(text)
     if not cleaned:
@@ -349,8 +372,7 @@ def quality_flags(text: str, min_characters: int = 64) -> list[str]:
 
 
 def _shingles(tokens: Sequence[str], size: int = 3) -> set[tuple[str, ...]]:
-    if size < 1:
-        raise ValueError("shingle size must be positive")
+    _validate_integer("shingle size", size)
     return {tuple(tokens[index:index + size]) for index in range(max(0, len(tokens) - size + 1))}
 
 
@@ -361,7 +383,7 @@ def jaccard_similarity(left: set[tuple[str, ...]], right: set[tuple[str, ...]]) 
 
 
 def _validate_threshold(name: str, value: float) -> float:
-    if not isinstance(value, (int, float)) or not math.isfinite(value) or not 0.0 < value <= 1.0:
+    if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or not 0.0 < value <= 1.0:
         raise ValueError(f"{name} must be finite and in (0, 1]")
     return float(value)
 
@@ -394,8 +416,10 @@ def near_duplicate_pairs(
 ) -> list[dict]:
     """Pairwise shingle-Jaccard candidate search for small offline examples only."""
     threshold = _validate_threshold("near-duplicate threshold", threshold)
-    if min_tokens < shingle_size or shingle_size < 1:
-        raise ValueError("min_tokens must be at least a positive shingle_size")
+    _validate_integer("shingle_size", shingle_size)
+    _validate_integer("min_tokens", min_tokens)
+    if min_tokens < shingle_size:
+        raise ValueError("min_tokens must be at least shingle_size")
     cached = []
     for record in records:
         text_key = comparison_key(record["text"])
@@ -441,8 +465,11 @@ def evaluation_overlap_candidates(
 ) -> list[dict]:
     """Find exact, long-substring, or shingle-similarity candidates, not proof of exposure."""
     near_threshold = _validate_threshold("evaluation near-overlap threshold", near_threshold)
-    if min_contiguous_tokens < 1 or shingle_size < 1 or min_tokens < shingle_size:
-        raise ValueError("overlap sizes must be positive and min_tokens >= shingle_size")
+    _validate_integer("min_contiguous_tokens", min_contiguous_tokens)
+    _validate_integer("shingle_size", shingle_size)
+    _validate_integer("min_tokens", min_tokens)
+    if min_tokens < shingle_size:
+        raise ValueError("min_tokens must be at least shingle_size")
     matches = []
     for benchmark in evaluation:
         benchmark_key = comparison_key(benchmark["text"])

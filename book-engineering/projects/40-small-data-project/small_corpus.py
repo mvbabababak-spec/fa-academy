@@ -309,6 +309,7 @@ def _write_data_card(path: Path, summary: dict) -> None:
         "- **هدف:** ساخت ورودی کوچک و قابل‌بازتولید برای آموزش آزمایشی فصل ۴۱؛ نه benchmark و نه دادهٔ مناسب محصول.",
         "- **ترکیب:** متن‌های فارسی خودنگاشتهٔ نمونه؛ هیچ فایل یا صفحهٔ وبی در اجرای پیش‌فرض دریافت نمی‌شود.",
         f"- **نسخهٔ pipeline:** 1؛ تعداد رکوردهای پذیرفته‌شده پس از حذف تکرار: {summary['retained_records']}.",
+        f"- **هش دقیق فایل manifest (SHA-256):** `{summary['input_manifest_sha256']}`؛ این هش هویت بایت‌های ورودی را ثبت می‌کند و مجوز یا منشأ حقوقی را اثبات نمی‌کند.",
         f"- **مجوزهای ثبت‌شده در manifest:** {licenses or 'هیچ'}.",
         "- **پاک‌سازی:** Unicode NFC و فشرده‌سازی whitespace؛ نیم‌فاصله حفظ می‌شود؛ متن خام این نمونه در `sample_corpus.jsonl` می‌ماند.",
         f"- **تقسیم:** گروه منبعی با seed={summary['seed']}؛ نسبت‌ها برای نمونهٔ کوچک تقریبی‌اند؛ گروه‌ها بین splitها مشترک نیستند.",
@@ -330,6 +331,8 @@ def prepare_dataset(
     max_vocab_size: int = 10_000,
 ) -> dict:
     """Run validation, exact deduplication, group splitting, and train-only vocab fit."""
+    manifest_path = Path(manifest_path)
+    manifest_sha256 = hashlib.sha256(manifest_path.read_bytes()).hexdigest()
     records = load_manifest(manifest_path)
     unique, duplicates = deduplicate_records(records)
     splits, group_membership = split_by_group(unique, fractions=fractions, seed=seed)
@@ -351,6 +354,7 @@ def prepare_dataset(
         "pipeline_version": 1,
         "seed": seed,
         "normalization": NORMALIZATION_NOTE,
+        "input_manifest_sha256": manifest_sha256,
         "input_records": len(records),
         "retained_records": len(unique),
         "exact_duplicates_removed": len(duplicates),

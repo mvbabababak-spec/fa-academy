@@ -120,10 +120,17 @@ def load_evaluation(path: str | Path) -> list[dict]:
     return _load_jsonl(path, validate_evaluation_record)
 
 
+def _validate_integer(name: str, value: object, *, minimum: int = 1) -> int:
+    """Reject booleans and fractional values before they reach range/slicing."""
+    if isinstance(value, bool) or not isinstance(value, int) or value < minimum:
+        qualifier = "non-negative" if minimum == 0 else "positive"
+        raise ValueError(f"{name} must be a {qualifier} integer")
+    return value
+
+
 def quality_flags(text: str, min_characters: int = 64) -> list[str]:
     """Return review signals only; no flag automatically removes a record."""
-    if min_characters < 0:
-        raise ValueError("min_characters must be non-negative")
+    _validate_integer("min_characters", min_characters, minimum=0)
     flags: list[str] = []
     cleaned = normalize_text(text)
     if not cleaned:
@@ -149,8 +156,7 @@ def quality_flags(text: str, min_characters: int = 64) -> list[str]:
 
 
 def _shingles(tokens: Sequence[str], size: int = 3) -> set[tuple[str, ...]]:
-    if size < 1:
-        raise ValueError("shingle size must be positive")
+    _validate_integer("shingle size", size)
     return {tuple(tokens[index:index + size]) for index in range(max(0, len(tokens) - size + 1))}
 
 
@@ -161,7 +167,7 @@ def jaccard_similarity(left: set[tuple[str, ...]], right: set[tuple[str, ...]]) 
 
 
 def _validate_threshold(name: str, value: float) -> float:
-    if not isinstance(value, (int, float)) or not math.isfinite(value) or not 0.0 < value <= 1.0:
+    if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or not 0.0 < value <= 1.0:
         raise ValueError(f"{name} must be finite and in (0, 1]")
     return float(value)
 
@@ -194,8 +200,10 @@ def near_duplicate_pairs(
 ) -> list[dict]:
     """Pairwise shingle-Jaccard candidate search for small offline examples only."""
     threshold = _validate_threshold("near-duplicate threshold", threshold)
-    if min_tokens < shingle_size or shingle_size < 1:
-        raise ValueError("min_tokens must be at least a positive shingle_size")
+    _validate_integer("shingle_size", shingle_size)
+    _validate_integer("min_tokens", min_tokens)
+    if min_tokens < shingle_size:
+        raise ValueError("min_tokens must be at least shingle_size")
     cached = []
     for record in records:
         text_key = comparison_key(record["text"])
@@ -241,8 +249,11 @@ def evaluation_overlap_candidates(
 ) -> list[dict]:
     """Find exact, long-substring, or shingle-similarity candidates, not proof of exposure."""
     near_threshold = _validate_threshold("evaluation near-overlap threshold", near_threshold)
-    if min_contiguous_tokens < 1 or shingle_size < 1 or min_tokens < shingle_size:
-        raise ValueError("overlap sizes must be positive and min_tokens >= shingle_size")
+    _validate_integer("min_contiguous_tokens", min_contiguous_tokens)
+    _validate_integer("shingle_size", shingle_size)
+    _validate_integer("min_tokens", min_tokens)
+    if min_tokens < shingle_size:
+        raise ValueError("min_tokens must be at least shingle_size")
     matches = []
     for benchmark in evaluation:
         benchmark_key = comparison_key(benchmark["text"])

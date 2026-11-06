@@ -83,11 +83,19 @@ class CorpusAuditTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             near_duplicate_pairs(self.corpus, threshold=0)
         with self.assertRaises(ValueError):
+            near_duplicate_pairs(self.corpus, threshold=True)
+        with self.assertRaises(ValueError):
             near_duplicate_pairs(self.corpus, min_tokens=2, shingle_size=3)
+        with self.assertRaisesRegex(ValueError, "positive integer"):
+            near_duplicate_pairs(self.corpus, min_tokens=6.5)
         with self.assertRaises(ValueError):
             evaluation_overlap_candidates(self.corpus, self.evaluation, near_threshold=float("nan"))
+        with self.assertRaisesRegex(ValueError, "positive integer"):
+            evaluation_overlap_candidates(self.corpus, self.evaluation, min_contiguous_tokens=True)
         with self.assertRaises(ValueError):
             quality_flags("text", min_characters=-1)
+        with self.assertRaisesRegex(ValueError, "non-negative integer"):
+            quality_flags("text", min_characters=3.5)
 
     def test_invalid_manifest_and_duplicate_ids_fail_closed(self):
         with tempfile.TemporaryDirectory() as folder:

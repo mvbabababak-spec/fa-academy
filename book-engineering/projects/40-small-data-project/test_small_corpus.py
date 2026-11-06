@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 import tempfile
@@ -178,6 +179,7 @@ class PipelineTests(unittest.TestCase):
             self.assertEqual(summary["retained_records"], 16)
             self.assertEqual(summary["exact_duplicates_removed"], 0)
             self.assertEqual(summary["tokenizer_fit_split"], "train")
+            self.assertEqual(summary["input_manifest_sha256"], hashlib.sha256(SAMPLE.read_bytes()).hexdigest())
             for name in ("train", "validation", "test"):
                 self.assertTrue((output / f"{name}.jsonl").is_file())
             self.assertTrue((output / "vocab.json").is_file())
@@ -190,6 +192,15 @@ class PipelineTests(unittest.TestCase):
             card = (output / "data_card.md").read_text(encoding="utf-8")
             self.assertIn("فقط از متن train", card)
             self.assertIn("بررسی انسانی", card)
+
+            repeated_output = Path(temp) / "prepared-repeat"
+            repeated_summary = prepare_dataset(SAMPLE, repeated_output, seed=40)
+            self.assertEqual(summary, repeated_summary)
+            for name in (
+                "train.jsonl", "validation.jsonl", "test.jsonl", "vocab.json",
+                "duplicates.json", "summary.json", "data_card.md",
+            ):
+                self.assertEqual((output / name).read_bytes(), (repeated_output / name).read_bytes(), name)
 
     def test_train_vocab_does_not_absorb_holdout_only_word(self):
         tokenizer = SimpleWordTokenizer.train(["واژهٔ آموزش"], max_vocab_size=20)
