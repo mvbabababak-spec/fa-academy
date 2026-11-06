@@ -1,5 +1,5 @@
-// ===== فا-اکدمی Service Worker v70 =====
-const CACHE_NAME = 'fa-academy-v70';
+// ===== فا-اکدمی Service Worker v71 =====
+const CACHE_NAME = 'fa-academy-v71';
 const CORE_FILES = [
   './',
   './index.html',
@@ -113,6 +113,15 @@ const CORE_FILES = [
   './book-engineering/projects/44-pretraining/test_pretraining_run.py',
   './book-engineering/create_v3_ch12_image.py',
   './book-engineering/diagrams/v3-ch12-pretraining.svg',
+  './assets/images/babak-ai/v3-ch13-precision.webp',
+  './book-engineering/chapters/45-precision.md',
+  './book-engineering/chapters/45-audit-report-fa.md',
+  './book-engineering/answers/45-precision-fa.md',
+  './book-engineering/projects/45-precision/README.md',
+  './book-engineering/projects/45-precision/precision_lab.py',
+  './book-engineering/projects/45-precision/test_precision_lab.py',
+  './book-engineering/create_v3_ch13_image.py',
+  './book-engineering/diagrams/v3-ch13-precision.svg',
   './assets/images/babak-ai/v2-ch07-backprop.webp',
   './assets/images/babak-ai/v2-ch10-cnn.webp',
   './assets/images/babak-ai/v2-ch11-representations.webp',

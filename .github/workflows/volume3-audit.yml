@@ -65,6 +65,9 @@ jobs:
           cmp /tmp/ch44-ci-full/history.json /tmp/ch44-ci-resume/history.json
           test -s /tmp/ch44-ci-full/loss_curve.svg
           test -s /tmp/ch44-ci-resume/loss_curve.svg
+          (cd book-engineering/projects/45-precision && python -m unittest discover -v)
+          python book-engineering/projects/45-precision/precision_lab.py --output /tmp/ch45-precision.json
+          python -c "import json; p=json.load(open('/tmp/ch45-precision.json')); assert p['runtime']['torch_version'].startswith('2.6.') and p['cpu_bf16_autocast']['finite_output'] and p['quantization']['calibration_shift']['result']['saturation_count']==2"
       - name: Confirm volume 3 builder idempotence
         run: |
           cp data.json /tmp/v3-data-before.json
