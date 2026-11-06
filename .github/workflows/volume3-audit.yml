@@ -36,6 +36,8 @@ jobs:
           (cd book-engineering/projects/39-multimodal-transformer && python -m unittest discover -v)
           (cd book-engineering/projects/40-small-data-project && python -m unittest discover -v)
           (cd book-engineering/projects/41-first-language-model && python -m unittest discover -v)
+          (cd book-engineering/projects/42-mini-gpt-design && python -m unittest discover -v)
+          python book-engineering/projects/42-mini-gpt-design/mini_gpt_design.py --context-sweep
       - name: Confirm volume 3 builder idempotence
         run: |
           cp data.json /tmp/v3-data-before.json

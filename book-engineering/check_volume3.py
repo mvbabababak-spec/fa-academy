@@ -91,6 +91,8 @@ for image in inspector.images:
         assert all(term in alt for term in ("مجوز", "manifest", "group_id", "train", "validation", "test", "tokenizer")), alt
     if "v3-ch09-training-loop.webp" in src:
         assert all(term in alt for term in ("شکل ۳-۹-۱", "train", "validation", "test", "Embedding", "MLP", "logits", "cross-entropy", "گرادیان")), alt
+    if "v3-ch10-mini-gpt-budget.webp" in src:
+        assert all(term in alt for term in ("شکل ۳-۱۰-۱", "Decoder-only", "۱۱۷٬۳۵۰", "score-equivalent", "MiB")), alt
     path = ROOT / src
     assert path.is_file(), path
     with Image.open(path) as im:
@@ -210,6 +212,18 @@ if len(chapters) >= 9:
     assert (ROOT / "book-engineering/create_v3_ch09_image.py").is_file()
     assert (ROOT / "book-engineering/diagrams/v3-ch09-training-loop.svg").is_file()
     assert (ROOT / "book-engineering/chapters/41-audit-report-fa.md").is_file()
+
+if len(chapters) >= 10:
+    source = ROOT / "book-engineering/chapters/42-mini-gpt.md"
+    project = ROOT / "book-engineering/projects/42-mini-gpt-design"
+    code = (project / "mini_gpt_design.py").read_text(encoding="utf-8").rstrip()
+    blocks = re.findall(r"```python\n(.*?)\n```", source.read_text(encoding="utf-8"), flags=re.DOTALL)
+    assert blocks and blocks[-1] == code, "chapter 42 executable code differs from tested project"
+    for project_file in ["mini_gpt_design.py", "test_mini_gpt_design.py", "README.md"]:
+        assert (project / project_file).is_file(), project_file
+    assert (ROOT / "book-engineering/create_v3_ch10_image.py").is_file()
+    assert (ROOT / "book-engineering/diagrams/v3-ch10-mini-gpt-budget.svg").is_file()
+    assert (ROOT / "book-engineering/chapters/42-audit-report-fa.md").is_file()
 
 full_text = ROOT / "volume-3-full-fa.md"
 assert full_text.is_file()

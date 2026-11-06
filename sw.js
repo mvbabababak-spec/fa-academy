@@ -1,5 +1,5 @@
-// ===== فا-اکدمی Service Worker v67 =====
-const CACHE_NAME = 'fa-academy-v67';
+// ===== فا-اکدمی Service Worker v68 =====
+const CACHE_NAME = 'fa-academy-v68';
 const CORE_FILES = [
   './',
   './index.html',
@@ -84,6 +84,15 @@ const CORE_FILES = [
   './book-engineering/projects/41-first-language-model/test_tiny_lm.py',
   './book-engineering/create_v3_ch09_image.py',
   './book-engineering/diagrams/v3-ch09-training-loop.svg',
+  './assets/images/babak-ai/v3-ch10-mini-gpt-budget.webp',
+  './book-engineering/chapters/42-mini-gpt.md',
+  './book-engineering/chapters/42-audit-report-fa.md',
+  './book-engineering/answers/42-mini-gpt-fa.md',
+  './book-engineering/projects/42-mini-gpt-design/README.md',
+  './book-engineering/projects/42-mini-gpt-design/mini_gpt_design.py',
+  './book-engineering/projects/42-mini-gpt-design/test_mini_gpt_design.py',
+  './book-engineering/create_v3_ch10_image.py',
+  './book-engineering/diagrams/v3-ch10-mini-gpt-budget.svg',
   './assets/images/babak-ai/v2-ch07-backprop.webp',
   './assets/images/babak-ai/v2-ch10-cnn.webp',
   './assets/images/babak-ai/v2-ch11-representations.webp',
