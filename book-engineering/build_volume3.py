@@ -46,6 +46,14 @@ def build_chapter(spec: tuple[int, int, str, str, str]) -> dict:
     if not source.is_file():
         raise FileNotFoundError(source)
     text = source.read_text(encoding="utf-8")
+    if global_num == 44:
+        project_code_path = ROOT / "book-engineering/projects/44-pretraining/pretraining_run.py"
+        if not project_code_path.is_file():
+            raise FileNotFoundError(project_code_path)
+        code_blocks = re.findall(r"```python\n(.*?)\n```", text, flags=re.DOTALL)
+        project_code = project_code_path.read_text(encoding="utf-8").rstrip()
+        if not code_blocks or code_blocks[-1] != project_code:
+            raise ValueError("chapter 44 executable appendix must match the tested pretraining project")
     parts = re.split(r"^## (.+)$", text, flags=re.MULTILINE)
     if len(parts) < 3:
         raise ValueError(f"chapter {global_num} must contain at least one H2 section")

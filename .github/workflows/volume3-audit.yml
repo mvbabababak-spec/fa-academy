@@ -40,6 +40,31 @@ jobs:
           python book-engineering/projects/42-mini-gpt-design/mini_gpt_design.py --context-sweep
           (cd book-engineering/projects/43-corpus-audit && python -m unittest discover -v)
           python book-engineering/projects/43-corpus-audit/corpus_audit.py --output /tmp/ch43-audit
+          (cd book-engineering/projects/44-pretraining && python -m unittest discover -v)
+          python book-engineering/projects/40-small-data-project/small_corpus.py \
+            --manifest book-engineering/projects/40-small-data-project/sample_corpus.jsonl \
+            --output /tmp/ch44-ci-data --seed 40
+          python book-engineering/projects/44-pretraining/pretraining_run.py \
+            --data-dir /tmp/ch44-ci-data --output-dir /tmp/ch44-ci-full \
+            --total-updates 12 --microbatch-size 8 --gradient-accumulation-steps 2 \
+            --peak-lr 0.01 --warmup-updates 3 --min-lr-ratio 0.1 \
+            --evaluation-every 3 --checkpoint-every 4 --seed 44
+          python book-engineering/projects/44-pretraining/pretraining_run.py \
+            --data-dir /tmp/ch44-ci-data --output-dir /tmp/ch44-ci-resume \
+            --total-updates 12 --microbatch-size 8 --gradient-accumulation-steps 2 \
+            --peak-lr 0.01 --warmup-updates 3 --min-lr-ratio 0.1 \
+            --evaluation-every 3 --checkpoint-every 4 --seed 44 --stop-after 6
+          python -c "import json; m=json.load(open('/tmp/ch44-ci-resume/metrics.json')); assert m['status']=='partial' and m['test_once_after_training']==0 and m['test_metrics'] is None"
+          python book-engineering/projects/44-pretraining/pretraining_run.py \
+            --data-dir /tmp/ch44-ci-data --output-dir /tmp/ch44-ci-resume \
+            --total-updates 12 --microbatch-size 8 --gradient-accumulation-steps 2 \
+            --peak-lr 0.01 --warmup-updates 3 --min-lr-ratio 0.1 \
+            --evaluation-every 3 --checkpoint-every 4 --seed 44 \
+            --resume /tmp/ch44-ci-resume/checkpoint-latest.pt
+          cmp /tmp/ch44-ci-full/metrics.json /tmp/ch44-ci-resume/metrics.json
+          cmp /tmp/ch44-ci-full/history.json /tmp/ch44-ci-resume/history.json
+          test -s /tmp/ch44-ci-full/loss_curve.svg
+          test -s /tmp/ch44-ci-resume/loss_curve.svg
       - name: Confirm volume 3 builder idempotence
         run: |
           cp data.json /tmp/v3-data-before.json

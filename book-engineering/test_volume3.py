@@ -9,7 +9,7 @@ from playwright.sync_api import sync_playwright
 ROOT = Path(__file__).resolve().parent.parent
 BOOK_ID = "art-science-intelligence-v3"
 TITLE = "هنر و علم ساخت هوش — جلد سوم"
-CACHE_NAME = "fa-academy-v69"
+CACHE_NAME = "fa-academy-v70"
 OFFLINE_PATHS = [
     "volume-3-full-fa.md",
     "assets/images/babak-ai/v3-ch01-tokenization.webp",
@@ -99,6 +99,15 @@ OFFLINE_PATHS = [
     "book-engineering/projects/43-corpus-audit/sample_evaluation.jsonl",
     "book-engineering/create_v3_ch11_image.py",
     "book-engineering/diagrams/v3-ch11-corpus-audit.svg",
+    "assets/images/babak-ai/v3-ch12-pretraining.webp",
+    "book-engineering/chapters/44-pretraining.md",
+    "book-engineering/chapters/44-audit-report-fa.md",
+    "book-engineering/answers/44-pretraining-fa.md",
+    "book-engineering/projects/44-pretraining/README.md",
+    "book-engineering/projects/44-pretraining/pretraining_run.py",
+    "book-engineering/projects/44-pretraining/test_pretraining_run.py",
+    "book-engineering/create_v3_ch12_image.py",
+    "book-engineering/diagrams/v3-ch12-pretraining.svg",
 ]
 
 
@@ -126,13 +135,13 @@ def main():
                 assert page.get_by_text(TITLE, exact=True).count() == 1
                 assert page.get_by_text("نسخه PDF و EPUB تولید نشده است.", exact=False).count() == 1
                 card = page.locator(".book-card").filter(has_text=TITLE)
-                assert card.count() == 1 and "11 فصل" in card.inner_text() and "190 بخش" in card.inner_text()
+                assert card.count() == 1 and "12 فصل" in card.inner_text() and "211 بخش" in card.inner_text()
                 assert page.locator(".book-card").count() >= 3
 
                 page.evaluate(f"openItem('{BOOK_ID}','book')")
                 headers = page.locator(".chapter-header")
-                assert headers.count() == 11
-                for index, count in enumerate((11, 13, 13, 16, 16, 20, 20, 20, 20, 20, 21)):
+                assert headers.count() == 12
+                for index, count in enumerate((11, 13, 13, 16, 16, 20, 20, 20, 20, 20, 21, 21)):
                     assert f"فصل {index + 1}" in headers.nth(index).inner_text()
                     assert f"{count} بخش" in headers.nth(index).inner_text()
 
@@ -271,6 +280,23 @@ def main():
                 code = page.locator(".reader-content pre code").last.inner_text()
                 assert "def audit_records" in code and "def evaluation_overlap_candidates" in code
 
+                # Chapter 44: update-based schedule, checkpoint/resume and generated loss-curve output.
+                page.evaluate(f"openSec('{BOOK_ID}',11,0)")
+                image = page.locator(".reader-content img").first
+                assert all(term in image.get_attribute("alt") for term in (
+                    "شکل ۳-۱۲-۱", "microbatch", "optimizer update", "warmup", "cosine", "checkpoint", "test"
+                ))
+                wait_for_current_figure(page)
+                for section in (1, 3, 4, 7):
+                    page.evaluate(f"openSec('{BOOK_ID}',11,{section})")
+                    assert page.locator(".reader-content math").count() == 1
+                    assert page.locator(".reader-content math").first.get_attribute("aria-label")
+                page.evaluate(f"openSec('{BOOK_ID}',11,19)")
+                assert page.locator(".reader-content a[href='book-engineering/answers/44-pretraining-fa.md']").count() == 1
+                page.evaluate(f"openSec('{BOOK_ID}',11,20)")
+                code = page.locator(".reader-content pre code").last.inner_text()
+                assert "def train_pretraining" in code and "def _loss_curve_svg" in code
+
                 # Visit every section for overflow and accessible MathML.
                 result = page.evaluate(f'''() => {{
                     const book=DATA.books.find(b=>b.id==="{BOOK_ID}"), math=[], bad=[];
@@ -282,8 +308,8 @@ def main():
                     }}));
                     return {{count:book.chapters.reduce((n,c)=>n+c.sections.length,0),math,bad}};
                 }}''')
-                assert result["count"] == 190 and not result["bad"], (width, result)
-                assert len(result["math"]) >= 32 and all(item["label"] and item["visible"] for item in result["math"]), result["math"]
+                assert result["count"] == 211 and not result["bad"], (width, result)
+                assert len(result["math"]) >= 36 and all(item["label"] and item["visible"] for item in result["math"]), result["math"]
 
                 # Cross-chapter navigation in both directions.
                 page.evaluate(f"openItem('{BOOK_ID}','book');openSec('{BOOK_ID}',0,10);nextSec()")
@@ -328,6 +354,10 @@ def main():
                 assert page.evaluate("[curChapterIndex,curSectionIndex]") == [10, 0]
                 page.evaluate("prevSec()")
                 assert page.evaluate("[curChapterIndex,curSectionIndex]") == [9, 19]
+                page.evaluate(f"openSec('{BOOK_ID}',10,20);nextSec()")
+                assert page.evaluate("[curChapterIndex,curSectionIndex]") == [11, 0]
+                page.evaluate("prevSec()")
+                assert page.evaluate("[curChapterIndex,curSectionIndex]") == [10, 20]
 
                 # Stable chapter-42 section IDs survive reload; its design terms are searchable.
                 page.evaluate(f"openItem('{BOOK_ID}','book');openSec('{BOOK_ID}',9,10)")
@@ -341,6 +371,12 @@ def main():
                 page.wait_for_selector(".reader-content")
                 assert page.evaluate("[curChapterIndex,curSectionIndex]") == [10, 12]
                 page.evaluate("navTo('search');doSearch('Jaccard')")
+                assert page.evaluate(f"window_searchResults.some(r=>JSON.stringify(r).includes('{BOOK_ID}'))")
+                page.evaluate(f"openItem('{BOOK_ID}','book');openSec('{BOOK_ID}',11,19)")
+                page.reload(wait_until="networkidle")
+                page.wait_for_selector(".reader-content")
+                assert page.evaluate("[curChapterIndex,curSectionIndex]") == [11, 19]
+                page.evaluate("navTo('search');doSearch('loss_curve.svg')")
                 assert page.evaluate(f"window_searchResults.some(r=>JSON.stringify(r).includes('{BOOK_ID}'))")
 
                 # Every chapter asset is cached and retrievable after going offline.
@@ -368,6 +404,8 @@ def main():
                 assert page.locator(".reader-content img").first.evaluate("e => e.complete && e.naturalWidth === 1600 && e.naturalHeight === 1000")
                 page.evaluate(f"openSec('{BOOK_ID}',10,0)")
                 assert page.locator(".reader-content img").first.evaluate("e => e.complete && e.naturalWidth === 1600 && e.naturalHeight === 1000")
+                page.evaluate(f"openSec('{BOOK_ID}',11,0)")
+                assert page.locator(".reader-content img").first.evaluate("e => e.complete && e.naturalWidth === 1600 && e.naturalHeight === 1000")
                 offline = page.evaluate('''async paths => {
                     const bad=[];
                     for (const path of paths) {
@@ -394,12 +432,15 @@ def main():
                     const chapter43=await (await fetch(paths[78])).text();
                     const answer43=await (await fetch(paths[80])).text();
                     const project43=await (await fetch(paths[81])).text();
+                    const chapter44=await (await fetch(paths[89])).text();
+                    const answer44=await (await fetch(paths[91])).text();
+                    const project44=await (await fetch(paths[93])).text();
                     const markdown=await (await fetch(paths[0])).text();
-                    return {bad,answer33:answer33.includes('پاسخ‌نامه تشریحی جلد سوم'),answer34:answer34.includes('جواب‌نامهٔ تشریحی'),answer35:answer35.includes('جواب‌نامهٔ تشریحی'),answer36:answer36.includes('پاسخ‌نامهٔ تشریحی'),answer37:answer37.includes('پاسخ‌نامهٔ تشریحی'),chapter38:chapter38.includes('KV Cache'),answer38:answer38.includes('پاسخ‌نامهٔ تشریحی'),chapter39:chapter39.includes('Transformer چندوجهی'),answer39:answer39.includes('پاسخ‌نامهٔ تشریحی'),chapter40:chapter40.includes('پروژهٔ دادهٔ کوچک'),answer40:answer40.includes('پاسخ‌نامهٔ تشریحی'),chapter41:chapter41.includes('نخستین مدل زبانی کوچک'),answer41:answer41.includes('پاسخ‌نامهٔ تشریحی'),project41:project41.includes('weights_only=True'),chapter42:chapter42.includes('طراحی Mini GPT'),answer42:answer42.includes('پاسخ‌نامهٔ تشریحی'),project42:project42.includes('def parameter_breakdown'),chapter43:chapter43.includes('آلودگی ارزیابی'),answer43:answer43.includes('پاسخ‌نامهٔ تشریحی'),project43:project43.includes('دفتر ممیزی'),markdown:markdown.includes('بازبینی منابع')};
+                    return {bad,answer33:answer33.includes('پاسخ‌نامه تشریحی جلد سوم'),answer34:answer34.includes('جواب‌نامهٔ تشریحی'),answer35:answer35.includes('جواب‌نامهٔ تشریحی'),answer36:answer36.includes('پاسخ‌نامهٔ تشریحی'),answer37:answer37.includes('پاسخ‌نامهٔ تشریحی'),chapter38:chapter38.includes('KV Cache'),answer38:answer38.includes('پاسخ‌نامهٔ تشریحی'),chapter39:chapter39.includes('Transformer چندوجهی'),answer39:answer39.includes('پاسخ‌نامهٔ تشریحی'),chapter40:chapter40.includes('پروژهٔ دادهٔ کوچک'),answer40:answer40.includes('پاسخ‌نامهٔ تشریحی'),chapter41:chapter41.includes('نخستین مدل زبانی کوچک'),answer41:answer41.includes('پاسخ‌نامهٔ تشریحی'),project41:project41.includes('weights_only=True'),chapter42:chapter42.includes('طراحی Mini GPT'),answer42:answer42.includes('پاسخ‌نامهٔ تشریحی'),project42:project42.includes('def parameter_breakdown'),chapter43:chapter43.includes('آلودگی ارزیابی'),answer43:answer43.includes('پاسخ‌نامهٔ تشریحی'),project43:project43.includes('دفتر ممیزی'),chapter44:chapter44.includes('پیش‌آموزش'),answer44:answer44.includes('پاسخ‌نامهٔ تشریحی'),project44:project44.includes('def _loss_curve_svg'),markdown:markdown.includes('بازبینی منابع')};
                 }''', OFFLINE_PATHS)
-                assert offline == {"bad": [], "answer33": True, "answer34": True, "answer35": True, "answer36": True, "answer37": True, "chapter38": True, "answer38": True, "chapter39": True, "answer39": True, "chapter40": True, "answer40": True, "chapter41": True, "answer41": True, "project41": True, "chapter42": True, "answer42": True, "project42": True, "chapter43": True, "answer43": True, "project43": True, "markdown": True}, offline
+                assert offline == {"bad": [], "answer33": True, "answer34": True, "answer35": True, "answer36": True, "answer37": True, "chapter38": True, "answer38": True, "chapter39": True, "answer39": True, "chapter40": True, "answer40": True, "chapter41": True, "answer41": True, "project41": True, "chapter42": True, "answer42": True, "project42": True, "chapter43": True, "answer43": True, "project43": True, "chapter44": True, "answer44": True, "project44": True, "markdown": True}, offline
                 assert not errors, errors
-                print(f"PASS volume 3 chapters 1–11 at {width}px: 190 sections, {len(result['math'])} MathML blocks, eleven WebP figures, navigation, search and {len(OFFLINE_PATHS)} offline files")
+                print(f"PASS volume 3 chapters 1–12 at {width}px: 211 sections, {len(result['math'])} MathML blocks, twelve WebP figures, navigation, search and {len(OFFLINE_PATHS)} offline files")
                 context.close()
             browser.close()
     finally:

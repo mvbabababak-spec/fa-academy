@@ -95,6 +95,8 @@ for image in inspector.images:
         assert all(term in alt for term in ("شکل ۳-۱۰-۱", "Decoder-only", "۱۱۷٬۳۵۰", "score-equivalent", "MiB")), alt
     if "v3-ch11-corpus-audit.webp" in src:
         assert all(term in alt for term in ("شکل ۳-۱۱-۱", "منشأ", "کیفیت", "تکرار", "ارزیابی", "مجوز")), alt
+    if "v3-ch12-pretraining.webp" in src:
+        assert all(term in alt for term in ("شکل ۳-۱۲-۱", "microbatch", "optimizer update", "warmup", "cosine", "checkpoint", "test")), alt
     path = ROOT / src
     assert path.is_file(), path
     with Image.open(path) as im:
@@ -241,6 +243,18 @@ if len(chapters) >= 11:
     assert (ROOT / "book-engineering/create_v3_ch11_image.py").is_file()
     assert (ROOT / "book-engineering/diagrams/v3-ch11-corpus-audit.svg").is_file()
     assert (ROOT / "book-engineering/chapters/43-audit-report-fa.md").is_file()
+
+if len(chapters) >= 12:
+    source = ROOT / "book-engineering/chapters/44-pretraining.md"
+    project = ROOT / "book-engineering/projects/44-pretraining"
+    code = (project / "pretraining_run.py").read_text(encoding="utf-8").rstrip()
+    blocks = re.findall(r"```python\n(.*?)\n```", source.read_text(encoding="utf-8"), flags=re.DOTALL)
+    assert blocks and blocks[-1] == code, "chapter 44 executable pretraining code differs from tested project"
+    for project_file in ["pretraining_run.py", "test_pretraining_run.py", "README.md", ".gitignore"]:
+        assert (project / project_file).is_file(), project_file
+    assert (ROOT / "book-engineering/create_v3_ch12_image.py").is_file()
+    assert (ROOT / "book-engineering/diagrams/v3-ch12-pretraining.svg").is_file()
+    assert (ROOT / "book-engineering/chapters/44-audit-report-fa.md").is_file()
 
 full_text = ROOT / "volume-3-full-fa.md"
 assert full_text.is_file()
