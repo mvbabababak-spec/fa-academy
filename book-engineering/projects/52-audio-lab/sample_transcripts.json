@@ -1,0 +1,29 @@
+{
+  "metadata": {
+    "fixture_kind": "synthetic_transcript_examples",
+    "language": "en",
+    "audio_recordings_included": false,
+    "model_outputs_included": false,
+    "purpose": "exercise deterministic framing and edit-rate code; not an ASR or speech-quality sample"
+  },
+  "records": [
+    {
+      "id": "route-a",
+      "reference": "turn left at the bridge",
+      "hypothesis": "turn right at bridge",
+      "label_source": "synthetic_fixture"
+    },
+    {
+      "id": "schedule-b",
+      "reference": "call Mina at noon",
+      "hypothesis": "call Mina tomorrow at noon",
+      "label_source": "synthetic_fixture"
+    },
+    {
+      "id": "short-c",
+      "reference": "please wait",
+      "hypothesis": "please wait",
+      "label_source": "synthetic_fixture"
+    }
+  ]
+}

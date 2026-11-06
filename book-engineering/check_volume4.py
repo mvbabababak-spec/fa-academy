@@ -243,6 +243,54 @@ def main() -> None:
     _require(results51["audit"]["sha256"] == "aba309bb1b3e69443802190b988a21e0432109c01b777f4f58fe11f992936522", "chapter 51 result manifest fixture hash mismatch")
     _require(results51["demo"]["training_performed"] is False and results51["demo"]["image_files_loaded"] is False, "chapter 51 result manifest must disclaim training and image loading")
 
+    source52 = ROOT / "book-engineering/chapters/52-audio-models.md"
+    answer52 = ROOT / "book-engineering/answers/52-audio-models-fa.md"
+    report52 = ROOT / "book-engineering/chapters/52-audit-report-fa.md"
+    diagram52 = ROOT / "book-engineering/diagrams/v4-ch06-audio.svg"
+    project52 = ROOT / "book-engineering/projects/52-audio-lab"
+    for path in (source52, answer52, report52, diagram52, project52 / "README.md", project52 / "audio_lab.py", project52 / "test_audio_lab.py", project52 / "sample_transcripts.json", project52 / "results.json"):
+        _require(path.is_file(), f"missing chapter 52 deliverable: {path.relative_to(ROOT)}")
+    source52_text = source52.read_text(encoding="utf-8")
+    _require("فصل محلی ۶ جلد چهارم = فصل سراسری ۵۲" in source52_text, "chapter 52 local/global mapping missing")
+    _require("تاریخ بازبینی منابع: ۶ نوامبر ۲۰۲۶" in source52_text, "chapter 52 source review date missing")
+    _require(bool(re.search(r"^##\s+.*منابع و تاریخ بازبینی", source52_text, flags=re.MULTILINE)), "chapter 52 dated bibliography missing")
+    _require(all(term in source52_text for term in ("ASR", "TTS", "Audio-Language", "WER", "CER", "Moshi", "Qwen3-TTS", "AudioBench")), "chapter 52 roadmap topics missing")
+    _require("فصل ۳۹" in source52_text and "فصل ۵۱" in source52_text and "فصل ۵۳" in source52_text, "chapter 52 boundaries with neighboring material missing")
+    math52 = re.findall(r"<math\b[^>]*>", source52_text)
+    _require(len(math52) >= 5, "chapter 52 should explain core formulas with MathML")
+    _require(all("aria-label=" in node for node in math52), "chapter 52 MathML needs aria-label")
+    _require(source52_text.count("**متن جایگزین فرمول:**") >= len(math52), "chapter 52 formulas need visible alternatives")
+    figures52 = re.findall(r"!\[([^\]]*)\]\(([^)]+)\)", source52_text)
+    _require(bool(figures52), "chapter 52 figure missing")
+    for alt, image_path in figures52:
+        _require(bool(alt.strip()), "chapter 52 figure alternative text must be non-empty")
+        _require((ROOT / image_path).is_file(), f"missing chapter 52 figure: {image_path}")
+    svg52 = ET.parse(diagram52).getroot()
+    _require(svg52.attrib.get("width") == "1600" and svg52.attrib.get("height") == "1000", "chapter 52 SVG dimensions mismatch")
+    _require("aria-labelledby" in svg52.attrib, "chapter 52 SVG must expose title and description")
+    answer52_text = answer52.read_text(encoding="utf-8")
+    _require("پاسخ‌نامهٔ تشریحی فصل ۵۲" in answer52_text and len(answer52_text.split()) >= 250, "chapter 52 independent answer key missing or too short")
+    report52_text = report52.read_text(encoding="utf-8")
+    _require("نتایج اجرای واقعی" in report52_text, "chapter 52 audit report must distinguish actual test results")
+    _require("۳۹/۳۹ آزمون موفق" in report52_text, "chapter 52 report must record the actual unit-test result")
+    fixture52_hash = "46abd6b35e1481e0b3796522056d25168f7cc1823e0059fafc9a544dd5fdf347"
+    _require(fixture52_hash in report52_text, "chapter 52 report must record the fixture hash")
+    _require("0.2727272727272727" in report52_text and "0.21666666666666667" in report52_text and ("440 Hz" in report52_text or "۴۴۰ Hz" in report52_text), "chapter 52 report must record exact demo outcomes")
+    _require("test_volume4.py" in report52_text and "test_mobile_layout.py" in report52_text, "chapter 52 report must record browser/mobile integration results")
+    _require("مدل" in report52_text and "فارسی" in report52_text and "آموزش" in report52_text, "chapter 52 report must state its claim limits")
+    code52 = (project52 / "audio_lab.py").read_text(encoding="utf-8").rstrip()
+    blocks52 = re.findall(r"```python\n(.*?)\n```", source52_text, flags=re.DOTALL)
+    _require(bool(blocks52) and blocks52[-1] == code52, "chapter 52 appendix and tested project must be byte-for-byte equal")
+    fixture52 = json.loads((project52 / "sample_transcripts.json").read_text(encoding="utf-8"))
+    _require(len(fixture52["records"]) == 3 and all(row["label_source"] == "synthetic_fixture" for row in fixture52["records"]), "chapter 52 synthetic fixture rows changed")
+    _require(fixture52["metadata"]["audio_recordings_included"] is False and fixture52["metadata"]["model_outputs_included"] is False, "chapter 52 fixture must disclaim audio/model outputs")
+    results52 = json.loads((project52 / "results.json").read_text(encoding="utf-8"))
+    _require(results52["unit_tests"]["passed"] == 39 and results52["unit_tests"]["failed"] == 0, "chapter 52 result manifest test count mismatch")
+    _require(results52["audit"]["fixture"]["sha256"] == fixture52_hash and results52["demo"]["fixture"]["sha256"] == fixture52_hash, "chapter 52 result manifest fixture hash mismatch")
+    _require(results52["demo"]["training_performed"] is False and results52["demo"]["audio_recordings_loaded"] is False and results52["demo"]["speech_model_loaded"] is False, "chapter 52 result manifest must disclaim training, audio, and model loading")
+    _require(results52["demo"]["analytic_tone"]["sample_count"] == 1600 and results52["demo"]["analytic_tone"]["complete_frames_without_tail_padding"] == 8, "chapter 52 result manifest framing values mismatch")
+    _require(results52["demo"]["transcript_metrics"]["wer"]["error_rate"] == 3 / 11 and results52["demo"]["transcript_metrics"]["sentence_macro_wer"] == 0.21666666666666667, "chapter 52 result manifest metric values mismatch")
+
     code = (project / "sft_experiment.py").read_text(encoding="utf-8").rstrip()
     blocks = re.findall(r"```python\n(.*?)\n```", source_text, flags=re.DOTALL)
     _require(bool(blocks) and blocks[-1] == code, "chapter appendix and tested project must be byte-for-byte equal")
@@ -256,7 +304,7 @@ def main() -> None:
     _require(markdown_path.is_file(), "volume-4-full-fa.md missing")
     _require(markdown_path.read_text(encoding="utf-8") == builder.expected_markdown(expected_chapters, specs), "full Markdown does not match chapter sources")
     sw = (ROOT / "sw.js").read_text(encoding="utf-8")
-    _require("fa-academy-v81" in sw and "v80" not in sw.splitlines()[0], "service worker cache version was not advanced")
+    _require("fa-academy-v82" in sw and "v81" not in sw.splitlines()[0], "service worker cache version was not advanced")
     required_cache_paths = (
         "./volume-4-full-fa.md",
         "./book-engineering/diagrams/v4-ch01-posttraining.svg",
@@ -303,6 +351,15 @@ def main() -> None:
         "./book-engineering/projects/51-vision-lab/test_vision_lab.py",
         "./book-engineering/projects/51-vision-lab/sample_embeddings.json",
         "./book-engineering/projects/51-vision-lab/results.json",
+        "./book-engineering/diagrams/v4-ch06-audio.svg",
+        "./book-engineering/chapters/52-audio-models.md",
+        "./book-engineering/chapters/52-audit-report-fa.md",
+        "./book-engineering/answers/52-audio-models-fa.md",
+        "./book-engineering/projects/52-audio-lab/README.md",
+        "./book-engineering/projects/52-audio-lab/audio_lab.py",
+        "./book-engineering/projects/52-audio-lab/test_audio_lab.py",
+        "./book-engineering/projects/52-audio-lab/sample_transcripts.json",
+        "./book-engineering/projects/52-audio-lab/results.json",
     )
     for item in required_cache_paths:
         _require(item in sw, f"service worker does not precache {item}")
@@ -310,7 +367,7 @@ def main() -> None:
     print(
         f"PASS volume 4: {len(book['chapters'])}/{builder.PLANNED_CHAPTERS} chapters, "
         f"{sum(len(ch['sections']) for ch in book['chapters'])} sections, "
-        f"{len(math_nodes) + len(math48) + len(math49) + len(math50) + len(math51)} accessible MathML expressions, exact appendices, reports/answers/fixtures present"
+        f"{len(math_nodes) + len(math48) + len(math49) + len(math50) + len(math51) + len(math52)} accessible MathML expressions, exact appendices, reports/answers/fixtures present"
     )
 
 

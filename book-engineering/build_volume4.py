@@ -52,6 +52,7 @@ APPENDIX_PROJECTS = {
     49: "book-engineering/projects/49-preference-lab/preference_lab.py",
     50: "book-engineering/projects/50-synthetic-reasoning/reasoning_lab.py",
     51: "book-engineering/projects/51-vision-lab/vision_lab.py",
+    52: "book-engineering/projects/52-audio-lab/audio_lab.py",
 }
 
 
