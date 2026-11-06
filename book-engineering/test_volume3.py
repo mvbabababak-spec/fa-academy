@@ -9,7 +9,7 @@ from playwright.sync_api import sync_playwright
 ROOT = Path(__file__).resolve().parent.parent
 BOOK_ID = "art-science-intelligence-v3"
 TITLE = "هنر و علم ساخت هوش — جلد سوم"
-CACHE_NAME = "fa-academy-v72"
+CACHE_NAME = "fa-academy-v73"
 OFFLINE_PATHS = [
     "volume-3-full-fa.md",
     "assets/images/babak-ai/v3-ch01-tokenization.webp",

@@ -1,6 +1,6 @@
 # گزارش ممیزی فصل ۴۶ — مقیاس، activation checkpointing و بازیابی run
 
-**تاریخ:** ۶ نوامبر ۲۰۲۶ · **وضعیت:** گیت‌های محلی تکمیل؛ commit مستقل، push و CI راه‌دور در انتظارند. **دامنه:** منبع فصل، پروژهٔ دوپردازهٔ CPU، شکل و یکپارچه‌سازی جلد سوم. این گزارش هیچ ادعای benchmark مدل/سخت‌افزار یا اجرای چند GPU واقعی ندارد.
+**تاریخ:** ۶ نوامبر ۲۰۲۶ · **وضعیت:** commit مستقل فصل `c2e210e84fe591ee3fb866eef922553d0382e055` روی `gh-pages` منتشر شد؛ remote، CI جلدهای ۱ تا ۳ و Pages بررسی و موفق شدند. **دامنه:** منبع فصل، پروژهٔ دوپردازهٔ CPU، شکل و یکپارچه‌سازی جلد سوم. این گزارش هیچ ادعای benchmark مدل/سخت‌افزار یا اجرای چند GPU واقعی ندارد.
 
 ## پیش‌بررسی و جلوگیری از تکرار
 
@@ -21,10 +21,10 @@
 - checkerهای جلدهای ۱، ۲ و ۳ موفق شدند. جلد سوم: **۱۴ فصل، ۲۶۵ بخش، ۱۴ تصویر، ۱۴ پاسخ‌نامه و ۶۰ بلوک MathML دسترس‌پذیر**. builder پس از اجرا، `data.json` و `volume-3-full-fa.md` را عیناً ثابت گذاشت.
 - آزمون Chromium جلد سوم در ۳۲۰، ۳۹۰ و ۱۴۴۰ پیکسل موفق شد: بخش‌ها، فرمول‌ها، تصویرها، overflow، search، navigation و **۱۱۵ فایل آفلاین** بررسی شدند. آزمون جلد دوم در همان سه عرض و آزمون layout موبایل در ۳۲۰، ۳۹۰، ۴۱۴، ۷۶۸ و ۱۴۴۰ پیکسل نیز موفق شدند.
 - smoke testهای CLI فصل‌های ۴۲، ۴۳، ۴۴ (آموزش کامل و resume با history/metrics یکسان) و ۴۵ موفق شدند. WebP شکل **۱۶۰۰×۱۰۰۰** است؛ SHA-256: `4e060a7d0c9d069f67cfd7e8ce7f2a935701fa79218115eb77cb08981bedd1fe`.
+- commit انتشار فصل `c2e210e84fe591ee3fb866eef922553d0382e055` پس از push با `origin/gh-pages` تطبیق داده شد. CIهای push برای جلد ۱ ([run 42171983701](https://github.com/mvbabababak-spec/fa-academy/actions/runs/42171983701))، جلد ۲ ([run 42171983694](https://github.com/mvbabababak-spec/fa-academy/actions/runs/42171983694)) و جلد ۳ ([run 42171983562](https://github.com/mvbabababak-spec/fa-academy/actions/runs/42171983562)) همگی `success` شدند. GitHub Pages وضعیت `built` گزارش کرد؛ سایت زنده در [mvbabababak-spec.github.io/fa-academy](https://mvbabababak-spec.github.io/fa-academy/) با ۱۴ فصل جلد سوم، ۲۷ بخش فصل ۱۴، Service Worker v72 و همان hash شکل پاسخ داد.
+- annotations غیرمسدودکنندهٔ runner به deprecation مربوط به Node 20 در `actions/checkout@v4` و `actions/setup-python@v5` و مهاجرت آیندهٔ `ubuntu-latest` به Ubuntu 26 اشاره داشتند؛ هیچ jobی شکست نخورد.
 - در لاگ Chromium یک درخواست 404 برای thumbnail قدیمیِ بیرون از فصل/جلد سوم دیده شد؛ مطابق گزارش فصل ۴۵، دارایی از قبل در کارت عمومی وجود ندارد و مانع آزمون یا نمایش محتوای فصل نشد. خطای JavaScript صفحه ثبت نشد.
-
-نتیجهٔ CI راه‌دور و Pages تنها پس از commit و push ثبت می‌شود.
 
 ## محدودیت‌ها و گیت انتشار
 
-شمار saved-tensorها peak memory یا fragmentation نیست؛ Gloo دوپردازه روی یک میزبان، آموزش چند GPU/node، NCCL، latency، throughput، کیفیت زبان، recovery پس از خرابی واقعی یا تغییر topology را نمی‌آزماید. run fingerprint امضای امنیتی یا تضمین بازتولید بین سخت‌افزار/نسخه‌ها نیست. checkerها، ۱۹۰ آزمون پروژه، idempotence builder، browser جلد دوم/سوم و آزمون mobile در محیط محلی موفق شدند. پیش از انتشار هنوز باید `git diff --check` و بازبینی نهایی diff انجام شود؛ سپس فصل ۴۶ در commit مستقل push و remote و CI/Pages بررسی شوند. Force push نکنید.
+شمار saved-tensorها peak memory یا fragmentation نیست؛ Gloo دوپردازه روی یک میزبان، آموزش چند GPU/node، NCCL، latency، throughput، کیفیت زبان، recovery پس از خرابی واقعی یا تغییر topology را نمی‌آزماید. run fingerprint امضای امنیتی یا تضمین بازتولید بین سخت‌افزار/نسخه‌ها نیست. checkerها، ۱۹۰ آزمون پروژه، idempotence builder، browser جلد دوم/سوم، آزمون mobile و `git diff --check` برای انتشار commit بالا موفق شدند. commit به‌صورت معمولی push شد، با remote تطبیق یافت و workflowهای سه جلد و Pages موفق شدند؛ force push انجام نشد.
