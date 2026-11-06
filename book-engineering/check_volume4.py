@@ -393,6 +393,58 @@ def main() -> None:
     _require(scenarios54["synthetic-adapter-training"]["estimate"]["total_estimate_per_rank"]["bytes"] == 18924967296, "chapter 54 adapter scenario result changed")
     _require(scenarios54["synthetic-zero-stage3-four-ranks"]["estimate"]["total_estimate_per_rank"]["bytes"] == 35952467296, "chapter 54 ZeRO scenario result changed")
 
+    source55 = ROOT / "book-engineering/chapters/55-ai-lab-design.md"
+    answer55 = ROOT / "book-engineering/answers/55-ai-lab-design.md"
+    report55 = ROOT / "book-engineering/chapters/55-audit-report-fa.md"
+    diagram55 = ROOT / "book-engineering/diagrams/v4-ch09-lab-design.svg"
+    project55 = ROOT / "book-engineering/projects/55-ai-lab-design"
+    for path in (source55, answer55, report55, diagram55, project55 / "README.md", project55 / "lab_design_planner.py", project55 / "test_lab_design_planner.py", project55 / "sample_labs.json", project55 / "results.json"):
+        _require(path.is_file(), f"missing chapter 55 deliverable: {path.relative_to(ROOT)}")
+    source55_text = source55.read_text(encoding="utf-8")
+    _require("فصل محلی ۹ از ۱۵ فصل جلد چهارم؛ فصل سراسری ۵۵" in source55_text, "chapter 55 local/global mapping or 15-chapter roadmap missing")
+    _require("تاریخ بازبینی منابع: ۶ نوامبر ۲۰۲۶" in source55_text, "chapter 55 source-review date missing")
+    _require(bool(re.search(r"^##\s+.*منابع و تاریخ بازبینی", source55_text, flags=re.MULTILINE)), "chapter 55 dated bibliography missing")
+    _require("فصل ۵۴" in source55_text and "فصل ۵۶" in source55_text, "chapter 55 boundaries with adjacent chapters missing")
+    _require(all(term in source55_text for term in ("شخصی", "حرفه‌ای مستقل", "سازمانی", "GPU", "PCIe", "RAM", "storage", "شبکه", "برق", "خنک", "backup", "paper_feasible", "قیمت")), "chapter 55 roadmap topics or claim limits missing")
+    math55_nodes = re.findall(r"<math\b[^>]*>", source55_text)
+    math55_blocks = re.findall(r"<math\b.*?</math>", source55_text, flags=re.DOTALL)
+    _require(len(math55_nodes) >= 5 and len(math55_blocks) == len(math55_nodes), "chapter 55 core MathML missing or malformed")
+    _require(all("aria-label=" in node for node in math55_nodes), "chapter 55 MathML needs aria-label")
+    _require(source55_text.count("**متن جایگزین فرمول:**") >= len(math55_nodes), "chapter 55 formulas need visible alternatives")
+    for math_markup in math55_blocks:
+        _require(ET.fromstring(math_markup).tag.endswith("math"), "chapter 55 contains invalid MathML XML")
+    figures55 = re.findall(r"!\[([^\]]*)\]\(([^)]+)\)", source55_text)
+    _require(bool(figures55), "chapter 55 figure missing")
+    _require(all(term in figures55[0][0] for term in ("شکل ۴-۹-۱", "شخصی", "workstation", "کلاستر", "خنک")), "chapter 55 figure alt text misses architecture tiers")
+    for alt, image_path in figures55:
+        _require(bool(alt.strip()), "chapter 55 figure alternative text must be non-empty")
+        _require((ROOT / image_path).is_file(), f"missing chapter 55 figure: {image_path}")
+    svg55 = ET.parse(diagram55).getroot()
+    _require(svg55.attrib.get("width") == "1600" and svg55.attrib.get("height") == "1000", "chapter 55 SVG dimensions mismatch")
+    _require("aria-labelledby" in svg55.attrib, "chapter 55 SVG must expose title and description")
+    answer55_text = answer55.read_text(encoding="utf-8")
+    _require("پاسخ‌نامهٔ مستقل" in answer55_text and "فصل ۵۵" in answer55_text and len(answer55_text.split()) >= 250, "chapter 55 independent answer key missing or too short")
+    report55_text = report55.read_text(encoding="utf-8")
+    _require("نتایج اجرای واقعی" in report55_text and "۵۷/۵۷ آزمون موفق" in report55_text, "chapter 55 audit report must record actual unit tests")
+    _require("f3fc9ec6961b3655a05e8a9436b52963bbfa38e48bd58e94ce09c1dcf9f34689" in report55_text, "chapter 55 report must record fixture SHA-256")
+    _require("test_volume4.py" in report55_text and "test_mobile_layout.py" in report55_text and "۸۹ دارایی آفلاین" in report55_text, "chapter 55 report must record browser/mobile and offline checks")
+    _require("benchmark" in report55_text and "سخت‌افزار واقعی" in report55_text and "تضمین ایمنی" in report55_text, "chapter 55 report must state claim limits")
+    project_code55 = (project55 / "lab_design_planner.py").read_bytes()
+    appendix_marker55 = b"\n```python\n"
+    _, appendix_found55, appendix_tail55 = source55.read_bytes().rpartition(appendix_marker55)
+    appendix_close55 = appendix_tail55.rfind(b"```")
+    _require(bool(appendix_found55) and appendix_close55 >= 0 and appendix_tail55[:appendix_close55] == project_code55, "chapter 55 appendix and project must match byte-for-byte")
+    fixture_path55 = project55 / "sample_labs.json"
+    fixture55 = json.loads(fixture_path55.read_text(encoding="utf-8"))
+    fixture55_hash = hashlib.sha256(fixture_path55.read_bytes()).hexdigest()
+    _require(fixture55["fixture_id"] == "v4-ch09-synthetic-lab-design-v1" and fixture55["label_source"] == "synthetic_fixture" and len(fixture55["profiles"]) == 4, "chapter 55 synthetic fixture identity or row count changed")
+    _require(all(value is False for value in fixture55["metadata"].values()), "chapter 55 fixture must disclaim measurements, SKUs, prices, benchmarks, installation and training")
+    results55 = json.loads((project55 / "results.json").read_text(encoding="utf-8"))
+    _require(results55["unit_tests"]["passed"] == 57 and results55["unit_tests"]["failed"] == 0 and results55["unit_tests"]["python"] == "3.13.16", "chapter 55 result manifest test result mismatch")
+    _require(results55["fixture"]["sha256"] == fixture55_hash, "chapter 55 result manifest fixture hash mismatch")
+    _require(results55["summary"] == {"profiles": 4, "paper_feasible": 3, "needs_revision": 1}, "chapter 55 deterministic screen summary changed")
+    _require(results55["scope"]["real_hardware_measured"] is False and results55["scope"]["prices_included"] is False and results55["scope"]["benchmark_performed"] is False and results55["scope"]["installation_performed"] is False, "chapter 55 result manifest scope limits changed")
+
     code = (project / "sft_experiment.py").read_text(encoding="utf-8").rstrip()
     blocks = re.findall(r"```python\n(.*?)\n```", source_text, flags=re.DOTALL)
     _require(bool(blocks) and blocks[-1] == code, "chapter appendix and tested project must be byte-for-byte equal")
@@ -406,7 +458,7 @@ def main() -> None:
     _require(markdown_path.is_file(), "volume-4-full-fa.md missing")
     _require(markdown_path.read_text(encoding="utf-8") == builder.expected_markdown(expected_chapters, specs), "full Markdown does not match chapter sources")
     sw = (ROOT / "sw.js").read_text(encoding="utf-8")
-    _require("fa-academy-v89" in sw and "v88" not in sw.splitlines()[0], "service worker cache version was not advanced")
+    _require("fa-academy-v90" in sw and "v89" not in sw.splitlines()[0], "service worker cache version was not advanced")
     cover_paths = {
         f"art-science-intelligence-v{volume}": f"assets/images/covers/volume-{volume}-cover.webp"
         for volume in range(1, 5)
@@ -499,6 +551,15 @@ def main() -> None:
         "./book-engineering/projects/54-resource-estimation/test_resource_estimator.py",
         "./book-engineering/projects/54-resource-estimation/sample_profiles.json",
         "./book-engineering/projects/54-resource-estimation/results.json",
+        "./book-engineering/diagrams/v4-ch09-lab-design.svg",
+        "./book-engineering/chapters/55-ai-lab-design.md",
+        "./book-engineering/chapters/55-audit-report-fa.md",
+        "./book-engineering/answers/55-ai-lab-design.md",
+        "./book-engineering/projects/55-ai-lab-design/README.md",
+        "./book-engineering/projects/55-ai-lab-design/lab_design_planner.py",
+        "./book-engineering/projects/55-ai-lab-design/test_lab_design_planner.py",
+        "./book-engineering/projects/55-ai-lab-design/sample_labs.json",
+        "./book-engineering/projects/55-ai-lab-design/results.json",
     )
     for item in required_cache_paths:
         _require(item in sw, f"service worker does not precache {item}")

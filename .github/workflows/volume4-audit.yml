@@ -101,6 +101,24 @@ jobs:
             --mode demo --fixture book-engineering/projects/53-diffusion-lab/sample_mixture.json \
             --output /tmp/ch53-ci-demo --steps 200 --samples 64 --seed 53
           python -c "import json; p=json.load(open('/tmp/ch53-ci-demo/run.json')); assert p['status']=='analytic_synthetic_mixture_ddpm_demo_complete' and p['training_performed'] is False and p['neural_model_loaded'] is False and p['model_downloaded'] is False and p['image_files_loaded'] is False and p['video_files_loaded'] is False and p['analytic_score_used'] is True and p['sampling']['timesteps']==200 and p['sampling']['sample_count']==64 and p['sampling']['seed']==53 and p['sampling']['terminal_alpha_bar']==0.002080618226191632 and p['nearest_synthetic_center_counts']=={'southwest':19,'northwest':17,'southeast':16,'northeast':12}"
+      - name: Chapter 55 synthetic lab-design planner tests
+        run: |
+          (cd book-engineering/projects/55-ai-lab-design && python -m unittest discover -v)
+          python book-engineering/projects/55-ai-lab-design/lab_design_planner.py \
+            --output /tmp/ch55-ci.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          result = json.loads(Path('/tmp/ch55-ci.json').read_text())
+          assert result['schema_version'] == 'v4-ch09-lab-design-v1'
+          assert result['fixture']['sha256'] == 'f3fc9ec6961b3655a05e8a9436b52963bbfa38e48bd58e94ce09c1dcf9f34689'
+          assert result['summary'] == {'profiles': 4, 'paper_feasible': 3, 'needs_revision': 1}
+          assert [item['status'] for item in result['profiles']] == ['paper_feasible', 'paper_feasible', 'paper_feasible', 'needs_revision']
+          assert result['scope']['real_hardware_measured'] is False
+          assert result['scope']['prices_included'] is False
+          assert result['scope']['benchmark_performed'] is False
+          assert result['scope']['installation_performed'] is False
+          PY
       - name: Confirm volume 4 builder idempotence
         run: |
           cp data.json /tmp/v4-data-before.json

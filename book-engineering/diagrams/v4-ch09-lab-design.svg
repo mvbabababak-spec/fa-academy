@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc" xml:lang="fa">
+  <title id="title">از workload تا طراحی آزمایشگاه هوش مصنوعی</title>
+  <desc id="desc">نمودار سه سطح طراحی را مقایسه می‌کند: آزمایشگاه شخصی تک‌گره، workstation مستقل حرفه‌ای و کلاستر سازمانی چندگره. در هر سطح، اجزا و وابستگی‌های برق، خنک‌کاری، ذخیره‌سازی، شبکه و نگه‌داری باید از workload استخراج شوند. مسیر پایین شکل، تعریف workload، بازبینی سندها، تأیید ظرفیت سایت، آزمون کوچک و ثبت پشتیبان را نشان می‌دهد؛ هیچ سطحی به معنی benchmark یا فهرست خرید نیست.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#071a2c"/>
+      <stop offset="1" stop-color="#102d45"/>
+    </linearGradient>
+    <linearGradient id="personal" x1="0" x2="1">
+      <stop offset="0" stop-color="#1f8a70"/>
+      <stop offset="1" stop-color="#36b69a"/>
+    </linearGradient>
+    <linearGradient id="professional" x1="0" x2="1">
+      <stop offset="0" stop-color="#bb7022"/>
+      <stop offset="1" stop-color="#f1b452"/>
+    </linearGradient>
+    <linearGradient id="org" x1="0" x2="1">
+      <stop offset="0" stop-color="#5375d8"/>
+      <stop offset="1" stop-color="#86a0ff"/>
+    </linearGradient>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto">
+      <path d="M1 1 L10 6 L1 11" fill="none" stroke="#f7cb71" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <style>
+      .fa{font-family:Tahoma,Arial,sans-serif;fill:#f4f7fb}
+      .muted{fill:#bfd0df}
+      .tiny{font-size:19px}
+      .small{font-size:22px}
+      .body{font-size:24px}
+      .h2{font-size:28px;font-weight:700}
+      .h1{font-size:43px;font-weight:700}
+      .card{fill:#10263a;stroke:#35516a;stroke-width:2}
+      .divider{stroke:#456177;stroke-width:1.5}
+      .pill{fill:#19374f;stroke:#4b667e;stroke-width:1.5}
+    </style>
+  </defs>
+  <rect width="1600" height="1000" rx="28" fill="url(#bg)"/>
+  <circle cx="1500" cy="100" r="120" fill="#163951" opacity=".5"/>
+  <circle cx="90" cy="930" r="150" fill="#12334a" opacity=".4"/>
+
+  <text class="fa h1" x="1510" y="82" text-anchor="end" direction="rtl">از بار کاری تا طراحی آزمایشگاه</text>
+  <text class="fa small muted" x="1510" y="126" text-anchor="end" direction="rtl">معماری را از نیاز استخراج کنید؛ قطعه، قیمت و کارایی را از روی این شکل حدس نزنید.</text>
+
+  <!-- Three architecture cards -->
+  <rect class="card" x="70" y="180" width="460" height="470" rx="24"/>
+  <rect x="70" y="180" width="460" height="16" rx="8" fill="url(#personal)"/>
+  <circle cx="460" cy="240" r="24" fill="#1f8a70"/>
+  <text class="fa h2" x="420" y="248" text-anchor="end" direction="rtl">شخصی · تک‌گره</text>
+  <text class="fa small muted" x="490" y="298" text-anchor="end" direction="rtl">هدف: یادگیری، نمونهٔ کوچک، کار تک‌نفره</text>
+  <line class="divider" x1="104" y1="325" x2="496" y2="325"/>
+  <text class="fa body" x="490" y="372" text-anchor="end" direction="rtl">میزبان و یک مسیر شتاب‌دهنده</text>
+  <text class="fa small muted" x="490" y="410" text-anchor="end" direction="rtl">RAM · جایگاه و فضای کیس · درایور/چارچوب</text>
+  <text class="fa body" x="490" y="468" text-anchor="end" direction="rtl">دادهٔ محلی و checkpoint</text>
+  <text class="fa small muted" x="490" y="506" text-anchor="end" direction="rtl">SSD کاری + پشتیبان جدا؛ نرخ شبکه فقط نیازمحور</text>
+  <text class="fa body" x="490" y="565" text-anchor="end" direction="rtl">گرما و برقِ محل</text>
+  <text class="fa small muted" x="490" y="603" text-anchor="end" direction="rtl">سنجش ورودی هوا؛ مدار را متخصص تأیید می‌کند</text>
+
+  <rect class="card" x="570" y="180" width="460" height="470" rx="24"/>
+  <rect x="570" y="180" width="460" height="16" rx="8" fill="url(#professional)"/>
+  <circle cx="960" cy="240" r="24" fill="#bb7022"/>
+  <text class="fa h2" x="920" y="248" text-anchor="end" direction="rtl">حرفه‌ای مستقل · workstation</text>
+  <text class="fa small muted" x="990" y="298" text-anchor="end" direction="rtl">هدف: run تکرارپذیر و چندمرحله‌ای</text>
+  <line class="divider" x1="604" y1="325" x2="996" y2="325"/>
+  <text class="fa body" x="990" y="372" text-anchor="end" direction="rtl">برد، خطوط PCIe و چیدمان کارت‌ها</text>
+  <text class="fa small muted" x="990" y="410" text-anchor="end" direction="rtl">عرض کارت · NUMA · پاور/کانکتور · سازگاری نرم‌افزار</text>
+  <text class="fa body" x="990" y="468" text-anchor="end" direction="rtl">داده، scratch و نسخه‌های ذخیره</text>
+  <text class="fa small muted" x="990" y="506" text-anchor="end" direction="rtl">پشتیبان بیرون از دستگاه؛ restore را تمرین کنید</text>
+  <text class="fa body" x="990" y="565" text-anchor="end" direction="rtl">نویز، دما و دسترسی</text>
+  <text class="fa small muted" x="990" y="603" text-anchor="end" direction="rtl">آزمون جزءبه‌جزء؛ بار و گرما با سند واقعی</text>
+
+  <rect class="card" x="1070" y="180" width="460" height="470" rx="24"/>
+  <rect x="1070" y="180" width="460" height="16" rx="8" fill="url(#org)"/>
+  <circle cx="1460" cy="240" r="24" fill="#5375d8"/>
+  <text class="fa h2" x="1420" y="248" text-anchor="end" direction="rtl">سازمانی · چندگره</text>
+  <text class="fa small muted" x="1490" y="298" text-anchor="end" direction="rtl">هدف: تیم، سیاست دسترسی و تداوم</text>
+  <line class="divider" x1="1104" y1="325" x2="1496" y2="325"/>
+  <text class="fa body" x="1490" y="372" text-anchor="end" direction="rtl">Fabric، شبکهٔ مدیریت و ذخیرهٔ اشتراکی</text>
+  <text class="fa small muted" x="1490" y="410" text-anchor="end" direction="rtl">NUMA/topology · switch · oversubscription · telemetry</text>
+  <text class="fa body" x="1490" y="468" text-anchor="end" direction="rtl">برق، سرمایش و ظرفیت فضا</text>
+  <text class="fa small muted" x="1490" y="506" text-anchor="end" direction="rtl">تأیید تأسیسات · افزونگی و نقطهٔ شکست</text>
+  <text class="fa body" x="1490" y="565" text-anchor="end" direction="rtl">مالکیت عملیاتی و بازیابی</text>
+  <text class="fa small muted" x="1490" y="603" text-anchor="end" direction="rtl">RBAC · ثبت رخداد · نسخهٔ offline · آزمون restore</text>
+
+  <!-- Shared constraints -->
+  <rect x="70" y="680" width="1460" height="105" rx="18" fill="#132f46" stroke="#42627a" stroke-width="2"/>
+  <text class="fa h2" x="1490" y="722" text-anchor="end" direction="rtl">هر سه سطح به یک دفتر مشترک نیاز دارند</text>
+  <text class="fa small muted" x="1490" y="759" text-anchor="end" direction="rtl">مدل فصل ۵۴ → اجزای سازگار → توان/گرما/شبکه/فضا → ایمنی، امنیت و نگه‌داری؛ فصل ۵۶ بعداً هزینه را بررسی می‌کند.</text>
+
+  <!-- Commissioning flow -->
+  <text class="fa small" x="1510" y="830" text-anchor="end" direction="rtl">پیش از run جدی</text>
+  <g>
+    <rect class="pill" x="70" y="856" width="260" height="92" rx="16"/>
+    <rect class="pill" x="370" y="856" width="260" height="92" rx="16"/>
+    <rect class="pill" x="670" y="856" width="260" height="92" rx="16"/>
+    <rect class="pill" x="970" y="856" width="260" height="92" rx="16"/>
+    <rect class="pill" x="1270" y="856" width="260" height="92" rx="16"/>
+    <text class="fa small" x="200" y="912" text-anchor="middle" direction="rtl">workload و حدها</text>
+    <text class="fa small" x="500" y="912" text-anchor="middle" direction="rtl">سندهای سازنده</text>
+    <text class="fa small" x="800" y="912" text-anchor="middle" direction="rtl">تأیید تأسیسات</text>
+    <text class="fa small" x="1100" y="912" text-anchor="middle" direction="rtl">آزمون کم‌خطر</text>
+    <text class="fa small" x="1400" y="912" text-anchor="middle" direction="rtl">ثبت و بازیابی</text>
+    <path d="M335 902 H359" stroke="#f7cb71" stroke-width="3" marker-end="url(#arrow)"/>
+    <path d="M635 902 H659" stroke="#f7cb71" stroke-width="3" marker-end="url(#arrow)"/>
+    <path d="M935 902 H959" stroke="#f7cb71" stroke-width="3" marker-end="url(#arrow)"/>
+    <path d="M1235 902 H1259" stroke="#f7cb71" stroke-width="3" marker-end="url(#arrow)"/>
+  </g>
+</svg>

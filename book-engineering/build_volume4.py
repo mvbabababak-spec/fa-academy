@@ -55,6 +55,7 @@ APPENDIX_PROJECTS = {
     52: "book-engineering/projects/52-audio-lab/audio_lab.py",
     53: "book-engineering/projects/53-diffusion-lab/diffusion_lab.py",
     54: "book-engineering/projects/54-resource-estimation/resource_estimator.py",
+    55: "book-engineering/projects/55-ai-lab-design/lab_design_planner.py",
 }
 
 
@@ -65,6 +66,15 @@ def _verify_code_appendix(global_num: int, text: str) -> None:
     project_code_path = ROOT / relative
     if not project_code_path.is_file():
         raise FileNotFoundError(project_code_path)
+    if global_num == 55:
+        # New chapter appendix check includes every source byte and final newline.
+        marker = b"\n```python\n"
+        _, found, tail = text.encode("utf-8").rpartition(marker)
+        closing = tail.rfind(b"```")
+        project_code = project_code_path.read_bytes()
+        if not found or closing < 0 or tail[:closing] != project_code or tail[closing + 3:] not in (b"", b"\n"):
+            raise ValueError(f"chapter {global_num} executable appendix must match its tested project byte-for-byte")
+        return
     code_blocks = re.findall(r"```python\n(.*?)\n```", text, flags=re.DOTALL)
     project_code = project_code_path.read_text(encoding="utf-8").rstrip()
     if not code_blocks or code_blocks[-1] != project_code:
