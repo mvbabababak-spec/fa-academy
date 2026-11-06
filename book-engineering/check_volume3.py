@@ -99,6 +99,8 @@ for image in inspector.images:
         assert all(term in alt for term in ("شکل ۳-۱۲-۱", "microbatch", "optimizer update", "warmup", "cosine", "checkpoint", "test")), alt
     if "v3-ch13-precision.webp" in src:
         assert all(term in alt for term in ("شکل ۳-۱۳-۱", "FP32", "FP16", "BF16", "E4M3/E5M2", "AMP per-op", "Quantization", "scale/zero-point", "validation", "سخت‌افزار")), alt
+    if "v3-ch14-scale-training.webp" in src:
+        assert all(term in alt for term in ("شکل ۳-۱۴-۱", "AllReduce", "activation recomputation", "sharding", "snapshot", "run record")), alt
     path = ROOT / src
     assert path.is_file(), path
     with Image.open(path) as im:
@@ -269,6 +271,18 @@ if len(chapters) >= 13:
     assert (ROOT / "book-engineering/create_v3_ch13_image.py").is_file()
     assert (ROOT / "book-engineering/diagrams/v3-ch13-precision.svg").is_file()
     assert (ROOT / "book-engineering/chapters/45-audit-report-fa.md").is_file()
+
+if len(chapters) >= 14:
+    source = ROOT / "book-engineering/chapters/46-scale-training.md"
+    project = ROOT / "book-engineering/projects/46-scale-training"
+    code = (project / "scaling_lab.py").read_text(encoding="utf-8").rstrip()
+    blocks = re.findall(r"```python\n(.*?)\n```", source.read_text(encoding="utf-8"), flags=re.DOTALL)
+    assert blocks and blocks[-1] == code, "chapter 46 executable scaling code differs from tested project"
+    for project_file in ["scaling_lab.py", "test_scaling_lab.py", "README.md"]:
+        assert (project / project_file).is_file(), project_file
+    assert (ROOT / "book-engineering/create_v3_ch14_image.py").is_file()
+    assert (ROOT / "book-engineering/diagrams/v3-ch14-scale-training.svg").is_file()
+    assert (ROOT / "book-engineering/chapters/46-audit-report-fa.md").is_file()
 
 full_text = ROOT / "volume-3-full-fa.md"
 assert full_text.is_file()

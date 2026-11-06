@@ -35,7 +35,7 @@ SPECS = [
     (11, 43, "43-corpus", "Corpus، مجوز، کیفیت و جلوگیری از آلودگی ارزیابی", "▦"),
     (12, 44, "44-pretraining", "پیش‌آموزش، برنامه نرخ یادگیری و Checkpoint", "↗"),
     (13, 45, "45-precision", "دقت عددی، BF16، FP16، FP8 و Quantization", "±"),
-    (14, 46, "46-scale-training", "آموزش توزیع‌شده، حافظه و بازتولید آزمایش", "⌁"),
+    (14, 46, "46-scale-training", "Gradient Checkpointing، آموزش توزیع‌شده و مقیاس", "⌁"),
 ]
 
 
@@ -62,6 +62,14 @@ def build_chapter(spec: tuple[int, int, str, str, str]) -> dict:
         project_code = project_code_path.read_text(encoding="utf-8").rstrip()
         if not code_blocks or code_blocks[-1] != project_code:
             raise ValueError("chapter 45 executable appendix must match the tested precision project")
+    if global_num == 46:
+        project_code_path = ROOT / "book-engineering/projects/46-scale-training/scaling_lab.py"
+        if not project_code_path.is_file():
+            raise FileNotFoundError(project_code_path)
+        code_blocks = re.findall(r"```python\n(.*?)\n```", text, flags=re.DOTALL)
+        project_code = project_code_path.read_text(encoding="utf-8").rstrip()
+        if not code_blocks or code_blocks[-1] != project_code:
+            raise ValueError("chapter 46 executable appendix must match the tested scaling project")
     parts = re.split(r"^## (.+)$", text, flags=re.MULTILINE)
     if len(parts) < 3:
         raise ValueError(f"chapter {global_num} must contain at least one H2 section")

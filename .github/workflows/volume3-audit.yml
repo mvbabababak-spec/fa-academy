@@ -68,6 +68,9 @@ jobs:
           (cd book-engineering/projects/45-precision && python -m unittest discover -v)
           python book-engineering/projects/45-precision/precision_lab.py --output /tmp/ch45-precision.json
           python -c "import json; p=json.load(open('/tmp/ch45-precision.json')); assert p['runtime']['torch_version'].startswith('2.6.') and p['cpu_bf16_autocast']['finite_output'] and p['quantization']['calibration_shift']['result']['saturation_count']==2"
+          (cd book-engineering/projects/46-scale-training && python -m unittest discover -v)
+          python book-engineering/projects/46-scale-training/scaling_lab.py --output /tmp/ch46-scaling.json
+          python -c "import json; p=json.load(open('/tmp/ch46-scaling.json')); a=p['activation_checkpoint_probe']; d=p['distributed_probe']; assert a['saved_tensor_bytes_baseline'] > a['saved_tensor_bytes_rematerialized'] and max(a['max_abs_output_delta'],a['max_abs_input_gradient_delta'],a['max_abs_parameter_gradient_delta']) < 1e-6 and d['local_sample_counts']==[3,2] and d['max_abs_gradient_delta'] < 1e-6"
       - name: Confirm volume 3 builder idempotence
         run: |
           cp data.json /tmp/v3-data-before.json

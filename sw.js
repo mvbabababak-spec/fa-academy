@@ -1,5 +1,5 @@
-// ===== فا-اکدمی Service Worker v71 =====
-const CACHE_NAME = 'fa-academy-v71';
+// ===== فا-اکدمی Service Worker v72 =====
+const CACHE_NAME = 'fa-academy-v72';
 const CORE_FILES = [
   './',
   './index.html',
@@ -122,6 +122,15 @@ const CORE_FILES = [
   './book-engineering/projects/45-precision/test_precision_lab.py',
   './book-engineering/create_v3_ch13_image.py',
   './book-engineering/diagrams/v3-ch13-precision.svg',
+  './assets/images/babak-ai/v3-ch14-scale-training.webp',
+  './book-engineering/chapters/46-scale-training.md',
+  './book-engineering/chapters/46-audit-report-fa.md',
+  './book-engineering/answers/46-scale-training-fa.md',
+  './book-engineering/projects/46-scale-training/README.md',
+  './book-engineering/projects/46-scale-training/scaling_lab.py',
+  './book-engineering/projects/46-scale-training/test_scaling_lab.py',
+  './book-engineering/create_v3_ch14_image.py',
+  './book-engineering/diagrams/v3-ch14-scale-training.svg',
   './assets/images/babak-ai/v2-ch07-backprop.webp',
   './assets/images/babak-ai/v2-ch10-cnn.webp',
   './assets/images/babak-ai/v2-ch11-representations.webp',

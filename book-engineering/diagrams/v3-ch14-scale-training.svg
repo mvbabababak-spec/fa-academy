@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">From a small training run to reliable distributed training</title>
+  <desc id="desc">A schematic showing data shards processed by two training ranks, synchronized gradients, activation recomputation inside model blocks, sharded model state, and coordinated checkpoints plus run metadata.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M1 1 L11 6 L1 11 Z" fill="#53657a"/></marker>
+    <marker id="arrow-blue" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M1 1 L11 6 L1 11 Z" fill="#2764c5"/></marker>
+    <marker id="arrow-green" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M1 1 L11 6 L1 11 Z" fill="#18845c"/></marker>
+  </defs>
+  <rect width="1600" height="1000" fill="#f4f7fb"/>
+  <text x="800" y="64" text-anchor="middle" font-family="Arial, sans-serif" font-size="33" font-weight="700" fill="#162a43">Scale the run — keep state, evidence, and recovery</text>
+  <text x="800" y="101" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="#53657a">A conceptual workflow; exact memory, communication, and speed depend on the model and hardware.</text>
+
+  <rect x="66" y="140" width="1468" height="396" rx="24" fill="#ffffff" stroke="#c9d5e3" stroke-width="2"/>
+  <text x="106" y="185" font-family="Arial, sans-serif" font-size="23" font-weight="700" fill="#203955">1 · One optimizer update across data-parallel ranks</text>
+
+  <rect x="105" y="224" width="205" height="92" rx="14" fill="#e8f0ff" stroke="#8bb0ee" stroke-width="2"/>
+  <text x="207" y="260" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#164b9b">Global batch</text>
+  <text x="207" y="286" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#315d99">split by sampler</text>
+
+  <path d="M310 270 H365 V253 H410" fill="none" stroke="#53657a" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M365 270 V365 H410" fill="none" stroke="#53657a" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <rect x="414" y="211" width="294" height="112" rx="16" fill="#ecf7ff" stroke="#85c2e8" stroke-width="2"/>
+  <text x="561" y="244" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#174d6a">Rank 0 · shard A</text>
+  <rect x="454" y="260" width="93" height="39" rx="8" fill="#ffffff" stroke="#96bfd5"/>
+  <text x="500" y="285" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#28485a">forward</text>
+  <rect x="566" y="260" width="102" height="39" rx="8" fill="#ffffff" stroke="#96bfd5"/>
+  <text x="617" y="285" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#28485a">backward</text>
+
+  <rect x="414" y="324" width="294" height="112" rx="16" fill="#f2f8ed" stroke="#a6ca86" stroke-width="2"/>
+  <text x="561" y="357" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#426b25">Rank 1 · shard B</text>
+  <rect x="454" y="373" width="93" height="39" rx="8" fill="#ffffff" stroke="#b3c99e"/>
+  <text x="500" y="398" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#405936">forward</text>
+  <rect x="566" y="373" width="102" height="39" rx="8" fill="#ffffff" stroke="#b3c99e"/>
+  <text x="617" y="398" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#405936">backward</text>
+
+  <path d="M709 280 H760 V321 H804" fill="none" stroke="#2764c5" stroke-width="3" marker-end="url(#arrow-blue)"/>
+  <path d="M709 390 H760 V346 H804" fill="none" stroke="#18845c" stroke-width="3" marker-end="url(#arrow-green)"/>
+  <rect x="808" y="280" width="238" height="112" rx="16" fill="#f3edff" stroke="#b49bdd" stroke-width="2"/>
+  <text x="927" y="317" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#5d3c92">Gradient AllReduce</text>
+  <text x="927" y="347" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#695882">same update on each rank</text>
+  <text x="927" y="370" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#695882">loss weighting must match samples</text>
+
+  <path d="M1047 336 H1110" fill="none" stroke="#53657a" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="1115" y="280" width="205" height="112" rx="16" fill="#fff2df" stroke="#e6ba75" stroke-width="2"/>
+  <text x="1217" y="318" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#8a5510">Optimizer step</text>
+  <text x="1217" y="348" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#80643d">advance once</text>
+  <text x="1217" y="371" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#80643d">after synchronized gradients</text>
+  <text x="1390" y="304" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" font-weight="700" fill="#203955">Not one</text>
+  <text x="1390" y="328" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" font-weight="700" fill="#203955">universal</text>
+  <text x="1390" y="352" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" font-weight="700" fill="#203955">parallel plan</text>
+  <text x="1390" y="380" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#53657a">DP · FSDP/ZeRO</text>
+  <text x="1390" y="401" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#53657a">TP · PP · hybrids</text>
+
+  <rect x="66" y="563" width="706" height="352" rx="24" fill="#ffffff" stroke="#c9d5e3" stroke-width="2"/>
+  <text x="106" y="611" font-family="Arial, sans-serif" font-size="23" font-weight="700" fill="#203955">2 · Memory trade-offs are different mechanisms</text>
+  <rect x="108" y="647" width="268" height="116" rx="16" fill="#eaf4ff" stroke="#83addd" stroke-width="2"/>
+  <text x="242" y="684" text-anchor="middle" font-family="Arial, sans-serif" font-size="19" font-weight="700" fill="#235b98">Activation recomputation</text>
+  <text x="242" y="713" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#415d7a">keep selected boundaries</text>
+  <text x="242" y="737" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#415d7a">recompute interior on backward</text>
+  <path d="M378 704 H439" fill="none" stroke="#53657a" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="444" y="647" width="278" height="116" rx="16" fill="#f2f8ed" stroke="#a6ca86" stroke-width="2"/>
+  <text x="583" y="684" text-anchor="middle" font-family="Arial, sans-serif" font-size="19" font-weight="700" fill="#426b25">State sharding</text>
+  <text x="583" y="713" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#536a43">partition params / grads / optimizer</text>
+  <text x="583" y="737" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#536a43">trade local memory for communication</text>
+  <text x="108" y="808" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#a14c39">Activation checkpoint ≠ training-state checkpoint</text>
+  <text x="108" y="839" font-family="Arial, sans-serif" font-size="15" fill="#53657a">The first rematerializes tensors within one backward pass.</text>
+  <text x="108" y="864" font-family="Arial, sans-serif" font-size="15" fill="#53657a">The second snapshots a consistent run for later recovery.</text>
+
+  <rect x="806" y="563" width="728" height="352" rx="24" fill="#ffffff" stroke="#c9d5e3" stroke-width="2"/>
+  <text x="846" y="611" font-family="Arial, sans-serif" font-size="23" font-weight="700" fill="#203955">3 · A recoverable run needs state and evidence</text>
+  <rect x="846" y="650" width="260" height="108" rx="16" fill="#fff5e6" stroke="#e6ba75" stroke-width="2"/>
+  <text x="976" y="687" text-anchor="middle" font-family="Arial, sans-serif" font-size="19" font-weight="700" fill="#8a5510">Coordinated snapshot</text>
+  <text x="976" y="717" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#80643d">model + optimizer + sampler/RNG</text>
+  <text x="976" y="740" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#80643d">consistent step · durable storage</text>
+
+  <path d="M1108 704 H1171" fill="none" stroke="#53657a" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="1176" y="650" width="300" height="108" rx="16" fill="#f1edff" stroke="#b49bdd" stroke-width="2"/>
+  <text x="1326" y="687" text-anchor="middle" font-family="Arial, sans-serif" font-size="19" font-weight="700" fill="#5d3c92">Run record and artifacts</text>
+  <text x="1326" y="717" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#695882">code/data/config hashes · versions</text>
+  <text x="1326" y="740" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#695882">tokens · metrics · failures · costs</text>
+
+  <path d="M1326 763 V800 H976 V763" fill="none" stroke="#53657a" stroke-width="2.5" stroke-dasharray="8 7" marker-end="url(#arrow)"/>
+  <text x="1150" y="829" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#31516b">restart workers → verify identity → resume from last valid snapshot</text>
+  <text x="1150" y="866" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#64758a">A launcher restart alone does not reconstruct the optimizer or data position.</text>
+</svg>
