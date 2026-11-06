@@ -87,7 +87,7 @@ def main() -> None:
     _require(markdown_path.is_file(), "volume-4-full-fa.md missing")
     _require(markdown_path.read_text(encoding="utf-8") == builder.expected_markdown(expected_chapters, specs), "full Markdown does not match chapter sources")
     sw = (ROOT / "sw.js").read_text(encoding="utf-8")
-    _require("fa-academy-v76" in sw and "v75" not in sw.splitlines()[0], "service worker cache version was not advanced")
+    _require("fa-academy-v77" in sw and "v76" not in sw.splitlines()[0], "service worker cache version was not advanced")
     required_cache_paths = (
         "./volume-4-full-fa.md",
         "./book-engineering/diagrams/v4-ch01-posttraining.svg",
