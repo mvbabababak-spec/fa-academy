@@ -1,5 +1,5 @@
-// ===== فا-اکدمی Service Worker v83 =====
-const CACHE_NAME = 'fa-academy-v83';
+// ===== فا-اکدمی Service Worker v84 =====
+const CACHE_NAME = 'fa-academy-v84';
 const CORE_FILES = [
   './',
   './index.html',
@@ -20,6 +20,10 @@ const CORE_FILES = [
   './assets/images/covers/volume-2-cover.webp',
   './assets/images/covers/volume-3-cover.webp',
   './assets/images/covers/volume-4-cover.webp',
+  './assets/images/covers/microsoft-ai-for-beginners-cover.webp',
+  './assets/images/covers/microsoft-generative-ai-for-beginners-cover.webp',
+  './assets/images/covers/microsoft-ml-for-beginners-cover.webp',
+  './assets/images/covers/microsoft-data-science-for-beginners-cover.webp',
   './volume-3-full-fa.md',
   './volume-4-full-fa.md',
   './assets/images/babak-ai/v3-ch01-tokenization.webp',

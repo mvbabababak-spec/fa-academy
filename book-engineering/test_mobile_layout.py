@@ -24,7 +24,8 @@ def main():
                 page = context.new_page()
                 page.goto(url, wait_until='networkidle')
                 page.wait_for_selector('#loading.hidden')
-                page.evaluate("document.querySelectorAll('.book-card--volume img').forEach(img => img.loading='eager')")
+                assert page.locator('.home-hero > p').first.inner_text() == 'مجموعه‌ای جامع از کتاب‌ها و دوره‌های آموزشی هوش مصنوعی — با دسترسی آفلاین'
+                page.evaluate("document.querySelectorAll('.book-card--volume img,.book-card--microsoft img').forEach(img => img.loading='eager')")
                 page.wait_for_function("""() => {
                   const imgs=Array.from(document.querySelectorAll('.book-card--volume img'));
                   return imgs.length===4 && imgs.every(img=>img.complete && img.naturalWidth===848 && img.naturalHeight===1264);
@@ -60,6 +61,33 @@ def main():
                     assert result_cover['src'].endswith(result_cover['path']), result_cover
                     assert result_cover['dimensions'] == [848, 1264], result_cover
                     assert result_cover['fit'] == 'contain' and 0.65 < result_cover['ratio'] < 0.68, result_cover
+                microsoft_covers = page.evaluate("""() => {
+                  const expected={
+                    'ai':'assets/images/covers/microsoft-ai-for-beginners-cover.webp',
+                    'genai':'assets/images/covers/microsoft-generative-ai-for-beginners-cover.webp',
+                    'ml':'assets/images/covers/microsoft-ml-for-beginners-cover.webp',
+                    'datascience':'assets/images/covers/microsoft-data-science-for-beginners-cover.webp'
+                  };
+                  return Object.entries(expected).map(([id,path])=>{
+                    const item=DATA.books.find(book=>book.id===id);
+                    const card=document.querySelector(`.book-card--microsoft[data-book-id="${id}"]`);
+                    const img=card&&card.querySelector('img');
+                    const cover=card&&card.querySelector('.book-card-cover');
+                    const rect=cover&&cover.getBoundingClientRect();
+                    return {id,path,cover:item&&item.cover,title:item&&item.title,
+                      src:img&&new URL(img.currentSrc).pathname,
+                      dimensions:img&&[img.naturalWidth,img.naturalHeight],
+                      fit:img&&getComputedStyle(img).objectFit,ratio:rect&&rect.width/rect.height,
+                      portrait:card&&card.classList.contains('book-card--portrait-cover')};
+                  });
+                }""")
+                assert len(microsoft_covers) == 4, microsoft_covers
+                for result_cover in microsoft_covers:
+                    assert result_cover['cover'] == result_cover['path'], result_cover
+                    assert result_cover['src'].endswith(result_cover['path']), result_cover
+                    assert result_cover['dimensions'] == [848, 1264], result_cover
+                    assert result_cover['fit'] == 'contain' and result_cover['portrait'], result_cover
+                    assert 0.65 < result_cover['ratio'] < 0.68, result_cover
                 dims = page.evaluate('''() => ({viewport: innerWidth, root: document.documentElement.scrollWidth,
                     header: document.querySelector('.header-nav').scrollWidth,
                     headerVisible: document.querySelector('.header-nav').clientWidth})''')
@@ -151,13 +179,17 @@ def main():
                 context.set_offline(True)
                 page.goto(url, wait_until='domcontentloaded')
                 page.wait_for_selector('#loading.hidden')
-                page.evaluate("document.querySelectorAll('.book-card--volume img').forEach(img => img.loading='eager')")
+                page.evaluate("document.querySelectorAll('.book-card--volume img,.book-card--microsoft img').forEach(img => img.loading='eager')")
                 page.wait_for_function("""() => {
-                  const imgs=Array.from(document.querySelectorAll('.book-card--volume img'));
-                  return imgs.length===4 && imgs.every(img=>img.complete && img.naturalWidth===848 && img.naturalHeight===1264);
+                  const volumes=Array.from(document.querySelectorAll('.book-card--volume img'));
+                  const microsoft=Array.from(document.querySelectorAll('.book-card--microsoft img'));
+                  const good=imgs=>imgs.length===4 && imgs.every(img=>img.complete && img.naturalWidth===848 && img.naturalHeight===1264);
+                  return good(volumes) && good(microsoft);
                 }""")
                 offline_images = page.locator('.book-card--volume img')
-                assert offline_images.count() == 4, 'expected all four book covers offline'
+                offline_microsoft_images = page.locator('.book-card--microsoft img')
+                assert offline_images.count() == 4, 'expected all four volume covers offline'
+                assert offline_microsoft_images.count() == 4, 'expected all four Microsoft covers offline'
                 answer = page.evaluate("fetch('book-engineering/answers/01-intelligence-answers-fa.md').then(r => r.ok ? r.text() : '')")
                 assert 'پاسخ‌نامه فصل ۱' in answer, 'answer key unavailable offline'
                 typography_summary=', '.join(

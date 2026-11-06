@@ -479,8 +479,8 @@ main{
   box-shadow:var(--shadow-lg),0 0 24px var(--accent-glow);
 }
 .book-card:hover .book-cover-img{transform:scale(1.05)}
-.book-card--volume .book-card-cover{height:auto;aspect-ratio:2 / 3}
-.book-card--volume .book-cover-img{object-fit:contain}
+.book-card--portrait-cover .book-card-cover{height:auto;aspect-ratio:2 / 3;flex:0 0 auto}
+.book-card--portrait-cover .book-cover-img{object-fit:contain}
 .book-card-english{direction:ltr;text-align:center;color:var(--text-secondary);font-size:var(--font-size-sm);line-height:1.45;padding:var(--space-3) var(--space-4) 0;overflow-wrap:anywhere}
 .book-card-cover{
   height:180px;
@@ -1233,7 +1233,7 @@ function renderHome(){
   document.getElementById('mainView').innerHTML=
     '<div class="home-hero">'+
       '<h1>آموزش <span class="accent">هوش مصنوعی</span><br>به زبان فارسی</h1>'+
-      '<p>مجموعه‌ای جامع از کتاب‌ها و دوره‌های آموزشی هوش مصنوعی — با طراحی حرفه‌ای و دسترسی آفلاین</p>'+
+      '<p>مجموعه‌ای جامع از کتاب‌ها و دوره‌های آموزشی هوش مصنوعی — با دسترسی آفلاین</p>'+
       '<p>انتشار کتاب‌ها در وب و PWA است؛ نسخه PDF و EPUB تولید نشده است. دریافت Markdown: <a href="volume-2-full-fa.md">جلد دوم، کامل</a> و <a href="volume-3-full-fa.md">جلد سوم، یک فصل از ۱۴ فصل</a>.</p>'+
       '<div class="hero-stats">'+
         '<div class="hero-stat"><div class="hero-stat-num">'+(DATA.books||[]).length+'</div><div class="hero-stat-label">کتاب</div></div>'+
@@ -1289,8 +1289,10 @@ function cardHTML(item,chCount,secCount,type){
     '<div class="book-cover-placeholder" style="display:none">'+(type==='book'?'📖':'🎓')+'</div>':
     '<div class="book-cover-placeholder">'+(type==='book'?'📖':'🎓')+'</div>';
   var author=item.author?'<div class="book-card-author">✍️ '+item.author+'</div>':'';
-  var volumeClass=/^art-science-intelligence-v[1-4]$/.test(item.id)?' book-card--volume':'';
-  return '<div class="book-card animate-in'+volumeClass+'" role="button" tabindex="0" onkeydown="activateOnKey(event)" onclick="openItem(\''+item.id+'\',\''+type+'\')">'+
+  var isVolume=/^art-science-intelligence-v[1-4]$/.test(item.id);
+  var isMicrosoft=/^(ai|genai|ml|datascience)$/.test(item.id);
+  var coverClasses=(isVolume?' book-card--volume':'')+((isVolume||isMicrosoft)?' book-card--portrait-cover':'')+(isMicrosoft?' book-card--microsoft':'');
+  return '<div class="book-card animate-in'+coverClasses+'" data-book-id="'+item.id+'" role="button" tabindex="0" onkeydown="activateOnKey(event)" onclick="openItem(\''+item.id+'\',\''+type+'\')">'+
     '<div class="book-card-cover">'+cover+'</div>'+
     (item.id==='art-science-intelligence-v1'?'<div class="book-card-english" lang="en">The Art &amp; Science of Building Intelligence</div>':'')+
     '<div class="book-card-info">'+
