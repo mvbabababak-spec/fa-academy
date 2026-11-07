@@ -101,7 +101,7 @@ def main() -> None:
         for alt, image_path in images:
             require(bool(alt.strip()), f"chapter {global_num} figure has empty alt text")
             require((ROOT / image_path).is_file(), f"chapter {global_num} missing figure {image_path}")
-        if global_num in (62, 63):
+        if global_num in (62, 63, 64):
             questions = re.findall(r"(?m)^([۱-۸])\. (.+)$", source_text.split("## پیوست اجرایی", 1)[0])
             answer_questions = re.findall(r"(?m)^\*\*صورت پرسش:\*\* (.+)$", answer.read_text(encoding="utf-8"))
             require(len(questions) == 8 and [question for _, question in questions] == answer_questions,
@@ -110,6 +110,33 @@ def main() -> None:
             require(len(book["chapters"][0]["sections"]) == 26, "chapter 62 expected 26 sections")
         if global_num == 63:
             require(len(book["chapters"][1]["sections"]) == 34, "chapter 63 expected 34 sections")
+        if global_num == 64:
+            require(len(book["chapters"][2]["sections"]) == 39, "chapter 64 expected 39 sections")
+            project_files = (
+                "environment.json", "fixture_manifest.json", "results.json",
+                "synthetic_security_fixture.json", "test_red_team_lab.py", "red_team_lab.py",
+                "requirements.txt",
+            )
+            for filename in project_files:
+                require((project_dir / filename).is_file(), f"chapter 64 project file missing: {filename}")
+            fixture_path = project_dir / "synthetic_security_fixture.json"
+            fixture_hash = hashlib.sha256(fixture_path.read_bytes()).hexdigest()
+            manifest = json.loads((project_dir / "fixture_manifest.json").read_text(encoding="utf-8"))
+            result = json.loads((project_dir / "results.json").read_text(encoding="utf-8"))
+            environment = json.loads((project_dir / "environment.json").read_text(encoding="utf-8"))
+            require(manifest.get("sha256") == fixture_hash and manifest.get("case_count") == 7,
+                    "chapter 64 fixture manifest does not match fixture bytes")
+            require(result.get("fixture_sha256") == fixture_hash and result.get("case_count") == 7,
+                    "chapter 64 results do not match fixture bytes")
+            require(result.get("attack_case_count") == 6 and result.get("benign_control_count") == 1
+                    and result.get("control_checks_passed") == 7 and result.get("control_checks_failed") == 0
+                    and result.get("simulated_attack_goals_reached") == 0
+                    and result.get("simulated_attack_goal_rate") == 0.0,
+                    "chapter 64 results exceed or contradict the documented fixture outcomes")
+            require(environment.get("python") == "CPython 3.13.16"
+                    and environment.get("network_used") is False
+                    and environment.get("external_model_or_api") is False,
+                    "chapter 64 environment metadata mismatch")
 
         diagram_relative = builder.DIAGRAMS.get(global_num)
         if diagram_relative:

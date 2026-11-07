@@ -1,5 +1,5 @@
-// ===== فا-اکدمی Service Worker v99 =====
-const CACHE_NAME = 'fa-academy-v99';
+// ===== فا-اکدمی Service Worker v100 =====
+const CACHE_NAME = 'fa-academy-v100';
 const CORE_FILES = [
   './',
   './index.html',
@@ -392,6 +392,18 @@ const CORE_FILES = [
   './book-engineering/projects/63-model-behavior-lab/synthetic_behavior_fixture.json',
   './book-engineering/projects/63-model-behavior-lab/test_model_behavior_lab.py',
   './assets/images/covers/volume-5-cover.png',
+  './book-engineering/chapters/64-red-teaming-security.md',
+  './book-engineering/chapters/64-audit-report-fa.md',
+  './book-engineering/diagrams/v5-ch03-red-team-pipeline.svg',
+  './book-engineering/answers/64-red-teaming-security-fa.md',
+  './book-engineering/projects/64-red-team-lab/README.md',
+  './book-engineering/projects/64-red-team-lab/environment.json',
+  './book-engineering/projects/64-red-team-lab/fixture_manifest.json',
+  './book-engineering/projects/64-red-team-lab/red_team_lab.py',
+  './book-engineering/projects/64-red-team-lab/requirements.txt',
+  './book-engineering/projects/64-red-team-lab/results.json',
+  './book-engineering/projects/64-red-team-lab/synthetic_security_fixture.json',
+  './book-engineering/projects/64-red-team-lab/test_red_team_lab.py',
 ];
 
 // ===== INSTALL: Cache core files =====

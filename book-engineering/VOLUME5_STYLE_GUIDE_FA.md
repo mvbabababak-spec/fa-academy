@@ -35,6 +35,8 @@ python book-engineering/check_volume5.py
 python book-engineering/projects/62-evaluation-lab/evaluation_lab.py --output /tmp/ch62-results.json
 (cd book-engineering/projects/63-model-behavior-lab && python -m unittest -v)
 python book-engineering/projects/63-model-behavior-lab/model_behavior_lab.py --output /tmp/ch63-results.json
+(cd book-engineering/projects/64-red-team-lab && python -m unittest -v)
+python book-engineering/projects/64-red-team-lab/red_team_lab.py --output /tmp/ch64-results.json
 python book-engineering/test_volume5.py
 python book-engineering/test_mobile_layout.py
 ```

@@ -22,7 +22,7 @@ jobs:
         run: |
           python -m pip install -r requirements.txt
           python -m playwright install --with-deps chromium
-      - name: Check published structures and chapter 62
+      - name: Check published structures through chapter 64
         run: |
           python book-engineering/check_volume.py
           python book-engineering/check_volume2.py
@@ -51,6 +51,36 @@ jobs:
           assert result['human_vote_fixture']['pair_comparisons'] == 18
           assert result['overlap_screen'][0]['flagged_for_review'] is True
           assert result['scope'].startswith('Synthetic') and len(result['limitations']) == 5
+          PY
+      - name: Chapter 63 synthetic behavior project tests
+        run: |
+          (cd book-engineering/projects/63-model-behavior-lab && python -m unittest discover -v)
+          python book-engineering/projects/63-model-behavior-lab/model_behavior_lab.py \
+            --output /tmp/ch63-ci-results.json
+          cmp /tmp/ch63-ci-results.json book-engineering/projects/63-model-behavior-lab/results.json
+      - name: Chapter 64 synthetic security-control project tests
+        run: |
+          (cd book-engineering/projects/64-red-team-lab && python -m unittest discover -v)
+          python book-engineering/projects/64-red-team-lab/red_team_lab.py \
+            --output /tmp/ch64-ci-results.json
+          cmp /tmp/ch64-ci-results.json book-engineering/projects/64-red-team-lab/results.json
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+          root = Path('book-engineering/projects/64-red-team-lab')
+          fixture = (root / 'synthetic_security_fixture.json').read_bytes()
+          result = json.loads(Path('/tmp/ch64-ci-results.json').read_text())
+          manifest = json.loads((root / 'fixture_manifest.json').read_text())
+          assert hashlib.sha256(fixture).hexdigest() == '1f7183e4db3536e12afb9dd07c81042d0e13c2e7fab9312321bc4f2fed84013f'
+          assert manifest['sha256'] == result['fixture_sha256']
+          assert result['case_count'] == 7 and result['attack_case_count'] == 6
+          assert result['benign_control_count'] == 1
+          assert result['control_checks_passed'] == 7 and result['control_checks_failed'] == 0
+          assert result['simulated_attack_goals_reached'] == 0
+          assert result['simulated_attack_goal_rate'] == 0.0
+          assert len(result['limitations']) == 6
+          assert 'not a red-team test' in result['scope']
           PY
       - name: Confirm volume 5 builder idempotence
         run: |

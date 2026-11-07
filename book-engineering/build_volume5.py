@@ -36,18 +36,22 @@ SPECS = [
 APPENDIX_PROJECTS = {
     62: "book-engineering/projects/62-evaluation-lab/evaluation_lab.py",
     63: "book-engineering/projects/63-model-behavior-lab/model_behavior_lab.py",
+    64: "book-engineering/projects/64-red-team-lab/red_team_lab.py",
 }
 DIAGRAMS = {
     62: "book-engineering/diagrams/v5-ch01-evaluation-protocol.svg",
     63: "book-engineering/diagrams/v5-ch02-behavior-audit.svg",
+    64: "book-engineering/diagrams/v5-ch03-red-team-pipeline.svg",
 }
 ANSWER_KEYS = {
     62: "book-engineering/answers/62-benchmarking-evaluation-fa.md",
     63: "book-engineering/answers/63-hallucination-bias-robustness-fa.md",
+    64: "book-engineering/answers/64-red-teaming-security-fa.md",
 }
 PROJECT_DIRS = {
     62: "book-engineering/projects/62-evaluation-lab",
     63: "book-engineering/projects/63-model-behavior-lab",
+    64: "book-engineering/projects/64-red-team-lab",
 }
 
 

@@ -17,11 +17,11 @@ TITLE = "هنر و علم ساخت هوش — جلد پنجم"
 CHAPTER_TITLES = {
     62: "Benchmarking، طراحی آزمون، معیارها، ارزیابی انسانی، عدم‌قطعیت و آلودگی بنچمارک",
     63: "توهم، سوگیری، استحکام، تبیین‌پذیری و تفسیرپذیری",
+    64: "Red Teaming، حملات خصمانه، Prompt Injection، مسموم‌سازی داده، استخراج مدل و حریم خصوصی",
 }
 PROJECT_CODES = {
     global_num: (ROOT / path).read_text(encoding="utf-8").rstrip("\n")
     for global_num, path in builder.APPENDIX_PROJECTS.items()
-    if global_num in (62, 63)
 }
 SW_TEXT = (ROOT / "sw.js").read_text(encoding="utf-8")
 CACHE_NAME = re.search(r"const CACHE_NAME = '([^']+)'", SW_TEXT).group(1)
@@ -55,20 +55,27 @@ def main() -> None:
                       sectionCount:chapter.sections.length,
                       mathSections:chapter.sections.map((section,index)=>({{index,count:(section.html.match(/<math/g)||[]).length}})).filter(item=>item.count>0)}}))}};
                 }}""")
-                assert metadata["count"] == 2, metadata
+                assert metadata["count"] == 3, metadata
                 assert metadata["cover"] == builder.COVER_PATH, metadata
                 assert metadata["subtitle"] == "ارزیابی، محصول و پژوهش | ۱۲ فصل", metadata
-                assert [chapter["id"] for chapter in metadata["chapters"]] == ["art-science-v5-ch01", "art-science-v5-ch02"], metadata
-                assert [chapter["title"] for chapter in metadata["chapters"]] == [CHAPTER_TITLES[62], CHAPTER_TITLES[63]], metadata
+                assert [chapter["id"] for chapter in metadata["chapters"]] == [
+                    "art-science-v5-ch01", "art-science-v5-ch02", "art-science-v5-ch03"
+                ], metadata
+                assert [chapter["title"] for chapter in metadata["chapters"]] == [
+                    CHAPTER_TITLES[number] for number in (62, 63, 64)
+                ], metadata
                 assert metadata["chapters"][0]["sectionCount"] == 26, metadata
                 assert metadata["chapters"][0]["sectionIds"][0] == "art-science-v5-ch01-s01", metadata
                 assert metadata["chapters"][0]["sectionIds"][-1] == "art-science-v5-ch01-s26", metadata
-                assert metadata["chapters"][1]["sectionCount"] >= 30, metadata
+                assert metadata["chapters"][1]["sectionCount"] == 34, metadata
                 assert metadata["chapters"][1]["sectionIds"][0] == "art-science-v5-ch02-s01", metadata
-                assert metadata["chapters"][1]["sectionIds"][-1] == f"art-science-v5-ch02-s{metadata['chapters'][1]['sectionCount']:02d}", metadata
-                assert metadata["chapters"][0]["mathSections"] and metadata["chapters"][1]["mathSections"], metadata
+                assert metadata["chapters"][1]["sectionIds"][-1] == "art-science-v5-ch02-s34", metadata
+                assert metadata["chapters"][2]["sectionCount"] == 39, metadata
+                assert metadata["chapters"][2]["sectionIds"][0] == "art-science-v5-ch03-s01", metadata
+                assert metadata["chapters"][2]["sectionIds"][-1] == "art-science-v5-ch03-s39", metadata
+                assert all(chapter["mathSections"] for chapter in metadata["chapters"]), metadata
 
-                # Confirm the portrait cover, accessible figures and MathML in both authored chapters.
+                # Confirm the portrait cover, accessible figures and MathML in all three authored chapters.
                 page.locator(".book-card--volume img").last.evaluate("img => img.loading='eager'")
                 page.wait_for_function("""() => {
                   const img=Array.from(document.querySelectorAll('.book-card--volume img'))
@@ -139,16 +146,28 @@ def main() -> None:
                 assert offline_cover_asset == {"width":1024,"height":1536}, offline_cover_asset
                 offline_answer62 = page.evaluate("fetch('book-engineering/answers/62-benchmarking-evaluation-fa.md').then(r=>r.ok?r.text():'')")
                 offline_answer63 = page.evaluate("fetch('book-engineering/answers/63-hallucination-bias-robustness-fa.md').then(r=>r.ok?r.text():'')")
+                offline_answer64 = page.evaluate("fetch('book-engineering/answers/64-red-teaming-security-fa.md').then(r=>r.ok?r.text():'')")
                 offline_report63 = page.evaluate("fetch('book-engineering/chapters/63-audit-report-fa.md').then(r=>r.ok?r.text():'')")
+                offline_source64 = page.evaluate("fetch('book-engineering/chapters/64-red-teaming-security.md').then(r=>r.ok?r.text():'')")
+                offline_report64 = page.evaluate("fetch('book-engineering/chapters/64-audit-report-fa.md').then(r=>r.ok?r.text():'')")
+                offline_diagram64 = page.evaluate("fetch('book-engineering/diagrams/v5-ch03-red-team-pipeline.svg').then(r=>r.ok?r.text():'')")
                 offline_project63 = page.evaluate("fetch('book-engineering/projects/63-model-behavior-lab/results.json').then(r=>r.ok?r.text():'')")
+                offline_project64 = page.evaluate("fetch('book-engineering/projects/64-red-team-lab/results.json').then(r=>r.ok?r.text():'')")
+                offline_fixture64 = page.evaluate("fetch('book-engineering/projects/64-red-team-lab/synthetic_security_fixture.json').then(r=>r.ok?r.text():'')")
                 offline_full_text = page.evaluate("fetch('volume-5-full-fa.md').then(r=>r.ok?r.text():'')")
                 assert "پاسخ‌نامهٔ مستقل فصل ۶۲" in offline_answer62
                 assert "پاسخ‌نامهٔ مستقل فصل ۶۳" in offline_answer63
+                assert "پاسخ‌نامهٔ مستقل فصل ۶۴" in offline_answer64
                 assert "فصل سراسری ۶۳" in offline_report63
                 assert 'v5-ch02-synthetic-behavior-v1' in offline_project63
-                assert "جلد پنجم" in offline_full_text and "فصل ۶۲" in offline_full_text and "فصل ۶۳" in offline_full_text
+                assert "فصل محلی ۳ جلد پنجم = فصل سراسری ۶۴" in offline_source64
+                assert "فصل سراسری ۶۴" in offline_report64
+                assert 'v5-ch03-red-team-synthetic-v1' in offline_fixture64
+                assert 'v5-ch03-red-team-synthetic-v1' in offline_project64
+                assert "فرایند آزمون خصمانه" in offline_diagram64
+                assert all(term in offline_full_text for term in ("جلد پنجم", "فصل ۶۲", "فصل ۶۳", "فصل ۶۴"))
                 assert not errors, errors
-                print(f"PASS volume 5 chapters 62–63 browser/offline checks at {width}px: {metadata['chapters'][1]['sectionCount']} chapter 63 sections, accessible MathML/SVG, exact code appendices, {len(OFFLINE_PATHS)} offline paths")
+                print(f"PASS volume 5 chapters 62–64 browser/offline checks at {width}px: sections={[chapter['sectionCount'] for chapter in metadata['chapters']]}, accessible MathML/SVG, exact code appendices, {len(OFFLINE_PATHS)} offline paths")
                 context.close()
             browser.close()
     finally:

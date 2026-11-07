@@ -44,16 +44,24 @@ def main():
                   return {count:book&&book.chapters.length,id:chapter&&chapter.id,sections:chapter&&chapter.sections.length,
                     firstSection:chapter&&chapter.sections[0].id,lastSection:chapter&&chapter.sections.at(-1).id};
                 }""")
-                assert chapter62 == {'count':2,'id':'art-science-v5-ch01','sections':26,'firstSection':'art-science-v5-ch01-s01','lastSection':'art-science-v5-ch01-s26'}, chapter62
+                assert chapter62 == {'count':3,'id':'art-science-v5-ch01','sections':26,'firstSection':'art-science-v5-ch01-s01','lastSection':'art-science-v5-ch01-s26'}, chapter62
                 chapter63 = page.evaluate("""() => {
                   const book=DATA.books.find(item=>item.id==='art-science-intelligence-v5');
                   const chapter=book&&book.chapters[1];
                   return {count:book&&book.chapters.length,id:chapter&&chapter.id,sections:chapter&&chapter.sections.length,
                     firstSection:chapter&&chapter.sections[0].id,lastSection:chapter&&chapter.sections.at(-1).id};
                 }""")
-                assert chapter63['count'] == 2 and chapter63['id'] == 'art-science-v5-ch02', chapter63
-                assert chapter63['sections'] >= 30 and chapter63['firstSection'] == 'art-science-v5-ch02-s01', chapter63
-                assert chapter63['lastSection'] == f"art-science-v5-ch02-s{chapter63['sections']:02d}", chapter63
+                assert chapter63['count'] == 3 and chapter63['id'] == 'art-science-v5-ch02', chapter63
+                assert chapter63['sections'] == 34 and chapter63['firstSection'] == 'art-science-v5-ch02-s01', chapter63
+                assert chapter63['lastSection'] == 'art-science-v5-ch02-s34', chapter63
+                chapter64 = page.evaluate("""() => {
+                  const book=DATA.books.find(item=>item.id==='art-science-intelligence-v5');
+                  const chapter=book&&book.chapters[2];
+                  return {count:book&&book.chapters.length,id:chapter&&chapter.id,sections:chapter&&chapter.sections.length,
+                    firstSection:chapter&&chapter.sections[0].id,lastSection:chapter&&chapter.sections.at(-1).id};
+                }""")
+                assert chapter64 == {'count':3,'id':'art-science-v5-ch03','sections':39,
+                  'firstSection':'art-science-v5-ch03-s01','lastSection':'art-science-v5-ch03-s39'}, chapter64
                 assert page.locator('.home-hero > p').first.inner_text() == 'مجموعه‌ای جامع از کتاب‌ها و دوره‌های آموزشی هوش مصنوعی — با دسترسی آفلاین'
                 page.evaluate("document.querySelectorAll('.book-card--volume img,.book-card--microsoft img').forEach(img => img.loading='eager')")
                 page.wait_for_function("""() => {
@@ -235,6 +243,12 @@ def main():
                 v5_report63_offline = page.evaluate("fetch('book-engineering/chapters/63-audit-report-fa.md').then(r => r.ok ? r.text() : '')")
                 v5_diagram63_offline = page.evaluate("fetch('book-engineering/diagrams/v5-ch02-behavior-audit.svg').then(r => r.ok ? r.text() : '')")
                 v5_project63_offline = page.evaluate("fetch('book-engineering/projects/63-model-behavior-lab/results.json').then(r => r.ok ? r.text() : '')")
+                v5_answer64_offline = page.evaluate("fetch('book-engineering/answers/64-red-teaming-security-fa.md').then(r => r.ok ? r.text() : '')")
+                v5_source64_offline = page.evaluate("fetch('book-engineering/chapters/64-red-teaming-security.md').then(r => r.ok ? r.text() : '')")
+                v5_report64_offline = page.evaluate("fetch('book-engineering/chapters/64-audit-report-fa.md').then(r => r.ok ? r.text() : '')")
+                v5_diagram64_offline = page.evaluate("fetch('book-engineering/diagrams/v5-ch03-red-team-pipeline.svg').then(r => r.ok ? r.text() : '')")
+                v5_project64_offline = page.evaluate("fetch('book-engineering/projects/64-red-team-lab/results.json').then(r => r.ok ? r.text() : '')")
+                v5_fixture64_offline = page.evaluate("fetch('book-engineering/projects/64-red-team-lab/synthetic_security_fixture.json').then(r => r.ok ? r.text() : '')")
                 v5_markdown_offline = page.evaluate("fetch('volume-5-full-fa.md').then(r => r.ok ? r.text() : '')")
                 v5_cover_dimensions_offline = page.evaluate("""async () => {
                   const response=await fetch('assets/images/covers/volume-5-cover.png');
@@ -248,7 +262,12 @@ def main():
                 assert 'پاسخ‌نامهٔ مستقل فصل ۶۳' in v5_answer63_offline
                 assert 'فصل سراسری ۶۳' in v5_source63_offline and 'فصل سراسری ۶۳' in v5_report63_offline
                 assert 'ممیزی چندمحوره' in v5_diagram63_offline and 'synthetic' in v5_project63_offline
-                assert 'جلد پنجم' in v5_markdown_offline and 'فصل ۶۳' in v5_markdown_offline
+                assert 'پاسخ‌نامهٔ مستقل فصل ۶۴' in v5_answer64_offline
+                assert 'فصل محلی ۳ جلد پنجم = فصل سراسری ۶۴' in v5_source64_offline
+                assert 'فصل سراسری ۶۴' in v5_report64_offline
+                assert 'فرایند آزمون خصمانه' in v5_diagram64_offline
+                assert 'synthetic' in v5_project64_offline and 'v5-ch03-red-team-synthetic-v1' in v5_fixture64_offline
+                assert all(term in v5_markdown_offline for term in ('جلد پنجم', 'فصل ۶۲', 'فصل ۶۳', 'فصل ۶۴'))
                 answer = page.evaluate("fetch('book-engineering/answers/01-intelligence-answers-fa.md').then(r => r.ok ? r.text() : '')")
                 assert 'پاسخ‌نامه فصل ۱' in answer, 'answer key unavailable offline'
                 chapter55_offline = page.evaluate("fetch('book-engineering/chapters/55-ai-lab-design.md').then(r => r.ok ? r.text() : '')")
@@ -297,7 +316,7 @@ def main():
                     f"{book_id}: {stats['paragraphs']} justified prose paragraphs, {stats['indented']} indented, {stats['formulas']} MathML, {stats['captions']} captions"
                     for book_id,stats in result['typography'].items()
                 )
-                print(f"PASS {width}px: covers online/offline, chapters 56–63 source/answer/diagram offline, text, header, RTL navigation, locked viewport and {result['count']} sections; {typography_summary}")
+                print(f"PASS {width}px: covers online/offline, chapters 56–64 source/answer/diagram offline, text, header, RTL navigation, locked viewport and {result['count']} sections; {typography_summary}")
                 context.close()
             browser.close()
     finally:

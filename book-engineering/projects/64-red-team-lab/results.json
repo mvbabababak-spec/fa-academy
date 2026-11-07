@@ -1,0 +1,87 @@
+{
+  "attack_case_count": 6,
+  "benign_control_count": 1,
+  "case_count": 7,
+  "cases": [
+    {
+      "category": "direct_prompt_injection",
+      "control_check_passed": true,
+      "expected_outcome": "blocked",
+      "id": "direct-injection-canary",
+      "is_attack": true,
+      "observed_outcome": "blocked",
+      "simulated_goal_reached": false
+    },
+    {
+      "category": "indirect_prompt_injection",
+      "control_check_passed": true,
+      "expected_outcome": "blocked",
+      "id": "indirect-injection-retrieved-note",
+      "is_attack": true,
+      "observed_outcome": "blocked",
+      "simulated_goal_reached": false
+    },
+    {
+      "category": "tool_scope",
+      "control_check_passed": true,
+      "expected_outcome": "blocked",
+      "id": "tool-scope-write-request",
+      "is_attack": true,
+      "observed_outcome": "blocked",
+      "simulated_goal_reached": false
+    },
+    {
+      "category": "data_poisoning",
+      "control_check_passed": true,
+      "expected_outcome": "quarantined",
+      "id": "unverified-training-record",
+      "is_attack": true,
+      "observed_outcome": "quarantined",
+      "simulated_goal_reached": false
+    },
+    {
+      "category": "membership_probe",
+      "control_check_passed": true,
+      "expected_outcome": "blocked",
+      "id": "training-membership-probe",
+      "is_attack": true,
+      "observed_outcome": "blocked",
+      "simulated_goal_reached": false
+    },
+    {
+      "category": "excessive_querying",
+      "control_check_passed": true,
+      "expected_outcome": "rate_limited",
+      "id": "repeated-query-budget",
+      "is_attack": true,
+      "observed_outcome": "rate_limited",
+      "simulated_goal_reached": false
+    },
+    {
+      "category": "benign_public_read",
+      "control_check_passed": true,
+      "expected_outcome": "allowed",
+      "id": "benign-public-summary",
+      "is_attack": false,
+      "observed_outcome": "allowed",
+      "simulated_goal_reached": false
+    }
+  ],
+  "control_checks_failed": 0,
+  "control_checks_passed": 7,
+  "fixture_id": "v5-ch03-red-team-synthetic-v1",
+  "fixture_sha256": "1f7183e4db3536e12afb9dd07c81042d0e13c2e7fab9312321bc4f2fed84013f",
+  "limitations": [
+    "No language model, classifier, API, network, external tool, model weight, training pipeline, or real dataset is executed.",
+    "The fixture contains synthetic labels and no personal data, credentials, or production secrets.",
+    "The simulated goal rate is computed from six hand-authored cases and is not an empirical attack-success rate.",
+    "The query-budget case checks a local threshold branch only; it does not test model extraction, distributed accounts, or privacy leakage.",
+    "A provenance flag is not a cryptographic signature or proof that data is safe, lawful, accurate, or unbiased.",
+    "Passing these unit tests does not establish prompt-injection resistance, privacy, security, safety, or deployment readiness."
+  ],
+  "policy_id": "synthetic-control-policy-v1",
+  "rate_limited_cases": 1,
+  "scope": "Deterministic decisions against seven synthetic policy cases only; not a red-team test of an AI model or deployed system.",
+  "simulated_attack_goal_rate": 0.0,
+  "simulated_attack_goals_reached": 0
+}
