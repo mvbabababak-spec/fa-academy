@@ -31,6 +31,10 @@ jobs:
               echo "Chapter 60 runs in its pinned offline environment in volume4-audit.yml"
               continue
             fi
+            if [[ "$project" == "book-engineering/projects/66-ai-product-api/" ]]; then
+              echo "Chapter 66 runs in its pinned dependency/browser environment in volume5-audit.yml"
+              continue
+            fi
             (cd "$project" && python -m unittest discover -v)
           done
       - name: Browser and offline smoke checks
