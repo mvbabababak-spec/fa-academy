@@ -1,5 +1,5 @@
-// ===== فا-اکدمی Service Worker v93 =====
-const CACHE_NAME = 'fa-academy-v93';
+// ===== فا-اکدمی Service Worker v94 =====
+const CACHE_NAME = 'fa-academy-v94';
 const CORE_FILES = [
   './',
   './index.html',
@@ -322,7 +322,21 @@ const CORE_FILES = [
   './book-engineering/projects/58-huggingface-stack/results.json',
   './book-engineering/projects/58-huggingface-stack/requirements.txt',
   './book-engineering/projects/58-huggingface-stack/requirements-cpu.txt',
-  './book-engineering/projects/58-huggingface-stack/requirements-lock-linux-py313.txt'
+  './book-engineering/projects/58-huggingface-stack/requirements-lock-linux-py313.txt',
+  './book-engineering/diagrams/v4-ch13-gpu-systems.svg',
+  './book-engineering/chapters/59-gpu-systems.md',
+  './book-engineering/chapters/59-audit-report-fa.md',
+  './book-engineering/answers/59-gpu-systems-fa.md',
+  './book-engineering/projects/59-gpu-systems/README.md',
+  './book-engineering/projects/59-gpu-systems/gpu_systems_demo.py',
+  './book-engineering/projects/59-gpu-systems/test_gpu_systems_demo.py',
+  './book-engineering/projects/59-gpu-systems/sample_layout.json',
+  './book-engineering/projects/59-gpu-systems/fixture_manifest.json',
+  './book-engineering/projects/59-gpu-systems/environment.json',
+  './book-engineering/projects/59-gpu-systems/results.json',
+  './book-engineering/projects/59-gpu-systems/requirements.txt',
+  './book-engineering/projects/59-gpu-systems/requirements-cpu.txt',
+  './book-engineering/projects/59-gpu-systems/requirements-lock-linux-py313.txt'
 ];
 
 // ===== INSTALL: Cache core files =====

@@ -185,6 +185,32 @@ jobs:
               assert result['model']['pretrained_weights_loaded'] is False
               assert all(value is False for value in result['scope'].values())
           PY
+      - name: Chapter 59 GPU-stack CPU/Gloo contract tests
+        run: |
+          python -m pip check
+          (cd book-engineering/projects/59-gpu-systems && python -m unittest discover -v)
+          python book-engineering/projects/59-gpu-systems/gpu_systems_demo.py \
+            --mode preflight > /tmp/ch59-ci-preflight.json
+          python book-engineering/projects/59-gpu-systems/gpu_systems_demo.py \
+            --mode layout > /tmp/ch59-ci-layout.json
+          torchrun --standalone --nproc-per-node=2 \
+            book-engineering/projects/59-gpu-systems/gpu_systems_demo.py \
+            --mode gloo-smoke --output /tmp/ch59-ci-gloo.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          preflight = json.loads(Path('/tmp/ch59-ci-preflight.json').read_text())
+          layout = json.loads(Path('/tmp/ch59-ci-layout.json').read_text())
+          result = json.loads(Path('/tmp/ch59-ci-gloo.json').read_text())
+          assert preflight['torch'] == '2.6.0+cpu'
+          assert preflight['gloo_available'] is True and preflight['nccl_available'] is False
+          assert layout['fixture_sha256'] == '1edb63d0caa8eedbadf77de3a086c6d61cc1a7dc072601f97046066eb95e7fa0'
+          assert layout['layout']['world_size'] == layout['layout']['dimension_product'] == 16
+          assert result['fixture_sha256'] == layout['fixture_sha256']
+          assert result['process_group']['backend'] == 'gloo' and result['process_group']['world_size'] == 2
+          assert result['collective'] == {'operation': 'all_reduce_sum', 'observed': 3, 'expected': 3, 'passed': True}
+          assert all(value is False for value in result['scope'].values())
+          PY
       - name: Confirm volume 4 builder idempotence
         run: |
           cp data.json /tmp/v4-data-before.json

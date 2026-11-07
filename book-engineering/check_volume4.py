@@ -591,6 +591,67 @@ def main() -> None:
     environment58 = json.loads((project58 / "environment.json").read_text(encoding="utf-8"))
     _require(environment58["pip_check"].startswith("passed") and environment58["fixture_sha256"] == fixture58_hash and environment58["device"] == "CPU only", "chapter 58 environment manifest mismatch")
 
+    source59 = ROOT / "book-engineering/chapters/59-gpu-systems.md"
+    answer59 = ROOT / "book-engineering/answers/59-gpu-systems-fa.md"
+    report59 = ROOT / "book-engineering/chapters/59-audit-report-fa.md"
+    diagram59 = ROOT / "book-engineering/diagrams/v4-ch13-gpu-systems.svg"
+    project59 = ROOT / "book-engineering/projects/59-gpu-systems"
+    for path in (source59, answer59, report59, diagram59, project59 / "README.md", project59 / "gpu_systems_demo.py", project59 / "test_gpu_systems_demo.py", project59 / "sample_layout.json", project59 / "fixture_manifest.json", project59 / "environment.json", project59 / "results.json", project59 / "requirements.txt", project59 / "requirements-cpu.txt", project59 / "requirements-lock-linux-py313.txt"):
+        _require(path.is_file(), f"missing chapter 59 deliverable: {path.relative_to(ROOT)}")
+    source59_text = source59.read_text(encoding="utf-8")
+    _require("فصل محلی ۱۳ از ۱۵ جلد چهارم؛ فصل سراسری ۵۹" in source59_text, "chapter 59 local/global mapping missing")
+    _require("فصل ۵۷" in source59_text and "فصل ۵۸" in source59_text and "فصل ۶۰" in source59_text and "فصل ۶۱" in source59_text, "chapter 59 adjacent-chapter boundaries missing")
+    _require("تاریخ بازبینی منابع:** ۷ نوامبر ۲۰۲۶" in source59_text, "chapter 59 dated source review missing")
+    _require(all(term in source59_text for term in ("CUDA", "ROCm", "Triton", "DeepSpeed", "FSDP", "Megatron", "NCCL", "RCCL", "synthetic_fixture", "2.15.0", "3.9.0", "0.19.9", "0.20.0")), "chapter 59 roadmap topics or version snapshot missing")
+    _require(len(re.findall(r"^##\s+", source59_text, flags=re.MULTILINE)) >= 20, "chapter 59 needs a complete section structure")
+    math59_nodes = re.findall(r"<math\b[^>]*>", source59_text)
+    math59_blocks = re.findall(r"<math\b.*?</math>", source59_text, flags=re.DOTALL)
+    _require(len(math59_nodes) >= 1 and len(math59_blocks) == len(math59_nodes), "chapter 59 accessible MathML missing or malformed")
+    _require(all("aria-label=" in node for node in math59_nodes) and source59_text.count("**متن جایگزین فرمول:**") >= len(math59_nodes), "chapter 59 MathML needs aria-label and visible alternatives")
+    for math_markup in math59_blocks:
+        _require(ET.fromstring(math_markup).tag.endswith("math"), "chapter 59 contains invalid MathML XML")
+    figures59 = re.findall(r"!\[([^\]]*)\]\(([^)]+)\)", source59_text)
+    _require(bool(figures59) and all(term in figures59[0][0] for term in ("شکل ۴-۱۳-۱", "PyTorch", "CUDA", "ROCm", "benchmark")), "chapter 59 figure alt text misses relationships or limitations")
+    for alt, image_path in figures59:
+        _require(bool(alt.strip()) and (ROOT / image_path).is_file(), f"missing or inaccessible chapter 59 figure: {image_path}")
+    svg59 = ET.parse(diagram59).getroot()
+    _require(svg59.attrib.get("width") == "1600" and svg59.attrib.get("height") == "1000" and "aria-labelledby" in svg59.attrib, "chapter 59 SVG dimensions/accessibility mismatch")
+    for text_node in svg59.iter():
+        if text_node.tag.endswith("text"):
+            visible_label = "".join(text_node.itertext())
+            has_rtl = any("\u0600" <= char <= "\u06ff" for char in visible_label)
+            has_latin = any(("a" <= char <= "z") or ("A" <= char <= "Z") for char in visible_label)
+            _require(not (has_rtl and has_latin), "chapter 59 figure must place English labels on separate lines from Persian")
+    answer59_text = answer59.read_text(encoding="utf-8")
+    _require("پاسخ‌نامهٔ مستقل" in answer59_text and "فصل ۵۹" in answer59_text and len(answer59_text.split()) >= 300, "chapter 59 independent answer key missing or too short")
+    exercise59_match = re.search(r"^##\s+۱۹\.\s+تمرین‌ها\s*\n(.*?)(?=^##\s+|\Z)", source59_text, flags=re.MULTILINE | re.DOTALL)
+    _require(exercise59_match is not None, "chapter 59 exercise section missing")
+    for question in re.findall(r"^\d+\. (.+)$", exercise59_match.group(1), flags=re.MULTILINE):
+        _require(question in answer59_text, f"chapter 59 answer key changed question text: {question}")
+    report59_text = report59.read_text(encoding="utf-8")
+    _require("نتایج اجرای واقعی" in report59_text and "۲۳/۲۳ آزمون unit موفق" in report59_text, "chapter 59 report must record actual unit-test result")
+    _require("1edb63d0caa8eedbadf77de3a086c6d61cc1a7dc072601f97046066eb95e7fa0" in report59_text and "all_reduce_sum" in report59_text, "chapter 59 report must identify fixture and Gloo result")
+    _require("test_volume4.py" in report59_text and "test_mobile_layout.py" in report59_text and "مدل‌سنجی" in report59_text, "chapter 59 report must record integration checks and limitations")
+    project_code59 = (project59 / "gpu_systems_demo.py").read_bytes()
+    appendix_marker59 = b"\n```python\n"
+    _, appendix_found59, appendix_tail59 = source59.read_bytes().rpartition(appendix_marker59)
+    appendix_close59 = appendix_tail59.rfind(b"```")
+    _require(bool(appendix_found59) and appendix_close59 >= 0 and appendix_tail59[:appendix_close59] == project_code59, "chapter 59 appendix and project must be byte-for-byte equal")
+    fixture59 = json.loads((project59 / "sample_layout.json").read_text(encoding="utf-8"))
+    manifest59 = json.loads((project59 / "fixture_manifest.json").read_text(encoding="utf-8"))
+    fixture59_hash = hashlib.sha256((project59 / "sample_layout.json").read_bytes()).hexdigest()
+    _require(fixture59["fixture_id"] == "v4-ch13-synthetic-dense-layout-v1" and fixture59["label_source"] == "synthetic_fixture" and manifest59["sha256"] == fixture59_hash and manifest59["fixture_id"] == fixture59["fixture_id"], "chapter 59 synthetic layout fixture identity/hash changed")
+    _require(fixture59["world_size"] == 16 and fixture59["dense_parallelism"] == {"dp": 2, "tp": 2, "pp": 2, "cp": 2} and all(value is False for value in fixture59["metadata"].values()), "chapter 59 synthetic layout or scope changed")
+    results59 = json.loads((project59 / "results.json").read_text(encoding="utf-8"))
+    _require(results59["fixture_id"] == fixture59["fixture_id"] and results59["fixture_sha256"] == fixture59_hash, "chapter 59 results fixture identity/hash mismatch")
+    _require(results59["unit_tests"] == {"passed": 23, "failed": 0, "command": "python -m unittest discover -v"} and results59["pip_check"] == "passed", "chapter 59 results must record tests and pip check")
+    _require(results59["environment"]["torch"] == "2.6.0+cpu" and results59["environment"]["device"] == "CPU only" and results59["environment"]["gloo_available"] is True and results59["environment"]["nccl_available"] is False, "chapter 59 tested environment/device mismatch")
+    _require(results59["layout_validation"]["world_size"] == 16 and results59["layout_validation"]["dimension_product"] == 16, "chapter 59 layout arithmetic changed")
+    _require(results59["gloo_smoke"]["process_group"]["backend"] == "gloo" and results59["gloo_smoke"]["process_group"]["world_size"] == 2 and results59["gloo_smoke"]["collective"]["observed"] == 3 and results59["gloo_smoke"]["collective"]["passed"] is True, "chapter 59 Gloo collective result changed")
+    _require(all(value is False for value in results59["scope"].values()), "chapter 59 result manifest must retain all GPU/backend/training claim limits")
+    environment59 = json.loads((project59 / "environment.json").read_text(encoding="utf-8"))
+    _require(environment59["pip_check"].startswith("passed") and environment59["packages"]["torch"] == "2.6.0+cpu" and environment59["accelerator"] == "CPU only", "chapter 59 environment manifest mismatch")
+
     code = (project / "sft_experiment.py").read_text(encoding="utf-8").rstrip()
     blocks = re.findall(r"```python\n(.*?)\n```", source_text, flags=re.DOTALL)
     _require(bool(blocks) and blocks[-1] == code, "chapter appendix and tested project must be byte-for-byte equal")
@@ -604,7 +665,7 @@ def main() -> None:
     _require(markdown_path.is_file(), "volume-4-full-fa.md missing")
     _require(markdown_path.read_text(encoding="utf-8") == builder.expected_markdown(expected_chapters, specs), "full Markdown does not match chapter sources")
     sw = (ROOT / "sw.js").read_text(encoding="utf-8")
-    _require("fa-academy-v93" in sw and "v92" not in sw.splitlines()[0], "service worker cache version was not advanced")
+    _require("fa-academy-v94" in sw and "v93" not in sw.splitlines()[0], "service worker cache version was not advanced")
     cover_paths = {
         f"art-science-intelligence-v{volume}": f"assets/images/covers/volume-{volume}-cover.webp"
         for volume in range(1, 5)
@@ -738,6 +799,20 @@ def main() -> None:
         "./book-engineering/projects/58-huggingface-stack/requirements.txt",
         "./book-engineering/projects/58-huggingface-stack/requirements-cpu.txt",
         "./book-engineering/projects/58-huggingface-stack/requirements-lock-linux-py313.txt",
+        "./book-engineering/diagrams/v4-ch13-gpu-systems.svg",
+        "./book-engineering/chapters/59-gpu-systems.md",
+        "./book-engineering/chapters/59-audit-report-fa.md",
+        "./book-engineering/answers/59-gpu-systems-fa.md",
+        "./book-engineering/projects/59-gpu-systems/README.md",
+        "./book-engineering/projects/59-gpu-systems/gpu_systems_demo.py",
+        "./book-engineering/projects/59-gpu-systems/test_gpu_systems_demo.py",
+        "./book-engineering/projects/59-gpu-systems/sample_layout.json",
+        "./book-engineering/projects/59-gpu-systems/fixture_manifest.json",
+        "./book-engineering/projects/59-gpu-systems/environment.json",
+        "./book-engineering/projects/59-gpu-systems/results.json",
+        "./book-engineering/projects/59-gpu-systems/requirements.txt",
+        "./book-engineering/projects/59-gpu-systems/requirements-cpu.txt",
+        "./book-engineering/projects/59-gpu-systems/requirements-lock-linux-py313.txt",
     )
     for item in required_cache_paths:
         _require(item in sw, f"service worker does not precache {item}")
@@ -745,7 +820,7 @@ def main() -> None:
     print(
         f"PASS volume 4: {len(book['chapters'])}/{builder.PLANNED_CHAPTERS} chapters, "
         f"{sum(len(ch['sections']) for ch in book['chapters'])} sections, "
-        f"{len(math_nodes) + len(math48) + len(math49) + len(math50) + len(math51) + len(math52) + len(math53_nodes) + len(math54_nodes) + len(math55_nodes) + len(math56_nodes) + len(math57_nodes) + len(math58_nodes)} accessible MathML expressions, exact appendices, reports/answers/fixtures present"
+        f"{len(math_nodes) + len(math48) + len(math49) + len(math50) + len(math51) + len(math52) + len(math53_nodes) + len(math54_nodes) + len(math55_nodes) + len(math56_nodes) + len(math57_nodes) + len(math58_nodes) + len(math59_nodes)} accessible MathML expressions, exact appendices, reports/answers/fixtures present"
     )
 
 

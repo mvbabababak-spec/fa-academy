@@ -1,0 +1,38 @@
+{
+  "review_date": "2026-11-07",
+  "python": "3.13.16",
+  "platform": "Linux-6.1.189+-x86_64-with-glibc2.41",
+  "packages": {
+    "filelock": "4.2.9",
+    "fsspec": "2026.9.0",
+    "jinja2": "3.1.6",
+    "markupsafe": "3.0.4",
+    "mpmath": "1.3.0",
+    "networkx": "3.7",
+    "numpy": "2.3.5",
+    "pip": "26.3",
+    "setuptools": "84.2.1",
+    "sympy": "1.13.1",
+    "torch": "2.6.0+cpu",
+    "typing_extensions": "4.16.0"
+  },
+  "pip_check": "passed: No broken requirements found.",
+  "accelerator": "CPU only",
+  "torch_cuda_build": null,
+  "torch_hip_build": null,
+  "torch_cuda_api_available": false,
+  "visible_device_count": 0,
+  "distributed_available": true,
+  "gloo_available": true,
+  "nccl_available": false,
+  "install_files": [
+    "requirements-cpu.txt",
+    "requirements-lock-linux-py313.txt"
+  ],
+  "test_commands": [
+    "python -m unittest discover -v",
+    "python gpu_systems_demo.py --mode preflight",
+    "python gpu_systems_demo.py --mode layout",
+    "torchrun --standalone --nproc-per-node=2 gpu_systems_demo.py --mode gloo-smoke --output /tmp/ch59-gloo-smoke.json"
+  ]
+}
