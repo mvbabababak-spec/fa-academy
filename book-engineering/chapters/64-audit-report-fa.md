@@ -1,6 +1,6 @@
 # گزارش ممیزی فصل سراسری ۶۴ — Red Teaming و امنیت
 
-**نگاشت:** فصل محلی ۳ جلد پنجم = فصل سراسری ۶۴. **تاریخ اجرای محلی: ۷ نوامبر ۲۰۲۶.** این گزارش اجرای آموزشیِ fixture ساختگی و آزمون‌های ساختار/مرورگر را مستند می‌کند؛ نتیجهٔ آن red-team واقعیِ مدل یا محصول نیست. این گزارش فقط نتایج محلی را پوشش می‌دهد؛ از آن نمی‌توان وضعیت remote، CI یا انتشار زنده را نتیجه گرفت.
+**نگاشت:** فصل محلی ۳ جلد پنجم = فصل سراسری ۶۴. **تاریخ ممیزی: ۷ نوامبر ۲۰۲۶.** این گزارش نتایج محلی را از انتشار و آزمون‌های remote جدا ثبت می‌کند؛ نتیجهٔ fixture آزمایشگاه red-team واقعیِ مدل یا محصول نیست. تأیید remote فقط به commit و فایل‌های مشخص‌شده در بخش انتشار مربوط است.
 
 ## دامنه و محیط
 
@@ -36,7 +36,30 @@
 - آزمون مرورگر جلد دوم در ۳۲۰، ۳۹۰ و ۱۴۴۰ پیکسل موفق شد: ۱۰۱ بخش و ۲۲ فایل آفلاین. آزمون جلد چهارم نیز در همین سه عرض موفق شد و ۱۵ فصل محلی ۱–۱۵/۱۶۲ دارایی آفلاین را وارسی کرد. آزمون آفلاین سراسری ۲۱ پاسخ‌نامه و ۲۷ تصویر جلد را تأیید کرد؛ آزمون PWA نیز manifest، metadata اپل، ابعاد PNG، نصب‌پذیری Chromium و assetهای آفلاین را گذراند. آزمون مرورگر جلد سوم ۲۶۵ بخش، ۶۰ MathML، ۱۴ شکل و ۱۱۵ فایل آفلاین را در ۳۲۰، ۳۹۰ و ۱۴۴۰ پیکسل تأیید کرد؛ اجرای کاملِ مجدد پس از یک شکست تک‌اجرای assertion بارگذاری تصویر موفق شد و فایل آزمون یا محتوای آن جلد تغییر نکرد.
 - آزمون گستردهٔ موبایل چند درخواست 404 برای دارایی‌های تصویری قدیمی و نامرتبط ثبت کرد؛ assertionهای آن موفق ماندند و این مسیرها جزو دارایی‌های فصل ۶۴ نیستند. `git diff --check` و `node --check sw.js` نیز موفق شدند.
 
-این نتایج محلی‌اند و اجرای GitHub Actions، تطبیق فایل‌های سایت زنده یا تأیید remote را ادعا نمی‌کنند.
+نتایج محلیِ بالا فقط همان fixture و آزمون‌های توصیف‌شده را پوشش می‌دهند؛ وضعیت GitHub Actions و فایل‌های زنده در بخش remote جداگانه ثبت شده است.
+
+## انتشار و تأیید remote
+
+فصل محلی ۳/سراسری ۶۴ در commit مستقل `7c6074dbf899397f4a904a0d12805109f6c48b13` با push عادی به `origin/gh-pages` منتشر شد؛ هنگام انتشار، `git ls-remote` همان SHA را برای نوک شاخه برگرداند. هر شش workflow برای همین commit موفق شدند:
+
+- [Volume 1](https://github.com/mvbabababak-spec/fa-academy/actions/runs/42380667136)
+- [Volume 2](https://github.com/mvbabababak-spec/fa-academy/actions/runs/42380667095)
+- [Volume 3](https://github.com/mvbabababak-spec/fa-academy/actions/runs/42380667099)
+- [Volume 4](https://github.com/mvbabababak-spec/fa-academy/actions/runs/42380667097)
+- [Volume 5](https://github.com/mvbabababak-spec/fa-academy/actions/runs/42380667089)
+- [GitHub Pages](https://github.com/mvbabababak-spec/fa-academy/actions/runs/42380666893)
+
+نسخهٔ زنده در [Fa Academy](https://mvbabababak-spec.github.io/fa-academy/) پاسخ HTTP 200 داد. برای فایل‌های جدول، SHA-256 دریافت زنده با فایل محلی در commit فصل برابر بود؛ صفحهٔ اصلی و گزارش ممیزی نیز HTTP 200 داشتند. hash گزارش ممیزیِ ثبت‌شده در این نسخه به‌روزرسانی release است و خودش در جدول hash نشده است.
+
+| فایل زنده | SHA-256 محلی = زنده |
+|---|---|
+| `data.json` | `ae30bdee93eb41020cacc6a9d017762acd22260878d037c3d36cd5e7de00380d` |
+| `sw.js` | `02b5fe8343e9f1cae8bc41b447bde9d2a69d085542558695f94f6bfad6d5f53c` |
+| `volume-5-full-fa.md` | `da2ea1cf7b0faaf7aa6e520bd20ddebf9f09d32023cedf41a71b9bc253499a64` |
+| `book-engineering/chapters/64-red-teaming-security.md` | `81b4be0a00444631d9bb5e302331b18ae6714c1ef3deab2c0dcb2fe4d6c9d99a` |
+| `book-engineering/answers/64-red-teaming-security-fa.md` | `28f274f4a76e31222fcef36baaa9c4460b7a114ea7554d3fdc43f1aa67031100` |
+| `book-engineering/diagrams/v5-ch03-red-team-pipeline.svg` | `9f03adf59b2eafa5d62f29b1fbe9983b97b1e3faee8e98449f5a58d8af047745` |
+| `book-engineering/projects/64-red-team-lab/results.json` | `2bd1ac90a1a1229fd3a9a38e015641044b4629fb9b7ed879ebe1df8afe61a8e5` |
 
 ## محدودیت‌ها
 
