@@ -1,0 +1,20 @@
+{
+  "audit_date": "2026-11-08",
+  "python": {
+    "implementation": "CPython",
+    "version": "3.13.16"
+  },
+  "platform": "Linux x86_64; glibc 2.41",
+  "dependencies": [],
+  "execution": {
+    "runtime": "CPython standard library only; deterministic discrete-event simulation",
+    "external_http_requests": 0,
+    "live_model_calls": 0,
+    "gpu_used": false,
+    "production_trace_used": false,
+    "personal_records": 0,
+    "unit_tests": "17/17 passed"
+  },
+  "fixture_sha256": "2082e82cc4e68ec031715c6429c225cf06e77124fe2c565fe397613fbbbf7e0c",
+  "scope": "Synthetic service-level queue, microbatch, and exact-response-cache behavior; not model inference or a hardware benchmark."
+}

@@ -104,7 +104,7 @@ def main() -> None:
             image_path_on_disk = (ROOT / image_relative if image_relative.parts and image_relative.parts[0] in {"book-engineering", "assets"}
                                   else source.parent / image_relative)
             require(image_path_on_disk.is_file(), f"chapter {global_num} missing figure {image_path}")
-        if global_num in (62, 63, 64, 65, 66):
+        if global_num in (62, 63, 64, 65, 66, 67):
             questions = re.findall(r"(?m)^([۱-۸])\. (.+)$", source_text.split("## پیوست اجرایی", 1)[0])
             answer_questions = re.findall(r"(?m)^\*\*صورت پرسش:\*\* (.+)$", answer.read_text(encoding="utf-8"))
             require(len(questions) == 8 and [question for _, question in questions] == answer_questions,
@@ -203,6 +203,87 @@ def main() -> None:
                     and environment.get("execution", {}).get("live_model_calls") == 0
                     and environment.get("execution", {}).get("real_user_or_personal_records") == 0,
                     "chapter 66 environment metadata mismatch")
+
+        if global_num == 67:
+            require(len(book["chapters"][5]["sections"]) == 28, "chapter 67 expected 28 sections")
+            project_files = (
+                "environment.json", "fixture_manifest.json", "results.json",
+                "synthetic_serving_trace.json", "serving_lab.py", "test_serving_lab.py",
+                "README.md", "requirements.txt",
+            )
+            for filename in project_files:
+                require((project_dir / filename).is_file(), f"chapter 67 project file missing: {filename}")
+            fixture_path = project_dir / "synthetic_serving_trace.json"
+            fixture_hash = hashlib.sha256(fixture_path.read_bytes()).hexdigest()
+            manifest = json.loads((project_dir / "fixture_manifest.json").read_text(encoding="utf-8"))
+            result = json.loads((project_dir / "results.json").read_text(encoding="utf-8"))
+            environment = json.loads((project_dir / "environment.json").read_text(encoding="utf-8"))
+            require(manifest.get("fixture_id") == "v5-ch06-serving-synthetic-v1"
+                    and manifest.get("sha256") == fixture_hash
+                    and manifest.get("synthetic") is True
+                    and manifest.get("request_count") == 24
+                    and manifest.get("unique_exact_cache_keys") == 12
+                    and manifest.get("contains_personal_data") is False
+                    and manifest.get("contains_production_trace") is False,
+                    "chapter 67 fixture manifest does not match the synthetic trace")
+            require(result.get("fixture_id") == manifest.get("fixture_id")
+                    and result.get("fixture_sha256") == fixture_hash
+                    and result.get("synthetic") is True
+                    and result.get("request_count") == 24
+                    and result.get("unique_exact_cache_keys") == 12
+                    and result.get("run_count") == 4
+                    and result.get("external_http_requests") == 0
+                    and result.get("live_model_calls") == 0
+                    and result.get("gpu_used") is False
+                    and result.get("production_trace_used") is False
+                    and result.get("personal_records") == 0
+                    and result.get("model_quality_evaluated") is False
+                    and len(result.get("limitations", [])) == 6,
+                    "chapter 67 results overstate or contradict the synthetic simulation")
+            runs = {run.get("name"): run for run in result.get("runs", [])}
+            require(set(runs) == {
+                "baseline_one_at_a_time", "microbatch_only",
+                "exact_response_cache_only", "microbatch_plus_exact_cache",
+            }, "chapter 67 run names or count mismatch")
+            baseline = runs["baseline_one_at_a_time"]
+            microbatch = runs["microbatch_only"]
+            cache_only = runs["exact_response_cache_only"]
+            combined = runs["microbatch_plus_exact_cache"]
+            require(baseline.get("successful_responses") == 20
+                    and baseline.get("queue_rejections") == 4
+                    and baseline.get("response_cache_hits") == 0
+                    and baseline.get("response_latency_p95_ms") == 333.6,
+                    "chapter 67 baseline results mismatch")
+            require(microbatch.get("successful_responses") == 24
+                    and microbatch.get("queue_rejections") == 0
+                    and microbatch.get("model_batches") == 6
+                    and microbatch.get("response_latency_p95_ms") == 179.5,
+                    "chapter 67 microbatch results mismatch")
+            require(cache_only.get("successful_responses") == 22
+                    and cache_only.get("queue_rejections") == 2
+                    and cache_only.get("model_compute_requests") == 12
+                    and cache_only.get("response_cache_hits") == 10,
+                    "chapter 67 exact-cache results mismatch")
+            require(combined.get("successful_responses") == 24
+                    and combined.get("queue_rejections") == 0
+                    and combined.get("model_compute_requests") == 12
+                    and combined.get("response_cache_hits") == 12
+                    and combined.get("model_batches") == 3
+                    and combined.get("response_cache_payload_bytes_peak") == 2460,
+                    "chapter 67 combined results mismatch")
+            require(all(run.get("output_integrity_rate") == 1.0
+                        and run.get("max_waiting_queue_depth", 999) <= run.get("max_queue_size", 0)
+                        for run in runs.values()),
+                    "chapter 67 result integrity or bounded-queue check failed")
+            require(environment.get("python", {}).get("implementation") == "CPython"
+                    and environment.get("python", {}).get("version") == "3.13.16"
+                    and environment.get("dependencies") == []
+                    and environment.get("execution", {}).get("external_http_requests") == 0
+                    and environment.get("execution", {}).get("live_model_calls") == 0
+                    and environment.get("execution", {}).get("gpu_used") is False
+                    and environment.get("execution", {}).get("production_trace_used") is False
+                    and environment.get("execution", {}).get("personal_records") == 0,
+                    "chapter 67 environment metadata mismatch")
 
         diagram_relative = builder.DIAGRAMS.get(global_num)
         if diagram_relative:

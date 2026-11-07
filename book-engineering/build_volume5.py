@@ -41,6 +41,7 @@ APPENDIX_PROJECTS = {
     64: "book-engineering/projects/64-red-team-lab/red_team_lab.py",
     65: "book-engineering/projects/65-governance-lab/governance_check.py",
     66: "book-engineering/projects/66-ai-product-api/app.py",
+    67: "book-engineering/projects/67-serving-lab/serving_lab.py",
 }
 DIAGRAMS = {
     62: "book-engineering/diagrams/v5-ch01-evaluation-protocol.svg",
@@ -48,6 +49,7 @@ DIAGRAMS = {
     64: "book-engineering/diagrams/v5-ch03-red-team-pipeline.svg",
     65: "book-engineering/diagrams/v5-ch04-governance-cycle.svg",
     66: "book-engineering/diagrams/v5-ch05-api-contract.svg",
+    67: "book-engineering/diagrams/v5-ch06-serving-pipeline.svg",
 }
 ANSWER_KEYS = {
     62: "book-engineering/answers/62-benchmarking-evaluation-fa.md",
@@ -55,6 +57,7 @@ ANSWER_KEYS = {
     64: "book-engineering/answers/64-red-teaming-security-fa.md",
     65: "book-engineering/answers/65-alignment-governance-fa.md",
     66: "book-engineering/answers/66-ai-product-api-fa.md",
+    67: "book-engineering/answers/67-model-serving-operations-fa.md",
 }
 PROJECT_DIRS = {
     62: "book-engineering/projects/62-evaluation-lab",
@@ -62,6 +65,7 @@ PROJECT_DIRS = {
     64: "book-engineering/projects/64-red-team-lab",
     65: "book-engineering/projects/65-governance-lab",
     66: "book-engineering/projects/66-ai-product-api",
+    67: "book-engineering/projects/67-serving-lab",
 }
 
 

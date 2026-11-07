@@ -1,5 +1,5 @@
-// ===== فا-اکدمی Service Worker v105 =====
-const CACHE_NAME = 'fa-academy-v105';
+// ===== فا-اکدمی Service Worker v106 =====
+const CACHE_NAME = 'fa-academy-v106';
 const CORE_FILES = [
   './',
   './index.html',
@@ -431,6 +431,18 @@ const CORE_FILES = [
   './book-engineering/projects/66-ai-product-api/synthetic_fixture.json',
   './book-engineering/projects/66-ai-product-api/test_api.py',
   './book-engineering/projects/66-ai-product-api/test_frontend.py',
+  './book-engineering/chapters/67-model-serving-operations.md',
+  './book-engineering/chapters/67-audit-report-fa.md',
+  './book-engineering/diagrams/v5-ch06-serving-pipeline.svg',
+  './book-engineering/answers/67-model-serving-operations-fa.md',
+  './book-engineering/projects/67-serving-lab/README.md',
+  './book-engineering/projects/67-serving-lab/environment.json',
+  './book-engineering/projects/67-serving-lab/fixture_manifest.json',
+  './book-engineering/projects/67-serving-lab/requirements.txt',
+  './book-engineering/projects/67-serving-lab/results.json',
+  './book-engineering/projects/67-serving-lab/serving_lab.py',
+  './book-engineering/projects/67-serving-lab/synthetic_serving_trace.json',
+  './book-engineering/projects/67-serving-lab/test_serving_lab.py',
 ];
 
 // ===== INSTALL: Cache core files =====

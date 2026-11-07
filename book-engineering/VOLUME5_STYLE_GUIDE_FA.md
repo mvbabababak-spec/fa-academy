@@ -46,6 +46,11 @@ python book-engineering/projects/65-governance-lab/governance_check.py --output 
 python -m pip install -r book-engineering/projects/66-ai-product-api/requirements.txt
 python book-engineering/projects/66-ai-product-api/audit.py --output /tmp/ch66-results.json
 cmp /tmp/ch66-results.json book-engineering/projects/66-ai-product-api/results.json
+(cd book-engineering/projects/67-serving-lab && python -m unittest -v)
+python book-engineering/projects/67-serving-lab/serving_lab.py \
+  --fixture book-engineering/projects/67-serving-lab/synthetic_serving_trace.json \
+  --output /tmp/ch67-results.json
+cmp /tmp/ch67-results.json book-engineering/projects/67-serving-lab/results.json
 python book-engineering/test_volume5.py
 python book-engineering/test_mobile_layout.py
 ```
