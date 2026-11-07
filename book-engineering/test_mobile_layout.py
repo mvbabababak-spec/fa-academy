@@ -24,13 +24,13 @@ def main():
                 page = context.new_page()
                 page.goto(url, wait_until='networkidle')
                 page.wait_for_selector('#loading.hidden')
-                chapter59 = page.evaluate("""() => {
+                chapter60 = page.evaluate("""() => {
                   const book=DATA.books.find(item=>item.id==='art-science-intelligence-v4');
-                  const chapter=book&&book.chapters[12];
-                  const previous=book&&book.chapters[11];
+                  const chapter=book&&book.chapters[13];
+                  const previous=book&&book.chapters[12];
                   return {count:book&&book.chapters.length,id:chapter&&chapter.id,sections:chapter&&chapter.sections.length,previousId:previous&&previous.id,previousSections:previous&&previous.sections.length};
                 }""")
-                assert chapter59 == {'count':13,'id':'art-science-v4-ch13','sections':22,'previousId':'art-science-v4-ch12','previousSections':22}, chapter59
+                assert chapter60 == {'count':14,'id':'art-science-v4-ch14','sections':24,'previousId':'art-science-v4-ch13','previousSections':22}, chapter60
                 assert page.locator('.home-hero > p').first.inner_text() == 'مجموعه‌ای جامع از کتاب‌ها و دوره‌های آموزشی هوش مصنوعی — با دسترسی آفلاین'
                 page.evaluate("document.querySelectorAll('.book-card--volume img,.book-card--microsoft img').forEach(img => img.loading='eager')")
                 page.wait_for_function("""() => {
@@ -214,6 +214,9 @@ def main():
                 chapter59_offline = page.evaluate("fetch('book-engineering/chapters/59-gpu-systems.md').then(r => r.ok ? r.text() : '')")
                 answer59_offline = page.evaluate("fetch('book-engineering/answers/59-gpu-systems-fa.md').then(r => r.ok ? r.text() : '')")
                 diagram59_offline = page.evaluate("fetch('book-engineering/diagrams/v4-ch13-gpu-systems.svg').then(r => r.ok ? r.text() : '')")
+                chapter60_offline = page.evaluate("fetch('book-engineering/chapters/60-mlops.md').then(r => r.ok ? r.text() : '')")
+                answer60_offline = page.evaluate("fetch('book-engineering/answers/60-mlops-fa.md').then(r => r.ok ? r.text() : '')")
+                diagram60_offline = page.evaluate("fetch('book-engineering/diagrams/v4-ch14-mlops.svg').then(r => r.ok ? r.text() : '')")
                 assert 'طراحی آزمایشگاه' in chapter55_offline, 'chapter 55 unavailable offline'
                 assert 'پاسخ‌نامهٔ مستقل' in answer55_offline, 'chapter 55 answer key unavailable offline'
                 assert '<svg' in diagram55_offline, 'chapter 55 diagram unavailable offline'
@@ -229,11 +232,14 @@ def main():
                 assert 'CUDA' in chapter59_offline and 'Triton' in chapter59_offline, 'chapter 59 unavailable offline'
                 assert 'پاسخ‌نامهٔ مستقل' in answer59_offline, 'chapter 59 answer key unavailable offline'
                 assert '<svg' in diagram59_offline, 'chapter 59 diagram unavailable offline'
+                assert 'MLflow' in chapter60_offline and 'W&B' in chapter60_offline, 'chapter 60 unavailable offline'
+                assert 'پاسخ‌نامهٔ مستقل' in answer60_offline, 'chapter 60 answer key unavailable offline'
+                assert '<svg' in diagram60_offline, 'chapter 60 diagram unavailable offline'
                 typography_summary=', '.join(
                     f"{book_id}: {stats['paragraphs']} justified prose paragraphs, {stats['indented']} indented, {stats['formulas']} MathML, {stats['captions']} captions"
                     for book_id,stats in result['typography'].items()
                 )
-                print(f"PASS {width}px: cover online/offline, chapters 56–59 source/answer/diagram offline, text, header, RTL navigation, locked viewport and {result['count']} sections; {typography_summary}")
+                print(f"PASS {width}px: cover online/offline, chapters 56–60 source/answer/diagram offline, text, header, RTL navigation, locked viewport and {result['count']} sections; {typography_summary}")
                 context.close()
             browser.close()
     finally:

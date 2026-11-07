@@ -652,6 +652,79 @@ def main() -> None:
     environment59 = json.loads((project59 / "environment.json").read_text(encoding="utf-8"))
     _require(environment59["pip_check"].startswith("passed") and environment59["packages"]["torch"] == "2.6.0+cpu" and environment59["accelerator"] == "CPU only", "chapter 59 environment manifest mismatch")
 
+    source60 = ROOT / "book-engineering/chapters/60-mlops.md"
+    answer60 = ROOT / "book-engineering/answers/60-mlops-fa.md"
+    report60 = ROOT / "book-engineering/chapters/60-audit-report-fa.md"
+    diagram60 = ROOT / "book-engineering/diagrams/v4-ch14-mlops.svg"
+    project60 = ROOT / "book-engineering/projects/60-mlops"
+    files60 = (
+        source60, answer60, report60, diagram60,
+        project60 / "README.md", project60 / "experiment_ops.py", project60 / "test_experiment_ops.py",
+        project60 / "sample_experiment.json", project60 / "fixture_manifest.json",
+        project60 / "environment.json", project60 / "results.json",
+        project60 / "requirements.txt", project60 / "requirements-cpu.txt",
+        project60 / "requirements-lock-linux-py313.txt", project60 / "Dockerfile",
+        project60 / "job.yaml", project60 / ".dockerignore", project60 / ".gitignore",
+    )
+    for path in files60:
+        _require(path.is_file(), f"missing chapter 60 deliverable: {path.relative_to(ROOT)}")
+    source60_text = source60.read_text(encoding="utf-8")
+    _require("فصل محلی ۱۴ از ۱۵ جلد چهارم؛ فصل سراسری ۶۰" in source60_text, "chapter 60 local/global mapping missing")
+    _require(all(term in source60_text for term in ("فصل ۵۷", "فصل ۵۸", "فصل ۵۹", "فصل ۶۱")), "chapter 60 adjacent-chapter boundaries missing")
+    _require("تاریخ بازبینی منابع: ۷ نوامبر ۲۰۲۶" in source60_text, "chapter 60 dated source review missing")
+    _require(all(term in source60_text for term in ("MLflow", "W&B", "Docker", "Kubernetes", "Git", "fixture_manifest.json", "wandb-offline", "lockfile")), "chapter 60 MLOps scope topics missing")
+    _require(len(re.findall(r"^##\s+", source60_text, flags=re.MULTILINE)) >= 22, "chapter 60 needs a complete section structure")
+    math60_nodes = re.findall(r"<math\b[^>]*>", source60_text)
+    math60_blocks = re.findall(r"<math\b.*?</math>", source60_text, flags=re.DOTALL)
+    _require(len(math60_nodes) >= 2 and len(math60_blocks) == len(math60_nodes), "chapter 60 accessible MathML missing or malformed")
+    _require(all("aria-label=" in node for node in math60_nodes) and source60_text.count("**متن جایگزین فرمول:**") >= len(math60_nodes), "chapter 60 MathML needs aria-label and visible alternatives")
+    for math_markup in math60_blocks:
+        _require(ET.fromstring(math_markup).tag.endswith("math"), "chapter 60 contains invalid MathML XML")
+    figures60 = re.findall(r"!\[([^\]]*)\]\(([^)]+)\)", source60_text)
+    _require(bool(figures60) and all(term in figures60[0][0] for term in ("شکل ۴-۱۴-۱", "MLflow", "W&B", "run.json", "کیفیت مدل", "benchmark")), "chapter 60 figure alt text misses relationships or limits")
+    for alt, image_path in figures60:
+        _require(bool(alt.strip()) and (ROOT / image_path).is_file(), f"missing or inaccessible chapter 60 figure: {image_path}")
+    svg60 = ET.parse(diagram60).getroot()
+    _require(svg60.attrib.get("width") == "1600" and svg60.attrib.get("height") == "1000" and "aria-labelledby" in svg60.attrib, "chapter 60 SVG dimensions/accessibility mismatch")
+    for text_node in svg60.iter():
+        if text_node.tag.endswith("text"):
+            visible_label = "".join(text_node.itertext())
+            has_rtl = any("\u0600" <= char <= "\u06ff" for char in visible_label)
+            has_latin = any(("a" <= char <= "z") or ("A" <= char <= "Z") for char in visible_label)
+            _require(not (has_rtl and has_latin), "chapter 60 figure must place English labels on separate lines from Persian")
+    answer60_text = answer60.read_text(encoding="utf-8")
+    _require("پاسخ‌نامهٔ مستقل" in answer60_text and "فصل ۶۰" in answer60_text and len(answer60_text.split()) >= 300, "chapter 60 independent answer key missing or too short")
+    exercise60_match = re.search(r"^##\s+۲۱\.\s+تمرین‌ها\s*\n(.*?)(?=^##\s+|\Z)", source60_text, flags=re.MULTILINE | re.DOTALL)
+    _require(exercise60_match is not None, "chapter 60 exercise section missing")
+    questions60 = re.findall(r"^\d+\. (.+)$", exercise60_match.group(1), flags=re.MULTILINE)
+    _require(len(questions60) == 6, "chapter 60 must retain all six exercise prompts")
+    for question in questions60:
+        _require(question in answer60_text, f"chapter 60 answer key changed question text: {question}")
+    report60_text = report60.read_text(encoding="utf-8")
+    _require("نتایج اجرای واقعی" in report60_text and "۱۶/۱۶ آزمون unit موفق" in report60_text, "chapter 60 report must record actual unit-test result")
+    _require("81989e3ae534cade6f4e77742cb3fae01649247956962559720e75b093f1a260" in report60_text and "0.09078731868784178" in report60_text, "chapter 60 report must record fixture hash and exact synthetic metric")
+    _require(all(term in report60_text for term in ("mlflow", "wandb-offline", "Docker", "Kubernetes", "آزموده نشده")), "chapter 60 report must record tracking outcomes and deployment limits")
+    project_code60 = (project60 / "experiment_ops.py").read_bytes()
+    appendix_marker60 = b"\n```python\n"
+    _, appendix_found60, appendix_tail60 = source60.read_bytes().rpartition(appendix_marker60)
+    appendix_close60 = appendix_tail60.rfind(b"```")
+    _require(bool(appendix_found60) and appendix_close60 >= 0 and appendix_tail60[:appendix_close60] == project_code60 and appendix_tail60[appendix_close60 + 3:] in (b"", b"\n"), "chapter 60 appendix and project must be byte-for-byte equal")
+    fixture60 = json.loads((project60 / "sample_experiment.json").read_text(encoding="utf-8"))
+    manifest60 = json.loads((project60 / "fixture_manifest.json").read_text(encoding="utf-8"))
+    fixture60_hash = hashlib.sha256((project60 / "sample_experiment.json").read_bytes()).hexdigest()
+    _require(fixture60["fixture_id"] == "v4-ch14-synthetic-linear-v1" and fixture60["label_source"] == "synthetic_fixture" and manifest60["sha256"] == fixture60_hash and manifest60["fixture_id"] == fixture60["fixture_id"] and manifest60["record_count"] == 4, "chapter 60 synthetic fixture identity/hash/count changed")
+    _require(fixture60["scope"]["synthetic_only"] is True and all(fixture60["scope"][key] is False for key in ("real_data_used", "pretrained_model_used", "gpu_used", "benchmark_claim", "model_quality_claim", "production_claim")), "chapter 60 fixture scope must remain synthetic-only")
+    results60 = json.loads((project60 / "results.json").read_text(encoding="utf-8"))
+    _require(results60["fixture_id"] == fixture60["fixture_id"] and results60["fixture_sha256"] == fixture60_hash, "chapter 60 results fixture identity/hash mismatch")
+    _require(results60["unit_tests"] == {"passed": 16, "failed": 0, "command": "python -m unittest -v"} and results60["pip_check"] == "passed", "chapter 60 results must record tests and pip check")
+    _require(results60["toy_run"]["initial_mse"] == 21.0 and results60["toy_run"]["final_mse"] == 0.09078731868784178 and results60["toy_run"]["training_points"] == 4 and results60["toy_run"]["synthetic_only"] is True, "chapter 60 toy results changed")
+    _require(results60["tracking_integrations"]["mlflow"]["status"] == "passed" and results60["tracking_integrations"]["wandb"]["mode"] == "offline" and results60["tracking_integrations"]["wandb"]["online_sync_performed"] is False, "chapter 60 local/offline tracking evidence mismatch")
+    _require(all(value is False for key, value in results60["scope"].items() if key != "synthetic_fixture_only") and results60["scope"]["synthetic_fixture_only"] is True, "chapter 60 result manifest must retain its non-claims")
+    environment60 = json.loads((project60 / "environment.json").read_text(encoding="utf-8"))
+    _require(environment60["packages"] == {"mlflow": "3.18.0", "wandb": "0.31.0", "PyYAML": "6.0.3"} and environment60["requirements"]["pip_check"] == "passed", "chapter 60 tested dependency versions or pip check mismatch")
+    _require(environment60["fixture"]["sha256"] == fixture60_hash and environment60["container_reference"]["manifest_list_digest"] == "sha256:cf50a4f6ac4f026458b08d5222023d700ac806410dff5e9ca8728fa44f2b850f", "chapter 60 fixture/environment manifest digest mismatch")
+    _require(environment60["validation_tools"]["docker"] == "unavailable" and environment60["validation_tools"]["kubectl"] == "unavailable", "chapter 60 must preserve Docker/Kubernetes execution limitation")
+
     code = (project / "sft_experiment.py").read_text(encoding="utf-8").rstrip()
     blocks = re.findall(r"```python\n(.*?)\n```", source_text, flags=re.DOTALL)
     _require(bool(blocks) and blocks[-1] == code, "chapter appendix and tested project must be byte-for-byte equal")
@@ -665,7 +738,7 @@ def main() -> None:
     _require(markdown_path.is_file(), "volume-4-full-fa.md missing")
     _require(markdown_path.read_text(encoding="utf-8") == builder.expected_markdown(expected_chapters, specs), "full Markdown does not match chapter sources")
     sw = (ROOT / "sw.js").read_text(encoding="utf-8")
-    _require("fa-academy-v94" in sw and "v93" not in sw.splitlines()[0], "service worker cache version was not advanced")
+    _require("fa-academy-v95" in sw and "v94" not in sw.splitlines()[0], "service worker cache version was not advanced")
     cover_paths = {
         f"art-science-intelligence-v{volume}": f"assets/images/covers/volume-{volume}-cover.webp"
         for volume in range(1, 5)
@@ -813,6 +886,22 @@ def main() -> None:
         "./book-engineering/projects/59-gpu-systems/requirements.txt",
         "./book-engineering/projects/59-gpu-systems/requirements-cpu.txt",
         "./book-engineering/projects/59-gpu-systems/requirements-lock-linux-py313.txt",
+        "./book-engineering/diagrams/v4-ch14-mlops.svg",
+        "./book-engineering/chapters/60-mlops.md",
+        "./book-engineering/chapters/60-audit-report-fa.md",
+        "./book-engineering/answers/60-mlops-fa.md",
+        "./book-engineering/projects/60-mlops/README.md",
+        "./book-engineering/projects/60-mlops/experiment_ops.py",
+        "./book-engineering/projects/60-mlops/test_experiment_ops.py",
+        "./book-engineering/projects/60-mlops/sample_experiment.json",
+        "./book-engineering/projects/60-mlops/fixture_manifest.json",
+        "./book-engineering/projects/60-mlops/environment.json",
+        "./book-engineering/projects/60-mlops/results.json",
+        "./book-engineering/projects/60-mlops/requirements.txt",
+        "./book-engineering/projects/60-mlops/requirements-cpu.txt",
+        "./book-engineering/projects/60-mlops/requirements-lock-linux-py313.txt",
+        "./book-engineering/projects/60-mlops/Dockerfile",
+        "./book-engineering/projects/60-mlops/job.yaml",
     )
     for item in required_cache_paths:
         _require(item in sw, f"service worker does not precache {item}")
@@ -820,7 +909,7 @@ def main() -> None:
     print(
         f"PASS volume 4: {len(book['chapters'])}/{builder.PLANNED_CHAPTERS} chapters, "
         f"{sum(len(ch['sections']) for ch in book['chapters'])} sections, "
-        f"{len(math_nodes) + len(math48) + len(math49) + len(math50) + len(math51) + len(math52) + len(math53_nodes) + len(math54_nodes) + len(math55_nodes) + len(math56_nodes) + len(math57_nodes) + len(math58_nodes) + len(math59_nodes)} accessible MathML expressions, exact appendices, reports/answers/fixtures present"
+        f"{len(math_nodes) + len(math48) + len(math49) + len(math50) + len(math51) + len(math52) + len(math53_nodes) + len(math54_nodes) + len(math55_nodes) + len(math56_nodes) + len(math57_nodes) + len(math58_nodes) + len(math59_nodes) + len(math60_nodes)} accessible MathML expressions, exact appendices, reports/answers/fixtures present"
     )
 
 

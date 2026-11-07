@@ -9,7 +9,7 @@ from playwright.sync_api import sync_playwright
 ROOT = Path(__file__).resolve().parent.parent
 BOOK_ID = "art-science-intelligence-v4"
 TITLE = "هنر و علم ساخت هوش — جلد چهارم"
-CACHE_NAME = "fa-academy-v94"
+CACHE_NAME = "fa-academy-v95"
 OFFLINE_PATHS = [
     "assets/images/covers/volume-1-cover.webp",
     "assets/images/covers/volume-2-cover.webp",
@@ -146,6 +146,22 @@ OFFLINE_PATHS = [
     "book-engineering/projects/59-gpu-systems/requirements.txt",
     "book-engineering/projects/59-gpu-systems/requirements-cpu.txt",
     "book-engineering/projects/59-gpu-systems/requirements-lock-linux-py313.txt",
+    "book-engineering/diagrams/v4-ch14-mlops.svg",
+    "book-engineering/chapters/60-mlops.md",
+    "book-engineering/chapters/60-audit-report-fa.md",
+    "book-engineering/answers/60-mlops-fa.md",
+    "book-engineering/projects/60-mlops/README.md",
+    "book-engineering/projects/60-mlops/experiment_ops.py",
+    "book-engineering/projects/60-mlops/test_experiment_ops.py",
+    "book-engineering/projects/60-mlops/sample_experiment.json",
+    "book-engineering/projects/60-mlops/fixture_manifest.json",
+    "book-engineering/projects/60-mlops/environment.json",
+    "book-engineering/projects/60-mlops/results.json",
+    "book-engineering/projects/60-mlops/requirements.txt",
+    "book-engineering/projects/60-mlops/requirements-cpu.txt",
+    "book-engineering/projects/60-mlops/requirements-lock-linux-py313.txt",
+    "book-engineering/projects/60-mlops/Dockerfile",
+    "book-engineering/projects/60-mlops/job.yaml",
 ]
 
 
@@ -166,6 +182,7 @@ def main():
     project57 = (ROOT / "book-engineering/projects/57-framework-lab/framework_compare.py").read_text(encoding="utf-8").rstrip()
     project58 = (ROOT / "book-engineering/projects/58-huggingface-stack/pipeline_demo.py").read_text(encoding="utf-8").rstrip()
     project59 = (ROOT / "book-engineering/projects/59-gpu-systems/gpu_systems_demo.py").read_text(encoding="utf-8").rstrip()
+    project60 = (ROOT / "book-engineering/projects/60-mlops/experiment_ops.py").read_text(encoding="utf-8").rstrip()
     try:
         with sync_playwright() as playwright:
             browser = playwright.chromium.launch(args=["--no-sandbox"])
@@ -190,10 +207,10 @@ def main():
                     sectionCount:ch.sections.length
                   }}))}};
                 }}''')
-                assert len(metadata["chapters"]) == 13, metadata
-                c47, c48, c49, c50, c51, c52, c53, c54, c55, c56, c57, c58, c59 = metadata["chapters"]
+                assert len(metadata["chapters"]) == 14, metadata
+                c47, c48, c49, c50, c51, c52, c53, c54, c55, c56, c57, c58, c59, c60 = metadata["chapters"]
                 assert [c["id"] for c in metadata["chapters"]] == [
-                    "art-science-v4-ch01", "art-science-v4-ch02", "art-science-v4-ch03", "art-science-v4-ch04", "art-science-v4-ch05", "art-science-v4-ch06", "art-science-v4-ch07", "art-science-v4-ch08", "art-science-v4-ch09", "art-science-v4-ch10", "art-science-v4-ch11", "art-science-v4-ch12", "art-science-v4-ch13"
+                    "art-science-v4-ch01", "art-science-v4-ch02", "art-science-v4-ch03", "art-science-v4-ch04", "art-science-v4-ch05", "art-science-v4-ch06", "art-science-v4-ch07", "art-science-v4-ch08", "art-science-v4-ch09", "art-science-v4-ch10", "art-science-v4-ch11", "art-science-v4-ch12", "art-science-v4-ch13", "art-science-v4-ch14"
                 ], metadata
                 for chapter in metadata["chapters"]:
                     assert chapter["sectionCount"] >= 15
@@ -203,7 +220,7 @@ def main():
                 # Chapter 47: SFT figure, accessible MathML, answer and exact appendix.
                 page.evaluate(f"openItem('{BOOK_ID}','book')")
                 headers = page.locator(".chapter-header")
-                assert headers.count() == 13
+                assert headers.count() == 14
                 headers.nth(0).click()
                 page.evaluate(f"openSec('{BOOK_ID}',0,0)")
                 page.wait_for_selector(".reader-content")
@@ -231,7 +248,7 @@ def main():
                 # Chapter 48: PEFT figure, MathML, independent answer and exact appendix.
                 page.evaluate(f"openItem('{BOOK_ID}','book')")
                 headers = page.locator(".chapter-header")
-                assert headers.count() == 13
+                assert headers.count() == 14
                 headers.nth(1).click()
                 page.evaluate(f"openSec('{BOOK_ID}',1,0)")
                 image48 = page.locator(".reader-content img").first
@@ -258,7 +275,7 @@ def main():
                 # Chapter 49: preference diagram, MathML, independent answer and exact tested code.
                 page.evaluate(f"openItem('{BOOK_ID}','book')")
                 headers = page.locator(".chapter-header")
-                assert headers.count() == 13
+                assert headers.count() == 14
                 headers.nth(2).click()
                 page.evaluate(f"openSec('{BOOK_ID}',2,0)")
                 image49 = page.locator(".reader-content img").first
@@ -285,7 +302,7 @@ def main():
                 # Chapter 50: synthetic-data diagram, accessible MathML, answer and exact project code.
                 page.evaluate(f"openItem('{BOOK_ID}','book')")
                 headers = page.locator(".chapter-header")
-                assert headers.count() == 13
+                assert headers.count() == 14
                 headers.nth(3).click()
                 page.evaluate(f"openSec('{BOOK_ID}',3,0)")
                 image50 = page.locator(".reader-content img").first
@@ -311,7 +328,7 @@ def main():
                 # Chapter 51: ViT figure, patch MathML, independent answer and exact tested code.
                 page.evaluate(f"openItem('{BOOK_ID}','book')")
                 headers = page.locator(".chapter-header")
-                assert headers.count() == 13
+                assert headers.count() == 14
                 headers.nth(4).click()
                 page.evaluate(f"openSec('{BOOK_ID}',4,0)")
                 image51 = page.locator(".reader-content img").first
@@ -338,7 +355,7 @@ def main():
                 # Chapter 52: speech/audio diagram, accessible framing/metric MathML, answer and exact tested code.
                 page.evaluate(f"openItem('{BOOK_ID}','book')")
                 headers = page.locator(".chapter-header")
-                assert headers.count() == 13
+                assert headers.count() == 14
                 headers.nth(5).click()
                 page.evaluate(f"openSec('{BOOK_ID}',5,0)")
                 image52 = page.locator(".reader-content img").first
@@ -363,7 +380,7 @@ def main():
                 # Chapter 53: conditional diffusion diagram, MathML, independent answer and exact tested code.
                 page.evaluate(f"openItem('{BOOK_ID}','book')")
                 headers = page.locator(".chapter-header")
-                assert headers.count() == 13
+                assert headers.count() == 14
                 headers.nth(6).click()
                 page.evaluate(f"openSec('{BOOK_ID}',6,0)")
                 image53 = page.locator(".reader-content img").first
@@ -390,7 +407,7 @@ def main():
                 # Chapter 54: resource ledger diagram, accessible formulas, independent answers and exact tested code.
                 page.evaluate(f"openItem('{BOOK_ID}','book')")
                 headers = page.locator(".chapter-header")
-                assert headers.count() == 13
+                assert headers.count() == 14
                 headers.nth(7).click()
                 page.evaluate(f"openSec('{BOOK_ID}',7,0)")
                 image54 = page.locator(".reader-content img").first
@@ -417,7 +434,7 @@ def main():
                 # Chapter 55: lab-design architecture, accessible MathML, independent answer and byte-identical planner.
                 page.evaluate(f"openItem('{BOOK_ID}','book')")
                 headers = page.locator(".chapter-header")
-                assert headers.count() == 13
+                assert headers.count() == 14
                 headers.nth(8).click()
                 page.evaluate(f"openSec('{BOOK_ID}',8,0)")
                 image55 = page.locator(".reader-content img").first
@@ -443,7 +460,7 @@ def main():
                 # Chapter 56: dated-market TCO diagram, accessible formula, independent answer and exact calculator appendix.
                 page.evaluate(f"openItem('{BOOK_ID}','book')")
                 headers = page.locator(".chapter-header")
-                assert headers.count() == 13
+                assert headers.count() == 14
                 headers.nth(9).click()
                 page.evaluate(f"openSec('{BOOK_ID}',9,0)")
                 image56 = page.locator(".reader-content img").first
@@ -470,7 +487,7 @@ def main():
                 # Chapter 57: framework chooser, accessible formula, independent answer and exact CPU comparison appendix.
                 page.evaluate(f"openItem('{BOOK_ID}','book')")
                 headers = page.locator(".chapter-header")
-                assert headers.count() == 13
+                assert headers.count() == 14
                 headers.nth(10).click()
                 page.evaluate(f"openSec('{BOOK_ID}',10,0)")
                 image57 = page.locator(".reader-content img").first
@@ -496,7 +513,7 @@ def main():
                 # Chapter 58: accessible pipeline diagram/formula, independent answers and exact tested HF project.
                 page.evaluate(f"openItem('{BOOK_ID}','book')")
                 headers = page.locator(".chapter-header")
-                assert headers.count() == 13
+                assert headers.count() == 14
                 headers.nth(11).click()
                 page.evaluate(f"openSec('{BOOK_ID}',11,0)")
                 image58 = page.locator(".reader-content img").first
@@ -522,7 +539,7 @@ def main():
                 # Chapter 59: accessible GPU-stack diagram/formula, independent answer and exact CPU/Gloo appendix.
                 page.evaluate(f"openItem('{BOOK_ID}','book')")
                 headers = page.locator(".chapter-header")
-                assert headers.count() == 13
+                assert headers.count() == 14
                 headers.nth(12).click()
                 assert c59["imageIndexes"], "chapter 59 figure section missing"
                 image59_index = c59["imageIndexes"][0]
@@ -543,6 +560,31 @@ def main():
                 appendix59 = next(i for i, title in enumerate(c59["titles"]) if "پیوست اجرایی" in title)
                 page.evaluate(f"openSec('{BOOK_ID}',12,{appendix59})")
                 assert page.locator(".reader-content pre code").last.text_content().rstrip("\n") == project59
+
+                # Chapter 60: provenance diagram/formula, independent answers and exact executable appendix.
+                page.evaluate(f"openItem('{BOOK_ID}','book')")
+                headers = page.locator(".chapter-header")
+                assert headers.count() == 14
+                headers.nth(13).click()
+                assert c60["imageIndexes"], "chapter 60 figure section missing"
+                image60_index = c60["imageIndexes"][0]
+                page.evaluate(f"openSec('{BOOK_ID}',13,{image60_index})")
+                image60 = page.locator(".reader-content img").first
+                alt60 = image60.get_attribute("alt")
+                assert all(term in alt60 for term in ("شکل ۴-۱۴-۱", "MLflow", "W&B", "run.json", "کیفیت مدل", "benchmark")), alt60
+                page.wait_for_function("() => { const img=document.querySelector('.reader-content img'); return img && img.complete && img.naturalWidth===1600 && img.naturalHeight===1000; }")
+                assert c60["mathCount"] >= 2 and c60["mathIndexes"], "chapter 60 accessible MathML missing"
+                math60_index = c60["mathIndexes"][0]
+                page.evaluate(f"openSec('{BOOK_ID}',13,{math60_index})")
+                math60 = page.locator(".reader-content math").first
+                assert math60.get_attribute("aria-label") and "SHA256" in math60.get_attribute("aria-label")
+                assert page.locator(".reader-content").evaluate("e => e.scrollWidth <= e.clientWidth + 2")
+                assert c60["answerIndexes"], "chapter 60 independent answer link missing"
+                page.evaluate(f"openSec('{BOOK_ID}',13,{c60['answerIndexes'][0]})")
+                assert page.locator(".reader-content a[href='book-engineering/answers/60-mlops-fa.md']").count() == 1
+                appendix60 = next(i for i, title in enumerate(c60["titles"]) if "پیوست اجرایی" in title)
+                page.evaluate(f"openSec('{BOOK_ID}',13,{appendix60})")
+                assert page.locator(".reader-content pre code").last.text_content().rstrip("\n") == project60
 
                 assert not errors, errors
 
@@ -584,6 +626,10 @@ def main():
                 report59 = page.evaluate("fetch('book-engineering/chapters/59-audit-report-fa.md').then(r => r.ok ? r.text() : '')")
                 answer59 = page.evaluate("fetch('book-engineering/answers/59-gpu-systems-fa.md').then(r => r.ok ? r.text() : '')")
                 diagram59 = page.evaluate("fetch('book-engineering/diagrams/v4-ch13-gpu-systems.svg').then(r => r.ok ? r.text() : '')")
+                source60 = page.evaluate("fetch('book-engineering/chapters/60-mlops.md').then(r => r.ok ? r.text() : '')")
+                report60 = page.evaluate("fetch('book-engineering/chapters/60-audit-report-fa.md').then(r => r.ok ? r.text() : '')")
+                answer60 = page.evaluate("fetch('book-engineering/answers/60-mlops-fa.md').then(r => r.ok ? r.text() : '')")
+                diagram60 = page.evaluate("fetch('book-engineering/diagrams/v4-ch14-mlops.svg').then(r => r.ok ? r.text() : '')")
                 source51 = page.evaluate("fetch('book-engineering/chapters/51-vision-models.md').then(r => r.ok ? r.text() : '')")
                 source52 = page.evaluate("fetch('book-engineering/chapters/52-audio-models.md').then(r => r.ok ? r.text() : '')")
                 source53 = page.evaluate("fetch('book-engineering/chapters/53-image-video-generation.md').then(r => r.ok ? r.text() : '')")
@@ -618,6 +664,10 @@ def main():
                 assert "پاسخ‌نامهٔ مستقل" in answer59
                 assert "نتایج اجرای واقعی" in report59
                 assert "<svg" in diagram59
+                assert "MLflow" in source60 and "W&B" in source60 and "synthetic_fixture" in source60
+                assert "پاسخ‌نامهٔ مستقل" in answer60 and "فصل ۶۰" in answer60
+                assert "۱۶/۱۶ آزمون unit موفق" in report60 and "آزموده نشده" in report60
+                assert "<svg" in diagram60
                 assert "طراحی آزمایشگاه" in source55 and "فصل ۵۶" in source55 and "NIST SP 800-88 Rev. 2" in source55
                 assert "نتایج اجرای واقعی" in report55 and "۵۷/۵۷ آزمون موفق" in report55
                 assert "سخت‌افزار واقعی" in report55 and "تضمین ایمنی" in report55
@@ -630,7 +680,7 @@ def main():
                 assert "synthetic_fixture" in source50 and "محاسبهٔ زمان آزمون" in source50
                 assert "Vision Transformer" in source51 and "SigLIP" in source51
                 assert "Qwen3-TTS" in source52 and "VocalGrad" in source52 and "آزمایشگاه CPU" in source52
-                print(f"PASS volume 4 chapters 47–59 at {width}px: sections={[c47['sectionCount'],c48['sectionCount'],c49['sectionCount'],c50['sectionCount'],c51['sectionCount'],c52['sectionCount'],c53['sectionCount'],c54['sectionCount'],c55['sectionCount'],c56['sectionCount'],c57['sectionCount'],c58['sectionCount'],c59['sectionCount']]}, MathML/appendices exact, {len(OFFLINE_PATHS)} offline assets")
+                print(f"PASS volume 4 chapters 47–60 at {width}px: sections={[c47['sectionCount'],c48['sectionCount'],c49['sectionCount'],c50['sectionCount'],c51['sectionCount'],c52['sectionCount'],c53['sectionCount'],c54['sectionCount'],c55['sectionCount'],c56['sectionCount'],c57['sectionCount'],c58['sectionCount'],c59['sectionCount'],c60['sectionCount']]}, MathML/appendices exact, {len(OFFLINE_PATHS)} offline assets")
                 context.close()
             browser.close()
     finally:

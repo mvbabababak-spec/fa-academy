@@ -1,5 +1,5 @@
-// ===== فا-اکدمی Service Worker v94 =====
-const CACHE_NAME = 'fa-academy-v94';
+// ===== فا-اکدمی Service Worker v95 =====
+const CACHE_NAME = 'fa-academy-v95';
 const CORE_FILES = [
   './',
   './index.html',
@@ -336,7 +336,23 @@ const CORE_FILES = [
   './book-engineering/projects/59-gpu-systems/results.json',
   './book-engineering/projects/59-gpu-systems/requirements.txt',
   './book-engineering/projects/59-gpu-systems/requirements-cpu.txt',
-  './book-engineering/projects/59-gpu-systems/requirements-lock-linux-py313.txt'
+  './book-engineering/projects/59-gpu-systems/requirements-lock-linux-py313.txt',
+  './book-engineering/diagrams/v4-ch14-mlops.svg',
+  './book-engineering/chapters/60-mlops.md',
+  './book-engineering/chapters/60-audit-report-fa.md',
+  './book-engineering/answers/60-mlops-fa.md',
+  './book-engineering/projects/60-mlops/README.md',
+  './book-engineering/projects/60-mlops/experiment_ops.py',
+  './book-engineering/projects/60-mlops/test_experiment_ops.py',
+  './book-engineering/projects/60-mlops/sample_experiment.json',
+  './book-engineering/projects/60-mlops/fixture_manifest.json',
+  './book-engineering/projects/60-mlops/environment.json',
+  './book-engineering/projects/60-mlops/results.json',
+  './book-engineering/projects/60-mlops/requirements.txt',
+  './book-engineering/projects/60-mlops/requirements-cpu.txt',
+  './book-engineering/projects/60-mlops/requirements-lock-linux-py313.txt',
+  './book-engineering/projects/60-mlops/Dockerfile',
+  './book-engineering/projects/60-mlops/job.yaml'
 ];
 
 // ===== INSTALL: Cache core files =====

@@ -211,6 +211,41 @@ jobs:
           assert result['collective'] == {'operation': 'all_reduce_sum', 'observed': 3, 'expected': 3, 'passed': True}
           assert all(value is False for value in result['scope'].values())
           PY
+      - name: Chapter 60 local MLflow and offline W&B contract tests
+        run: |
+          python -m venv /tmp/ch60-venv
+          /tmp/ch60-venv/bin/python -m pip install -r book-engineering/projects/60-mlops/requirements-cpu.txt
+          /tmp/ch60-venv/bin/python -m pip install -r book-engineering/projects/60-mlops/requirements-lock-linux-py313.txt
+          /tmp/ch60-venv/bin/python -m pip check
+          (cd book-engineering/projects/60-mlops && /tmp/ch60-venv/bin/python -m unittest -v)
+          /tmp/ch60-venv/bin/python book-engineering/projects/60-mlops/experiment_ops.py \
+            --backend manifest --output /tmp/ch60-ci-manifest
+          /tmp/ch60-venv/bin/python book-engineering/projects/60-mlops/experiment_ops.py \
+            --backend mlflow --output /tmp/ch60-ci-mlflow
+          /tmp/ch60-venv/bin/python book-engineering/projects/60-mlops/experiment_ops.py \
+            --backend wandb-offline --output /tmp/ch60-ci-wandb
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          expected_fixture = '81989e3ae534cade6f4e77742cb3fae01649247956962559720e75b093f1a260'
+          for name, backend in (('manifest', 'manifest'), ('mlflow', 'mlflow'), ('wandb', 'wandb')):
+              path = Path(f'/tmp/ch60-ci-{name}/run.json')
+              result = json.loads(path.read_text())
+              assert result['fixture']['sha256'] == expected_fixture
+              assert result['metrics']['initial_mse'] == 21.0
+              assert result['metrics']['final_mse'] == 0.09078731868784178
+              assert result['tracking']['backend'] == backend
+              assert result['scope']['real_data_used'] is False
+              assert result['scope']['gpu_used'] is False
+              assert result['tracking']['external_sync_requested'] is False
+          mlflow_run = json.loads(Path('/tmp/ch60-ci-mlflow/run.json').read_text())
+          assert mlflow_run['tracking']['status'] == 'logged-local-sqlite'
+          wandb_run = json.loads(Path('/tmp/ch60-ci-wandb/run.json').read_text())
+          assert wandb_run['tracking']['mode'] == 'offline'
+          assert wandb_run['tracking']['status'] == 'saved-locally-not-synced'
+          offline_dir = Path('/tmp/ch60-ci-wandb') / wandb_run['tracking']['offline_run_directory']
+          assert offline_dir.is_dir() and list(offline_dir.glob('*.wandb'))
+          PY
       - name: Confirm volume 4 builder idempotence
         run: |
           cp data.json /tmp/v4-data-before.json
