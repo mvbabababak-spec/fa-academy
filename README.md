@@ -1,6 +1,6 @@
 # Fa Academy
 
-اپ وب/PWA فارسی برای مجموعهٔ پنج‌جلدی «هنر و علم ساخت هوش». جلد اول ۲۱ فصل و جلد دوم ۱۱ فصل منتشرشده دارد. جلد سوم ۱۴ فصل محلی (۱–۱۴)، متناظر با فصل‌های سراسری ۳۳–۴۶، منتشر شده است. جلد چهارم ۱۵ فصل محلی (سراسری ۴۷–۶۱) دارد و هر ۱۵ فصل جداگانه منتشر شده‌اند. جلد پنجم در نقشه ۱۲ فصل محلی دارد؛ فصل‌های محلی ۱ تا ۴ (فصل‌های سراسری ۶۲ تا ۶۵) منتشر شده‌اند و فصل محلی ۵/سراسری ۶۶ تکمیل و از گیت‌های محلی گذشته است؛ تأیید remote، CI و Pages در جریان انتشار ثبت خواهد شد. متن‌های قابل‌دریافت:
+اپ وب/PWA فارسی برای مجموعهٔ پنج‌جلدی «هنر و علم ساخت هوش». جلد اول ۲۱ فصل و جلد دوم ۱۱ فصل منتشرشده دارد. جلد سوم ۱۴ فصل محلی (۱–۱۴)، متناظر با فصل‌های سراسری ۳۳–۴۶، منتشر شده است. جلد چهارم ۱۵ فصل محلی (سراسری ۴۷–۶۱) دارد و هر ۱۵ فصل جداگانه منتشر شده‌اند. جلد پنجم در نقشه ۱۲ فصل محلی دارد؛ فصل‌های محلی ۱ تا ۴ (فصل‌های سراسری ۶۲ تا ۶۵) منتشر شده‌اند و فصل محلی ۵/سراسری ۶۶ با commit مستقل منتشر شده است. پس از اصلاح واگذاری یک آزمون در workflow جلد اول، هر پنج workflow جلدها و Pages موفق شدند؛ جزئیات commitها، runها و بررسی زنده در [گزارش ممیزی فصل ۶۶](book-engineering/chapters/66-audit-report-fa.md) آمده است. متن‌های قابل‌دریافت:
 
 - [جلد دوم — Markdown](volume-2-full-fa.md)
 - [جلد سوم، فصل‌های ۳۳–۴۶ — Markdown](volume-3-full-fa.md)
@@ -41,7 +41,7 @@
 
 ## جلد پنجم: فصل‌های محلی ۱–۱۲ / سراسری ۶۲–۷۳
 
-فصل‌های محلی ۱–۴ (سراسری ۶۲–۶۵) جداگانه منتشر شده‌اند؛ فصل محلی ۵/سراسری ۶۶ در worktree تکمیل و پس از گیت‌های محلی برای انتشار آماده است. این جلد benchmark و رفتار مدل (۶۲–۶۳)، Red Teaming و امنیت (۶۴)، حکمرانی و ریسک (۶۵)، سپس محصول/API و قراردادهای backend/frontend (۶۶) را به هم پیوند می‌دهد. مرزهای بعدی حفظ شده‌اند: runtime و بهینه‌سازی در ۶۷، احراز هویت/پایش/پاسخ به رخداد در ۶۸، و استقرار/CI/CD در ۶۹ است؛ پژوهش مستقل در فصل‌های ۷۰–۷۳ می‌آید.
+فصل‌های محلی ۱–۴ (سراسری ۶۲–۶۵) جداگانه منتشر شده‌اند؛ فصل محلی ۵/سراسری ۶۶ با commit مستقل و push عادی منتشر شد. اجرای نخستِ جلد اول آشکار کرد که حلقهٔ عمومی آزمون پروژه‌ها باید فصل ۶۶ را به محیط پین‌شدهٔ جلد پنجم واگذارد؛ اصلاح این گیت و تأیید موفق هر پنج workflow و Pages در گزارش ممیزی ثبت شده‌اند. این جلد benchmark و رفتار مدل (۶۲–۶۳)، Red Teaming و امنیت (۶۴)، حکمرانی و ریسک (۶۵)، سپس محصول/API و قراردادهای backend/frontend (۶۶) را به هم پیوند می‌دهد. مرزهای بعدی حفظ شده‌اند: runtime و بهینه‌سازی در ۶۷، احراز هویت/پایش/پاسخ به رخداد در ۶۸، و استقرار/CI/CD در ۶۹ است؛ پژوهش مستقل در فصل‌های ۷۰–۷۳ می‌آید.
 
 - [فصل ۶۲: متن](book-engineering/chapters/62-benchmarking-evaluation.md) · [پاسخ‌نامه](book-engineering/answers/62-benchmarking-evaluation-fa.md) · [پروژه](book-engineering/projects/62-evaluation-lab/README.md) · [گزارش ممیزی](book-engineering/chapters/62-audit-report-fa.md)
 - [فصل ۶۳: متن](book-engineering/chapters/63-hallucination-bias-robustness.md) · [پاسخ‌نامه](book-engineering/answers/63-hallucination-bias-robustness-fa.md) · [پروژه](book-engineering/projects/63-model-behavior-lab/README.md) · [گزارش ممیزی](book-engineering/chapters/63-audit-report-fa.md)
@@ -62,6 +62,6 @@ python book-engineering/test_volume5.py
 python book-engineering/test_mobile_layout.py
 ```
 
-در این snapshot جلد پنجم ۵/۱۲ فصل و ۴۰ بخش تازه دارد؛ Service Worker `fa-academy-v104`، ۶۶ مسیر آفلاین را ثبت می‌کند. پنج checker جلدها، پروژه‌های ۶۲–۶۶، آزمون idempotence سازنده و browser/mobile در گیت محلی موفق شدند. `.github/workflows/volume5-audit.yml` همین آزمون‌ها و checkerهای هر پنج جلد را اجرا می‌کند؛ وضعیت remote، پنج workflow و Pages پس از push عادی به‌روز می‌شود. تصویر مرجع `book-engineering/reports/browser-mobile.webp` و تغییرهای responsive قبلی حفظ شده‌اند.
+در این snapshot جلد پنجم ۵/۱۲ فصل و ۴۰ بخش تازه دارد؛ Service Worker `fa-academy-v105` با ۶۶ مسیر آفلاین، از جمله گزارش به‌روزشدهٔ فصل ۶۶، منتشر می‌شود. پنج checker جلدها، پروژه‌های ۶۲–۶۶، آزمون idempotence سازنده و browser/mobile در گیت محلی موفق شدند. commit محتوای فصل [`5dc3672`](https://github.com/mvbabababak-spec/fa-academy/commit/5dc36725c962ce05790cac1728df744d4c640e42) و commit اصلاح واگذاری CI [`9ed607a`](https://github.com/mvbabababak-spec/fa-academy/commit/9ed607a862b5b11042ad640394606e00fab28851) روی `gh-pages` منتشر شدند؛ پس از اصلاح، هر پنج workflow و Pages با وضعیت موفق تأیید شدند. شناسهٔ runها، شکست اولیهٔ جلد اول و علت اصلاح در [گزارش ممیزی فصل ۶۶](book-engineering/chapters/66-audit-report-fa.md) ثبت است. تصویر مرجع `book-engineering/reports/browser-mobile.webp` و تغییرهای responsive قبلی حفظ شده‌اند.
 
 قالب انتشار وب/PWA و Markdown است؛ PDF و EPUB تولید یا آزموده نشده‌اند. فصل ۶۵ تکرار نمی‌شود. فصل ۶۷ را تا ثبت SHA انتشار فصل ۶۶، تأیید remote، workflowهای جلدهای ۱–۵ و Pages آغاز نکنید.
