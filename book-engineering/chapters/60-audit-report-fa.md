@@ -34,7 +34,15 @@
 
 ## GitHub Actions و نسخهٔ زنده
 
-پیش از انتشار، وضعیت پنج workflow برای commit محتوا بررسی خواهد شد. سپس گزارش نهایی با شناسه‌ها و پیوندهای واقعی Pages و چهار workflow جلدها، پاسخ HTTP نسخهٔ زنده و SHA-256 فایل‌های منتشرشده تکمیل می‌شود. اجرای در انتظار یا نتیجهٔ نامعلوم موفق تلقی نمی‌شود.
+فصل در commit مستقل `83263810ea3b8c0ff024e1ffaf41f7411273183a` با push عادی روی `gh-pages` منتشر شد؛ remote و tree پس از push تأیید شدند.
+
+- [Volume 4 audit — run 42345596107](https://github.com/mvbabababak-spec/fa-academy/actions/runs/42345596107): **موفق**؛ شامل پروژهٔ ۶۰، builder idempotence، آزمون مرورگر/آفلاین و layout.
+- [Volume 3 audit — run 42345596099](https://github.com/mvbabababak-spec/fa-academy/actions/runs/42345596099): **موفق**.
+- [Volume 2 audit — run 42345596128](https://github.com/mvbabababak-spec/fa-academy/actions/runs/42345596128): **موفق**.
+- [Pages build and deployment — run 42345595760](https://github.com/mvbabababak-spec/fa-academy/actions/runs/42345595760): **موفق**.
+- [Volume 1 audit — run 42345596131](https://github.com/mvbabababak-spec/fa-academy/actions/runs/42345596131): **ناموفق**؛ annotation عمومی نشان می‌دهد گام «Run each project test suite» با exit code 1 پایان یافته، در حالی که «Check volume structure» موفق بود. همان حلقهٔ آزمون پروژه‌ها در venv محلیِ وابستگی‌های پین‌شده با موفقیت کامل شد؛ گزارش عمومی علت دقیق شکست runner را نشان نمی‌دهد، بنابراین این workflow موفق اعلام نمی‌شود.
+
+نسخهٔ زندهٔ [اپ/PWA](https://mvbabababak-spec.github.io/fa-academy/) پس از موفقیت Pages با HTTP 200 بررسی شد. `index.html`، `README.md`، `data.json`، `sw.js`، `volume-4-full-fa.md`، متن و پاسخ‌نامهٔ فصل ۶۰، پروژه و SVG فصل ۱۴ همگی HTTP 200 دادند و بایت‌های منتشرشده با SHA-256 فایل محلی یکسان بودند. هش‌های کلیدی: `data.json` `1b0a8291d446562a1342b3209f21e32dedd5a2f4f0e08029a374508c43364e98`؛ `sw.js` `bb98f6f7420448618125a01ae80ed61535dcc762379c33bfc23b8564f8a1df77`؛ `volume-4-full-fa.md` `65c28b9741c98f313811230fc084b3b9558371d2eccfbf4210574852df30e462`؛ فصل ۶۰ `6ff7741158fde22c7b6c1b2cd5c6bb34a2d491619463d8346a6bff16f728462b`؛ پاسخ‌نامه `3392eadfb750603de3c2e268b6c6ab0c9926b7494ceb0e33babbe8207cd6c09a`.
 
 ## محدودیت ادعا
 
