@@ -1,0 +1,67 @@
+name: Volume 5 audit
+on:
+  push:
+    paths:
+      - '**'
+      - '.github/workflows/volume5-audit.yml'
+  pull_request:
+  workflow_dispatch:
+jobs:
+  volume5-cpu-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install pinned repository dependencies and Chromium
+        run: |
+          python -m pip install -r requirements.txt
+          python -m playwright install --with-deps chromium
+      - name: Check published structures and chapter 62
+        run: |
+          python book-engineering/check_volume.py
+          python book-engineering/check_volume2.py
+          python book-engineering/check_volume3.py
+          python book-engineering/check_volume4.py
+          python book-engineering/check_volume5.py
+      - name: Chapter 62 synthetic evaluation project tests
+        run: |
+          (cd book-engineering/projects/62-evaluation-lab && python -m unittest discover -v)
+          python book-engineering/projects/62-evaluation-lab/evaluation_lab.py \
+            --output /tmp/ch62-ci-results.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          result = json.loads(Path('/tmp/ch62-ci-results.json').read_text())
+          assert result['fixture_sha256'] == {
+              'sample_evaluation.jsonl': '97135e669009c1ac8e3c30a33cee2fb4aa910fc1f457d32f747d29a0518c1b45',
+              'training_corpus_fixture.txt': 'a0f234a212badd9120e0f2868fb28a02f6b6472bb20689e150c57ec84fa353b6',
+              'human_votes_fixture.json': '216988f7f338af7f75a70425649f165d2f9e8104e8e852dbf76ef3d2f223775e',
+          }
+          assert result['test_case_count'] == 6
+          assert result['baseline']['accuracy'] == 2/3
+          assert result['candidate']['accuracy'] == 5/6
+          assert result['paired_group_bootstrap']['groups'] == 3
+          assert result['paired_group_bootstrap']['seed'] == 62
+          assert result['human_vote_fixture']['pair_comparisons'] == 18
+          assert result['overlap_screen'][0]['flagged_for_review'] is True
+          assert result['scope'].startswith('Synthetic') and len(result['limitations']) == 5
+          PY
+      - name: Confirm volume 5 builder idempotence
+        run: |
+          cp data.json /tmp/v5-data-before.json
+          cp sw.js /tmp/v5-sw-before.js
+          cp volume-5-full-fa.md /tmp/v5-markdown-before.md
+          python book-engineering/build_volume5.py
+          cmp data.json /tmp/v5-data-before.json
+          cmp sw.js /tmp/v5-sw-before.js
+          cmp volume-5-full-fa.md /tmp/v5-markdown-before.md
+      - name: Browser, responsive and offline checks
+        run: |
+          python book-engineering/test_volume5.py
+          python book-engineering/test_mobile_layout.py

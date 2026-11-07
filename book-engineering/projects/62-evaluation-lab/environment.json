@@ -1,0 +1,8 @@
+{
+  "python_implementation": "CPython",
+  "python_version": "3.13.16",
+  "platform": "Linux-6.1.189+-x86_64-with-glibc2.41",
+  "dependencies": "Python standard library only; no third-party packages",
+  "network_accessed": false,
+  "model_weights_downloaded": false
+}

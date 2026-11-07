@@ -1,10 +1,11 @@
 # Fa Academy
 
-اپ وب/PWA فارسی برای مجموعهٔ پنج‌جلدی «هنر و علم ساخت هوش». جلد اول ۲۱ فصل و جلد دوم ۱۱ فصل منتشرشده دارد. جلد سوم ۱۴ فصل محلی (۱–۱۴)، متناظر با فصل‌های سراسری ۳۳–۴۶، منتشر شده است. جلد چهارم ۱۵ فصل محلی (سراسری ۴۷–۶۱) دارد و هر ۱۵ فصل جداگانه منتشر شده‌اند. متن‌های قابل‌دریافت:
+اپ وب/PWA فارسی برای مجموعهٔ پنج‌جلدی «هنر و علم ساخت هوش». جلد اول ۲۱ فصل و جلد دوم ۱۱ فصل منتشرشده دارد. جلد سوم ۱۴ فصل محلی (۱–۱۴)، متناظر با فصل‌های سراسری ۳۳–۴۶، منتشر شده است. جلد چهارم ۱۵ فصل محلی (سراسری ۴۷–۶۱) دارد و هر ۱۵ فصل جداگانه منتشر شده‌اند. جلد پنجم در نقشه ۱۲ فصل محلی دارد و فصل محلی ۱ آن (فصل سراسری ۶۲) اکنون افزوده شده است. متن‌های قابل‌دریافت:
 
 - [جلد دوم — Markdown](volume-2-full-fa.md)
 - [جلد سوم، فصل‌های ۳۳–۴۶ — Markdown](volume-3-full-fa.md)
 - [جلد چهارم، فصل‌های ۴۷–۶۱ — Markdown](volume-4-full-fa.md)
+- [جلد پنجم، فصل ۶۲ — Markdown](volume-5-full-fa.md)
 
 **قالب انتشار فعلی وب/PWA و Markdown است. PDF و EPUB تولید و آزموده نشده‌اند و به milestone بعدی موکول‌اند.** راهنمای اجرا، محدوده و محدودیت پروژه‌ها در [book-engineering/README.md](book-engineering/README.md) آمده است.
 
@@ -37,6 +38,13 @@
 - [فصل ۶۰: متن](book-engineering/chapters/60-mlops.md) · [پاسخ‌نامه](book-engineering/answers/60-mlops-fa.md) · [پروژه](book-engineering/projects/60-mlops/README.md) · [گزارش](book-engineering/chapters/60-audit-report-fa.md)
 - [فصل ۶۱: متن](book-engineering/chapters/61-inference-serving.md) · [پاسخ‌نامه](book-engineering/answers/61-inference-serving-fa.md) · [پروژه](book-engineering/projects/61-inference-serving/README.md) · [گزارش](book-engineering/chapters/61-audit-report-fa.md)
 - سازندهٔ append-safe: `book-engineering/build_volume4.py`؛ checker: `book-engineering/check_volume4.py`؛ خروجی Markdown: `volume-4-full-fa.md`.
+
+## جلد پنجم: فصل‌های محلی ۱–۱۲ / سراسری ۶۲–۷۳
+
+فصل ۶۲ طراحی benchmark، سنجه، ارزیابی انسانی، عدم‌قطعیت و خطر آلودگی را از ارزیابی کارایی runtime در فصل ۶۱ جدا می‌کند. نتیجه‌های پروژهٔ این فصل فقط به fixture ساختگی آن محدودند. فصل‌های بعدی جلد پنجم، توهم/سوگیری/استحکام (۶۳)، آزمون خصمانه و امنیت (۶۴)، حکمرانی و مدیریت ریسک (۶۵)، محصول (۶۶–۶۹) و پژوهش مستقل (۷۰–۷۳) را پوشش خواهند داد.
+
+- [فصل ۶۲: متن](book-engineering/chapters/62-benchmarking-evaluation.md) · [پاسخ‌نامه](book-engineering/answers/62-benchmarking-evaluation-fa.md) · [پروژه](book-engineering/projects/62-evaluation-lab/README.md) · [گزارش ممیزی](book-engineering/chapters/62-audit-report-fa.md)
+- [جلد پنجم: سازندهٔ append-safe](book-engineering/build_volume5.py) · [checker](book-engineering/check_volume5.py) · [آزمون مرورگر/PWA](book-engineering/test_volume5.py) · [راهنمای سبک](book-engineering/VOLUME5_STYLE_GUIDE_FA.md) · [خروجی Markdown](volume-5-full-fa.md)
 - مثال اختیاری فصل ۴۷ از revision ثابت `EleutherAI/pythia-14m` استفاده می‌کند. کارت مدل آن را انگلیسی‌زبان و پژوهشی معرفی می‌کند و برای deployment یا زبان‌های دیگر توصیه نمی‌کند؛ fixture آن ساختگی انگلیسی است و ادعای کیفیت فارسی یا محصولی ندارد. پروژه‌های فصل‌های ۴۸–۶۱ به مدل pretrained نیاز ندارند؛ پروژهٔ فصل ۵۹ فقط CPU/Gloo را آزموده، پروژهٔ فصل ۶۰ فقط fixture ساختگی و trackerهای محلی/آفلاین را آزموده و پروژهٔ فصل ۶۱ فقط trace ساختگی و arithmetic payload KV را بررسی کرده است.
 
 ## گزارش‌های ممیزی جلد سوم

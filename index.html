@@ -1032,6 +1032,8 @@ main{
   .content-grid{grid-template-columns:minmax(0,1fr)}
   .reader-content{padding:var(--space-6)}
   .reader-toolbar{flex-wrap:wrap;padding:var(--space-3) var(--space-4)}
+  .reader-breadcrumb>span:first-child{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .reader-breadcrumb .current{min-width:0}
   .reader-nav-btn{font-size:var(--font-size-xs)}
 }
 
@@ -1280,15 +1282,16 @@ function renderHomeCourses(){
 
 function cardHTML(item,chCount,secCount,type){
   // Some imported covers contain an entire HTML fragment, not a URL.
-  // Only a local WebP path is permitted as a cover source.
+  // Local WebP covers are allowed; the authored Volume 5 SVG is a one-file exception.
   var candidate=String(item.cover||'');
-  var found=candidate.match(/assets\/images\/[a-zA-Z0-9_./-]+\.webp/);
-  var coverPath=found && found[0].indexOf('..')===-1 ? found[0] : '';
+  var found=candidate.match(/assets\/images\/[a-zA-Z0-9_./-]+\.(?:webp|svg)/);
+  var isVolume5Cover=item.id==='art-science-intelligence-v5' && found && found[0]==='assets/images/covers/volume-5-cover.svg';
+  var coverPath=found && found[0].indexOf('..')===-1 && (found[0].endsWith('.webp') || isVolume5Cover) ? found[0] : '';
   var cover=coverPath?'<img class="book-cover-img" src="'+coverPath+'" alt="" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">'+
     '<div class="book-cover-placeholder" style="display:none">'+(type==='book'?'📖':'🎓')+'</div>':
     '<div class="book-cover-placeholder">'+(type==='book'?'📖':'🎓')+'</div>';
   var author=item.author?'<div class="book-card-author">✍️ '+item.author+'</div>':'';
-  var isVolume=/^art-science-intelligence-v[1-4]$/.test(item.id);
+  var isVolume=/^art-science-intelligence-v[1-5]$/.test(item.id);
   var isMicrosoft=/^(ai|genai|ml|datascience)$/.test(item.id);
   var coverClasses=(isVolume?' book-card--volume':'')+((isVolume||isMicrosoft)?' book-card--portrait-cover':'')+(isMicrosoft?' book-card--microsoft':'');
   return '<div class="book-card animate-in'+coverClasses+'" data-book-id="'+item.id+'" role="button" tabindex="0" onkeydown="activateOnKey(event)" onclick="openItem(\''+item.id+'\',\''+type+'\')">'+

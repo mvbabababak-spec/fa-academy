@@ -38,11 +38,18 @@ def main():
                   return {count:book&&book.chapters.length,id:chapter&&chapter.id,sections:chapter&&chapter.sections.length,previousId:previous&&previous.id,previousSections:previous&&previous.sections.length};
                 }""")
                 assert chapter61 == {'count':15,'id':'art-science-v4-ch15','sections':25,'previousId':'art-science-v4-ch14','previousSections':24}, chapter61
+                chapter62 = page.evaluate("""() => {
+                  const book=DATA.books.find(item=>item.id==='art-science-intelligence-v5');
+                  const chapter=book&&book.chapters[0];
+                  return {count:book&&book.chapters.length,id:chapter&&chapter.id,sections:chapter&&chapter.sections.length,
+                    firstSection:chapter&&chapter.sections[0].id,lastSection:chapter&&chapter.sections.at(-1).id};
+                }""")
+                assert chapter62 == {'count':1,'id':'art-science-v5-ch01','sections':26,'firstSection':'art-science-v5-ch01-s01','lastSection':'art-science-v5-ch01-s26'}, chapter62
                 assert page.locator('.home-hero > p').first.inner_text() == 'مجموعه‌ای جامع از کتاب‌ها و دوره‌های آموزشی هوش مصنوعی — با دسترسی آفلاین'
                 page.evaluate("document.querySelectorAll('.book-card--volume img,.book-card--microsoft img').forEach(img => img.loading='eager')")
                 page.wait_for_function("""() => {
                   const imgs=Array.from(document.querySelectorAll('.book-card--volume img'));
-                  return imgs.length===4 && imgs.every(img=>img.complete && img.naturalWidth===848 && img.naturalHeight===1264);
+                  return imgs.length===5 && imgs.every(img=>img.complete && img.naturalWidth===848 && img.naturalHeight===1264);
                 }""")
                 card = page.locator('.book-card--volume').first
                 assert card.locator('.book-card-english').inner_text() == 'The Art & Science of Building Intelligence'
@@ -51,7 +58,8 @@ def main():
                     'art-science-intelligence-v1':{path:'assets/images/covers/volume-1-cover.webp',subtitle:'از صفر مطلق تا طراحی هوش مصنوعی | ۲۱ فصل'},
                     'art-science-intelligence-v2':{path:'assets/images/covers/volume-2-cover.webp',subtitle:'یادگیری ماشین و شبکه‌های عصبی | جلد دوم: ۱۱ فصل'},
                     'art-science-intelligence-v3':{path:'assets/images/covers/volume-3-cover.webp',subtitle:'Transformer و مهندسی مدل زبانی | ۱۴ فصل'},
-                    'art-science-intelligence-v4':{path:'assets/images/covers/volume-4-cover.webp',subtitle:'پس‌آموزش، چندوجهی و زیرساخت | ۱۵ فصل'}
+                    'art-science-intelligence-v4':{path:'assets/images/covers/volume-4-cover.webp',subtitle:'پس‌آموزش، چندوجهی و زیرساخت | ۱۵ فصل'},
+                    'art-science-intelligence-v5':{path:'assets/images/covers/volume-5-cover.svg',subtitle:'ارزیابی، محصول و پژوهش | ۱۲ فصل'}
                   };
                   return Object.entries(expected).map(([id,copy])=>{
                     const path=copy.path;
@@ -67,7 +75,7 @@ def main():
                       ratio:rect&&rect.width/rect.height};
                   });
                 }""")
-                assert len(cover_checks) == 4, cover_checks
+                assert len(cover_checks) == 5, cover_checks
                 for result_cover in cover_checks:
                     assert result_cover['cover'] == result_cover['path'], result_cover
                     assert result_cover['subtitle'] == result_cover['expectedSubtitle'], result_cover
@@ -197,13 +205,20 @@ def main():
                 page.wait_for_function("""() => {
                   const volumes=Array.from(document.querySelectorAll('.book-card--volume img'));
                   const microsoft=Array.from(document.querySelectorAll('.book-card--microsoft img'));
-                  const good=imgs=>imgs.length===4 && imgs.every(img=>img.complete && img.naturalWidth===848 && img.naturalHeight===1264);
-                  return good(volumes) && good(microsoft);
+                  const loaded=imgs=>imgs.every(img=>img.complete && img.naturalWidth===848 && img.naturalHeight===1264);
+                  return volumes.length===5 && microsoft.length===4 && loaded(volumes) && loaded(microsoft);
                 }""")
                 offline_images = page.locator('.book-card--volume img')
                 offline_microsoft_images = page.locator('.book-card--microsoft img')
-                assert offline_images.count() == 4, 'expected all four volume covers offline'
+                assert offline_images.count() == 5, 'expected all five volume covers offline'
                 assert offline_microsoft_images.count() == 4, 'expected all four Microsoft covers offline'
+                v5_answer_offline = page.evaluate("fetch('book-engineering/answers/62-benchmarking-evaluation-fa.md').then(r => r.ok ? r.text() : '')")
+                v5_source_offline = page.evaluate("fetch('book-engineering/chapters/62-benchmarking-evaluation.md').then(r => r.ok ? r.text() : '')")
+                v5_diagram_offline = page.evaluate("fetch('book-engineering/diagrams/v5-ch01-evaluation-protocol.svg').then(r => r.ok ? r.text() : '')")
+                v5_markdown_offline = page.evaluate("fetch('volume-5-full-fa.md').then(r => r.ok ? r.text() : '')")
+                assert 'پاسخ‌نامهٔ مستقل فصل ۶۲' in v5_answer_offline
+                assert 'فصل سراسری ۶۲' in v5_source_offline and 'زنجیره' in v5_diagram_offline
+                assert 'جلد پنجم' in v5_markdown_offline
                 answer = page.evaluate("fetch('book-engineering/answers/01-intelligence-answers-fa.md').then(r => r.ok ? r.text() : '')")
                 assert 'پاسخ‌نامه فصل ۱' in answer, 'answer key unavailable offline'
                 chapter55_offline = page.evaluate("fetch('book-engineering/chapters/55-ai-lab-design.md').then(r => r.ok ? r.text() : '')")

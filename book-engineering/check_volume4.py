@@ -804,7 +804,12 @@ def main() -> None:
     _require(markdown_path.is_file(), "volume-4-full-fa.md missing")
     _require(markdown_path.read_text(encoding="utf-8") == builder.expected_markdown(expected_chapters, specs), "full Markdown does not match chapter sources")
     sw = (ROOT / "sw.js").read_text(encoding="utf-8")
-    _require("fa-academy-v96" in sw and "v95" not in sw.splitlines()[0], "service worker cache version was not advanced")
+    cache_version = re.search(r"(?m)^const CACHE_NAME = 'fa-academy-v(\d+)';$", sw)
+    header_version = re.search(r"Service Worker v(\d+)", sw.splitlines()[0])
+    _require(cache_version is not None and header_version is not None
+             and cache_version.group(1) == header_version.group(1)
+             and int(cache_version.group(1)) >= 97,
+             "service-worker header/cache version must match and be advanced for volume 5")
     cover_paths = {
         f"art-science-intelligence-v{volume}": f"assets/images/covers/volume-{volume}-cover.webp"
         for volume in range(1, 5)

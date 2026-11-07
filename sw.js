@@ -1,5 +1,5 @@
-// ===== فا-اکدمی Service Worker v96 =====
-const CACHE_NAME = 'fa-academy-v96';
+// ===== فا-اکدمی Service Worker v97 =====
+const CACHE_NAME = 'fa-academy-v97';
 const CORE_FILES = [
   './',
   './index.html',
@@ -363,7 +363,22 @@ const CORE_FILES = [
   './book-engineering/projects/61-inference-serving/sample_trace.json',
   './book-engineering/projects/61-inference-serving/fixture_manifest.json',
   './book-engineering/projects/61-inference-serving/environment.json',
-  './book-engineering/projects/61-inference-serving/results.json'
+  './book-engineering/projects/61-inference-serving/results.json',
+  './assets/images/covers/volume-5-cover.svg',
+  './volume-5-full-fa.md',
+  './book-engineering/chapters/62-benchmarking-evaluation.md',
+  './book-engineering/chapters/62-audit-report-fa.md',
+  './book-engineering/diagrams/v5-ch01-evaluation-protocol.svg',
+  './book-engineering/answers/62-benchmarking-evaluation-fa.md',
+  './book-engineering/projects/62-evaluation-lab/README.md',
+  './book-engineering/projects/62-evaluation-lab/environment.json',
+  './book-engineering/projects/62-evaluation-lab/evaluation_lab.py',
+  './book-engineering/projects/62-evaluation-lab/human_votes_fixture.json',
+  './book-engineering/projects/62-evaluation-lab/requirements.txt',
+  './book-engineering/projects/62-evaluation-lab/results.json',
+  './book-engineering/projects/62-evaluation-lab/sample_evaluation.jsonl',
+  './book-engineering/projects/62-evaluation-lab/test_evaluation_lab.py',
+  './book-engineering/projects/62-evaluation-lab/training_corpus_fixture.txt',
 ];
 
 // ===== INSTALL: Cache core files =====
