@@ -23,7 +23,7 @@ validator حضور فیلدها، قالب مقدارهای کیفی، یکتا�
 
 ## اعتبارسنجی ساختار کتاب و مرورگر
 
-- `python book-engineering/check_volume5.py` موفق شد: جلد پنجم ۴/۱۲ فصل، بخش‌ها `[26, 34, 39, 41]`، SVG و MathML دسترس‌پذیر، صورت‌پرسش‌های عیناً منطبق با پاسخ‌نامه، پیوست کد بایت‌به‌بایت، ۵۱ مسیر آفلاین و Service Worker نسخهٔ ۱۰۱.
+- `python book-engineering/check_volume5.py` موفق شد: جلد پنجم ۴/۱۲ فصل، بخش‌ها `[26, 34, 39, 41]`، SVG و MathML دسترس‌پذیر، صورت‌پرسش‌های عیناً منطبق با پاسخ‌نامه، پیوست کد بایت‌به‌بایت، ۵۱ مسیر آفلاین و Service Worker نسخهٔ ۱۰۲.
 - `python book-engineering/test_volume5.py` در عرض‌های ۳۲۰، ۳۹۰، ۷۶۸ و ۱۴۴۰ پیکسل موفق شد؛ چهار فصل و ۱۴۰ بخش، شکل‌ها، فرمول‌ها، پیوندهای همراه، پیوست‌های اجرایی دقیق و cache آفلاینِ ۵۱ مسیر را وارسی کرد.
 - `python book-engineering/test_mobile_layout.py` در عرض‌های ۳۲۰، ۳۹۰، ۴۱۴، ۷۶۸ و ۱۴۴۰ پیکسل موفق شد؛ ۱٬۲۸۹ بخشِ مجموعهٔ کتاب/دوره پیموده شد. برای جلد پنجم ۳۱۵ بند نثرِ هم‌تراز، ۱۷۷ بند تورفته، ۵ بلوک MathML و ۴ کپشن بررسی شدند.
 - آزمون‌های پروژه: فصل ۶۲، ۹/۹؛ فصل ۶۳، ۱۵/۱۵؛ فصل ۶۴، ۲۰/۲۰؛ فصل ۶۵، ۱۲/۱۲. CLIها و hashهای fixture با نتایج مرجع برابر بودند؛ فصل ۶۵ `structurally_valid: true`, `gate_status: hold`, `release_authorized: false` گزارش کرد.
@@ -34,7 +34,30 @@ validator حضور فیلدها، قالب مقدارهای کیفی، یکتا�
 
 ## انتشار و remote/CI
 
-نتایج محلی بالا تکمیل شده‌اند. شناسهٔ commit منتشرشده، نوک `origin/gh-pages`، workflowهای CI، پاسخ HTTP و تطبیق hash فایل‌های زنده هنوز در این پیش‌نویسِ گزارش ثبت نشده‌اند؛ این بخش باید پس از push عادی و راستی‌آزمایی remote/CI با نتایج واقعی تکمیل شود. تا آن زمان، انتشار یا موفقیت CI ادعا نمی‌شود.
+فصل محلی ۴ جلد پنجم / فصل سراسری ۶۵ در commit مستقل `546b4c000278de40fec43b4809d677d61e63f2cc` با push عادی روی `gh-pages` منتشر شد؛ در لحظهٔ انتشار، `git ls-remote origin refs/heads/gh-pages` همین SHA را برگرداند. هر شش workflow روی همان commit موفق شدند:
+
+- [Volume 1 — run 42387303368](https://github.com/mvbabababak-spec/fa-academy/actions/runs/42387303368)
+- [Volume 2 — run 42387303556](https://github.com/mvbabababak-spec/fa-academy/actions/runs/42387303556)
+- [Volume 3 — run 42387303480](https://github.com/mvbabababak-spec/fa-academy/actions/runs/42387303480)
+- [Volume 4 — run 42387303420](https://github.com/mvbabababak-spec/fa-academy/actions/runs/42387303420)
+- [Volume 5 — run 42387303359](https://github.com/mvbabababak-spec/fa-academy/actions/runs/42387303359)
+- [ساخت و استقرار GitHub Pages — run 42387303623](https://github.com/mvbabababak-spec/fa-academy/actions/runs/42387303623)
+
+در workflow جلد پنجم، آزمون‌های پروژه‌های ۶۲–۶۵، idempotence سازنده و آزمون‌های browser/responsive/offline موفق شدند؛ پروژهٔ فصل ۶۵ دوازده آزمون واحد را گذراند. workflow صفحات نیز artifact با اندازهٔ ۱۳۳ MB و digest `sha256:43d24c16d441a86d29abb75f4ae9dbfa375f342d9fd2bbede47bf412de4717d5` ساخت و deploy کرد. هشدارهای runner دربارهٔ مهاجرت Node.js و Ubuntu اطلاعیه‌های غیرمسدودکننده بودند؛ گام شکست‌خورده‌ای وجود نداشت.
+
+پس از deploy، [نسخهٔ زندهٔ وب/PWA](https://mvbabababak-spec.github.io/fa-academy/) و فایل‌های اصلی با HTTP 200 پاسخ دادند. `data.json` زنده چهار فصل منتشرشدهٔ جلد پنجم را نشان داد و فصل محلی ۴ را با ۴۱ بخش فهرست کرد. ده فایل منتخب از صفحهٔ زنده byte-for-byte با فایل‌های محلیِ commit فصل برابر بودند. جدول زیر hashهای دریافت زنده در همان انتشار فصل را ثبت می‌کند؛ گزارش ممیزی نیز HTTP 200 داد، اما hash خودش در جدول نیست چون همین گزارش در commit پیگیری به‌روزرسانی می‌شود.
+
+| فایل زنده در انتشار فصل | SHA-256 دریافت‌شده |
+|---|---|
+| `data.json` | `2fc0722493ea182f67e054751a7251d2bf5881477a3608bc349c6d5a7e37c1dc` |
+| `sw.js` (نسخهٔ ۱۰۱) | `0352f6f7a54e763165d5c4943f7ac0857540f6128a969711d658fc3964df311a` |
+| `volume-5-full-fa.md` | `f86358f47e662222e612fa53cd5822a03bbb5a20cc3b41e0224d00cbeb2a9cac` |
+| `book-engineering/chapters/65-alignment-governance.md` | `e470ef7e08fe18a7fb20f7fe6354895ae6fbf61b00e8257f50af68d581404461` |
+| `book-engineering/answers/65-alignment-governance-fa.md` | `6079543c1a52d119468309c39176ff4019e2429102d72b5e4e5b26d3a002df94` |
+| `book-engineering/diagrams/v5-ch04-governance-cycle.svg` | `c4869b69e9baa447fffd62a2867445e88042790e8ffadc6dfd82c862dff479e6` |
+| `book-engineering/projects/65-governance-lab/results.json` | `739057069b4c913f7fc94963941d59d725eed95b9da4e81895f41392e7696206` |
+
+چون متن همین گزارش نیز در cache آفلاین قرار دارد، commit پیگیریِ گزارش Service Worker را از نسخهٔ ۱۰۱ به ۱۰۲ افزایش می‌دهد تا نسخهٔ تازهٔ گزارش جایگزین شود.
 
 ## محدودیت‌ها
 
