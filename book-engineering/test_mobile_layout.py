@@ -44,22 +44,34 @@ def main():
                   return {count:book&&book.chapters.length,id:chapter&&chapter.id,sections:chapter&&chapter.sections.length,
                     firstSection:chapter&&chapter.sections[0].id,lastSection:chapter&&chapter.sections.at(-1).id};
                 }""")
-                assert chapter62 == {'count':1,'id':'art-science-v5-ch01','sections':26,'firstSection':'art-science-v5-ch01-s01','lastSection':'art-science-v5-ch01-s26'}, chapter62
+                assert chapter62 == {'count':2,'id':'art-science-v5-ch01','sections':26,'firstSection':'art-science-v5-ch01-s01','lastSection':'art-science-v5-ch01-s26'}, chapter62
+                chapter63 = page.evaluate("""() => {
+                  const book=DATA.books.find(item=>item.id==='art-science-intelligence-v5');
+                  const chapter=book&&book.chapters[1];
+                  return {count:book&&book.chapters.length,id:chapter&&chapter.id,sections:chapter&&chapter.sections.length,
+                    firstSection:chapter&&chapter.sections[0].id,lastSection:chapter&&chapter.sections.at(-1).id};
+                }""")
+                assert chapter63['count'] == 2 and chapter63['id'] == 'art-science-v5-ch02', chapter63
+                assert chapter63['sections'] >= 30 and chapter63['firstSection'] == 'art-science-v5-ch02-s01', chapter63
+                assert chapter63['lastSection'] == f"art-science-v5-ch02-s{chapter63['sections']:02d}", chapter63
                 assert page.locator('.home-hero > p').first.inner_text() == 'مجموعه‌ای جامع از کتاب‌ها و دوره‌های آموزشی هوش مصنوعی — با دسترسی آفلاین'
                 page.evaluate("document.querySelectorAll('.book-card--volume img,.book-card--microsoft img').forEach(img => img.loading='eager')")
                 page.wait_for_function("""() => {
                   const imgs=Array.from(document.querySelectorAll('.book-card--volume img'));
-                  return imgs.length===5 && imgs.every(img=>img.complete && img.naturalWidth===848 && img.naturalHeight===1264);
+                  const loaded=img=>img.complete && (img.currentSrc.includes('volume-5-cover.png')
+                    ? img.naturalWidth===1024 && img.naturalHeight===1536
+                    : img.naturalWidth===848 && img.naturalHeight===1264);
+                  return imgs.length===5 && imgs.every(loaded);
                 }""")
                 card = page.locator('.book-card--volume').first
                 assert card.locator('.book-card-english').inner_text() == 'The Art & Science of Building Intelligence'
                 cover_checks = page.evaluate("""() => {
                   const expected={
-                    'art-science-intelligence-v1':{path:'assets/images/covers/volume-1-cover.webp',subtitle:'از صفر مطلق تا طراحی هوش مصنوعی | ۲۱ فصل'},
-                    'art-science-intelligence-v2':{path:'assets/images/covers/volume-2-cover.webp',subtitle:'یادگیری ماشین و شبکه‌های عصبی | جلد دوم: ۱۱ فصل'},
-                    'art-science-intelligence-v3':{path:'assets/images/covers/volume-3-cover.webp',subtitle:'Transformer و مهندسی مدل زبانی | ۱۴ فصل'},
-                    'art-science-intelligence-v4':{path:'assets/images/covers/volume-4-cover.webp',subtitle:'پس‌آموزش، چندوجهی و زیرساخت | ۱۵ فصل'},
-                    'art-science-intelligence-v5':{path:'assets/images/covers/volume-5-cover.svg',subtitle:'ارزیابی، محصول و پژوهش | ۱۲ فصل'}
+                    'art-science-intelligence-v1':{path:'assets/images/covers/volume-1-cover.webp',subtitle:'از صفر مطلق تا طراحی هوش مصنوعی | ۲۱ فصل',dimensions:[848,1264]},
+                    'art-science-intelligence-v2':{path:'assets/images/covers/volume-2-cover.webp',subtitle:'یادگیری ماشین و شبکه‌های عصبی | جلد دوم: ۱۱ فصل',dimensions:[848,1264]},
+                    'art-science-intelligence-v3':{path:'assets/images/covers/volume-3-cover.webp',subtitle:'Transformer و مهندسی مدل زبانی | ۱۴ فصل',dimensions:[848,1264]},
+                    'art-science-intelligence-v4':{path:'assets/images/covers/volume-4-cover.webp',subtitle:'پس‌آموزش، چندوجهی و زیرساخت | ۱۵ فصل',dimensions:[848,1264]},
+                    'art-science-intelligence-v5':{path:'assets/images/covers/volume-5-cover.png',subtitle:'ارزیابی، محصول و پژوهش | ۱۲ فصل',dimensions:[1024,1536]}
                   };
                   return Object.entries(expected).map(([id,copy])=>{
                     const path=copy.path;
@@ -69,7 +81,7 @@ def main():
                     const img=bookCard&&bookCard.querySelector('img');
                     const cover=bookCard&&bookCard.querySelector('.book-card-cover');
                     const rect=cover&&cover.getBoundingClientRect();
-                    return {id,path,expectedSubtitle:copy.subtitle,subtitle:item&&item.subtitle,author:item&&item.author,
+                    return {id,path,expectedSubtitle:copy.subtitle,expectedDimensions:copy.dimensions,subtitle:item&&item.subtitle,author:item&&item.author,
                       cover:item&&item.cover,src:img&&new URL(img.currentSrc).pathname,
                       dimensions:img&&[img.naturalWidth,img.naturalHeight],fit:img&&getComputedStyle(img).objectFit,
                       ratio:rect&&rect.width/rect.height};
@@ -81,7 +93,7 @@ def main():
                     assert result_cover['subtitle'] == result_cover['expectedSubtitle'], result_cover
                     assert result_cover['author'] == 'Babak Moradvand', result_cover
                     assert result_cover['src'].endswith(result_cover['path']), result_cover
-                    assert result_cover['dimensions'] == [848, 1264], result_cover
+                    assert result_cover['dimensions'] == result_cover['expectedDimensions'], result_cover
                     assert result_cover['fit'] == 'contain' and 0.65 < result_cover['ratio'] < 0.68, result_cover
                 microsoft_covers = page.evaluate("""() => {
                   const expected={
@@ -205,8 +217,11 @@ def main():
                 page.wait_for_function("""() => {
                   const volumes=Array.from(document.querySelectorAll('.book-card--volume img'));
                   const microsoft=Array.from(document.querySelectorAll('.book-card--microsoft img'));
-                  const loaded=imgs=>imgs.every(img=>img.complete && img.naturalWidth===848 && img.naturalHeight===1264);
-                  return volumes.length===5 && microsoft.length===4 && loaded(volumes) && loaded(microsoft);
+                  const loadedVolumes=volumes.every(img=>img.complete && (img.currentSrc.includes('volume-5-cover.png')
+                    ? img.naturalWidth===1024 && img.naturalHeight===1536
+                    : img.naturalWidth===848 && img.naturalHeight===1264));
+                  const loadedMicrosoft=microsoft.every(img=>img.complete && img.naturalWidth===848 && img.naturalHeight===1264);
+                  return volumes.length===5 && microsoft.length===4 && loadedVolumes && loadedMicrosoft;
                 }""")
                 offline_images = page.locator('.book-card--volume img')
                 offline_microsoft_images = page.locator('.book-card--microsoft img')
@@ -215,10 +230,25 @@ def main():
                 v5_answer_offline = page.evaluate("fetch('book-engineering/answers/62-benchmarking-evaluation-fa.md').then(r => r.ok ? r.text() : '')")
                 v5_source_offline = page.evaluate("fetch('book-engineering/chapters/62-benchmarking-evaluation.md').then(r => r.ok ? r.text() : '')")
                 v5_diagram_offline = page.evaluate("fetch('book-engineering/diagrams/v5-ch01-evaluation-protocol.svg').then(r => r.ok ? r.text() : '')")
+                v5_answer63_offline = page.evaluate("fetch('book-engineering/answers/63-hallucination-bias-robustness-fa.md').then(r => r.ok ? r.text() : '')")
+                v5_source63_offline = page.evaluate("fetch('book-engineering/chapters/63-hallucination-bias-robustness.md').then(r => r.ok ? r.text() : '')")
+                v5_report63_offline = page.evaluate("fetch('book-engineering/chapters/63-audit-report-fa.md').then(r => r.ok ? r.text() : '')")
+                v5_diagram63_offline = page.evaluate("fetch('book-engineering/diagrams/v5-ch02-behavior-audit.svg').then(r => r.ok ? r.text() : '')")
+                v5_project63_offline = page.evaluate("fetch('book-engineering/projects/63-model-behavior-lab/results.json').then(r => r.ok ? r.text() : '')")
                 v5_markdown_offline = page.evaluate("fetch('volume-5-full-fa.md').then(r => r.ok ? r.text() : '')")
+                v5_cover_dimensions_offline = page.evaluate("""async () => {
+                  const response=await fetch('assets/images/covers/volume-5-cover.png');
+                  if(!response.ok)return null;
+                  const bitmap=await createImageBitmap(await response.blob());
+                  const result={width:bitmap.width,height:bitmap.height};bitmap.close();return result;
+                }""")
+                assert v5_cover_dimensions_offline == {'width':1024,'height':1536}, v5_cover_dimensions_offline
                 assert 'پاسخ‌نامهٔ مستقل فصل ۶۲' in v5_answer_offline
                 assert 'فصل سراسری ۶۲' in v5_source_offline and 'زنجیره' in v5_diagram_offline
-                assert 'جلد پنجم' in v5_markdown_offline
+                assert 'پاسخ‌نامهٔ مستقل فصل ۶۳' in v5_answer63_offline
+                assert 'فصل سراسری ۶۳' in v5_source63_offline and 'فصل سراسری ۶۳' in v5_report63_offline
+                assert 'ممیزی چندمحوره' in v5_diagram63_offline and 'synthetic' in v5_project63_offline
+                assert 'جلد پنجم' in v5_markdown_offline and 'فصل ۶۳' in v5_markdown_offline
                 answer = page.evaluate("fetch('book-engineering/answers/01-intelligence-answers-fa.md').then(r => r.ok ? r.text() : '')")
                 assert 'پاسخ‌نامه فصل ۱' in answer, 'answer key unavailable offline'
                 chapter55_offline = page.evaluate("fetch('book-engineering/chapters/55-ai-lab-design.md').then(r => r.ok ? r.text() : '')")
@@ -267,7 +297,7 @@ def main():
                     f"{book_id}: {stats['paragraphs']} justified prose paragraphs, {stats['indented']} indented, {stats['formulas']} MathML, {stats['captions']} captions"
                     for book_id,stats in result['typography'].items()
                 )
-                print(f"PASS {width}px: cover online/offline, chapters 56–61 source/answer/diagram offline, text, header, RTL navigation, locked viewport and {result['count']} sections; {typography_summary}")
+                print(f"PASS {width}px: covers online/offline, chapters 56–63 source/answer/diagram offline, text, header, RTL navigation, locked viewport and {result['count']} sections; {typography_summary}")
                 context.close()
             browser.close()
     finally:

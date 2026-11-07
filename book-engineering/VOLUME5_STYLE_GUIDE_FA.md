@@ -32,10 +32,13 @@
 python book-engineering/build_volume5.py
 python book-engineering/check_volume5.py
 (cd book-engineering/projects/62-evaluation-lab && python -m unittest -v)
+python book-engineering/projects/62-evaluation-lab/evaluation_lab.py --output /tmp/ch62-results.json
+(cd book-engineering/projects/63-model-behavior-lab && python -m unittest -v)
+python book-engineering/projects/63-model-behavior-lab/model_behavior_lab.py --output /tmp/ch63-results.json
 python book-engineering/test_volume5.py
 python book-engineering/test_mobile_layout.py
 ```
 
-`build_volume5.py` منبع‌های پیوسته را به `data.json`، `volume-5-full-fa.md` و cache آفلاین Service Worker می‌افزاید؛ هیچ فصل قبلی را بازنویسی نمی‌کند. `check_volume5.py` ساختار، ID، پیوند، MathML/SVG، پیوست دقیق، خروجی Markdown و cache را بررسی می‌کند. `test_mobile_layout.py` نیز باید پوشش جلد پنجم و عرض‌های ۳۲۰، ۳۹۰، ۴۱۴، ۷۶۸ و ۱۴۴۰ پیکسل را حفظ کند. پس از انتشار، SHA remote، workflowها و دسترسی فایل‌های وب/PWA در گزارش نهایی ثبت شوند.
+`build_volume5.py` منبع‌های پیوسته را به `data.json`، `volume-5-full-fa.md` و cache آفلاین Service Worker می‌افزاید؛ هیچ فصل ثبت‌شده یا شناسهٔ جلدهای ۱–۴ را بازنویسی نمی‌کند. مسیر پروژه، پاسخ‌نامه و شکل برای فصل‌های موجود صریح و داده‌محور نگاشت شده است. `check_volume5.py` ساختار، ID، پیوند، MathML/SVG، تطبیق عینِ پرسش و پاسخ، پیوست دقیق، خروجی Markdown و cache را بررسی می‌کند. `test_volume5.py` هر فصل موجود را در ۳۲۰، ۳۹۰، ۷۶۸ و ۱۴۴۰ پیکسل، و `test_mobile_layout.py` پوشش سراسری را در ۳۲۰، ۳۹۰، ۴۱۴، ۷۶۸ و ۱۴۴۰ پیکسل می‌آزماید. پس از انتشار، SHA remote، workflowها و دسترسی فایل‌های وب/PWA در گزارش نهایی ثبت شوند.
 
 خروجی این milestone وب/PWA و Markdown است. PDF یا EPUB فقط در صورت تولید و آزمون واقعی در گزارش ذکر می‌شود.

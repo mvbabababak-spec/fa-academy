@@ -14,8 +14,15 @@ import build_volume5 as builder
 ROOT = Path(__file__).resolve().parent.parent
 BOOK_ID = builder.VOLUME_ID
 TITLE = "هنر و علم ساخت هوش — جلد پنجم"
-CHAPTER_TITLE = "Benchmarking، طراحی آزمون، معیارها، ارزیابی انسانی، عدم‌قطعیت و آلودگی بنچمارک"
-PROJECT_CODE = (ROOT / builder.APPENDIX_PROJECTS[62]).read_text(encoding="utf-8").rstrip("\n")
+CHAPTER_TITLES = {
+    62: "Benchmarking، طراحی آزمون، معیارها، ارزیابی انسانی، عدم‌قطعیت و آلودگی بنچمارک",
+    63: "توهم، سوگیری، استحکام، تبیین‌پذیری و تفسیرپذیری",
+}
+PROJECT_CODES = {
+    global_num: (ROOT / path).read_text(encoding="utf-8").rstrip("\n")
+    for global_num, path in builder.APPENDIX_PROJECTS.items()
+    if global_num in (62, 63)
+}
 SW_TEXT = (ROOT / "sw.js").read_text(encoding="utf-8")
 CACHE_NAME = re.search(r"const CACHE_NAME = '([^']+)'", SW_TEXT).group(1)
 OFFLINE_PATHS = ["./" + path for path in builder._v5_offline_paths(builder.available_specs())]
@@ -32,67 +39,79 @@ def main() -> None:
                 context = browser.new_context(viewport={"width": width, "height": 900})
                 page = context.new_page()
                 errors: list[str] = []
+                cover_asset_requests: list[str] = []
                 page.on("pageerror", lambda error: errors.append(str(error)))
+                page.on("requestfinished", lambda request: cover_asset_requests.append(request.url) if request.url.endswith("/assets/images/covers/volume-5-cover.png") else None)
                 page.goto(url, wait_until="domcontentloaded")
                 page.wait_for_selector("#loading.hidden")
                 assert page.get_by_text(TITLE, exact=True).count() == 1
                 metadata = page.evaluate(f"""() => {{
                   const book=DATA.books.find(item=>item.id==='{BOOK_ID}');
-                  const chapter=book&&book.chapters[0];
-                  return {{count:book&&book.chapters.length,cover:book&&book.cover,subtitle:book&&book.subtitle,
-                    chapterId:chapter&&chapter.id,title:chapter&&chapter.title,
-                    sectionIds:chapter&&chapter.sections.map(section=>section.id),
-                    sectionTitles:chapter&&chapter.sections.map(section=>section.title),
-                    sectionCount:chapter&&chapter.sections.length,
-                    mathCount:chapter&&chapter.sections.reduce((n,section)=>n+(section.html.match(/<math/g)||[]).length,0)}};
+                  const chapters=book&&book.chapters||[];
+                  return {{count:chapters.length,cover:book&&book.cover,subtitle:book&&book.subtitle,
+                    chapters:chapters.map(chapter=>({{id:chapter.id,title:chapter.title,
+                      sectionIds:chapter.sections.map(section=>section.id),
+                      sectionTitles:chapter.sections.map(section=>section.title),
+                      sectionCount:chapter.sections.length,
+                      mathSections:chapter.sections.map((section,index)=>({{index,count:(section.html.match(/<math/g)||[]).length}})).filter(item=>item.count>0)}}))}};
                 }}""")
-                assert metadata["count"] == 1, metadata
-                assert metadata["cover"] == "assets/images/covers/volume-5-cover.svg", metadata
+                assert metadata["count"] == 2, metadata
+                assert metadata["cover"] == builder.COVER_PATH, metadata
                 assert metadata["subtitle"] == "ارزیابی، محصول و پژوهش | ۱۲ فصل", metadata
-                assert metadata["chapterId"] == "art-science-v5-ch01", metadata
-                assert metadata["title"] == CHAPTER_TITLE, metadata
-                assert metadata["sectionCount"] == 26, metadata
-                assert metadata["sectionIds"][0] == "art-science-v5-ch01-s01", metadata
-                assert metadata["sectionIds"][-1] == "art-science-v5-ch01-s26", metadata
-                assert metadata["mathCount"] == 1, metadata
+                assert [chapter["id"] for chapter in metadata["chapters"]] == ["art-science-v5-ch01", "art-science-v5-ch02"], metadata
+                assert [chapter["title"] for chapter in metadata["chapters"]] == [CHAPTER_TITLES[62], CHAPTER_TITLES[63]], metadata
+                assert metadata["chapters"][0]["sectionCount"] == 26, metadata
+                assert metadata["chapters"][0]["sectionIds"][0] == "art-science-v5-ch01-s01", metadata
+                assert metadata["chapters"][0]["sectionIds"][-1] == "art-science-v5-ch01-s26", metadata
+                assert metadata["chapters"][1]["sectionCount"] >= 30, metadata
+                assert metadata["chapters"][1]["sectionIds"][0] == "art-science-v5-ch02-s01", metadata
+                assert metadata["chapters"][1]["sectionIds"][-1] == f"art-science-v5-ch02-s{metadata['chapters'][1]['sectionCount']:02d}", metadata
+                assert metadata["chapters"][0]["mathSections"] and metadata["chapters"][1]["mathSections"], metadata
 
-                # Confirm the portrait cover and the first section's accessible figure.
+                # Confirm the portrait cover, accessible figures and MathML in both authored chapters.
                 page.locator(".book-card--volume img").last.evaluate("img => img.loading='eager'")
                 page.wait_for_function("""() => {
                   const img=Array.from(document.querySelectorAll('.book-card--volume img'))
-                    .find(node=>node.currentSrc.includes('volume-5-cover.svg'));
-                  return img&&img.complete&&img.naturalWidth===848&&img.naturalHeight===1264;
+                    .find(node=>node.currentSrc.includes('volume-5-cover.png'));
+                  return img&&img.complete&&img.naturalWidth===1024&&img.naturalHeight===1536;
                 }""")
+                assert cover_asset_requests, "the supplied Volume 5 PNG was not requested as the active cover"
                 page.evaluate(f"openItem('{BOOK_ID}','book');openSec('{BOOK_ID}',0,0)")
                 if width <= 768:
                     breadcrumb_title = page.locator(".reader-breadcrumb>span:first-child")
                     assert breadcrumb_title.evaluate("e=>getComputedStyle(e).whiteSpace") == "nowrap"
                     assert page.locator(".reader-breadcrumb").evaluate("e=>e.getBoundingClientRect().height<=32")
-                content = page.locator(".reader-content")
-                image = content.locator("img").first
-                assert image.get_attribute("alt") and "شکل ۵-۱-۱" in image.get_attribute("alt")
-                page.wait_for_function("""() => {
-                  const img=document.querySelector('.reader-content img');
-                  return img&&img.complete&&img.naturalWidth===1200&&img.naturalHeight===680;
-                }""")
-                assert content.evaluate("e=>e.scrollWidth<=e.clientWidth+2")
+                for chapter_index, chapter in enumerate(metadata["chapters"]):
+                    page.evaluate(f"openSec('{BOOK_ID}',{chapter_index},0)")
+                    content = page.locator(".reader-content")
+                    image = content.locator("img").first
+                    local_figure_number = str(chapter_index + 1).translate(str.maketrans("0123456789", "۰۱۲۳۴۵۶۷۸۹"))
+                    expected_figure = f"شکل ۵-{local_figure_number}-۱"
+                    assert image.get_attribute("alt") and expected_figure in image.get_attribute("alt")
+                    page.wait_for_function("""() => {
+                      const img=document.querySelector('.reader-content img');
+                      return img&&img.complete&&img.naturalWidth===1200&&img.naturalHeight===680;
+                    }""")
+                    assert content.evaluate("e=>e.scrollWidth<=e.clientWidth+2")
 
-                # MathML carries an accessible label; the content itself stays within the viewport.
-                page.evaluate(f"openSec('{BOOK_ID}',0,7)")
-                math = page.locator(".reader-content math").first
-                assert math.count() == 1 and math.get_attribute("aria-label")
-                assert page.locator(".reader-content").evaluate("e=>e.scrollWidth<=e.clientWidth+2")
+                    math_index = chapter["mathSections"][0]["index"]
+                    page.evaluate(f"openSec('{BOOK_ID}',{chapter_index},{math_index})")
+                    math = page.locator(".reader-content math").first
+                    assert math.count() >= 1 and math.get_attribute("aria-label"), chapter["id"]
+                    assert page.locator(".reader-content").evaluate("e=>e.scrollWidth<=e.clientWidth+2")
 
-                # The independent answer link is root-relative for the in-app reader.
-                summary_index = next(i for i, title in enumerate(metadata["sectionTitles"]) if "جمع‌بندی" in title)
-                page.evaluate(f"openSec('{BOOK_ID}',0,{summary_index})")
-                assert page.locator(".reader-content a[href='book-engineering/answers/62-benchmarking-evaluation-fa.md']").count() == 1
-                assert page.locator(".reader-content a[href='book-engineering/projects/62-evaluation-lab/README.md']").count() == 1
-                assert page.locator(".reader-content a[href='book-engineering/chapters/62-audit-report-fa.md']").count() == 1
+                    summary_index = next(i for i, title in enumerate(chapter["sectionTitles"]) if "جمع‌بندی" in title)
+                    page.evaluate(f"openSec('{BOOK_ID}',{chapter_index},{summary_index})")
+                    answer_path = builder.ANSWER_KEYS[62 + chapter_index]
+                    project_path = builder.PROJECT_DIRS[62 + chapter_index] + "/README.md"
+                    report_path = f"book-engineering/chapters/{62 + chapter_index}-audit-report-fa.md"
+                    assert page.locator(f".reader-content a[href='{answer_path}']").count() == 1
+                    assert page.locator(f".reader-content a[href='{project_path}']").count() == 1
+                    assert page.locator(f".reader-content a[href='{report_path}']").count() == 1
 
-                appendix_index = next(i for i, title in enumerate(metadata["sectionTitles"]) if "پیوست اجرایی" in title)
-                page.evaluate(f"openSec('{BOOK_ID}',0,{appendix_index})")
-                assert page.locator(".reader-content pre code").last.text_content().rstrip("\n") == PROJECT_CODE
+                    appendix_index = next(i for i, title in enumerate(chapter["sectionTitles"]) if "پیوست اجرایی" in title)
+                    page.evaluate(f"openSec('{BOOK_ID}',{chapter_index},{appendix_index})")
+                    assert page.locator(".reader-content pre code").last.text_content().rstrip("\n") == PROJECT_CODES[62 + chapter_index]
 
                 # All authored chapter files are present in the active offline cache.
                 sw_ready = page.evaluate("""async () => await Promise.race([
@@ -111,12 +130,25 @@ def main() -> None:
                 }""", {"cacheName": CACHE_NAME, "paths": OFFLINE_PATHS})
                 assert cache_misses == [], cache_misses
                 context.set_offline(True)
-                offline_answer = page.evaluate("fetch('book-engineering/answers/62-benchmarking-evaluation-fa.md').then(r=>r.ok?r.text():'')")
-                assert "پاسخ‌نامهٔ مستقل فصل ۶۲" in offline_answer
+                offline_cover_asset = page.evaluate("""async () => {
+                  const response=await fetch('assets/images/covers/volume-5-cover.png');
+                  if(!response.ok)return null;
+                  const bitmap=await createImageBitmap(await response.blob());
+                  const result={width:bitmap.width,height:bitmap.height};bitmap.close();return result;
+                }""")
+                assert offline_cover_asset == {"width":1024,"height":1536}, offline_cover_asset
+                offline_answer62 = page.evaluate("fetch('book-engineering/answers/62-benchmarking-evaluation-fa.md').then(r=>r.ok?r.text():'')")
+                offline_answer63 = page.evaluate("fetch('book-engineering/answers/63-hallucination-bias-robustness-fa.md').then(r=>r.ok?r.text():'')")
+                offline_report63 = page.evaluate("fetch('book-engineering/chapters/63-audit-report-fa.md').then(r=>r.ok?r.text():'')")
+                offline_project63 = page.evaluate("fetch('book-engineering/projects/63-model-behavior-lab/results.json').then(r=>r.ok?r.text():'')")
                 offline_full_text = page.evaluate("fetch('volume-5-full-fa.md').then(r=>r.ok?r.text():'')")
-                assert "جلد پنجم" in offline_full_text and "فصل ۶۲" in offline_full_text
+                assert "پاسخ‌نامهٔ مستقل فصل ۶۲" in offline_answer62
+                assert "پاسخ‌نامهٔ مستقل فصل ۶۳" in offline_answer63
+                assert "فصل سراسری ۶۳" in offline_report63
+                assert 'v5-ch02-synthetic-behavior-v1' in offline_project63
+                assert "جلد پنجم" in offline_full_text and "فصل ۶۲" in offline_full_text and "فصل ۶۳" in offline_full_text
                 assert not errors, errors
-                print(f"PASS volume 5 chapter 62 browser/offline checks at {width}px: 26 sections, accessible MathML/SVG, exact appendix, {len(OFFLINE_PATHS)} offline paths")
+                print(f"PASS volume 5 chapters 62–63 browser/offline checks at {width}px: {metadata['chapters'][1]['sectionCount']} chapter 63 sections, accessible MathML/SVG, exact code appendices, {len(OFFLINE_PATHS)} offline paths")
                 context.close()
             browser.close()
     finally:

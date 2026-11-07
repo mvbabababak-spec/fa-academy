@@ -10,7 +10,7 @@
 - پاسخ‌نامه: `book-engineering/answers/62-benchmarking-evaluation-fa.md`
 - پروژه و آزمون: `book-engineering/projects/62-evaluation-lab/`
 - شکل: `book-engineering/diagrams/v5-ch01-evaluation-protocol.svg`
-- کاور برداری جلد پنجم: `assets/images/covers/volume-5-cover.svg`
+- کاور برداری موجود در snapshot ممیزی فصل ۶۲: `assets/images/covers/volume-5-cover.svg`؛ پس از درخواست بعدی کاربر، مرجع فعال جلد پنجم به PNG پیوست‌شده تغییر کرد.
 - خروجی کتاب: `volume-5-full-fa.md`
 
 ## اجرای واقعی پروژه

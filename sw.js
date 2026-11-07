@@ -1,5 +1,5 @@
-// ===== فا-اکدمی Service Worker v97 =====
-const CACHE_NAME = 'fa-academy-v97';
+// ===== فا-اکدمی Service Worker v99 =====
+const CACHE_NAME = 'fa-academy-v99';
 const CORE_FILES = [
   './',
   './index.html',
@@ -379,6 +379,19 @@ const CORE_FILES = [
   './book-engineering/projects/62-evaluation-lab/sample_evaluation.jsonl',
   './book-engineering/projects/62-evaluation-lab/test_evaluation_lab.py',
   './book-engineering/projects/62-evaluation-lab/training_corpus_fixture.txt',
+  './book-engineering/chapters/63-hallucination-bias-robustness.md',
+  './book-engineering/chapters/63-audit-report-fa.md',
+  './book-engineering/diagrams/v5-ch02-behavior-audit.svg',
+  './book-engineering/answers/63-hallucination-bias-robustness-fa.md',
+  './book-engineering/projects/63-model-behavior-lab/README.md',
+  './book-engineering/projects/63-model-behavior-lab/environment.json',
+  './book-engineering/projects/63-model-behavior-lab/fixture_manifest.json',
+  './book-engineering/projects/63-model-behavior-lab/model_behavior_lab.py',
+  './book-engineering/projects/63-model-behavior-lab/requirements.txt',
+  './book-engineering/projects/63-model-behavior-lab/results.json',
+  './book-engineering/projects/63-model-behavior-lab/synthetic_behavior_fixture.json',
+  './book-engineering/projects/63-model-behavior-lab/test_model_behavior_lab.py',
+  './assets/images/covers/volume-5-cover.png',
 ];
 
 // ===== INSTALL: Cache core files =====

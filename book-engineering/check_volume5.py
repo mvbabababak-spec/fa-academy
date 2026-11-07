@@ -1,9 +1,11 @@
 """Structural, editorial, appendix, and offline-cache checks for Volume 5."""
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 import re
+import struct
 import unicodedata
 import xml.etree.ElementTree as ET
 from urllib.parse import urlparse
@@ -69,12 +71,13 @@ def main() -> None:
     require([chapter.get("num") for chapter in book["chapters"]] == list(range(1, len(specs) + 1)),
             "volume 5 local chapter numbering is not contiguous")
 
-    all_text_paths = [ROOT / path for path in builder._v5_offline_paths(specs)]
     for _, global_num, slug, _, _ in specs:
         source = ROOT / "book-engineering/chapters" / f"{slug}.md"
-        answer = ROOT / "book-engineering/answers/62-benchmarking-evaluation-fa.md" if global_num == 62 else ROOT / "book-engineering/answers" / f"{slug}-fa.md"
+        answer_relative = builder.ANSWER_KEYS.get(global_num, f"book-engineering/answers/{slug}-fa.md")
+        answer = ROOT / answer_relative
         report = ROOT / f"book-engineering/chapters/{global_num}-audit-report-fa.md"
-        project_dir = ROOT / f"book-engineering/projects/{global_num}-evaluation-lab"
+        project_relative = builder.PROJECT_DIRS.get(global_num, f"book-engineering/projects/{global_num}-evaluation-lab")
+        project_dir = ROOT / project_relative
         for path in (source, answer, report, project_dir / "README.md"):
             require(path.is_file(), f"missing chapter {global_num} deliverable: {path.relative_to(ROOT)}")
         source_text = source.read_text(encoding="utf-8")
@@ -98,26 +101,34 @@ def main() -> None:
         for alt, image_path in images:
             require(bool(alt.strip()), f"chapter {global_num} figure has empty alt text")
             require((ROOT / image_path).is_file(), f"chapter {global_num} missing figure {image_path}")
-        if global_num == 62:
+        if global_num in (62, 63):
             questions = re.findall(r"(?m)^([۱-۸])\. (.+)$", source_text.split("## پیوست اجرایی", 1)[0])
             answer_questions = re.findall(r"(?m)^\*\*صورت پرسش:\*\* (.+)$", answer.read_text(encoding="utf-8"))
             require(len(questions) == 8 and [question for _, question in questions] == answer_questions,
-                    "chapter 62 answer key must preserve all eight question texts exactly")
+                    f"chapter {global_num} answer key must preserve all eight question texts exactly")
+        if global_num == 62:
             require(len(book["chapters"][0]["sections"]) == 26, "chapter 62 expected 26 sections")
+        if global_num == 63:
+            require(len(book["chapters"][1]["sections"]) == 34, "chapter 63 expected 34 sections")
 
-    diagram = ROOT / builder.DIAGRAMS[62]
-    svg_root = ET.parse(diagram).getroot()
-    require(svg_root.attrib.get("role") == "img", "chapter 62 diagram must use role=img")
-    require("aria-labelledby" in svg_root.attrib and svg_root.attrib.get("{http://www.w3.org/XML/1998/namespace}lang") == "fa",
-            "chapter 62 SVG needs linked accessible title/description and Persian language")
-    svg_ids = {element.attrib["id"] for element in svg_root.iter() if "id" in element.attrib}
-    for element_id in svg_root.attrib["aria-labelledby"].split():
-        require(element_id in svg_ids, f"chapter 62 SVG references missing ID {element_id}")
+        diagram_relative = builder.DIAGRAMS.get(global_num)
+        if diagram_relative:
+            diagram = ROOT / diagram_relative
+            svg_root = ET.parse(diagram).getroot()
+            require(svg_root.attrib.get("role") == "img", f"chapter {global_num} diagram must use role=img")
+            require("aria-labelledby" in svg_root.attrib and svg_root.attrib.get("{http://www.w3.org/XML/1998/namespace}lang") == "fa",
+                    f"chapter {global_num} SVG needs linked accessible title/description and Persian language")
+            svg_ids = {element.attrib["id"] for element in svg_root.iter() if "id" in element.attrib}
+            for element_id in svg_root.attrib["aria-labelledby"].split():
+                require(element_id in svg_ids, f"chapter {global_num} SVG references missing ID {element_id}")
 
-    cover = ROOT / builder.COVER_PATH
-    cover_root = ET.parse(cover).getroot()
-    require(cover_root.attrib.get("role") == "img" and "aria-labelledby" in cover_root.attrib,
-            "volume 5 SVG cover needs accessible title and description")
+    cover_bytes = (ROOT / builder.COVER_PATH).read_bytes()
+    require(cover_bytes.startswith(b"\x89PNG\r\n\x1a\n") and len(cover_bytes) >= 24,
+            "volume 5 cover must be a valid PNG")
+    require(hashlib.sha256(cover_bytes).hexdigest() == builder.COVER_SHA256,
+            "volume 5 cover bytes do not match the supplied image")
+    require(struct.unpack(">II", cover_bytes[16:24]) == (1024, 1536),
+            "volume 5 supplied cover dimensions must remain 1024 by 1536")
 
     markdown_path = ROOT / "volume-5-full-fa.md"
     require(markdown_path.is_file(), "volume-5-full-fa.md is missing")

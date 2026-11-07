@@ -164,21 +164,23 @@ python book-engineering/test_mobile_layout.py
 
 ## جلد پنجم — انتشار مرحله‌ای
 
-طبق نقشهٔ پنج‌جلدی، جلد پنجم ۱۲ فصل محلی (فصل‌های سراسری ۶۲–۷۳) دارد. فصل محلی ۱، فصل سراسری ۶۲، دربارهٔ طراحی benchmark، سنجه‌ها، ارزیابی انسانی، عدم‌قطعیت و آلودگی benchmark است؛ موضوع runtime فصل ۶۱ را تکرار نمی‌کند و وارد ایمنی خصمانهٔ فصل ۶۴ نمی‌شود. فصل‌های بعدی جلد پنجم همچنان باید یکی‌یکی، پس از بررسی ساختار پنج جلد و remote، تکمیل و منتشر شوند.
+طبق نقشهٔ پنج‌جلدی، جلد پنجم ۱۲ فصل محلی (فصل‌های سراسری ۶۲–۷۳) دارد. فصل‌های محلی ۱ و ۲، یعنی فصل‌های سراسری ۶۲ و ۶۳، جداگانه تکمیل و منتشر شده‌اند. فصل ۶۲ طراحی benchmark، معیار، ارزیابی انسانی، عدم‌قطعیت و آلودگی را از سنجش runtime فصل ۶۱ جدا می‌کند. فصل ۶۳ توهم و factuality، سوگیری، استحکام در تغییر توزیع، تبیین و تفسیرپذیری را با تأکید بر مخرج، زمینه و محدودیت ادعا پوشش می‌دهد؛ حملهٔ خصمانه و Prompt Injection همچنان در فصل ۶۴ است. فصل ۶۲ در commit مستقل `bceb598ad7cc3dfdf29b0c8050fafa72b0d53ac9` با push عادی به `gh-pages` منتشر شد؛ پنج workflow جلدهای ۱ تا ۵ و Pages برای آن commit موفق شدند.
 
-فایل‌های فصل ۶۲ عبارت‌اند از `chapters/62-benchmarking-evaluation.md`، `answers/62-benchmarking-evaluation-fa.md`، `chapters/62-audit-report-fa.md`، `diagrams/v5-ch01-evaluation-protocol.svg` و `projects/62-evaluation-lab/`. اجرای پروژه با CPython 3.13.16 و کتابخانهٔ استاندارد، ۹/۹ آزمون را گذراند. دادهٔ ساختگیِ ۶ آزمونی (سه گروه) baseline را ۴/۶ و candidate را ۵/۶ گزارش کرد؛ این فقط نمونهٔ محاسباتی برای تمرین است و معنی‌داری آماری، کیفیت مدل، توافق انسانی یا نبود آلودگی را اثبات نمی‌کند. پوشش آزمون و محدودیت هر نتیجه در گزارش ممیزی فصل ثبت شده است.
+فایل‌های فصل ۶۲ شامل متن، پاسخ‌نامه، گزارش ممیزی، شکل و `projects/62-evaluation-lab/` است؛ پروژهٔ fixture آن ۹/۹ آزمون را گذراند و نتیجهٔ baseline/candidate فقط محاسبات آموزشی است. فصل ۶۳ نیز متن، پاسخ‌نامهٔ مستقل، گزارش، شکل دسترس‌پذیر و `projects/63-model-behavior-lab/` دارد. پروژه با CPython 3.13.16 و کتابخانهٔ استاندارد، ۱۵/۱۵ آزمون را گذراند؛ fixture دارای ۱۲ ردیف طبقه‌بندی و ۶ جفت ساختگی است، نه ارزیابی مدل واقعی. عددهای مربوط به گروه، factuality، استحکام و توضیح فقط خروجی همین fixture هستند؛ توان آماری، انصاف یا کیفیت محصول را اثبات نمی‌کنند.
 
-از ریشهٔ مخزن، برای ساخت و اعتبارسنجی فصل از این فرمان‌ها استفاده کنید:
+از ریشهٔ مخزن، برای ساخت و اعتبارسنجی استفاده کنید:
 
 ```bash
 python book-engineering/build_volume5.py
 python book-engineering/check_volume5.py
 (cd book-engineering/projects/62-evaluation-lab && python -m unittest -v)
 python book-engineering/projects/62-evaluation-lab/evaluation_lab.py --output /tmp/ch62-results.json
+(cd book-engineering/projects/63-model-behavior-lab && python -m unittest -v)
+python book-engineering/projects/63-model-behavior-lab/model_behavior_lab.py --output /tmp/ch63-results.json
 python book-engineering/test_volume5.py
 python book-engineering/test_mobile_layout.py
 ```
 
-`build_volume5.py` فقط منبع‌های موجود را به‌ترتیب اضافه می‌کند، شناسه‌های جلدهای ۱–۴ را حفظ می‌کند و فصل منتشرشده را بازنویسی نمی‌کند. `check_volume5.py` تطبیق پاسخ‌نامه و پیوست اجرایی، SVG/MathML، Markdown، cover و مسیرهای offline را کنترل می‌کند. آزمون مرورگر جلد پنجم در ۳۲۰، ۳۹۰، ۷۶۸ و ۱۴۴۰ پیکسل اجرا می‌شود؛ آزمون layout سراسری پنج عرض ۳۲۰، ۳۹۰، ۴۱۴، ۷۶۸ و ۱۴۴۰ پیکسل را وارسی می‌کند. در ممیزی جاری، ۱٬۱۷۵ بخش، پنج کاور جلد، چهار کاور Microsoft و ۱۵ مسیر آفلاین جلد پنجم تأیید شدند. رندرهای بازرسی در `.tmp-audit/` هستند؛ تصویر مرجع `reports/browser-mobile.webp` بازنویسی نشده است.
+Builder append-safe است و منبع‌های پیوسته را به `data.json`، `volume-5-full-fa.md` و cache Service Worker می‌افزاید؛ شناسه‌های جلدهای ۱–۴ و متن فصل‌های ثبت‌شده را بازنویسی نمی‌کند. checker تطبیق پرسش/پاسخ، پیوست کد دقیق، SVG/MathML، لینک‌ها، Markdown و cache آفلاین را بررسی می‌کند. وضعیت محلی جاری جلد پنجم ۲/۱۲ فصل و ۶۰ بخش (۲۶ + ۳۴) است؛ ۲۷ مسیر آفلاین در Service Worker v99 ثبت شده‌اند. `test_volume5.py` در ۳۲۰، ۳۹۰، ۷۶۸ و ۱۴۴۰ پیکسل، و `test_mobile_layout.py` در ۳۲۰، ۳۹۰، ۴۱۴، ۷۶۸ و ۱۴۴۰ پیکسل اجرا می‌شوند. آزمون سراسری موبایل ۱٬۲۰۹ بخش را پیمایش کرد؛ چند 404 برای تصویرهای قدیمی خارج از دارایی‌های جلد پنجم روی assertionهای این جلد اثر نگذاشتند. تصویر مرجع `reports/browser-mobile.webp` دست‌نخورده ماند.
 
-`.github/workflows/volume5-audit.yml` گیت‌های ساختار، آزمون پروژه، idempotence سازنده، مرورگر و layout موبایل را اجرا می‌کند. Service Worker با cache نسخهٔ `fa-academy-v97` فایل‌های موجود فصل ۶۲ را برای دسترسی آفلاین نگه می‌دارد. قالب فعلی انتشار وب/PWA و Markdown است؛ PDF و EPUB تولید و آزموده نشده‌اند.
+`.github/workflows/volume5-audit.yml` ساختار، هر دو پروژه، idempotence، مرورگر و layout/آفلاین را می‌آزماید. قالب انتشار وب/PWA و Markdown است؛ PDF و EPUB تولید یا آزموده نشده‌اند. فصل بعدی فقط پس از انتشار مستقل فصل ۶۳ و تأیید remote آن آغاز می‌شود.

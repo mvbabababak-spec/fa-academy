@@ -12,7 +12,8 @@ DATA_PATH = ROOT / "data.json"
 SW_PATH = ROOT / "sw.js"
 VOLUME_ID = "art-science-intelligence-v5"
 PLANNED_CHAPTERS = 12
-COVER_PATH = "assets/images/covers/volume-5-cover.svg"
+COVER_PATH = "assets/images/covers/volume-5-cover.png"
+COVER_SHA256 = "0a462880584e9f5190f0a16f0e89ea479e20eae3f78c02ed026843c0f035d754"
 PERSIAN_DIGITS = str.maketrans("0123456789", "۰۱۲۳۴۵۶۷۸۹")
 RENDER = mistune.create_markdown(escape=False, plugins=["table"])
 
@@ -34,9 +35,19 @@ SPECS = [
 
 APPENDIX_PROJECTS = {
     62: "book-engineering/projects/62-evaluation-lab/evaluation_lab.py",
+    63: "book-engineering/projects/63-model-behavior-lab/model_behavior_lab.py",
 }
 DIAGRAMS = {
     62: "book-engineering/diagrams/v5-ch01-evaluation-protocol.svg",
+    63: "book-engineering/diagrams/v5-ch02-behavior-audit.svg",
+}
+ANSWER_KEYS = {
+    62: "book-engineering/answers/62-benchmarking-evaluation-fa.md",
+    63: "book-engineering/answers/63-hallucination-bias-robustness-fa.md",
+}
+PROJECT_DIRS = {
+    62: "book-engineering/projects/62-evaluation-lab",
+    63: "book-engineering/projects/63-model-behavior-lab",
 }
 
 
@@ -125,16 +136,18 @@ def _v5_offline_paths(specs: list[tuple[int, int, str, str, str]]) -> list[str]:
     for _, global_num, slug, _, _ in specs:
         paths.append(f"book-engineering/chapters/{slug}.md")
         paths.append(f"book-engineering/chapters/{global_num}-audit-report-fa.md")
-        paths.append(f"book-engineering/diagrams/{DIAGRAMS[global_num].split('/')[-1]}") if global_num in DIAGRAMS else None
-        answer_stem = slug.removesuffix("-evaluation")
-        if global_num == 62:
-            paths.append("book-engineering/answers/62-benchmarking-evaluation-fa.md")
+        diagram = DIAGRAMS.get(global_num)
+        if diagram:
+            paths.append(diagram)
+        answer = ANSWER_KEYS.get(global_num)
+        if answer:
+            paths.append(answer)
         else:
-            # The answer key filename is fixed in the chapter source and may be added with that chapter.
             candidate = ROOT / "book-engineering/answers" / f"{slug}-fa.md"
             if candidate.is_file():
                 paths.append(candidate.relative_to(ROOT).as_posix())
-        project_dir = ROOT / "book-engineering/projects" / f"{global_num}-evaluation-lab" if global_num == 62 else None
+        project_dir_relative = PROJECT_DIRS.get(global_num)
+        project_dir = ROOT / project_dir_relative if project_dir_relative else None
         if project_dir and project_dir.is_dir():
             for path in sorted(project_dir.rglob("*")):
                 if path.is_file() and "__pycache__" not in path.parts:

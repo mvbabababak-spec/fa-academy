@@ -1,0 +1,18 @@
+{
+  "project": "63-model-behavior-lab",
+  "global_chapter": 63,
+  "local_chapter": 2,
+  "python": "CPython 3.13.16",
+  "dependencies": "Python standard library only",
+  "hardware": "CPU; no accelerator used",
+  "network_access": false,
+  "models_or_weights": "none",
+  "randomness": "none; deterministic arithmetic",
+  "fixture": "synthetic_behavior_fixture.json",
+  "fixture_provenance": "constructed solely for this teaching lab; contains no personal or external data",
+  "verification_commands": [
+    "python -m unittest -v",
+    "python model_behavior_lab.py --output results.json"
+  ],
+  "scope_note": "Unit tests check arithmetic and fixture contracts only; they do not validate real model behavior, fairness, factuality, robustness, or explanations."
+}

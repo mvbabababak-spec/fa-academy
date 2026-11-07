@@ -1282,10 +1282,10 @@ function renderHomeCourses(){
 
 function cardHTML(item,chCount,secCount,type){
   // Some imported covers contain an entire HTML fragment, not a URL.
-  // Local WebP covers are allowed; the authored Volume 5 SVG is a one-file exception.
+  // Local WebP covers are allowed; Volume 5 uses the supplied PNG raster.
   var candidate=String(item.cover||'');
-  var found=candidate.match(/assets\/images\/[a-zA-Z0-9_./-]+\.(?:webp|svg)/);
-  var isVolume5Cover=item.id==='art-science-intelligence-v5' && found && found[0]==='assets/images/covers/volume-5-cover.svg';
+  var found=candidate.match(/assets\/images\/[a-zA-Z0-9_./-]+\.(?:webp|png|svg)/);
+  var isVolume5Cover=item.id==='art-science-intelligence-v5' && found && found[0]==='assets/images/covers/volume-5-cover.png';
   var coverPath=found && found[0].indexOf('..')===-1 && (found[0].endsWith('.webp') || isVolume5Cover) ? found[0] : '';
   var cover=coverPath?'<img class="book-cover-img" src="'+coverPath+'" alt="" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">'+
     '<div class="book-cover-placeholder" style="display:none">'+(type==='book'?'📖':'🎓')+'</div>':
