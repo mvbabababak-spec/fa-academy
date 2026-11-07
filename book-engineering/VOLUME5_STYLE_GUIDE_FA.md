@@ -7,7 +7,11 @@
 - فصل ۶۲: طراحی benchmark و آزمون، metric، ارزیابی انسانی، عدم‌قطعیت و آلودگی. کارایی runtime و benchmark استنتاج در فصل ۶۱ است؛ تحلیل تفصیلی توهم/سوگیری در ۶۳ و آزمون خصمانه در ۶۴ است.
 - فصل ۶۳: توهم، سوگیری، استحکام، توضیح‌پذیری و تفسیرپذیری؛ روش و مرز اندازه‌گیری.
 - فصل ۶۴: Red Teaming، حمله، Prompt Injection، مسموم‌سازی، استخراج مدل و حریم خصوصی.
-- فصل ۶۵: هم‌ترازی، حکمرانی، مدل‌کارت/داده‌کارت و مدیریت ریسک.
+- فصل ۶۵: هم‌ترازیِ سازمانی، حکمرانی، مدل‌کارت/داده‌کارت و مدیریت ریسک؛ جزئیات حمله در ۶۴ می‌ماند و ساخت API در ۶۶ آغاز می‌شود.
+- فصل ۶۶: API و ساخت محصول، قرارداد داده، backend/frontend و آزمایش رابط؛ نه بهینه‌سازی runtime فصل ۶۷.
+- فصل ۶۷: سرو، صف، cache، تأخیر و توان عملیاتی؛ نه حاکمیت/کارت‌های فصل ۶۵ یا امنیت محصول/پایش فصل ۶۸.
+- فصل ۶۸: احراز هویت، محدودیت نرخ، ثبت رخداد، حریم خصوصی، پایش و پاسخ به رخداد؛ فصل ۶۹ به استقرار و CI/CD اختصاص دارد.
+- فصل ۶۹: استقرار ابری/محلی، نسخه‌بندی، CI/CD، بازگشت نسخه و نگه‌داری؛ مرز محصول فصل‌های ۶۶–۶۸ حفظ شود.
 
 پیش از هر فصل، وضعیت شاخهٔ محلی و remote، فایل‌های هم‌نام و نسخهٔ roadmap بررسی شود؛ سپس ساختار هر پنج جلد و مرز دو فصل مجاور دوباره خوانده شود. فصل تکمیل‌شده دوباره نوشته نشود. فصل‌ها به ترتیب محلی ۱ تا ۱۲، هرکدام با یک commit مستقل و push عادی منتشر می‌شوند؛ آغاز فصل بعد تنها پس از تأیید remote فصل قبل مجاز است. Force push ممنوع است.
 
@@ -37,6 +41,8 @@ python book-engineering/projects/62-evaluation-lab/evaluation_lab.py --output /t
 python book-engineering/projects/63-model-behavior-lab/model_behavior_lab.py --output /tmp/ch63-results.json
 (cd book-engineering/projects/64-red-team-lab && python -m unittest -v)
 python book-engineering/projects/64-red-team-lab/red_team_lab.py --output /tmp/ch64-results.json
+(cd book-engineering/projects/65-governance-lab && python -m unittest discover -v)
+python book-engineering/projects/65-governance-lab/governance_check.py --output /tmp/ch65-results.json
 python book-engineering/test_volume5.py
 python book-engineering/test_mobile_layout.py
 ```

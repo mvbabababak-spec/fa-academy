@@ -1,5 +1,5 @@
-// ===== فا-اکدمی Service Worker v100 =====
-const CACHE_NAME = 'fa-academy-v100';
+// ===== فا-اکدمی Service Worker v101 =====
+const CACHE_NAME = 'fa-academy-v101';
 const CORE_FILES = [
   './',
   './index.html',
@@ -404,6 +404,18 @@ const CORE_FILES = [
   './book-engineering/projects/64-red-team-lab/results.json',
   './book-engineering/projects/64-red-team-lab/synthetic_security_fixture.json',
   './book-engineering/projects/64-red-team-lab/test_red_team_lab.py',
+  './book-engineering/chapters/65-alignment-governance.md',
+  './book-engineering/chapters/65-audit-report-fa.md',
+  './book-engineering/diagrams/v5-ch04-governance-cycle.svg',
+  './book-engineering/answers/65-alignment-governance-fa.md',
+  './book-engineering/projects/65-governance-lab/README.md',
+  './book-engineering/projects/65-governance-lab/environment.json',
+  './book-engineering/projects/65-governance-lab/fixture_manifest.json',
+  './book-engineering/projects/65-governance-lab/governance_check.py',
+  './book-engineering/projects/65-governance-lab/governance_pack.json',
+  './book-engineering/projects/65-governance-lab/requirements.txt',
+  './book-engineering/projects/65-governance-lab/results.json',
+  './book-engineering/projects/65-governance-lab/test_governance_check.py',
 ];
 
 // ===== INSTALL: Cache core files =====

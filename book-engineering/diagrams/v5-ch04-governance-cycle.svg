@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc" xml:lang="fa">
+  <title id="title">چرخهٔ حکمرانی و مدیریت ریسک هوش مصنوعی</title>
+  <desc id="desc">چرخه از تعیین کاربرد و مرز سامانه به ارزیابی اثر، سپس ثبت ریسک و شاهد، و بعد تصمیم یک مالک انسانی می‌رسد. اگر ریسک شدیدِ باز یا شاهد ناکافی باشد، دروازه روی توقف یا بازطراحی می‌ماند؛ تصمیم مشروط فقط با مالک پاسخ‌گو، شواهد، محدودیت کاربرد و زمان بازبینی ثبت می‌شود. تغییر سامانه دوباره ارزیابی را فعال می‌کند؛ رنگ صرفاً تزئینی است.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M1,1 L11,6 L1,11 z" fill="#25364a"/>
+    </marker>
+    <marker id="arrow-hold" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M1,1 L11,6 L1,11 z" fill="#8a3a3a"/>
+    </marker>
+    <marker id="arrow-continue" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M1,1 L11,6 L1,11 z" fill="#2f6048"/>
+    </marker>
+    <style>
+      .heading{font:700 30px sans-serif;fill:#172438}
+      .node-title{font:700 21px sans-serif;fill:#152233;text-anchor:middle;direction:rtl;unicode-bidi:plaintext}
+      .node-copy{font:17px sans-serif;fill:#243449;text-anchor:middle;direction:rtl;unicode-bidi:plaintext}
+      .gate-title{font:700 20px sans-serif;fill:#172438;text-anchor:middle;direction:rtl;unicode-bidi:plaintext}
+      .gate-copy{font:16px sans-serif;fill:#243449;text-anchor:middle;direction:rtl;unicode-bidi:plaintext}
+      .path-label{font:700 17px sans-serif;fill:#172438;text-anchor:middle;direction:rtl;unicode-bidi:plaintext}
+      .edge{stroke:#25364a;stroke-width:3;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect x="0" y="0" width="1200" height="680" rx="24" fill="#f7f9fc"/>
+  <text x="600" y="54" class="heading" xml:lang="fa" direction="rtl" unicode-bidi="plaintext">از دامنه تا تصمیمِ قابل‌پاسخ‌گویی</text>
+  <text x="600" y="91" class="node-copy" xml:lang="fa" direction="rtl" unicode-bidi="plaintext">هر گام باید مالک، نسخه و شاهدِ قابل‌ردیابی داشته باشد</text>
+
+  <g>
+    <rect x="880" y="145" width="260" height="142" rx="18" fill="#e7eef8" stroke="#52677f" stroke-width="2"/>
+    <text x="1010" y="184" class="node-title" xml:lang="fa"><tspan x="1010">۱. کاربرد و مرز</tspan></text>
+    <text x="1010" y="222" class="node-copy" xml:lang="fa"><tspan x="1010">هدف، بیرون‌ازدامنه،</tspan><tspan x="1010" dy="25">نقش‌ها و نسخه</tspan></text>
+  </g>
+  <g>
+    <rect x="590" y="145" width="260" height="142" rx="18" fill="#eaf2ee" stroke="#52677f" stroke-width="2"/>
+    <text x="720" y="184" class="node-title" xml:lang="fa"><tspan x="720">۲. اثر و ذی‌نفع</tspan></text>
+    <text x="720" y="222" class="node-copy" xml:lang="fa"><tspan x="720">مسیر اثر، گروه‌های</tspan><tspan x="720" dy="25">متأثر و محدودیت</tspan></text>
+  </g>
+  <g>
+    <rect x="300" y="145" width="260" height="142" rx="18" fill="#fff1dc" stroke="#52677f" stroke-width="2"/>
+    <text x="430" y="184" class="node-title" xml:lang="fa"><tspan x="430">۳. ریسک و شاهد</tspan></text>
+    <text x="430" y="222" class="node-copy" xml:lang="fa"><tspan x="430">سناریو، مالک، کنترل،</tspan><tspan x="430" dy="25">نتیجه و ریسک باقی‌مانده</tspan></text>
+  </g>
+  <g>
+    <rect x="10" y="145" width="260" height="142" rx="18" fill="#eeeafa" stroke="#52677f" stroke-width="2"/>
+    <text x="140" y="184" class="node-title" xml:lang="fa"><tspan x="140">۴. دروازهٔ انسانی</tspan></text>
+    <text x="140" y="222" class="node-copy" xml:lang="fa"><tspan x="140">تصمیم، امضا، دلیل</tspan><tspan x="140" dy="25">و موعد بازبینی</tspan></text>
+  </g>
+
+  <path d="M875 216 H858" class="edge"/>
+  <path d="M585 216 H568" class="edge"/>
+  <path d="M295 216 H278" class="edge"/>
+
+  <rect x="354" y="335" width="492" height="84" rx="16" fill="#ffffff" stroke="#52677f" stroke-width="2"/>
+  <text x="600" y="368" class="gate-title" xml:lang="fa"><tspan x="600">آیا شواهد کافی است و ریسک شدیدِ باز مهار شده؟</tspan></text>
+  <text x="600" y="397" class="gate-copy" xml:lang="fa"><tspan x="600">پاسخ با مالک پاسخ‌گو و در محدودهٔ کاربرد ثبت می‌شود</tspan></text>
+  <path d="M140 289 V326 H355" stroke="#25364a" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+
+  <rect x="656" y="475" width="310" height="93" rx="16" fill="#f8ebeb" stroke="#8a3a3a" stroke-width="2"/>
+  <text x="811" y="511" class="gate-title" xml:lang="fa"><tspan x="811">خیر: توقف یا بازطراحی</tspan></text>
+  <text x="811" y="540" class="gate-copy" xml:lang="fa"><tspan x="811">کاهش دامنه، کنترل تازه یا عدم‌استفاده</tspan></text>
+  <path d="M730 420 V461" stroke="#8a3a3a" stroke-width="3" fill="none" marker-end="url(#arrow-hold)"/>
+  <text x="778" y="449" class="path-label" xml:lang="fa"><tspan x="778">خیر</tspan></text>
+
+  <rect x="234" y="475" width="310" height="93" rx="16" fill="#eaf2ee" stroke="#2f6048" stroke-width="2"/>
+  <text x="389" y="511" class="gate-title" xml:lang="fa"><tspan x="389">بله: تصمیم مشروط و محدود</tspan></text>
+  <text x="389" y="540" class="gate-copy" xml:lang="fa"><tspan x="389">مالک، شاهد، حدود و موعد بازبینی ثبت شود</tspan></text>
+  <path d="M470 420 V461" stroke="#2f6048" stroke-width="3" fill="none" marker-end="url(#arrow-continue)"/>
+  <text x="426" y="449" class="path-label" xml:lang="fa"><tspan x="426">بله</tspan></text>
+
+  <path d="M389 574 V620 H1010 V300" stroke="#52677f" stroke-width="2.5" stroke-dasharray="8 7" fill="none" marker-end="url(#arrow)"/>
+  <text x="700" y="610" class="node-copy" xml:lang="fa"><tspan x="700">تغییر مدل، داده، کاربرد یا قانون، ارزیابی و تصمیم را دوباره فعال می‌کند</tspan></text>
+</svg>

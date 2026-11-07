@@ -101,7 +101,7 @@ def main() -> None:
         for alt, image_path in images:
             require(bool(alt.strip()), f"chapter {global_num} figure has empty alt text")
             require((ROOT / image_path).is_file(), f"chapter {global_num} missing figure {image_path}")
-        if global_num in (62, 63, 64):
+        if global_num in (62, 63, 64, 65):
             questions = re.findall(r"(?m)^([۱-۸])\. (.+)$", source_text.split("## پیوست اجرایی", 1)[0])
             answer_questions = re.findall(r"(?m)^\*\*صورت پرسش:\*\* (.+)$", answer.read_text(encoding="utf-8"))
             require(len(questions) == 8 and [question for _, question in questions] == answer_questions,
@@ -137,6 +137,31 @@ def main() -> None:
                     and environment.get("network_used") is False
                     and environment.get("external_model_or_api") is False,
                     "chapter 64 environment metadata mismatch")
+        if global_num == 65:
+            require(len(book["chapters"][3]["sections"]) == 41, "chapter 65 expected 41 sections")
+            project_files = (
+                "environment.json", "fixture_manifest.json", "results.json",
+                "governance_pack.json", "test_governance_check.py", "governance_check.py",
+                "requirements.txt",
+            )
+            for filename in project_files:
+                require((project_dir / filename).is_file(), f"chapter 65 project file missing: {filename}")
+            fixture_path = project_dir / "governance_pack.json"
+            fixture_hash = hashlib.sha256(fixture_path.read_bytes()).hexdigest()
+            manifest = json.loads((project_dir / "fixture_manifest.json").read_text(encoding="utf-8"))
+            result = json.loads((project_dir / "results.json").read_text(encoding="utf-8"))
+            environment = json.loads((project_dir / "environment.json").read_text(encoding="utf-8"))
+            require(manifest.get("sha256") == fixture_hash and manifest.get("risk_count") == 4,
+                    "chapter 65 fixture manifest does not match governance-pack bytes")
+            require(result.get("fixture_sha256") == fixture_hash and result.get("risk_count") == 4
+                    and result.get("structurally_valid") is True
+                    and result.get("release_authorized") is False
+                    and result.get("gate_status") == "hold",
+                    "chapter 65 results overstate or contradict the synthetic governance pack")
+            require(environment.get("python", "").startswith("CPython 3.13")
+                    and environment.get("network_used") is False
+                    and environment.get("external_model_or_api") is False,
+                    "chapter 65 environment metadata mismatch")
 
         diagram_relative = builder.DIAGRAMS.get(global_num)
         if diagram_relative:
