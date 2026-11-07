@@ -725,6 +725,72 @@ def main() -> None:
     _require(environment60["fixture"]["sha256"] == fixture60_hash and environment60["container_reference"]["manifest_list_digest"] == "sha256:cf50a4f6ac4f026458b08d5222023d700ac806410dff5e9ca8728fa44f2b850f", "chapter 60 fixture/environment manifest digest mismatch")
     _require(environment60["validation_tools"]["docker"] == "unavailable" and environment60["validation_tools"]["kubectl"] == "unavailable", "chapter 60 must preserve Docker/Kubernetes execution limitation")
 
+    source61 = ROOT / "book-engineering/chapters/61-inference-serving.md"
+    answer61 = ROOT / "book-engineering/answers/61-inference-serving-fa.md"
+    report61 = ROOT / "book-engineering/chapters/61-audit-report-fa.md"
+    diagram61 = ROOT / "book-engineering/diagrams/v4-ch15-inference-serving.svg"
+    project61 = ROOT / "book-engineering/projects/61-inference-serving"
+    files61 = (
+        source61, answer61, report61, diagram61,
+        project61 / "README.md", project61 / "inference_lab.py", project61 / "test_inference_lab.py",
+        project61 / "sample_trace.json", project61 / "fixture_manifest.json",
+        project61 / "environment.json", project61 / "results.json",
+    )
+    for path in files61:
+        _require(path.is_file(), f"missing chapter 61 deliverable: {path.relative_to(ROOT)}")
+    source61_text = source61.read_text(encoding="utf-8")
+    _require("فصل محلی ۱۵ از ۱۵ جلد چهارم؛ فصل سراسری ۶۱" in source61_text, "chapter 61 local/global mapping missing")
+    _require("تاریخ بازبینی منابع: ۷ نوامبر ۲۰۲۶" in source61_text, "chapter 61 dated source review missing")
+    _require(all(term in source61_text for term in ("فصل ۵۸", "فصل ۵۹", "فصل ۶۰", "فصل‌های ۶۶ تا ۶۹")), "chapter 61 adjacent-chapter scope boundaries missing")
+    _require(all(term in source61_text for term in ("vLLM", "llama.cpp", "Ollama", "ONNX Runtime GenAI", "TensorRT-LLM", "GGUF", "Safetensors", "KV cache", "prefix", "speculative", "fixture_manifest.json")), "chapter 61 runtime/export/optimization scope topics missing")
+    _require(len(re.findall(r"^##\s+", source61_text, flags=re.MULTILINE)) == 25, "chapter 61 section count changed")
+    math61_nodes = re.findall(r"<math\b[^>]*>", source61_text)
+    math61_blocks = re.findall(r"<math\b.*?</math>", source61_text, flags=re.DOTALL)
+    _require(len(math61_nodes) >= 2 and len(math61_blocks) == len(math61_nodes), "chapter 61 accessible MathML missing or malformed")
+    _require(all("aria-label=" in node for node in math61_nodes) and source61_text.count("**متن جایگزین فرمول:**") >= len(math61_nodes), "chapter 61 MathML needs aria-label and visible alternatives")
+    for math_markup in math61_blocks:
+        _require(ET.fromstring(math_markup).tag.endswith("math"), "chapter 61 contains invalid MathML XML")
+    figures61 = re.findall(r"!\[([^\]]*)\]\(([^)]+)\)", source61_text)
+    _require(bool(figures61) and all(term in figures61[0][0] for term in ("شکل ۴-۱۵-۱", "runtime", "KV cache", "benchmark")), "chapter 61 figure alt text misses relationships or limits")
+    for alt, image_path in figures61:
+        _require(bool(alt.strip()) and (ROOT / image_path).is_file(), f"missing or inaccessible chapter 61 figure: {image_path}")
+    svg61 = ET.parse(diagram61).getroot()
+    _require(svg61.attrib.get("width") == "1600" and svg61.attrib.get("height") == "1000" and "aria-labelledby" in svg61.attrib, "chapter 61 SVG dimensions/accessibility mismatch")
+    for text_node in svg61.iter():
+        if text_node.tag.endswith("text"):
+            visible_label = "".join(text_node.itertext())
+            has_rtl = any("\u0600" <= char <= "\u06ff" for char in visible_label)
+            has_latin = any(("a" <= char <= "z") or ("A" <= char <= "Z") for char in visible_label)
+            _require(not (has_rtl and has_latin), "chapter 61 figure must place English labels on separate lines from Persian")
+    answer61_text = answer61.read_text(encoding="utf-8")
+    _require("پاسخ‌نامهٔ مستقل" in answer61_text and "فصل ۶۱" in answer61_text and len(answer61_text.split()) >= 300, "chapter 61 independent answer key missing or too short")
+    exercise61_match = re.search(r"^##\s+۲۲\.\s+تمرین‌ها\s*\n(.*?)(?=^##\s+|\Z)", source61_text, flags=re.MULTILINE | re.DOTALL)
+    _require(exercise61_match is not None, "chapter 61 exercise section missing")
+    questions61 = re.findall(r"^\d+\. (.+)$", exercise61_match.group(1), flags=re.MULTILINE)
+    _require(len(questions61) == 7, "chapter 61 must retain all seven exercise prompts")
+    for question in questions61:
+        _require(question in answer61_text, f"chapter 61 answer key changed question text: {question}")
+    report61_text = report61.read_text(encoding="utf-8")
+    _require("نتایج اجرای واقعی" in report61_text and "۲۴/۲۴ آزمون unit موفق" in report61_text, "chapter 61 report must record actual unit-test result")
+    _require("e53d085e8386c0c8d8dcb9b8b0c7ab9508bfef8d3f72341ea6c5f58bb9ffaf7c" in report61_text and "۴ GiB" in report61_text, "chapter 61 report must record fixture hash and exact synthetic cache result")
+    _require(all(term in report61_text for term in ("synthetic_fixture", "runtime", "GPU", "benchmark", "آزموده نشده")), "chapter 61 report must preserve fixture/runtime claim limits")
+    project_code61 = (project61 / "inference_lab.py").read_bytes()
+    appendix_marker61 = b"\n```python\n"
+    _, appendix_found61, appendix_tail61 = source61.read_bytes().rpartition(appendix_marker61)
+    appendix_close61 = appendix_tail61.rfind(b"```")
+    _require(bool(appendix_found61) and appendix_close61 >= 0 and appendix_tail61[:appendix_close61] == project_code61 and appendix_tail61[appendix_close61 + 3:] in (b"", b"\n"), "chapter 61 appendix and project must be byte-for-byte equal")
+    fixture61 = json.loads((project61 / "sample_trace.json").read_text(encoding="utf-8"))
+    manifest61 = json.loads((project61 / "fixture_manifest.json").read_text(encoding="utf-8"))
+    fixture61_hash = hashlib.sha256((project61 / "sample_trace.json").read_bytes()).hexdigest()
+    _require(fixture61["fixture_id"] == "v4-ch15-synthetic-inference-trace-v1" and fixture61["label_source"] == "synthetic_fixture" and manifest61["sha256"] == fixture61_hash and manifest61["fixture_id"] == fixture61["fixture_id"] and manifest61["runs"] == 2 and manifest61["requests_per_run"] == [6, 6], "chapter 61 synthetic trace identity/hash/count changed")
+    _require(fixture61["scope"]["synthetic_fixture_only"] is True and all(value is False for key, value in fixture61["scope"].items() if key != "synthetic_fixture_only"), "chapter 61 fixture scope must remain synthetic-only")
+    results61 = json.loads((project61 / "results.json").read_text(encoding="utf-8"))
+    _require(results61["fixture_id"] == fixture61["fixture_id"] and results61["fixture_sha256"] == fixture61_hash, "chapter 61 results fixture identity/hash mismatch")
+    _require(results61["unit_tests"] == {"passed": 24, "failed": 0, "command": "python -m unittest -v"} and results61["cli_smoke"]["status"] == "passed", "chapter 61 results must record tests and CLI smoke")
+    _require(results61["analysis"]["kv_cache_estimate"]["bytes_for_concurrency"] == 4294967296 and results61["analysis"]["runs"][0]["latency"]["ttft"]["p95_ms"] == 350.0 and results61["analysis"]["runs"][1]["latency"]["ttft"]["p95_ms"] == 200.0, "chapter 61 deterministic synthetic analysis changed")
+    environment61 = json.loads((project61 / "environment.json").read_text(encoding="utf-8"))
+    _require(environment61["python"] == "3.13.16" and environment61["external_dependencies"] == [] and environment61["scope"]["gpu_used"] is False and environment61["scope"]["model_loaded"] is False, "chapter 61 tested environment/scope mismatch")
+
     code = (project / "sft_experiment.py").read_text(encoding="utf-8").rstrip()
     blocks = re.findall(r"```python\n(.*?)\n```", source_text, flags=re.DOTALL)
     _require(bool(blocks) and blocks[-1] == code, "chapter appendix and tested project must be byte-for-byte equal")
@@ -738,7 +804,7 @@ def main() -> None:
     _require(markdown_path.is_file(), "volume-4-full-fa.md missing")
     _require(markdown_path.read_text(encoding="utf-8") == builder.expected_markdown(expected_chapters, specs), "full Markdown does not match chapter sources")
     sw = (ROOT / "sw.js").read_text(encoding="utf-8")
-    _require("fa-academy-v95" in sw and "v94" not in sw.splitlines()[0], "service worker cache version was not advanced")
+    _require("fa-academy-v96" in sw and "v95" not in sw.splitlines()[0], "service worker cache version was not advanced")
     cover_paths = {
         f"art-science-intelligence-v{volume}": f"assets/images/covers/volume-{volume}-cover.webp"
         for volume in range(1, 5)
@@ -902,6 +968,17 @@ def main() -> None:
         "./book-engineering/projects/60-mlops/requirements-lock-linux-py313.txt",
         "./book-engineering/projects/60-mlops/Dockerfile",
         "./book-engineering/projects/60-mlops/job.yaml",
+        "./book-engineering/diagrams/v4-ch15-inference-serving.svg",
+        "./book-engineering/chapters/61-inference-serving.md",
+        "./book-engineering/chapters/61-audit-report-fa.md",
+        "./book-engineering/answers/61-inference-serving-fa.md",
+        "./book-engineering/projects/61-inference-serving/README.md",
+        "./book-engineering/projects/61-inference-serving/inference_lab.py",
+        "./book-engineering/projects/61-inference-serving/test_inference_lab.py",
+        "./book-engineering/projects/61-inference-serving/sample_trace.json",
+        "./book-engineering/projects/61-inference-serving/fixture_manifest.json",
+        "./book-engineering/projects/61-inference-serving/environment.json",
+        "./book-engineering/projects/61-inference-serving/results.json",
     )
     for item in required_cache_paths:
         _require(item in sw, f"service worker does not precache {item}")
@@ -909,7 +986,7 @@ def main() -> None:
     print(
         f"PASS volume 4: {len(book['chapters'])}/{builder.PLANNED_CHAPTERS} chapters, "
         f"{sum(len(ch['sections']) for ch in book['chapters'])} sections, "
-        f"{len(math_nodes) + len(math48) + len(math49) + len(math50) + len(math51) + len(math52) + len(math53_nodes) + len(math54_nodes) + len(math55_nodes) + len(math56_nodes) + len(math57_nodes) + len(math58_nodes) + len(math59_nodes) + len(math60_nodes)} accessible MathML expressions, exact appendices, reports/answers/fixtures present"
+        f"{len(math_nodes) + len(math48) + len(math49) + len(math50) + len(math51) + len(math52) + len(math53_nodes) + len(math54_nodes) + len(math55_nodes) + len(math56_nodes) + len(math57_nodes) + len(math58_nodes) + len(math59_nodes) + len(math60_nodes) + len(math61_nodes)} accessible MathML expressions, exact appendices, reports/answers/fixtures present"
     )
 
 

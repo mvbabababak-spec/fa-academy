@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "fixture_id": "v4-ch15-synthetic-inference-trace-v1",
+  "label_source": "synthetic_fixture",
+  "scope": {
+    "synthetic_fixture_only": true,
+    "real_model_used": false,
+    "real_runtime_used": false,
+    "gpu_used": false,
+    "benchmark_claim": false,
+    "quality_claim": false,
+    "production_claim": false
+  },
+  "kv_profile": {
+    "layers": 32,
+    "kv_heads": 8,
+    "head_dim": 128,
+    "bytes_per_element": 2,
+    "context_tokens": 4096,
+    "concurrent_sequences": 8
+  },
+  "runs": [
+    {
+      "run_id": "illustrative-static",
+      "runtime": "fictional-reference",
+      "configuration": {
+        "batching": "static",
+        "weight_precision": "fp16",
+        "kv_precision": "fp16"
+      },
+      "window_ms": 2000,
+      "requests": [
+        {"request_id": "r1", "arrival_ms": 0, "first_output_ms": 160, "finish_ms": 620, "prompt_tokens": 256, "completion_tokens": 64, "status": "ok"},
+        {"request_id": "r2", "arrival_ms": 50, "first_output_ms": 270, "finish_ms": 850, "prompt_tokens": 512, "completion_tokens": 96, "status": "ok"},
+        {"request_id": "r3", "arrival_ms": 100, "first_output_ms": 450, "finish_ms": 1180, "prompt_tokens": 128, "completion_tokens": 128, "status": "ok"},
+        {"request_id": "r4", "arrival_ms": 250, "first_output_ms": 480, "finish_ms": 980, "prompt_tokens": 1024, "completion_tokens": 80, "status": "ok"},
+        {"request_id": "r5", "arrival_ms": 500, "first_output_ms": 830, "finish_ms": 1450, "prompt_tokens": 256, "completion_tokens": 100, "status": "ok"},
+        {"request_id": "r6", "arrival_ms": 750, "first_output_ms": null, "finish_ms": 1040, "prompt_tokens": 256, "completion_tokens": 0, "status": "error"}
+      ]
+    },
+    {
+      "run_id": "illustrative-candidate",
+      "runtime": "fictional-reference",
+      "configuration": {
+        "batching": "continuous",
+        "weight_precision": "fp16",
+        "kv_precision": "fp16"
+      },
+      "window_ms": 2000,
+      "requests": [
+        {"request_id": "r1", "arrival_ms": 0, "first_output_ms": 130, "finish_ms": 520, "prompt_tokens": 256, "completion_tokens": 64, "status": "ok"},
+        {"request_id": "r2", "arrival_ms": 50, "first_output_ms": 210, "finish_ms": 750, "prompt_tokens": 512, "completion_tokens": 96, "status": "ok"},
+        {"request_id": "r3", "arrival_ms": 100, "first_output_ms": 300, "finish_ms": 920, "prompt_tokens": 128, "completion_tokens": 128, "status": "ok"},
+        {"request_id": "r4", "arrival_ms": 250, "first_output_ms": 330, "finish_ms": 840, "prompt_tokens": 1024, "completion_tokens": 80, "status": "ok"},
+        {"request_id": "r5", "arrival_ms": 500, "first_output_ms": 580, "finish_ms": 1120, "prompt_tokens": 256, "completion_tokens": 100, "status": "ok"},
+        {"request_id": "r6", "arrival_ms": 750, "first_output_ms": null, "finish_ms": 950, "prompt_tokens": 256, "completion_tokens": 0, "status": "error"}
+      ]
+    }
+  ]
+}

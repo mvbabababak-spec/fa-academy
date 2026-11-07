@@ -246,6 +246,25 @@ jobs:
           offline_dir = Path('/tmp/ch60-ci-wandb') / wandb_run['tracking']['offline_run_directory']
           assert offline_dir.is_dir() and list(offline_dir.glob('*.wandb'))
           PY
+      - name: Chapter 61 synthetic inference-trace arithmetic
+        run: |
+          (cd book-engineering/projects/61-inference-serving && python -m unittest -v)
+          python book-engineering/projects/61-inference-serving/inference_lab.py \
+            --fixture book-engineering/projects/61-inference-serving/sample_trace.json \
+            --output /tmp/ch61-ci-analysis.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          result = json.loads(Path('/tmp/ch61-ci-analysis.json').read_text())
+          assert result['fixture_sha256'] == 'e53d085e8386c0c8d8dcb9b8b0c7ab9508bfef8d3f72341ea6c5f58bb9ffaf7c'
+          assert result['kv_cache_estimate']['bytes_for_concurrency'] == 4294967296
+          assert result['runs'][0]['requests']['successful'] == 5
+          assert result['runs'][1]['requests']['successful'] == 5
+          assert result['runs'][0]['runtime'] == 'fictional-reference'
+          assert result['scope']['real_runtime_used'] is False
+          assert result['scope']['gpu_used'] is False
+          assert result['scope']['benchmark_claim'] is False
+          PY
       - name: Confirm volume 4 builder idempotence
         run: |
           cp data.json /tmp/v4-data-before.json

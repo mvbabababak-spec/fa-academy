@@ -30,7 +30,14 @@ def main():
                   const previous=book&&book.chapters[12];
                   return {count:book&&book.chapters.length,id:chapter&&chapter.id,sections:chapter&&chapter.sections.length,previousId:previous&&previous.id,previousSections:previous&&previous.sections.length};
                 }""")
-                assert chapter60 == {'count':14,'id':'art-science-v4-ch14','sections':24,'previousId':'art-science-v4-ch13','previousSections':22}, chapter60
+                assert chapter60 == {'count':15,'id':'art-science-v4-ch14','sections':24,'previousId':'art-science-v4-ch13','previousSections':22}, chapter60
+                chapter61 = page.evaluate("""() => {
+                  const book=DATA.books.find(item=>item.id==='art-science-intelligence-v4');
+                  const chapter=book&&book.chapters[14];
+                  const previous=book&&book.chapters[13];
+                  return {count:book&&book.chapters.length,id:chapter&&chapter.id,sections:chapter&&chapter.sections.length,previousId:previous&&previous.id,previousSections:previous&&previous.sections.length};
+                }""")
+                assert chapter61 == {'count':15,'id':'art-science-v4-ch15','sections':25,'previousId':'art-science-v4-ch14','previousSections':24}, chapter61
                 assert page.locator('.home-hero > p').first.inner_text() == 'مجموعه‌ای جامع از کتاب‌ها و دوره‌های آموزشی هوش مصنوعی — با دسترسی آفلاین'
                 page.evaluate("document.querySelectorAll('.book-card--volume img,.book-card--microsoft img').forEach(img => img.loading='eager')")
                 page.wait_for_function("""() => {
@@ -217,6 +224,9 @@ def main():
                 chapter60_offline = page.evaluate("fetch('book-engineering/chapters/60-mlops.md').then(r => r.ok ? r.text() : '')")
                 answer60_offline = page.evaluate("fetch('book-engineering/answers/60-mlops-fa.md').then(r => r.ok ? r.text() : '')")
                 diagram60_offline = page.evaluate("fetch('book-engineering/diagrams/v4-ch14-mlops.svg').then(r => r.ok ? r.text() : '')")
+                chapter61_offline = page.evaluate("fetch('book-engineering/chapters/61-inference-serving.md').then(r => r.ok ? r.text() : '')")
+                answer61_offline = page.evaluate("fetch('book-engineering/answers/61-inference-serving-fa.md').then(r => r.ok ? r.text() : '')")
+                diagram61_offline = page.evaluate("fetch('book-engineering/diagrams/v4-ch15-inference-serving.svg').then(r => r.ok ? r.text() : '')")
                 assert 'طراحی آزمایشگاه' in chapter55_offline, 'chapter 55 unavailable offline'
                 assert 'پاسخ‌نامهٔ مستقل' in answer55_offline, 'chapter 55 answer key unavailable offline'
                 assert '<svg' in diagram55_offline, 'chapter 55 diagram unavailable offline'
@@ -235,11 +245,14 @@ def main():
                 assert 'MLflow' in chapter60_offline and 'W&B' in chapter60_offline, 'chapter 60 unavailable offline'
                 assert 'پاسخ‌نامهٔ مستقل' in answer60_offline, 'chapter 60 answer key unavailable offline'
                 assert '<svg' in diagram60_offline, 'chapter 60 diagram unavailable offline'
+                assert all(term in chapter61_offline for term in ('vLLM', 'llama.cpp', 'Ollama', 'TensorRT-LLM')), 'chapter 61 unavailable offline'
+                assert 'پاسخ‌نامهٔ مستقل' in answer61_offline, 'chapter 61 answer key unavailable offline'
+                assert '<svg' in diagram61_offline, 'chapter 61 diagram unavailable offline'
                 typography_summary=', '.join(
                     f"{book_id}: {stats['paragraphs']} justified prose paragraphs, {stats['indented']} indented, {stats['formulas']} MathML, {stats['captions']} captions"
                     for book_id,stats in result['typography'].items()
                 )
-                print(f"PASS {width}px: cover online/offline, chapters 56–60 source/answer/diagram offline, text, header, RTL navigation, locked viewport and {result['count']} sections; {typography_summary}")
+                print(f"PASS {width}px: cover online/offline, chapters 56–61 source/answer/diagram offline, text, header, RTL navigation, locked viewport and {result['count']} sections; {typography_summary}")
                 context.close()
             browser.close()
     finally:

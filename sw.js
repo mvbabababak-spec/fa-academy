@@ -1,5 +1,5 @@
-// ===== فا-اکدمی Service Worker v95 =====
-const CACHE_NAME = 'fa-academy-v95';
+// ===== فا-اکدمی Service Worker v96 =====
+const CACHE_NAME = 'fa-academy-v96';
 const CORE_FILES = [
   './',
   './index.html',
@@ -352,7 +352,18 @@ const CORE_FILES = [
   './book-engineering/projects/60-mlops/requirements-cpu.txt',
   './book-engineering/projects/60-mlops/requirements-lock-linux-py313.txt',
   './book-engineering/projects/60-mlops/Dockerfile',
-  './book-engineering/projects/60-mlops/job.yaml'
+  './book-engineering/projects/60-mlops/job.yaml',
+  './book-engineering/diagrams/v4-ch15-inference-serving.svg',
+  './book-engineering/chapters/61-inference-serving.md',
+  './book-engineering/chapters/61-audit-report-fa.md',
+  './book-engineering/answers/61-inference-serving-fa.md',
+  './book-engineering/projects/61-inference-serving/README.md',
+  './book-engineering/projects/61-inference-serving/inference_lab.py',
+  './book-engineering/projects/61-inference-serving/test_inference_lab.py',
+  './book-engineering/projects/61-inference-serving/sample_trace.json',
+  './book-engineering/projects/61-inference-serving/fixture_manifest.json',
+  './book-engineering/projects/61-inference-serving/environment.json',
+  './book-engineering/projects/61-inference-serving/results.json'
 ];
 
 // ===== INSTALL: Cache core files =====
