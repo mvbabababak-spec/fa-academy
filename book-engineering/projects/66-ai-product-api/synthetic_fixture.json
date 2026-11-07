@@ -1,0 +1,16 @@
+{
+  "fixture_id": "v5-ch05-api-contract-synthetic-v1",
+  "created_for": "Volume 5, Chapter 5 / global Chapter 66",
+  "created_on": "2026-11-07",
+  "synthetic": true,
+  "contains_personal_data": false,
+  "records": [
+    {
+      "id": "guide-001",
+      "title": "راهنمای آموزشی ساختگی",
+      "url": "https://example.invalid/guide-001",
+      "answer_fa": "این پاسخِ نمایشی از fixture ساختگی آمده است؛ برای پرسش واقعی به منبع معتبر و نسخه‌دار رجوع کنید.",
+      "answer_en": "This demonstration response comes from a synthetic fixture; consult an authoritative, versioned source for a real question."
+    }
+  ]
+}

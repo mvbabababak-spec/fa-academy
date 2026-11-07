@@ -100,8 +100,11 @@ def main() -> None:
         require(bool(images), f"chapter {global_num} has no figure")
         for alt, image_path in images:
             require(bool(alt.strip()), f"chapter {global_num} figure has empty alt text")
-            require((ROOT / image_path).is_file(), f"chapter {global_num} missing figure {image_path}")
-        if global_num in (62, 63, 64, 65):
+            image_relative = Path(image_path)
+            image_path_on_disk = (ROOT / image_relative if image_relative.parts and image_relative.parts[0] in {"book-engineering", "assets"}
+                                  else source.parent / image_relative)
+            require(image_path_on_disk.is_file(), f"chapter {global_num} missing figure {image_path}")
+        if global_num in (62, 63, 64, 65, 66):
             questions = re.findall(r"(?m)^([۱-۸])\. (.+)$", source_text.split("## پیوست اجرایی", 1)[0])
             answer_questions = re.findall(r"(?m)^\*\*صورت پرسش:\*\* (.+)$", answer.read_text(encoding="utf-8"))
             require(len(questions) == 8 and [question for _, question in questions] == answer_questions,
@@ -162,6 +165,44 @@ def main() -> None:
                     and environment.get("network_used") is False
                     and environment.get("external_model_or_api") is False,
                     "chapter 65 environment metadata mismatch")
+
+        if global_num == 66:
+            require(len(book["chapters"][4]["sections"]) == 40, "chapter 66 expected 40 sections")
+            project_files = (
+                "environment.json", "fixture_manifest.json", "results.json",
+                "synthetic_fixture.json", "app.py", "demo.html", "audit.py",
+                "test_api.py", "test_frontend.py", "requirements.txt",
+            )
+            for filename in project_files:
+                require((project_dir / filename).is_file(), f"chapter 66 project file missing: {filename}")
+            fixture_path = project_dir / "synthetic_fixture.json"
+            fixture_hash = hashlib.sha256(fixture_path.read_bytes()).hexdigest()
+            manifest = json.loads((project_dir / "fixture_manifest.json").read_text(encoding="utf-8"))
+            result = json.loads((project_dir / "results.json").read_text(encoding="utf-8"))
+            environment = json.loads((project_dir / "environment.json").read_text(encoding="utf-8"))
+            require(manifest.get("sha256") == fixture_hash
+                    and manifest.get("fixture_id") == "v5-ch05-api-contract-synthetic-v1"
+                    and manifest.get("synthetic") is True
+                    and manifest.get("contains_personal_data") is False,
+                    "chapter 66 fixture manifest does not match the synthetic fixture bytes")
+            require(result.get("fixture_sha256") == fixture_hash
+                    and result.get("fixture_id") == manifest.get("fixture_id")
+                    and result.get("api_case_count") == 12
+                    and result.get("api_cases_passed") == 12
+                    and result.get("api_cases_failed") == 0
+                    and result.get("frontend_case_count") == 2
+                    and result.get("frontend_cases_passed") == 2
+                    and result.get("frontend_cases_failed") == 0
+                    and result.get("external_http_requests") == 0
+                    and result.get("live_model_calls") == 0
+                    and result.get("personal_records") == 0,
+                    "chapter 66 results overstate or contradict the synthetic test runs")
+            require(environment.get("python", {}).get("implementation") == "CPython"
+                    and environment.get("python", {}).get("version") == "3.13.16"
+                    and environment.get("execution", {}).get("external_http_requests") == 0
+                    and environment.get("execution", {}).get("live_model_calls") == 0
+                    and environment.get("execution", {}).get("real_user_or_personal_records") == 0,
+                    "chapter 66 environment metadata mismatch")
 
         diagram_relative = builder.DIAGRAMS.get(global_num)
         if diagram_relative:

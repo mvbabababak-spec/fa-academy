@@ -1,11 +1,11 @@
 # Fa Academy
 
-اپ وب/PWA فارسی برای مجموعهٔ پنج‌جلدی «هنر و علم ساخت هوش». جلد اول ۲۱ فصل و جلد دوم ۱۱ فصل منتشرشده دارد. جلد سوم ۱۴ فصل محلی (۱–۱۴)، متناظر با فصل‌های سراسری ۳۳–۴۶، منتشر شده است. جلد چهارم ۱۵ فصل محلی (سراسری ۴۷–۶۱) دارد و هر ۱۵ فصل جداگانه منتشر شده‌اند. جلد پنجم در نقشه ۱۲ فصل محلی دارد؛ فصل‌های محلی ۱ تا ۳ (فصل‌های سراسری ۶۲ تا ۶۴) جداگانه تکمیل و منتشر شده‌اند. متن‌های قابل‌دریافت:
+اپ وب/PWA فارسی برای مجموعهٔ پنج‌جلدی «هنر و علم ساخت هوش». جلد اول ۲۱ فصل و جلد دوم ۱۱ فصل منتشرشده دارد. جلد سوم ۱۴ فصل محلی (۱–۱۴)، متناظر با فصل‌های سراسری ۳۳–۴۶، منتشر شده است. جلد چهارم ۱۵ فصل محلی (سراسری ۴۷–۶۱) دارد و هر ۱۵ فصل جداگانه منتشر شده‌اند. جلد پنجم در نقشه ۱۲ فصل محلی دارد؛ فصل‌های محلی ۱ تا ۴ (فصل‌های سراسری ۶۲ تا ۶۵) منتشر شده‌اند و فصل محلی ۵/سراسری ۶۶ تکمیل و از گیت‌های محلی گذشته است؛ تأیید remote، CI و Pages در جریان انتشار ثبت خواهد شد. متن‌های قابل‌دریافت:
 
 - [جلد دوم — Markdown](volume-2-full-fa.md)
 - [جلد سوم، فصل‌های ۳۳–۴۶ — Markdown](volume-3-full-fa.md)
 - [جلد چهارم، فصل‌های ۴۷–۶۱ — Markdown](volume-4-full-fa.md)
-- [جلد پنجم، فصل‌های ۶۲–۶۴ — Markdown](volume-5-full-fa.md)
+- [جلد پنجم، فصل‌های ۶۲–۶۶ — Markdown](volume-5-full-fa.md)
 
 **قالب انتشار فعلی وب/PWA و Markdown است. PDF و EPUB تولید و آزموده نشده‌اند و به milestone بعدی موکول‌اند.** راهنمای اجرا، محدوده و محدودیت پروژه‌ها در [book-engineering/README.md](book-engineering/README.md) آمده است.
 
@@ -41,14 +41,27 @@
 
 ## جلد پنجم: فصل‌های محلی ۱–۱۲ / سراسری ۶۲–۷۳
 
-فصل ۶۲ طراحی benchmark، سنجه، ارزیابی انسانی، عدم‌قطعیت و خطر آلودگی را از ارزیابی کارایی runtime در فصل ۶۱ جدا می‌کند. فصل ۶۳ توهم، سوگیری، استحکام و تبیین‌پذیری را با تفکیک حقیقت، پشتیبانی شواهد، معیار گروهی، تغییر توزیع و fidelity توضیح بررسی می‌کند. فصل ۶۴ آزمون خصمانه، threat modeling، Prompt Injection، اختیار ابزار/عامل، poisoning، زنجیرهٔ تأمین مدل، استخراج و حریم خصوصی را پوشش می‌دهد. پروژه‌های فصل‌های ۶۲ تا ۶۴ فقط fixtureهای ساختگی و آزمون‌های محدود همان fixtureها را اجرا می‌کنند؛ نتیجهٔ آن‌ها کیفیت، عدالت، امنیت یا مقاومت مدل/محصول واقعی را اثبات نمی‌کند. فصل ۶۵ حکمرانی و مدیریت ریسک، فصل‌های ۶۶–۶۹ محصول و فصل‌های ۷۰–۷۳ پژوهش مستقل را پوشش می‌دهند.
+فصل‌های محلی ۱–۴ (سراسری ۶۲–۶۵) جداگانه منتشر شده‌اند؛ فصل محلی ۵/سراسری ۶۶ در worktree تکمیل و پس از گیت‌های محلی برای انتشار آماده است. این جلد benchmark و رفتار مدل (۶۲–۶۳)، Red Teaming و امنیت (۶۴)، حکمرانی و ریسک (۶۵)، سپس محصول/API و قراردادهای backend/frontend (۶۶) را به هم پیوند می‌دهد. مرزهای بعدی حفظ شده‌اند: runtime و بهینه‌سازی در ۶۷، احراز هویت/پایش/پاسخ به رخداد در ۶۸، و استقرار/CI/CD در ۶۹ است؛ پژوهش مستقل در فصل‌های ۷۰–۷۳ می‌آید.
 
 - [فصل ۶۲: متن](book-engineering/chapters/62-benchmarking-evaluation.md) · [پاسخ‌نامه](book-engineering/answers/62-benchmarking-evaluation-fa.md) · [پروژه](book-engineering/projects/62-evaluation-lab/README.md) · [گزارش ممیزی](book-engineering/chapters/62-audit-report-fa.md)
 - [فصل ۶۳: متن](book-engineering/chapters/63-hallucination-bias-robustness.md) · [پاسخ‌نامه](book-engineering/answers/63-hallucination-bias-robustness-fa.md) · [پروژه](book-engineering/projects/63-model-behavior-lab/README.md) · [گزارش ممیزی](book-engineering/chapters/63-audit-report-fa.md)
 - [فصل ۶۴: متن](book-engineering/chapters/64-red-teaming-security.md) · [پاسخ‌نامه](book-engineering/answers/64-red-teaming-security-fa.md) · [پروژه](book-engineering/projects/64-red-team-lab/README.md) · [گزارش ممیزی](book-engineering/chapters/64-audit-report-fa.md)
-- [جلد پنجم: سازندهٔ append-safe](book-engineering/build_volume5.py) · [checker](book-engineering/check_volume5.py) · [آزمون مرورگر/PWA](book-engineering/test_volume5.py) · [راهنمای سبک](book-engineering/VOLUME5_STYLE_GUIDE_FA.md) · [خروجی Markdown](volume-5-full-fa.md)
-- مثال اختیاری فصل ۴۷ از revision ثابت `EleutherAI/pythia-14m` استفاده می‌کند. کارت مدل آن را انگلیسی‌زبان و پژوهشی معرفی می‌کند و برای deployment یا زبان‌های دیگر توصیه نمی‌کند؛ fixture آن ساختگی انگلیسی است و ادعای کیفیت فارسی یا محصولی ندارد. پروژه‌های فصل‌های ۴۸–۶۴ به مدل pretrained نیاز ندارند؛ پروژهٔ فصل ۵۹ فقط CPU/Gloo را آزموده، پروژهٔ فصل ۶۰ فقط fixture ساختگی و trackerهای محلی/آفلاین را آزموده، پروژهٔ فصل ۶۱ trace ساختگی و arithmetic payload KV را بررسی کرده، پروژهٔ فصل ۶۳ محاسبات توصیفی را روی fixture ساختگی اجرا می‌کند و پروژهٔ فصل ۶۴ نیز منطق کنترل امنیتی را فقط روی fixture ساختگی می‌آزماید.
+- [فصل ۶۵: متن](book-engineering/chapters/65-alignment-governance.md) · [پاسخ‌نامه](book-engineering/answers/65-alignment-governance-fa.md) · [پروژه](book-engineering/projects/65-governance-lab/README.md) · [گزارش ممیزی](book-engineering/chapters/65-audit-report-fa.md)
+- [فصل ۶۶: متن](book-engineering/chapters/66-ai-product-api.md) · [پاسخ‌نامه](book-engineering/answers/66-ai-product-api-fa.md) · [پروژه](book-engineering/projects/66-ai-product-api/README.md) · [گزارش ممیزی](book-engineering/chapters/66-audit-report-fa.md)
 
-## گزارش‌های ممیزی جلد سوم
+فصل ۶۶ روی fixture ساختگی و بدون شبکه یا مدل زنده، ۱۲ آزمون API و دو آزمون مرورگر دارد؛ نسخه‌ها، محدودیت‌ها و نتایج در [گزارش ممیزی](book-engineering/chapters/66-audit-report-fa.md) و `projects/66-ai-product-api/results.json` ثبت شده‌اند. برای بازتولید، از ریشهٔ مخزن اجرا کنید:
 
-[فصل ۳۳](book-engineering/chapters/33-audit-report-fa.md) · [۳۴](book-engineering/chapters/34-audit-report-fa.md) · [۳۵](book-engineering/chapters/35-audit-report-fa.md) · [۳۶](book-engineering/chapters/36-audit-report-fa.md) · [۳۷](book-engineering/chapters/37-audit-report-fa.md) · [۳۸](book-engineering/chapters/38-audit-report-fa.md) · [۳۹](book-engineering/chapters/39-audit-report-fa.md) · [۴۰](book-engineering/chapters/40-audit-report-fa.md) · [۴۱](book-engineering/chapters/41-audit-report-fa.md) · [۴۲](book-engineering/chapters/42-audit-report-fa.md) · [۴۳](book-engineering/chapters/43-audit-report-fa.md) · [۴۴](book-engineering/chapters/44-audit-report-fa.md) · [۴۵](book-engineering/chapters/45-audit-report-fa.md) · [۴۶](book-engineering/chapters/46-audit-report-fa.md) · [ممیزی نهایی جلد سوم](book-engineering/VOLUME3_FINAL_RELEASE_FA.md) · [گزارش ممیزی جلد دوم](book-engineering/VOLUME2_FINAL_RELEASE_FA.md).
+```bash
+python -m pip install -r requirements.txt
+python -m pip install -r book-engineering/projects/66-ai-product-api/requirements.txt
+python -m playwright install --with-deps chromium
+python book-engineering/build_volume5.py
+python book-engineering/check_volume5.py
+python book-engineering/projects/66-ai-product-api/audit.py --output /tmp/ch66-results.json
+python book-engineering/test_volume5.py
+python book-engineering/test_mobile_layout.py
+```
+
+در این snapshot جلد پنجم ۵/۱۲ فصل و ۴۰ بخش تازه دارد؛ Service Worker `fa-academy-v104`، ۶۶ مسیر آفلاین را ثبت می‌کند. پنج checker جلدها، پروژه‌های ۶۲–۶۶، آزمون idempotence سازنده و browser/mobile در گیت محلی موفق شدند. `.github/workflows/volume5-audit.yml` همین آزمون‌ها و checkerهای هر پنج جلد را اجرا می‌کند؛ وضعیت remote، پنج workflow و Pages پس از push عادی به‌روز می‌شود. تصویر مرجع `book-engineering/reports/browser-mobile.webp` و تغییرهای responsive قبلی حفظ شده‌اند.
+
+قالب انتشار وب/PWA و Markdown است؛ PDF و EPUB تولید یا آزموده نشده‌اند. فصل ۶۵ تکرار نمی‌شود. فصل ۶۷ را تا ثبت SHA انتشار فصل ۶۶، تأیید remote، workflowهای جلدهای ۱–۵ و Pages آغاز نکنید.

@@ -2,8 +2,10 @@
 from __future__ import annotations
 
 import json
+import posixpath
 import re
 from pathlib import Path
+from urllib.parse import urlsplit, urlunsplit
 
 import mistune
 
@@ -38,24 +40,28 @@ APPENDIX_PROJECTS = {
     63: "book-engineering/projects/63-model-behavior-lab/model_behavior_lab.py",
     64: "book-engineering/projects/64-red-team-lab/red_team_lab.py",
     65: "book-engineering/projects/65-governance-lab/governance_check.py",
+    66: "book-engineering/projects/66-ai-product-api/app.py",
 }
 DIAGRAMS = {
     62: "book-engineering/diagrams/v5-ch01-evaluation-protocol.svg",
     63: "book-engineering/diagrams/v5-ch02-behavior-audit.svg",
     64: "book-engineering/diagrams/v5-ch03-red-team-pipeline.svg",
     65: "book-engineering/diagrams/v5-ch04-governance-cycle.svg",
+    66: "book-engineering/diagrams/v5-ch05-api-contract.svg",
 }
 ANSWER_KEYS = {
     62: "book-engineering/answers/62-benchmarking-evaluation-fa.md",
     63: "book-engineering/answers/63-hallucination-bias-robustness-fa.md",
     64: "book-engineering/answers/64-red-teaming-security-fa.md",
     65: "book-engineering/answers/65-alignment-governance-fa.md",
+    66: "book-engineering/answers/66-ai-product-api-fa.md",
 }
 PROJECT_DIRS = {
     62: "book-engineering/projects/62-evaluation-lab",
     63: "book-engineering/projects/63-model-behavior-lab",
     64: "book-engineering/projects/64-red-team-lab",
     65: "book-engineering/projects/65-governance-lab",
+    66: "book-engineering/projects/66-ai-product-api",
 }
 
 
@@ -78,6 +84,31 @@ def _verify_code_appendix(global_num: int, text: str) -> None:
         raise ValueError(f"chapter {global_num} executable appendix must match the tested project byte-for-byte")
 
 
+def rewrite_reader_links(html: str, source_relative: str) -> str:
+    """Resolve source-relative links for sections injected into the site root.
+
+    The Markdown files keep ordinary portable relative links. The web reader
+    injects rendered sections into a page rooted above ``book-engineering``, so
+    relative href/src values must be rewritten for that view only.
+    """
+    source_dir = posixpath.dirname(source_relative)
+
+    def rewrite(match: re.Match[str]) -> str:
+        value = match.group(2)
+        parsed = urlsplit(value)
+        if parsed.scheme or parsed.netloc or not parsed.path:
+            return match.group(0)
+        if parsed.path.startswith(("book-engineering/", "assets/", "volume-5-full-fa.md")):
+            return match.group(0)
+        normalized = posixpath.normpath(posixpath.join(source_dir, parsed.path))
+        if normalized == ".." or normalized.startswith("../"):
+            return match.group(0)
+        resolved = urlunsplit(("", "", normalized, parsed.query, parsed.fragment))
+        return f'{match.group(1)}="{resolved}"'
+
+    return re.sub(r'\b(href|src)="([^"]*)"', rewrite, html)
+
+
 def build_chapter(spec: tuple[int, int, str, str, str]) -> dict:
     local_num, global_num, slug, title, icon = spec
     relative = f"book-engineering/chapters/{slug}.md"
@@ -93,6 +124,8 @@ def build_chapter(spec: tuple[int, int, str, str, str]) -> dict:
     for section_no, index in enumerate(range(1, len(parts), 2), 1):
         body = (parts[0] + "\n" if index == 1 else "") + "## " + parts[index] + "\n" + parts[index + 1]
         html = RENDER(body)
+        if global_num >= 66:
+            html = rewrite_reader_links(html, relative)
         if not html.strip():
             raise ValueError(f"empty rendered section {global_num}.{section_no}")
         sections.append({

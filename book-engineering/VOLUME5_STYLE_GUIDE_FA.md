@@ -43,10 +43,13 @@ python book-engineering/projects/63-model-behavior-lab/model_behavior_lab.py --o
 python book-engineering/projects/64-red-team-lab/red_team_lab.py --output /tmp/ch64-results.json
 (cd book-engineering/projects/65-governance-lab && python -m unittest discover -v)
 python book-engineering/projects/65-governance-lab/governance_check.py --output /tmp/ch65-results.json
+python -m pip install -r book-engineering/projects/66-ai-product-api/requirements.txt
+python book-engineering/projects/66-ai-product-api/audit.py --output /tmp/ch66-results.json
+cmp /tmp/ch66-results.json book-engineering/projects/66-ai-product-api/results.json
 python book-engineering/test_volume5.py
 python book-engineering/test_mobile_layout.py
 ```
 
-`build_volume5.py` منبع‌های پیوسته را به `data.json`، `volume-5-full-fa.md` و cache آفلاین Service Worker می‌افزاید؛ هیچ فصل ثبت‌شده یا شناسهٔ جلدهای ۱–۴ را بازنویسی نمی‌کند. مسیر پروژه، پاسخ‌نامه و شکل برای فصل‌های موجود صریح و داده‌محور نگاشت شده است. `check_volume5.py` ساختار، ID، پیوند، MathML/SVG، تطبیق عینِ پرسش و پاسخ، پیوست دقیق، خروجی Markdown و cache را بررسی می‌کند. `test_volume5.py` هر فصل موجود را در ۳۲۰، ۳۹۰، ۷۶۸ و ۱۴۴۰ پیکسل، و `test_mobile_layout.py` پوشش سراسری را در ۳۲۰، ۳۹۰، ۴۱۴، ۷۶۸ و ۱۴۴۰ پیکسل می‌آزماید. پس از انتشار، SHA remote، workflowها و دسترسی فایل‌های وب/PWA در گزارش نهایی ثبت شوند.
+`build_volume5.py` منبع‌های پیوسته را به `data.json`، `volume-5-full-fa.md` و cache آفلاین Service Worker می‌افزاید؛ هیچ فصل ثبت‌شده یا شناسهٔ جلدهای ۱–۴ را بازنویسی نمی‌کند. پیوندهای محلی در فایل Markdown نسبت به پوشهٔ خود منبع باشند؛ سازنده فقط هنگام درج HTML در ریشهٔ reader آن‌ها را به مسیر site-root تبدیل می‌کند تا هم فایل Markdown مستقل بماند و هم لینک‌های وب درست باز شوند. مسیر پروژه، پاسخ‌نامه و شکل برای فصل‌های موجود صریح و داده‌محور نگاشت شده است. `check_volume5.py` ساختار، ID، پیوند، MathML/SVG، تطبیق عینِ پرسش و پاسخ، پیوست دقیق، خروجی Markdown و cache را بررسی می‌کند. `test_volume5.py` هر فصل موجود را در ۳۲۰، ۳۹۰، ۷۶۸ و ۱۴۴۰ پیکسل، و `test_mobile_layout.py` پوشش سراسری را در ۳۲۰، ۳۹۰، ۴۱۴، ۷۶۸ و ۱۴۴۰ پیکسل می‌آزماید. پس از انتشار، SHA remote، workflowها و دسترسی فایل‌های وب/PWA در گزارش نهایی ثبت شوند.
 
 خروجی این milestone وب/PWA و Markdown است. PDF یا EPUB فقط در صورت تولید و آزمون واقعی در گزارش ذکر می‌شود.

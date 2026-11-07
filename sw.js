@@ -1,5 +1,5 @@
-// ===== فا-اکدمی Service Worker v103 =====
-const CACHE_NAME = 'fa-academy-v103';
+// ===== فا-اکدمی Service Worker v104 =====
+const CACHE_NAME = 'fa-academy-v104';
 const CORE_FILES = [
   './',
   './index.html',
@@ -416,6 +416,21 @@ const CORE_FILES = [
   './book-engineering/projects/65-governance-lab/requirements.txt',
   './book-engineering/projects/65-governance-lab/results.json',
   './book-engineering/projects/65-governance-lab/test_governance_check.py',
+  './book-engineering/chapters/66-ai-product-api.md',
+  './book-engineering/chapters/66-audit-report-fa.md',
+  './book-engineering/diagrams/v5-ch05-api-contract.svg',
+  './book-engineering/answers/66-ai-product-api-fa.md',
+  './book-engineering/projects/66-ai-product-api/README.md',
+  './book-engineering/projects/66-ai-product-api/app.py',
+  './book-engineering/projects/66-ai-product-api/audit.py',
+  './book-engineering/projects/66-ai-product-api/demo.html',
+  './book-engineering/projects/66-ai-product-api/environment.json',
+  './book-engineering/projects/66-ai-product-api/fixture_manifest.json',
+  './book-engineering/projects/66-ai-product-api/requirements.txt',
+  './book-engineering/projects/66-ai-product-api/results.json',
+  './book-engineering/projects/66-ai-product-api/synthetic_fixture.json',
+  './book-engineering/projects/66-ai-product-api/test_api.py',
+  './book-engineering/projects/66-ai-product-api/test_frontend.py',
 ];
 
 // ===== INSTALL: Cache core files =====

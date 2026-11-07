@@ -17,12 +17,12 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.13'
+          python-version: '3.13.16'
       - name: Install pinned repository dependencies and Chromium
         run: |
           python -m pip install -r requirements.txt
           python -m playwright install --with-deps chromium
-      - name: Check published structures through chapter 65
+      - name: Check published structures through chapter 66
         run: |
           python book-engineering/check_volume.py
           python book-engineering/check_volume2.py
@@ -101,6 +101,29 @@ jobs:
           assert result['risk_count'] == 4 and result['structurally_valid'] is True
           assert result['gate_status'] == 'hold' and result['release_authorized'] is False
           assert 'not a compliance audit' in result['scope']
+          PY
+      - name: Chapter 66 synthetic API contract and browser tests
+        run: |
+          python -m pip install -r book-engineering/projects/66-ai-product-api/requirements.txt
+          python -m pip check
+          python book-engineering/projects/66-ai-product-api/audit.py \
+            --output /tmp/ch66-ci-results.json
+          cmp /tmp/ch66-ci-results.json book-engineering/projects/66-ai-product-api/results.json
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+          root = Path('book-engineering/projects/66-ai-product-api')
+          fixture_hash = hashlib.sha256((root / 'synthetic_fixture.json').read_bytes()).hexdigest()
+          manifest = json.loads((root / 'fixture_manifest.json').read_text())
+          result = json.loads(Path('/tmp/ch66-ci-results.json').read_text())
+          assert fixture_hash == manifest['sha256'] == result['fixture_sha256']
+          assert result['fixture_id'] == 'v5-ch05-api-contract-synthetic-v1'
+          assert result['api_case_count'] == result['api_cases_passed'] == 12
+          assert result['api_cases_failed'] == 0
+          assert result['frontend_case_count'] == result['frontend_cases_passed'] == 2
+          assert result['frontend_cases_failed'] == 0
+          assert result['external_http_requests'] == result['live_model_calls'] == result['personal_records'] == 0
           PY
       - name: Confirm volume 5 builder idempotence
         run: |

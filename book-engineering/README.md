@@ -164,25 +164,43 @@ python book-engineering/test_mobile_layout.py
 
 ## جلد پنجم — انتشار مرحله‌ای
 
-طبق نقشهٔ پنج‌جلدی، جلد پنجم ۱۲ فصل محلی (فصل‌های سراسری ۶۲–۷۳) دارد. فصل‌های محلی ۱ و ۲ (سراسری ۶۲ و ۶۳) جداگانه منتشر و در remote تأیید شده‌اند؛ فصل محلی ۳/سراسری ۶۴ نیز در commit مستقل `7c6074dbf899397f4a904a0d12805109f6c48b13` با push عادی منتشر شد. در زمان انتشار، نوک `gh-pages` با همان SHA برابر بود؛ پنج workflow جلدها و Pages موفق شدند و فایل‌های اصلی وب/PWA با hash محلی تطبیق شدند. جزئیات و لینک runها در [گزارش ممیزی فصل ۶۴](chapters/64-audit-report-fa.md) است. هر فصل باید commit مستقل، push عادی و تأیید CI/remote خودش را داشته باشد. فصل ۶۲ طراحی benchmark، معیار، ارزیابی انسانی، عدم‌قطعیت و آلودگی را از سنجش runtime فصل ۶۱ جدا می‌کند. فصل ۶۳ توهم و factuality، سوگیری، استحکام در تغییر توزیع، تبیین و تفسیرپذیری را با تأکید بر مخرج، زمینه و محدودیت ادعا پوشش می‌دهد. فصل ۶۴ Red Teaming، threat modeling، Prompt Injection، اختیار ابزار/عامل، poisoning، زنجیرهٔ تأمین مدل، استخراج و حریم خصوصی را بررسی می‌کند؛ فصل ۶۵ حاکمیت و مدیریت ریسک را ادامه می‌دهد. فصل ۶۲ در commit مستقل `bceb598ad7cc3dfdf29b0c8050fafa72b0d53ac9` با push عادی به `gh-pages` منتشر شد؛ پنج workflow جلدهای ۱–۵ و Pages برای آن commit موفق شدند.
+نقشهٔ جلد پنجم ۱۲ فصل محلی (سراسری ۶۲–۷۳) دارد. فصل‌های ۶۲–۶۵ هرکدام مستقل منتشر شده‌اند؛ فصل ۶۵ دربارهٔ حکمرانی و ریسک بود و دوباره نوشته نشده است. فصل محلی ۵/سراسری ۶۶ اکنون با منبع Markdown، پاسخ‌نامهٔ مستقل، SVG دسترس‌پذیر، پروژهٔ FastAPI/UI بازتولیدپذیر و گزارش ممیزی تکمیل شده و گیت‌های محلی را گذرانده است؛ انتشار/تأیید remote، CI و Pages در انتظار push عادی و ثبت نتیجه است.
 
-فایل‌های فصل ۶۲ شامل متن، پاسخ‌نامه، گزارش ممیزی، شکل و `projects/62-evaluation-lab/` است؛ پروژهٔ fixture آن ۹/۹ آزمون را گذراند و نتیجهٔ baseline/candidate فقط محاسبات آموزشی است. فصل ۶۳ متن، پاسخ‌نامهٔ مستقل، گزارش، شکل دسترس‌پذیر و `projects/63-model-behavior-lab/` دارد؛ پروژه با CPython 3.13.16 و کتابخانهٔ استاندارد ۱۵/۱۵ آزمون را گذراند و fixture آن ارزیابی مدل واقعی نیست. فصل ۶۴ نیز متن، پاسخ‌نامه، گزارش، SVG دسترس‌پذیر و `projects/64-red-team-lab/` دارد؛ پروژهٔ CPU/stdlib آن ۲۰/۲۰ آزمون و هفت مورد ساختگی (شش هدف شبیه‌سازی‌شده و یک کنترل سالم) را اجرا کرد. نتیجهٔ صفر از شش، مقاومت مدل یا محصول را ثابت نمی‌کند.
+مرزها: فصل ۶۲ سنجش/benchmark، ۶۳ رفتار مدل، ۶۴ Red Teaming و امنیت، ۶۵ حکمرانی و مدیریت ریسک، و ۶۶ ساخت محصول و قرارداد رابط است. فصل ۶۶ بهینه‌سازی runtime (۶۷)، احراز هویت/محدودیت نرخ/پایش/پاسخ به رخداد (۶۸) یا استقرار و CI/CD (۶۹) را پیاده‌سازی نمی‌کند. پیش از شروع فصل ۶۷، ساختار هر پنج جلد و مرز فصل‌های مجاور دوباره مرور شود.
 
-از ریشهٔ مخزن، برای ساخت و اعتبارسنجی استفاده کنید:
+### منابع فصل‌ها
+
+- **۶۲:** [متن](chapters/62-benchmarking-evaluation.md) · [پاسخ‌نامه](answers/62-benchmarking-evaluation-fa.md) · [پروژه](projects/62-evaluation-lab/README.md) · [گزارش](chapters/62-audit-report-fa.md)
+- **۶۳:** [متن](chapters/63-hallucination-bias-robustness.md) · [پاسخ‌نامه](answers/63-hallucination-bias-robustness-fa.md) · [پروژه](projects/63-model-behavior-lab/README.md) · [گزارش](chapters/63-audit-report-fa.md)
+- **۶۴:** [متن](chapters/64-red-teaming-security.md) · [پاسخ‌نامه](answers/64-red-teaming-security-fa.md) · [پروژه](projects/64-red-team-lab/README.md) · [گزارش](chapters/64-audit-report-fa.md)
+- **۶۵:** [متن](chapters/65-alignment-governance.md) · [پاسخ‌نامه](answers/65-alignment-governance-fa.md) · [پروژه](projects/65-governance-lab/README.md) · [گزارش](chapters/65-audit-report-fa.md)
+- **۶۶:** [متن](chapters/66-ai-product-api.md) · [پاسخ‌نامه](answers/66-ai-product-api-fa.md) · [پروژه](projects/66-ai-product-api/README.md) · [گزارش ممیزی](chapters/66-audit-report-fa.md) · [نمودار](diagrams/v5-ch05-api-contract.svg)
+
+### ساخت و گیت‌های محلی
+
+از ریشهٔ مخزن و با Python 3.13 اجرا کنید:
 
 ```bash
+python -m pip install -r requirements.txt
+python -m pip install -r book-engineering/projects/66-ai-product-api/requirements.txt
+python -m playwright install --with-deps chromium
 python book-engineering/build_volume5.py
+python book-engineering/check_volume.py
+python book-engineering/check_volume2.py
+python book-engineering/check_volume3.py
+python book-engineering/check_volume4.py
 python book-engineering/check_volume5.py
-(cd book-engineering/projects/62-evaluation-lab && python -m unittest -v)
-python book-engineering/projects/62-evaluation-lab/evaluation_lab.py --output /tmp/ch62-results.json
-(cd book-engineering/projects/63-model-behavior-lab && python -m unittest -v)
-python book-engineering/projects/63-model-behavior-lab/model_behavior_lab.py --output /tmp/ch63-results.json
-(cd book-engineering/projects/64-red-team-lab && python -m unittest -v)
-python book-engineering/projects/64-red-team-lab/red_team_lab.py --output /tmp/ch64-results.json
+(cd book-engineering/projects/62-evaluation-lab && python -m unittest discover -v)
+(cd book-engineering/projects/63-model-behavior-lab && python -m unittest discover -v)
+(cd book-engineering/projects/64-red-team-lab && python -m unittest discover -v)
+(cd book-engineering/projects/65-governance-lab && python -m unittest discover -v)
+python book-engineering/projects/66-ai-product-api/audit.py --output /tmp/ch66-results.json
 python book-engineering/test_volume5.py
 python book-engineering/test_mobile_layout.py
 ```
 
-Builder append-safe است و منبع‌های پیوسته را به `data.json`، `volume-5-full-fa.md` و cache Service Worker می‌افزاید؛ شناسه‌های جلدهای ۱–۴ و متن فصل‌های ثبت‌شده را بازنویسی نمی‌کند. checker تطبیق پرسش/پاسخ، پیوست کد دقیق، SVG/MathML، لینک‌ها، Markdown و cache آفلاین را بررسی می‌کند. جلد پنجم اکنون ۳/۱۲ فصل و ۹۹ بخش (۲۶ + ۳۴ + ۳۹) دارد؛ Service Worker نسخهٔ ۱۰۰، ۳۹ مسیر آفلاین فصل‌های جلد پنجم را ثبت می‌کند. `test_volume5.py` در ۳۲۰، ۳۹۰، ۷۶۸ و ۱۴۴۰ پیکسل موفق شد. `test_mobile_layout.py` نیز در ۳۲۰، ۳۹۰، ۴۱۴، ۷۶۸ و ۱۴۴۰ پیکسل، ۱٬۲۴۸ بخش را وارسی کرد؛ در جلد پنجم ۲۱۵ بند نثر، ۱۱۷ بند تورفته، چهار بلوک MathML و سه کپشن بررسی شدند. در log آزمون سراسری چند 404 برای دارایی‌های قدیمی و نامرتبط بود؛ assertionهای موبایل موفق ماندند. تصویر مرجع `reports/browser-mobile.webp` دست‌نخورده می‌ماند.
+در گیت فعلی: جلد پنجم ۵/۱۲ فصل با تعداد بخش‌های `[۲۶، ۳۴، ۳۹، ۴۱، ۴۰]`، هشت سؤال/پاسخ دقیق، پیوست کد همسان، SVG/MathML دسترس‌پذیر، Markdown و `fa-academy-v104` با ۶۶ مسیر آفلاین دارد. پروژهٔ فصل ۶۶ از fixture ثابت با SHA-256 برابر `aa333a70cf87376fdde7a919d5b79fc1a97cf4ea8da15c8eab89c551c2070bad` استفاده می‌کند؛ ۱۲/۱۲ آزمون API و ۲/۲ آزمون مرورگر موفق‌اند. دادهٔ شخصی، درخواست بیرونی یا تماس مدل زنده ندارد. `environment.json` نسخه‌های دقیق را ثبت می‌کند؛ اجرای API درون‌فرایندی است و suite مرورگر پاسخ API را intercept می‌کند، پس نتیجه E2E شبکه‌ای یا ارزیابی کیفیت/امنیت/دسترس‌پذیری رسمی نیست.
 
-`.github/workflows/volume5-audit.yml` ساختار، پروژه‌های فصل‌های ۶۲ تا ۶۴، idempotence، مرورگر و layout/آفلاین را می‌آزماید. قالب انتشار وب/PWA و Markdown است؛ PDF و EPUB تولید یا آزموده نشده‌اند. فصل ۶۵ گام بعدی نقشه است؛ پیش از نگارش آن باید وضعیت local/remote، فایل‌های موجود و ساختار هر پنج جلد و مرز فصل‌های ۶۴–۶۶ دوباره بررسی شوند.
+پنج checker سراسری و پروژه‌های ۶۲–۶۶، build/idempotence، `test_volume5.py` در ۳۲۰/۳۹۰/۷۶۸/۱۴۴۰ و `test_mobile_layout.py` در ۳۲۰/۳۹۰/۴۱۴/۷۶۸/۱۴۴۰ پیکسل محلی موفق شدند. پیوندهای محلی در منبع Markdown نسبت به پوشهٔ فصل‌اند؛ سازنده فقط HTML reader را به مسیر site-root تبدیل می‌کند. آزمون موبایل ۱٬۳۲۹ بخش پنج جلد، RTL/overflow/ناوبری/تایپوگرافی و دسترسی آفلاین فصل‌های ۵۵–۶۶ را بررسی می‌کند. به‌علت sparse checkout، دارایی‌های مرجع موردنیاز checkerها در اجرای محلی با hash دقیق C3 به‌صورت موقت بار شدند و بعد پاک شدند؛ فایل منتشرشده یا تصویر مرجع تغییر نکرد. `.github/workflows/volume5-audit.yml` همین checkerها، آزمون‌های پروژه، idempotence و مرورگر/موبایل را اجرا می‌کند.
+
+نتایج local به‌تنهایی انتشار را تأیید نمی‌کنند. پس از push عادی، نوک remote، پنج workflow جلدها و Pages بررسی و شناسه‌ها/وضعیت واقعی به این گزارش و README افزوده می‌شوند. Force push ممنوع است؛ فصل ۶۷ تا آن زمان آغاز نمی‌شود. انتشار فعلی وب/PWA و Markdown است؛ PDF و EPUB تولید یا آزموده نشده‌اند.
