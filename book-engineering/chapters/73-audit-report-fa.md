@@ -40,6 +40,12 @@
 
 `all-volumes-full-fa.md` متن کامل Markdown جلدهای ۱ تا ۵ را با حفظ شناسنامهٔ هر جلد کنار هم می‌گذارد: ۷۳ فصل و حدود ۳٫۰ MiB؛ هشت فاصلهٔ انتهاییِ Markdown برای حفظ شکست‌خط به `<br>` تبدیل شده‌اند، بدون حذف متن. این فایل برای دسترسی مستقیم وب ساخته شده و به cache آفلاین PWA افزوده نشده است.
 
-## وضعیت انتشار اصلاح
+## انتشار اصلاح، CI و بررسی زنده
 
-اصلاح آزمون، فایل یکپارچه، `data.json` و محتوای فصل ۷۳ آمادهٔ push عادی هستند. CI جلدهای ۱ تا ۵، Pages، مرورگر موبایل و تأیید آفلاین remote پس از push دوباره اجرا می‌شوند؛ runهای نهایی و نتیجهٔ زنده در افزودهٔ بعدی همین گزارش ثبت خواهد شد. push اجباری ممنوع است.
+commit محتوای `ee70ff51307e3b65ff8ec9c99e99f48f62bc07a6` با push عادی روی `gh-pages` قرار گرفت (`c2f8e5d..ee70ff5`). این بار هر شش workflow موفق شدند: [جلد ۱، #42495808646](https://github.com/mvbabababak-spec/fa-academy/actions/runs/42495808646)، [جلد ۲، #42495808671](https://github.com/mvbabababak-spec/fa-academy/actions/runs/42495808671)، [جلد ۳، #42495808689](https://github.com/mvbabababak-spec/fa-academy/actions/runs/42495808689)، [جلد ۴، #42495808669](https://github.com/mvbabababak-spec/fa-academy/actions/runs/42495808669)، [جلد ۵، #42495808645](https://github.com/mvbabababak-spec/fa-academy/actions/runs/42495808645) و [GitHub Pages، #42495807972](https://github.com/mvbabababak-spec/fa-academy/actions/runs/42495807972). در workflow جلد ۱، گام «Run each project test suite» موفق شد؛ در workflow جلد ۵، آزمون پروژهٔ فصل ۷۳، builder، و گام‌های browser/responsive/offline همگی موفق بودند.
+
+[فایل یکپارچهٔ پنج جلد](https://mvbabababak-spec.github.io/fa-academy/all-volumes-full-fa.md) از Pages با HTTP 200 و `Content-Type: text/markdown; charset=utf-8` دریافت شد؛ اندازهٔ پاسخ ۳٬۰۲۱٬۳۴۴ بایت بود و SHA-256 آن `696c3e2dff26a94f43b7ed20276fc93b60c6774ebcf799c9987e8163355486d4` با فایل commit‌شده برابر بود. در بررسی مرورگر زنده با عرض ۳۹۰ و ارتفاع ۸۴۴ پیکسل، Service Worker `fa-academy-v123` کنترل صفحه را به‌دست گرفت؛ پس از قطع شبکه، ۱۱ مسیر شامل دادهٔ کتاب، فصل و همراهان فصل ۷۳ همگی HTTP 200 دادند. فایل تجمیعی ۳ مگابایتی به cache آفلاین اضافه نشده و برای دریافت مستقیم آنلاین است.
+
+در این commit پیگیری، خود گزارش ممیزی نیز به‌روز شده است؛ چون گزارش در فهرست آفلاین قرار دارد، Service Worker از `v123` به `v124` ارتقا می‌یابد تا نسخهٔ کش‌شدهٔ قبلی نماند. runهای فهرست‌شده در بالا، CI و Pages commit محتوای `ee70ff5` را ثبت می‌کنند؛ بررسی نهایی نسخهٔ کش پس از انتشار این پیگیری انجام می‌شود.
+
+نسخهٔ فعلی محصول وب/PWA و Markdown است؛ PDF و EPUB تولید یا آزموده نشده‌اند. موفقیت CI یا دریافت فایل، مجوز داده، کیفیت کاربردی یا تأیید deployment مدل را ثابت نمی‌کند.

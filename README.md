@@ -70,6 +70,6 @@ python book-engineering/test_volume5.py
 python book-engineering/test_mobile_layout.py
 ```
 
-در نسخهٔ فعلی جلد پنجم ۱۲/۱۲ فصل (سراسری ۶۲–۷۳) دارد؛ Service Worker `v123` مجموعهٔ مسیرهای آفلاین جلد پنجم را نگه می‌دارد. فایل `all-volumes-full-fa.md` نسخهٔ یک‌پارچهٔ Markdown هر پنج جلد است. نتیجهٔ CI، انتشار Pages و بررسی زنده/آفلاین فصل ۷۳ در [گزارش ممیزی فصل ۷۳](book-engineering/chapters/73-audit-report-fa.md) ثبت می‌شود. تغییرهای responsive موجود حفظ شده‌اند.
+در نسخهٔ فعلی جلد پنجم ۱۲/۱۲ فصل (سراسری ۶۲–۷۳) دارد؛ Service Worker `v124` مجموعهٔ مسیرهای آفلاین جلد پنجم را نگه می‌دارد. فایل `all-volumes-full-fa.md` نسخهٔ یک‌پارچهٔ Markdown هر پنج جلد است. روی commit محتوای `ee70ff5` هر پنج workflow جلدها و انتشار Pages موفق شدند؛ بررسی مستقیم لینک، کنترل Service Worker و بازیابی ۱۱ مسیر آفلاین نیز موفق بود. جزئیات runها، digest و محدودیت‌ها در [گزارش ممیزی فصل ۷۳](book-engineering/chapters/73-audit-report-fa.md) آمده‌اند. تغییرهای responsive موجود حفظ شده‌اند.
 
 قالب انتشار وب/PWA و Markdown است؛ PDF و EPUB تولید یا آزموده نشده‌اند.
