@@ -1,0 +1,10 @@
+{
+  "fixture": "synthetic_behavior_fixture.json",
+  "fixture_id": "v5-ch02-synthetic-behavior-v1",
+  "sha256": "636734157869cf6c065e644c8dca4fdd7143b4073ef3a8f109b50e8f68cb77d5",
+  "provenance": "All labels and values were created synthetically for this chapter. No people, real model outputs, or external facts are represented.",
+  "contains_personal_data": false,
+  "contains_model_weights": false,
+  "human_annotation": false,
+  "permitted_use": "teaching arithmetic, schema validation, and the limits of descriptive audits"
+}

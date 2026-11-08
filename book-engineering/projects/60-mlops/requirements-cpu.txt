@@ -1,0 +1,2 @@
+# The fixture is pure Python and uses no CUDA, ROCm, torch, or GPU runtime.
+-r requirements.txt

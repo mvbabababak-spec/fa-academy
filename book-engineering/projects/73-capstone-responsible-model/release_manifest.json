@@ -1,0 +1,23 @@
+{
+  "decision": "educational_source_packet_only",
+  "deployment_approved": false,
+  "files": {
+    "output/checkpoint.json": "ebf8bba27a2a8ff4576efdcefe13a514798a23d6df467f886810fb37b63814bf",
+    "output/environment.json": "d66d1c559ee6cbb00d74f6b689b22568226322b9b8b94a46e970ddc7d644d5bc",
+    "output/results.json": "eb1384f7a598d3b01e495a9e4946a4b7592311547acfb9d664729585b3e0ea5e",
+    "source/README.md": "4a4d4d70854d3f2ffc7afe1b714e1433af66067e379db1b2aa8a8219082d4d30",
+    "source/capstone.py": "2d497fbf23f343596bde38a5d31de8d27391ad6120cadd717af37c08e15e6c32",
+    "source/data_card.md": "a98dde95f89f5f70dda41523e1a01183c4dd5342a3c584010a74f28c4ae1dc38",
+    "source/fixture_manifest.json": "e437c9ec1ea3cd1643ad29f9c69e6ade0831b8302f9900d3710902ca8e67fc2e",
+    "source/model_card.md": "a78835bdc1b0f1a3a0f210e4c70768d1ecc366b14359eef5ad5c2cec6b6dd0d6",
+    "source/release_decision.json": "e08a55440df91187c8bf3d9b7de3879a3616e7ce5290779d22595707ac7ff1b7",
+    "source/requirements.txt": "f0bd9c679321b66f72537f84a122cbb07d2805e4895e0aee66fe698d7209cf77",
+    "source/run_card.json": "2fb62dbe11c62c84bed64aa4569c5e7d108b18dd98487e4671ebc765d3326392",
+    "source/synthetic_fixture.json": "f064f554dfec8fe3d1b77dacc4c0a89fdd014b3821c67b2f721c7d48335093a1",
+    "source/test_capstone.py": "a88b1036cb1228feeb9b9b6a8055ae9e7adb36561e712719a49d05aaeb323b58"
+  },
+  "format_version": 1,
+  "hash_algorithm": "SHA-256",
+  "project_id": "v5-ch12-capstone-responsible-model-synthetic-v1",
+  "self_hash_included": false
+}

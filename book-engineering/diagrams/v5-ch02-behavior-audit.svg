@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc" xml:lang="fa">
+  <title id="title">ممیزی چندمحورهٔ رفتار مدل</title>
+  <desc id="desc">یک ورودی نسخه‌مند و محدود به زمینه به چهار آزمون موازی منشعب می‌شود: حقیقت و شواهد، برش‌های گروهی و معیارهای سوگیری، استحکام در برابر تغییرهای تعریف‌شده، و وفاداری و کاربری توضیح. نتایج همراه با مخرج، نمونه، عدم‌قطعیت و محدودیت‌ها در گزارش ممیزی جمع می‌شوند و به اقدام و آزمون دوباره می‌رسند. نمودار یک امتیاز واحد یا تضمین کلی نمی‌دهد.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M1,1 L11,6 L1,11 Z" fill="#34566e" />
+    </marker>
+    <style>
+      .title { font: 700 27px sans-serif; fill: #17354b; }
+      .box-title { font: 700 21px sans-serif; fill: #17354b; }
+      .body { font: 17px sans-serif; fill: #243b4a; }
+      .small { font: 15px sans-serif; fill: #243b4a; }
+      .node { stroke: #34566e; stroke-width: 3; rx: 18; }
+      .edge { fill: none; stroke: #34566e; stroke-width: 3; marker-end: url(#arrow); }
+    </style>
+  </defs>
+  <rect width="1200" height="680" fill="#ffffff" />
+  <text x="600" y="38" class="title" text-anchor="middle" direction="rtl">ممیزی رفتار، چهار پرسش مستقل و یک گزارش محدود</text>
+
+  <rect x="385" y="66" width="430" height="91" class="node" fill="#edf5fb" />
+  <text x="600" y="101" class="box-title" text-anchor="middle" direction="rtl">ورودی نسخه‌مند و محدودهٔ ادعا</text>
+  <text x="600" y="132" class="body" text-anchor="middle" direction="rtl">جمعیت، زمینه، منبع، داده و نسخهٔ مدل</text>
+
+  <path d="M500 157 C420 190,280 195,195 232" class="edge" />
+  <path d="M555 157 C530 192,490 202,465 232" class="edge" />
+  <path d="M645 157 C670 192,710 202,735 232" class="edge" />
+  <path d="M700 157 C780 190,920 195,1005 232" class="edge" />
+
+  <rect x="70" y="240" width="250" height="132" class="node" fill="#f0f7f2" />
+  <text x="195" y="278" class="box-title" text-anchor="middle" direction="rtl">۱. حقیقت و شواهد</text>
+  <text x="195" y="311" class="body" text-anchor="middle" direction="rtl">پشتیبانی، تناقض،</text>
+  <text x="195" y="340" class="body" text-anchor="middle" direction="rtl">ادعای نامعلوم</text>
+
+  <rect x="340" y="240" width="250" height="132" class="node" fill="#fff7e8" />
+  <text x="465" y="278" class="box-title" text-anchor="middle" direction="rtl">۲. سوگیری در زمینه</text>
+  <text x="465" y="311" class="body" text-anchor="middle" direction="rtl">برش گروهی، مخرج،</text>
+  <text x="465" y="340" class="body" text-anchor="middle" direction="rtl">معیار و پیامد</text>
+
+  <rect x="610" y="240" width="250" height="132" class="node" fill="#f2f1fb" />
+  <text x="735" y="278" class="box-title" text-anchor="middle" direction="rtl">۳. استحکام</text>
+  <text x="735" y="311" class="body" text-anchor="middle" direction="rtl">تغییر تعریف‌شده،</text>
+  <text x="735" y="340" class="body" text-anchor="middle" direction="rtl">شیفت و بدترین برش</text>
+
+  <rect x="880" y="240" width="250" height="132" class="node" fill="#fceff1" />
+  <text x="1005" y="278" class="box-title" text-anchor="middle" direction="rtl">۴. تبیین</text>
+  <text x="1005" y="311" class="body" text-anchor="middle" direction="rtl">وفاداری، پایداری،</text>
+  <text x="1005" y="340" class="body" text-anchor="middle" direction="rtl">فهم و کاربری</text>
+
+  <path d="M195 372 C235 411,410 415,535 445" class="edge" />
+  <path d="M465 372 C485 408,540 420,575 445" class="edge" />
+  <path d="M735 372 C715 408,660 420,625 445" class="edge" />
+  <path d="M1005 372 C965 411,790 415,665 445" class="edge" />
+
+  <rect x="240" y="453" width="720" height="100" class="node" fill="#eef3f5" />
+  <text x="600" y="489" class="box-title" text-anchor="middle" direction="rtl">گزارش ممیزی: نتیجه همراه با مخرج و محدودیت</text>
+  <text x="600" y="522" class="body" text-anchor="middle" direction="rtl">نمونه و زمینه • روش و نسخه • عدم‌قطعیت • خطاهای باز</text>
+
+  <path d="M600 553 L600 585" class="edge" />
+  <rect x="375" y="594" width="450" height="53" class="node" fill="#edf5fb" />
+  <text x="600" y="628" class="box-title" text-anchor="middle" direction="rtl">اقدام متناسب با شواهد و آزمون دوباره</text>
+  <text x="600" y="674" class="small" text-anchor="middle" direction="rtl">چهار محور مکمل‌اند؛ هیچ‌کدام به‌تنهایی گواه کلی یا تضمین ایمنی نیست.</text>
+</svg>

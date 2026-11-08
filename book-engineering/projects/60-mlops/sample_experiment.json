@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "fixture_id": "v4-ch14-synthetic-linear-v1",
+  "label_source": "synthetic_fixture",
+  "records": [
+    {"sample_id": "toy-01", "x": 0.0, "y": 1.0},
+    {"sample_id": "toy-02", "x": 1.0, "y": 3.0},
+    {"sample_id": "toy-03", "x": 2.0, "y": 5.0},
+    {"sample_id": "toy-04", "x": 3.0, "y": 7.0}
+  ],
+  "config": {
+    "steps": 5,
+    "learning_rate": 0.05
+  },
+  "scope": {
+    "synthetic_only": true,
+    "real_data_used": false,
+    "pretrained_model_used": false,
+    "gpu_used": false,
+    "benchmark_claim": false,
+    "model_quality_claim": false,
+    "production_claim": false
+  }
+}

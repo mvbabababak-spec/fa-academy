@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">چرخهٔ اجرای قابل‌ردیابی در عملیات یادگیری ماشین</title>
+  <desc id="desc">چهار ورودی مستقل شامل کد، داده، محیط و پیکربندی با پیکان به یک اجرای دارای اثرانگشت می‌رسند. اجرا سنجه و artifact را در دو مسیر MLflow محلی و W and B آفلاین ثبت می‌کند. آزمون CI و Job زمان‌بندی را انجام می‌دهند اما جای tracker را نمی‌گیرند. مثال ساختگی است و کیفیت مدل، benchmark یا استقرار واقعی را ثابت نمی‌کند.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#071827"/>
+      <stop offset="1" stop-color="#12364b"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#164b65"/>
+      <stop offset="1" stop-color="#10364c"/>
+    </linearGradient>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M1,1 L11,6 L1,11 Z" fill="#7ce3d4"/>
+    </marker>
+    <pattern id="dots" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="3" cy="3" r="1.2" fill="#8cc9db" opacity="0.13"/>
+    </pattern>
+  </defs>
+  <rect width="1600" height="1000" fill="url(#bg)"/>
+  <rect width="1600" height="1000" fill="url(#dots)"/>
+  <text x="800" y="60" fill="#f3fbff" font-size="32" font-family="Tahoma, Arial, sans-serif" text-anchor="middle" direction="rtl">از ورودی‌های نسخه‌دار تا اجرای قابل‌بازرسی</text>
+  <text x="800" y="99" fill="#9cc9d8" font-size="19" font-family="Arial, sans-serif" text-anchor="middle">Experiment provenance · chapter 60</text>
+
+  <g stroke="#6bc7c2" stroke-width="3" fill="none" opacity="0.95">
+    <path d="M220 280 C220 360 430 350 580 425" marker-end="url(#arrow)"/>
+    <path d="M600 280 C600 345 670 350 710 415" marker-end="url(#arrow)"/>
+    <path d="M1000 280 C1000 345 930 350 890 415" marker-end="url(#arrow)"/>
+    <path d="M1380 280 C1380 360 1170 350 1020 425" marker-end="url(#arrow)"/>
+    <path d="M650 620 C560 680 405 680 330 735" marker-end="url(#arrow)"/>
+    <path d="M800 620 L800 735" marker-end="url(#arrow)"/>
+    <path d="M950 620 C1040 680 1195 680 1270 735" marker-end="url(#arrow)"/>
+  </g>
+
+  <g>
+    <rect x="55" y="145" width="330" height="135" rx="20" fill="url(#card)" stroke="#6bc7c2" stroke-width="2"/>
+    <circle cx="86" cy="176" r="17" fill="#f2b85f"/><text x="86" y="183" fill="#102333" font-size="18" font-weight="700" font-family="Arial" text-anchor="middle">1</text>
+    <text x="220" y="195" fill="#f3fbff" font-size="23" font-family="Tahoma, Arial, sans-serif" text-anchor="middle" direction="rtl">کد منبع</text>
+    <text x="220" y="235" fill="#b9e5eb" font-size="18" font-family="Arial, sans-serif" text-anchor="middle">Git commit</text>
+    <text x="220" y="262" fill="#b9e5eb" font-size="16" font-family="Arial, sans-serif" text-anchor="middle">dirty state · diff hash</text>
+  </g>
+  <g>
+    <rect x="435" y="145" width="330" height="135" rx="20" fill="url(#card)" stroke="#6bc7c2" stroke-width="2"/>
+    <circle cx="466" cy="176" r="17" fill="#f2b85f"/><text x="466" y="183" fill="#102333" font-size="18" font-weight="700" font-family="Arial" text-anchor="middle">2</text>
+    <text x="600" y="195" fill="#f3fbff" font-size="23" font-family="Tahoma, Arial, sans-serif" text-anchor="middle" direction="rtl">دادهٔ مجاز و نسخه‌دار</text>
+    <text x="600" y="235" fill="#b9e5eb" font-size="18" font-family="Arial, sans-serif" text-anchor="middle">fixture SHA-256</text>
+    <text x="600" y="262" fill="#b9e5eb" font-size="16" font-family="Arial, sans-serif" text-anchor="middle">license · split · snapshot</text>
+  </g>
+  <g>
+    <rect x="815" y="145" width="330" height="135" rx="20" fill="url(#card)" stroke="#6bc7c2" stroke-width="2"/>
+    <circle cx="846" cy="176" r="17" fill="#f2b85f"/><text x="846" y="183" fill="#102333" font-size="18" font-weight="700" font-family="Arial" text-anchor="middle">3</text>
+    <text x="980" y="195" fill="#f3fbff" font-size="23" font-family="Tahoma, Arial, sans-serif" text-anchor="middle" direction="rtl">محیط نرم‌افزار</text>
+    <text x="980" y="235" fill="#b9e5eb" font-size="18" font-family="Arial, sans-serif" text-anchor="middle">lockfile</text>
+    <text x="980" y="262" fill="#b9e5eb" font-size="16" font-family="Arial, sans-serif" text-anchor="middle">container image digest</text>
+  </g>
+  <g>
+    <rect x="1195" y="145" width="350" height="135" rx="20" fill="url(#card)" stroke="#6bc7c2" stroke-width="2"/>
+    <circle cx="1226" cy="176" r="17" fill="#f2b85f"/><text x="1226" y="183" fill="#102333" font-size="18" font-weight="700" font-family="Arial" text-anchor="middle">4</text>
+    <text x="1370" y="195" fill="#f3fbff" font-size="23" font-family="Tahoma, Arial, sans-serif" text-anchor="middle" direction="rtl">پیکربندی اجرا</text>
+    <text x="1370" y="235" fill="#b9e5eb" font-size="18" font-family="Arial, sans-serif" text-anchor="middle">parameters · seed</text>
+    <text x="1370" y="262" fill="#b9e5eb" font-size="16" font-family="Arial, sans-serif" text-anchor="middle">runtime · device</text>
+  </g>
+
+  <g>
+    <rect x="510" y="405" width="580" height="220" rx="28" fill="#0f5765" stroke="#7ce3d4" stroke-width="4"/>
+    <text x="800" y="458" fill="#ffffff" font-size="29" font-family="Tahoma, Arial, sans-serif" text-anchor="middle" direction="rtl">اجرای مستقل و اثرانگشت‌دار</text>
+    <text x="800" y="504" fill="#d7fff5" font-size="20" font-family="Arial, sans-serif" text-anchor="middle">Run fingerprint = SHA256(canonical inputs)</text>
+    <text x="800" y="545" fill="#d7fff5" font-size="18" font-family="Arial, sans-serif" text-anchor="middle">config · metrics · git status · environment</text>
+    <text x="800" y="583" fill="#f8d98c" font-size="17" font-family="Tahoma, Arial, sans-serif" text-anchor="middle" direction="rtl">نمونهٔ این فصل: چهار ردیف ساختگی</text>
+    <text x="800" y="607" fill="#f8d98c" font-size="15" font-family="Arial, sans-serif" text-anchor="middle">GPU: none</text>
+  </g>
+
+  <g>
+    <rect x="105" y="735" width="440" height="130" rx="20" fill="#183c6b" stroke="#91b6ff" stroke-width="2"/>
+    <text x="325" y="780" fill="#f6f8ff" font-size="23" font-family="Arial, sans-serif" text-anchor="middle">MLflow</text>
+    <text x="325" y="816" fill="#cbdcff" font-size="18" font-family="Arial, sans-serif" text-anchor="middle">local SQLite · local artifacts</text>
+    <text x="325" y="846" fill="#cbdcff" font-size="16" font-family="Tahoma, Arial, sans-serif" text-anchor="middle" direction="rtl">پیکربندی و سنجه به اجرا پیوند می‌خورند</text>
+  </g>
+  <g>
+    <rect x="580" y="735" width="440" height="130" rx="20" fill="#3f315f" stroke="#d6b2ff" stroke-width="2"/>
+    <text x="800" y="780" fill="#fff8ff" font-size="23" font-family="Arial, sans-serif" text-anchor="middle">Weights &amp; Biases</text>
+    <text x="800" y="816" fill="#ecdfff" font-size="18" font-family="Arial, sans-serif" text-anchor="middle">offline run · no sync</text>
+    <text x="800" y="846" fill="#ecdfff" font-size="16" font-family="Tahoma, Arial, sans-serif" text-anchor="middle" direction="rtl">فایل محلی، نه ارسال خودکار</text>
+  </g>
+  <g>
+    <rect x="1055" y="735" width="440" height="130" rx="20" fill="#254b43" stroke="#9bdfac" stroke-width="2"/>
+    <text x="1275" y="780" fill="#f2fff4" font-size="23" font-family="Tahoma, Arial, sans-serif" text-anchor="middle" direction="rtl">خروجی و پروندهٔ اجرا</text>
+    <text x="1275" y="816" fill="#d3f5d6" font-size="18" font-family="Arial, sans-serif" text-anchor="middle">artifact · model.json · run.json · SHA-256</text>
+    <text x="1275" y="846" fill="#d3f5d6" font-size="16" font-family="Tahoma, Arial, sans-serif" text-anchor="middle" direction="rtl">مالکیت و مدت نگهداری جداگانه لازم است</text>
+  </g>
+
+  <rect x="145" y="880" width="1310" height="104" rx="15" fill="#082536" stroke="#7394a4" stroke-width="1.5"/>
+  <text x="800" y="908" fill="#f5d18a" font-size="16" font-family="Tahoma, Arial, sans-serif" text-anchor="middle" direction="rtl">آزمون خودکار قرارداد را می‌آزماید و زمان‌بند کار را اجرا می‌کند؛ هیچ‌کدام جای ثبت اجرا را نمی‌گیرند.</text>
+  <text x="800" y="936" fill="#d7e9ef" font-size="15" font-family="Arial, sans-serif" text-anchor="middle">CI tests · Kubernetes Job · tracker</text>
+  <text x="800" y="963" fill="#b7d0d8" font-size="15" font-family="Tahoma, Arial, sans-serif" text-anchor="middle" direction="rtl">هش، هویت بایت‌ها را نشان می‌دهد؛ کیفیت مدل، سنجش کارایی یا استقرار واقعی را ثابت نمی‌کند.</text>
+</svg>

@@ -1,0 +1,13 @@
+# Supported runtime: CPython 3.13.x (local release audit: 3.13.16; CI: 3.13).
+# PyTorch is resolved from the CPU wheel index; PyPI provides the other packages.
+--index-url https://download.pytorch.org/whl/cpu
+--extra-index-url https://pypi.org/simple
+
+numpy==2.3.5
+scikit-learn==1.6.1
+pandas==2.2.3
+matplotlib==3.11.2
+Pillow==13.0.0
+mistune==3.4.0
+playwright==1.64.1
+torch==2.6.0

@@ -1,0 +1,192 @@
+# فصل ۲۱ — نظریه اطلاعات: آنتروپی، آنتروپی متقاطع و KL
+
+**هنر و علم ساخت هوش | جلد اول | Babak & Ai**  
+**تاریخ بررسی منابع: ۵ نوامبر ۲۰۲۶**
+
+## ۱. اطلاعات و عدم قطعیت
+
+پیش‌بینی نتیجه‌ای که پیشاپیش قطعی است، عدم قطعیت کمی باقی می‌گذارد؛ نتیجه‌ای میان گزینه‌های هم‌احتمال نامطمئن‌تر است. نظریه اطلاعات، از جمله در کار شانون در ۱۹۴۸، ابزار کمی برای تحلیل منابع و ارتباط ارائه کرد [۱]. در این فصل به توزیع‌های **گسسته محدود** می‌پردازیم، نه معنای انسانی متن یا همه جنبه‌های هوش.
+
+**پیش‌نیاز:** لگاریتم فصل ۱۶ و احتمال فصل ۱۹. **هدف:** محاسبه آنتروپی، آنتروپی متقاطع و واگرایی KL، تشخیص تفاوت آن‌ها و تحلیل احتمال صفر. این مفاهیم در توابع زیان مدل‌ها نقش دارند؛ آموزش مدل و ارزیابی آن در جلد دوم ادامه می‌یابد.
+
+## ۲. میزان شگفتی و آنتروپی
+
+برای رخدادی با احتمال مثبت p، اطلاعات خودی `I=−log₂(p)` است؛ رخداد کم‌احتمال‌تر شگفتی بیشتری دارد. **آنتروپی شانون** میانگین این مقدار تحت توزیع P است:
+
+```text
+H(P) = −Σᵢ pᵢ log₂(pᵢ)
+```
+
+**معادله ۲۱-۱** — P توزیع و pᵢ احتمال رخداد i است؛ پایه ۲ واحد بیت می‌دهد.
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block" dir="ltr" aria-label="Shannon entropy sum"><mi>H</mi><mo>(</mo><mi>P</mi><mo>)</mo><mo>=</mo><mo>−</mo><munder><mo>∑</mo><mi>i</mi></munder><msub><mi>p</mi><mi>i</mi></msub><msub><mi>log</mi><mn>2</mn></msub><mo>(</mo><msub><mi>p</mi><mi>i</mi></msub><mo>)</mo></math>
+
+احتمال‌ها نامنفی و مجموعشان ۱ است. قرارداد حدی `0 log 0 = 0` به کار می‌رود؛ لازم نیست `log(0)` را مستقیماً حساب کنیم. پایه ۲ واحد بیت و لگاریتم طبیعی واحد نَت می‌دهد. سکه هم‌احتمال `[0.5,0.5]` آنتروپی ۱ بیت و توزیع قطعی `[1,0]` آنتروپی صفر دارد. برای n گزینه هم‌احتمال آنتروپی `log₂(n)` است [۱].
+
+![شکل ۲۱-۱: آنتروپی برنولی از صفر در احتمال صفر و یک تا یک بیت در احتمال نیم افزایش می‌یابد.](assets/images/babak-ai/ch21-entropy.webp)
+
+**شکل ۲۱-۱ — آنتروپی توزیع برنولی.** p احتمال یکی از دو خروجی است. نمودار عدم قطعیت توزیع را نشان می‌دهد، نه کیفیت پیش‌بینی برای یک نمونه خاص.
+
+## ۳. آنتروپی متقاطع
+
+اگر P توزیع مرجع و Q توزیع پیش‌بینی روی همان رخدادها باشد، **آنتروپی متقاطع** با پایه ۲ چنین است [۲]:
+
+```text
+H(P,Q) = −Σᵢ pᵢ log₂(qᵢ)
+```
+
+این میانگین شگفتی طبق احتمال‌های Q، برای رخدادهای وزن‌دهی‌شده با P است. اگر P توزیع یک‌داغ `[1,0]` و Q برابر `[0.8,0.2]` باشد، زیان آن نمونه `−log₂(0.8)≈0.321928` بیت است. برچسب یک‌داغ یک مشاهده را نشان می‌دهد؛ لزوماً توزیع واقعی جامعه را آشکار نمی‌کند. برای چند نمونه معمولاً میانگین زیان‌ها گزارش می‌شود و جزئیات وزن‌دهی باید مشخص باشد.
+
+## ۴. واگرایی KL و جهت آن
+
+**واگرایی Kullback–Leibler** از P نسبت به Q:
+
+```text
+D_KL(P||Q) = Σᵢ pᵢ log₂(pᵢ/qᵢ)
+H(P,Q) = H(P) + D_KL(P||Q)
+```
+
+**معادله ۲۱-۲** — P توزیع مرجع و Q توزیع مدل است؛ قراردادهای صفر در متن توضیح داده شده‌اند.
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block" dir="ltr" aria-label="Kullback Leibler divergence"><msub><mi>D</mi><mi>KL</mi></msub><mo>(</mo><mi>P</mi><mo>∥</mo><mi>Q</mi><mo>)</mo><mo>=</mo><munder><mo>∑</mo><mi>i</mi></munder><msub><mi>p</mi><mi>i</mi></msub><msub><mi>log</mi><mn>2</mn></msub><mfrac><msub><mi>p</mi><mi>i</mi></msub><msub><mi>q</mi><mi>i</mi></msub></mfrac></math>
+
+با قرارداد مناسب برای احتمال‌های صفر، KL نامنفی است و برای دو توزیع یکسان صفر است [۲]. به‌طور کلی `D_KL(P||Q) ≠ D_KL(Q||P)`؛ پس فاصله متقارن متعارف نیست. از نظر شهودی نشان‌دهنده هزینه اضافی متوسط استفاده از Q به جای P است، با فرض اینکه P مدل مرجع درست مسئله باشد. KL نه رابطه علّی ثابت می‌کند و نه به‌تنهایی همه جنبه‌های کیفیت یا انصاف مدل را می‌سنجد.
+
+مثال `P=[0.5,0.5]` و `Q=[0.9,0.1]`: `H(P)=1`، `H(P,Q)≈1.736966` و `D_KL(P||Q)≈0.736966` بیت. ترتیب آرگومان‌ها و پایه لگاریتم باید در گزارش مشخص شوند.
+
+## ۵. صفرها، پایداری و واحدها
+
+اگر `pᵢ>0` و `qᵢ=0`، آنتروپی متقاطع و KL در تعریف توسعه‌یافته بی‌نهایت‌اند؛ زیرا مدل به رخدادی ممکن احتمال صفر داده است. اگر `pᵢ=0`، آن جمله سهم صفر دارد، حتی اگر `qᵢ=0` باشد. جایگزینی صفر با ε یا clipping مقدار محاسبه را تغییر می‌دهد و باید گزارش شود؛ این روش تضمین درستی مدل نیست.
+
+احتمالات بسیار کوچک ممکن است در محاسبه شناور underflow شوند؛ در پروژه‌های واقعی استفاده از فرمول‌های پایدار روی log-probability یا logits و ابزارهای معتبر مناسب است. بیت و نت با ضریب `ln(2)` مرتبط‌اند و مقایسه مستقیم مقادیر با پایه‌های متفاوت اشتباه است. آنتروپی تفاضلی متغیر پیوسته خواص متفاوتی دارد؛ نتیجه‌های فصل برای توزیع گسسته‌اند.
+
+## ۶. کاربرد و محدودیت در یادگیری ماشین
+
+در دسته‌بندی، cross-entropy برچسب و احتمال پیش‌بینی را مقایسه می‌کند؛ اگر برچسب صحیح احتمال کمتری داشته باشد زیان افزایش می‌یابد [۳]. برای مقایسه منصفانه باید داده، پایه لگاریتم، وزن کلاس‌ها و روش میانگین یکسان باشند. زیان پایین‌تر به‌تنهایی دقت عملیاتی، کالیبراسیون، انصاف، امنیت یا عملکرد خارج توزیع را تضمین نمی‌کند.
+
+قضیه‌ها برای توزیع و مفروضات مشخص‌اند. در مسئله واقعی P معمولاً ناشناخته است و توزیع تجربی از نمونه محدود برآورد می‌شود؛ کیفیت داده و عدم قطعیت بر تفسیر نتیجه اثر دارند. مقایسه و ارزیابی سیستماتیک در فصل‌های ۲۲ تا ۲۶ و ۶۲ ادامه دارد.
+
+## ۷. پروژه: محاسبه در بیت
+
+`information.py` را بسازید؛ فقط کتابخانه استاندارد Python 3.13.16 و CPU لازم است. داده ساختگی است و برنامه احتمال‌ها را بررسی می‌کند؛ برخلاف برخی کتابخانه‌ها آن‌ها را خودکار نرمال‌سازی نمی‌کند.
+
+```python
+"""Discrete entropy, cross entropy and KL divergence in bits."""
+import math
+
+
+def validate(distribution):
+    if not distribution or any(not math.isfinite(p) or p < 0 or p > 1 for p in distribution):
+        raise ValueError('probabilities must be finite values in [0, 1]')
+    if not math.isclose(math.fsum(distribution), 1.0, rel_tol=0, abs_tol=1e-12):
+        raise ValueError('probabilities must sum to one')
+
+
+def entropy(p):
+    validate(p)
+    return -math.fsum(x * math.log2(x) for x in p if x > 0)
+
+
+def cross_entropy(p, q):
+    validate(p)
+    validate(q)
+    if len(p) != len(q):
+        raise ValueError('distributions must have the same length')
+    if any(x > 0 and y == 0 for x, y in zip(p, q)):
+        return math.inf
+    return -math.fsum(x * math.log2(y) for x, y in zip(p, q) if x > 0)
+
+
+def kl_divergence(p, q):
+    validate(p)
+    validate(q)
+    if len(p) != len(q):
+        raise ValueError('distributions must have the same length')
+    if any(x > 0 and y == 0 for x, y in zip(p, q)):
+        return math.inf
+    return math.fsum(x * (math.log2(x) - math.log2(y))
+                     for x, y in zip(p, q) if x > 0)
+
+
+def main():
+    p, q = [0.5, 0.5], [0.9, 0.1]
+    h, ce, kl = entropy(p), cross_entropy(p, q), kl_divergence(p, q)
+    print(f'entropy_bits={h:.6f}')
+    print(f'cross_entropy_bits={ce:.6f}')
+    print(f'kl_bits={kl:.6f}')
+    print('identity=', math.isclose(ce, h + kl, abs_tol=1e-12))
+    print('zero_q_positive_p=', cross_entropy([1, 0], [0, 1]))
+
+
+if __name__ == '__main__':
+    main()
+```
+
+خروجی آزمایش‌شده:
+
+```text
+entropy_bits=1.000000
+cross_entropy_bits=1.736966
+kl_bits=0.736966
+identity= True
+zero_q_positive_p= inf
+```
+
+`math.fsum` به دقت جمع کمک می‌کند، اما محاسبات شناور همچنان تقریبی‌اند. شرط مجموع با تلورانس `10⁻¹²` ارزیابی می‌شود. توزیع مرجع و مدل باید هم‌طول باشند و رخدادهای متناظر در یک ترتیب باشند. مثال به‌صورت نمایشی است، نه پیاده‌سازی صنعتی برای تمام اندازه‌ها یا نوع داده‌ها.
+
+## ۸. آزمون و عیب‌یابی
+
+فایل زیر را کنار پروژه بگذارید و `python -m unittest -v test_information` اجرا کنید. چهار آزمون آنتروپی، هویت و جهت KL، احتمال صفر و ورودی نامعتبر را پوشش می‌دهند.
+
+```python
+import math
+import unittest
+from information import entropy, cross_entropy, kl_divergence
+
+
+class InformationTests(unittest.TestCase):
+    def test_entropy(self):
+        self.assertAlmostEqual(entropy([.5, .5]), 1)
+        self.assertEqual(entropy([1, 0]), 0)
+
+    def test_identity_and_direction(self):
+        p, q = [.5, .5], [.9, .1]
+        self.assertAlmostEqual(cross_entropy(p, q), entropy(p) + kl_divergence(p, q))
+        self.assertGreater(kl_divergence(p, q), 0)
+        self.assertNotAlmostEqual(kl_divergence(p, q), kl_divergence(q, p))
+        self.assertAlmostEqual(kl_divergence(p, p), 0)
+
+    def test_zeros(self):
+        self.assertTrue(math.isinf(cross_entropy([1, 0], [0, 1])))
+        self.assertTrue(math.isinf(kl_divergence([1, 0], [0, 1])))
+        self.assertEqual(cross_entropy([1, 0], [1, 0]), 0)
+
+    def test_invalid(self):
+        for p in ([], [-.1, 1.1], [.3, .3], [float('nan'), 1]):
+            with self.subTest(p=p), self.assertRaises(ValueError): entropy(p)
+        with self.assertRaises(ValueError): cross_entropy([1], [.5, .5])
+
+
+if __name__ == '__main__':
+    unittest.main()
+```
+
+`ValueError` برای توزیع خالی، منفی، NaN، مجموع نادرست یا طول ناسازگار مورد انتظار است. `inf` برای رخداد با `p>0` و `q=0` خطای برنامه نیست؛ یک نتیجه معنی‌دار در تعریف توسعه‌یافته است. اختلاف کوچک گردکردن ممکن است نتیجه عددی را اندکی تغییر دهد؛ تلورانس مقایسه باید با کاربرد سازگار باشد.
+
+## ۹. تمرین و آزمون فصل
+
+**پرسش:** ۱) آنتروپی سکه هم‌احتمال چند بیت است؟ ۲) آنتروپی نتیجه قطعی؟ ۳) واحد لگاریتم طبیعی؟ ۴) آیا KL متقارن است؟ ۵) اگر `p>0,q=0` چه می‌شود؟ ۶) اگر `p=0` سهم جمله چقدر است؟ ۷) رابطه cross-entropy و KL چیست؟ ۸) آیا احتمال پیش‌بینی و رخدادها باید متناظر باشند؟ ۹) آیا cross-entropy کم همه جنبه‌های کیفیت مدل را اثبات می‌کند؟ ۱۰) آیا می‌توان بیت و نت را بدون تبدیل مقایسه کرد؟
+
+**تمرین:** برای `P=[1,0]` و `Q=[0.5,0.5]`، آنتروپی، cross-entropy و KL را به بیت محاسبه کنید. **مینی‌پروژه:** سه توزیع پیش‌بینی برای یک برچسب ساختگی مقایسه کنید، ترتیب کلاس، واحد، حالت احتمال صفر و محدودیت نمونه را گزارش دهید. **قبولی:** دست‌کم ۸ پاسخ درست از ۱۰ و چهار تست موفق.
+
+[پاسخ‌نامه جداگانه فصل 21](book-engineering/answers/21-information-theory-answers-fa.md).
+
+## ۱۰. ارزیابی جامع بخش چهارم و گذار به جلد دوم
+
+پایان فصل ۲۱، پایان **بخش ریاضیات جلد اول طبق نقشه** است؛ به معنی تولید PDF یا تکمیل کل مجموعه نیست. پروژه ارزیابی بخش: ۱) مدل ساختگی `y=2x+1` با ۳ نمونه طراحی کنید؛ ۲) شکل داده و وزن، مشتق زیان و یک گام گرادیان‌کاهشی را دستی بررسی کنید؛ ۳) احتمال‌های یک پیش‌بینی دوتایی را با cross-entropy بسنجید؛ ۴) برای محاسبات و ورودی نامعتبر تست بنویسید؛ ۵) محدودیت داده، دقت شناور و عدم تعمیم را گزارش کنید. داده‌ها صرفاً ساختگی باشند.
+
+**معیار پیشنهادی:** مفاهیم ۲۵٪، ریاضی و ابعاد ۲۵٪، اجرای کد و آزمون خطا ۲۵٪، تحلیل محدودیت و گزارش ۲۵٪؛ دست‌کم ۸۰٪ در هر بخش و هیچ شکست در آزمون خطا. دو روش تحلیلی و عددی را مقایسه و یک حالت شکست را توضیح دهید. این پروژه تکلیف خواننده است؛ نتیجه آن اینجا اجرا نشده است.
+
+واژه‌ها: Entropy آنتروپی؛ Cross-Entropy آنتروپی متقاطع؛ KL Divergence واگرایی؛ Probability احتمال؛ Bit بیت؛ Nat نت. **بررسی ۵ نوامبر ۲۰۲۶:** نتیجه‌های عددی برای محیط اعلام‌شده بررسی شده‌اند. فصل ۲۲ جلد دوم، انواع یادگیری ماشین و تقسیم داده را آغاز می‌کند.
+
+**منابع؛ مراجعه ۵ نوامبر ۲۰۲۶:** [۱] Claude E. Shannon، «A Mathematical Theory of Communication»، Bell System Technical Journal 27، ۱۹۴۸، [متن](https://people.math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf). [۲] SciPy، «scipy.stats.entropy»، مستندات زنده، تاریخ نامشخص، [منبع](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.entropy.html). [۳] Google Developers، «Logistic regression: Loss and regularization»، ۲۰۲۶، [منبع](https://developers.google.com/machine-learning/crash-course/logistic-regression/loss-regularization).

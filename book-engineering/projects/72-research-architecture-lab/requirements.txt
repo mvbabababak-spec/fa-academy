@@ -1,0 +1,1 @@
+# No third-party dependencies. Python 3.11+; validation was run with CPython 3.13.16.

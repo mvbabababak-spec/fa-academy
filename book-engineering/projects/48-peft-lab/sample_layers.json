@@ -1,0 +1,5 @@
+[
+  {"name":"fixture.attention_query","in_features":32,"out_features":32,"rank":4,"alpha":8,"weight_bits":4},
+  {"name":"fixture.attention_value","in_features":32,"out_features":64,"rank":4,"alpha":8,"weight_bits":4},
+  {"name":"fixture.mlp_up","in_features":64,"out_features":32,"rank":2,"alpha":4,"weight_bits":4}
+]

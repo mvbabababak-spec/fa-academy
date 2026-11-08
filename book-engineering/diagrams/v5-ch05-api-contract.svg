@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc" xml:lang="fa">
+  <title id="title">قرارداد مشترک API میان رابط و backend</title>
+  <desc id="desc">دو مصرف‌کنندهٔ وب و موبایل از قرارداد نسخهٔ ۱٫۰ برای فرستادن پرسش کوتاه به endpoint ساختگی استفاده می‌کنند. backend ورودی را اعتبارسنجی می‌کند و از fixture محلی پاسخ نمایشی می‌سازد؛ پاسخ موفق با وضعیت ۲۰۰ یا خطای ساختاری با وضعیت ۴۲۲ به رابط برمی‌گردد. رابط یکی از حالت‌های بارگذاری، موفقیت یا خطا را نشان می‌دهد. آزمون‌های قرارداد، API و UI هر دو مسیر را می‌سنجند. رنگ‌ها تزئینی‌اند؛ نمودار نه کیفیت مدل، نه امنیت، نه تأخیر و نه آمادگی استقرار را می‌سنجد.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto">
+      <path d="M1,1 L10,6 L1,11 Z" fill="#155a76"/>
+    </marker>
+    <marker id="arrow-return" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto">
+      <path d="M1,1 L10,6 L1,11 Z" fill="#9b4a10"/>
+    </marker>
+    <style>
+      text { font-family: system-ui, sans-serif; fill: #15283e; }
+      .title { font-size: 29px; font-weight: 700; }
+      .label { font-size: 22px; font-weight: 650; }
+      .small { font-size: 18px; }
+      .box { fill: #f8fbff; stroke: #26465e; stroke-width: 3; rx: 18; }
+      .client { fill: #eef5fa; stroke: #26465e; stroke-width: 3; rx: 18; }
+      .contract { fill: #fff7e8; stroke: #805119; stroke-width: 3; rx: 18; }
+      .response { fill: #f2f8f0; stroke: #41643b; stroke-width: 3; rx: 18; }
+      .test { fill: #f6f3fa; stroke: #5b4779; stroke-width: 3; rx: 18; }
+      .forward { fill: none; stroke: #155a76; stroke-width: 5; marker-end: url(#arrow); }
+      .backward { fill: none; stroke: #9b4a10; stroke-width: 4; stroke-dasharray: 10 7; marker-end: url(#arrow-return); }
+    </style>
+  </defs>
+  <rect x="0" y="0" width="1200" height="680" fill="#ffffff"/>
+  <text x="600" y="52" class="title" text-anchor="middle" direction="rtl">یک قرارداد، دو مصرف‌کننده، چند حالت آزمون</text>
+
+  <rect x="930" y="122" width="210" height="100" class="client"/>
+  <text x="1035" y="164" class="label" text-anchor="middle" direction="rtl">رابط وب</text>
+  <text x="1035" y="196" class="small" text-anchor="middle" direction="rtl">بارگذاری / موفق / خطا</text>
+
+  <rect x="930" y="276" width="210" height="100" class="client"/>
+  <text x="1035" y="318" class="label" text-anchor="middle" direction="rtl">رابط موبایل</text>
+  <text x="1035" y="350" class="small" text-anchor="middle" direction="rtl">همان JSON، همان معنا</text>
+
+  <rect x="625" y="185" width="250" height="152" class="contract"/>
+  <text x="750" y="225" class="label" text-anchor="middle" direction="rtl">قرارداد نسخهٔ ۱٫۰</text>
+  <text x="750" y="261" class="small" text-anchor="middle" direction="ltr">POST /v1/assist</text>
+  <text x="750" y="294" class="small" text-anchor="middle" direction="rtl">ورودی: پرسش ≤ ۳۰۰ نویسه</text>
+  <text x="750" y="322" class="small" text-anchor="middle" direction="rtl">پاسخ: ۲۰۰ / خطا: ۴۲۲</text>
+
+  <rect x="305" y="185" width="250" height="152" class="box"/>
+  <text x="430" y="225" class="label" text-anchor="middle" direction="rtl">FastAPI backend</text>
+  <text x="430" y="261" class="small" text-anchor="middle" direction="rtl">اعتبارسنجی ورودی</text>
+  <text x="430" y="294" class="small" text-anchor="middle" direction="rtl">اجرای use-case</text>
+  <text x="430" y="322" class="small" text-anchor="middle" direction="rtl">پاسخ تایپ‌دار</text>
+
+  <rect x="60" y="185" width="190" height="152" class="response"/>
+  <text x="155" y="225" class="label" text-anchor="middle" direction="rtl">fixture محلی</text>
+  <text x="155" y="261" class="small" text-anchor="middle" direction="rtl">پاسخ ساختگی</text>
+  <text x="155" y="294" class="small" text-anchor="middle" direction="rtl">بدون مدل یا شبکه</text>
+
+  <path d="M930 166 C905 166 900 205 875 218" class="forward"/>
+  <path d="M930 325 C905 325 900 302 875 292" class="forward"/>
+  <path d="M625 250 L555 250" class="forward"/>
+  <path d="M305 281 L250 281" class="forward"/>
+  <path d="M250 316 C360 405 520 405 625 316" class="backward"/>
+  <path d="M555 314 C690 415 825 410 930 345" class="backward"/>
+
+  <rect x="170" y="458" width="860" height="92" class="test"/>
+  <text x="600" y="494" class="label" text-anchor="middle" direction="rtl">آزمون‌های هم‌راستا با قرارداد</text>
+  <text x="600" y="529" class="small" text-anchor="middle" direction="rtl">schema و status code  ←  API  ←  حالت‌های UI و دسترس‌پذیری</text>
+  <path d="M750 338 L750 458" class="forward"/>
+
+  <text x="600" y="610" class="small" text-anchor="middle" direction="rtl">محدوده: ساخت و آزمون قرارداد؛ نه بهینه‌سازی استنتاج، کنترل‌های امنیت/پایش یا استقرار.</text>
+</svg>

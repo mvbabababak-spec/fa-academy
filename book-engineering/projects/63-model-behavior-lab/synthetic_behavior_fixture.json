@@ -1,0 +1,42 @@
+{
+  "fixture_id": "v5-ch02-synthetic-behavior-v1",
+  "synthetic": true,
+  "claims": [
+    {"id": "claim-01", "status": "supported", "evidence_id": "fixture-evidence-01"},
+    {"id": "claim-02", "status": "supported", "evidence_id": "fixture-evidence-02"},
+    {"id": "claim-03", "status": "contradicted", "evidence_id": "fixture-evidence-03"},
+    {"id": "claim-04", "status": "unverified", "evidence_id": "fixture-evidence-04"},
+    {"id": "claim-05", "status": "supported", "evidence_id": "fixture-evidence-05"},
+    {"id": "claim-06", "status": "contradicted", "evidence_id": "fixture-evidence-06"},
+    {"id": "claim-07", "status": "supported", "evidence_id": "fixture-evidence-07"},
+    {"id": "claim-08", "status": "unverified", "evidence_id": "fixture-evidence-08"}
+  ],
+  "classification_cases": [
+    {"id": "cohort-a-01", "group": "synthetic_cohort_a", "label": 1, "probability_positive": 0.85},
+    {"id": "cohort-a-02", "group": "synthetic_cohort_a", "label": 1, "probability_positive": 0.74},
+    {"id": "cohort-a-03", "group": "synthetic_cohort_a", "label": 0, "probability_positive": 0.12},
+    {"id": "cohort-a-04", "group": "synthetic_cohort_a", "label": 0, "probability_positive": 0.28},
+    {"id": "cohort-a-05", "group": "synthetic_cohort_a", "label": 1, "probability_positive": 0.41},
+    {"id": "cohort-a-06", "group": "synthetic_cohort_a", "label": 0, "probability_positive": 0.22},
+    {"id": "cohort-b-01", "group": "synthetic_cohort_b", "label": 1, "probability_positive": 0.68},
+    {"id": "cohort-b-02", "group": "synthetic_cohort_b", "label": 1, "probability_positive": 0.37},
+    {"id": "cohort-b-03", "group": "synthetic_cohort_b", "label": 0, "probability_positive": 0.14},
+    {"id": "cohort-b-04", "group": "synthetic_cohort_b", "label": 0, "probability_positive": 0.72},
+    {"id": "cohort-b-05", "group": "synthetic_cohort_b", "label": 1, "probability_positive": 0.43},
+    {"id": "cohort-b-06", "group": "synthetic_cohort_b", "label": 0, "probability_positive": 0.31}
+  ],
+  "robustness_pairs": [
+    {"id": "pair-01", "true_label": 1, "baseline_prediction": 1, "variant_prediction": 1, "label_preserving": true, "transformation": "case-normalization"},
+    {"id": "pair-02", "true_label": 0, "baseline_prediction": 0, "variant_prediction": 0, "label_preserving": true, "transformation": "spacing-variant"},
+    {"id": "pair-03", "true_label": 1, "baseline_prediction": 1, "variant_prediction": 0, "label_preserving": true, "transformation": "token-boundary-variant"},
+    {"id": "pair-04", "true_label": 0, "baseline_prediction": 0, "variant_prediction": 1, "label_preserving": true, "transformation": "punctuation-variant"},
+    {"id": "pair-05", "true_label": 1, "baseline_prediction": 0, "variant_prediction": 0, "label_preserving": true, "transformation": "synthetic-paraphrase"},
+    {"id": "pair-06", "true_label": 0, "baseline_prediction": 0, "variant_prediction": 0, "label_preserving": true, "transformation": "unicode-normalization"}
+  ],
+  "explanation_cases": [
+    {"id": "linear-case-01", "intercept": -0.5, "weights": {"evidence_signal": 1.2, "surface_proxy": 0.9}, "features": {"evidence_signal": 1.0, "surface_proxy": 1.0}},
+    {"id": "linear-case-02", "intercept": -0.5, "weights": {"evidence_signal": 1.2, "surface_proxy": 0.9}, "features": {"evidence_signal": 0.0, "surface_proxy": 1.0}},
+    {"id": "linear-case-03", "intercept": -0.5, "weights": {"evidence_signal": 1.2, "surface_proxy": 0.9}, "features": {"evidence_signal": 1.0, "surface_proxy": 0.0}},
+    {"id": "linear-case-04", "intercept": -0.5, "weights": {"evidence_signal": 1.2, "surface_proxy": 0.9}, "features": {"evidence_signal": 0.0, "surface_proxy": 1.0}}
+  ]
+}

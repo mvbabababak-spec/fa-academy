@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="svg-title svg-desc" xml:lang="fa" lang="fa">
+  <title id="svg-title">زنجیرهٔ تحویل و انتشار مسئولانهٔ پروژهٔ نهایی</title>
+  <desc id="svg-desc">شش گام شماره‌دار از تعریف دامنه و ساخت نمونهٔ ساختگی تا آموزش و ارزیابی، نوشتن مدل‌کارت و تصمیم انتشار را نشان می‌دهد. بستهٔ آموزشی منتشر می‌شود، اما استقرار مدل در این نمونه متوقف است. شماره‌ها، عنوان‌ها و پیکان‌ها جهت را نشان می‌دهند؛ معنا به رنگ وابسته نیست.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M1,1 L11,6 L1,11 Z" fill="#23395d"/>
+    </marker>
+    <style>
+      .fa { font-family: "Vazirmatn", "Noto Sans Arabic", sans-serif; direction: rtl; unicode-bidi: plaintext; }
+      .step { fill: #102a43; stroke: #102a43; stroke-width: 3; }
+      .step-light { fill: #eef4fb; stroke: #23395d; stroke-width: 3; }
+      .arrow-line { stroke: #23395d; stroke-width: 4; fill: none; marker-end: url(#arrow); }
+      .title { font-size: 34px; font-weight: 700; fill: #102a43; }
+      .sub { font-size: 19px; fill: #243b53; }
+      .number { font-size: 25px; font-weight: 700; fill: #ffd166; }
+      .number-dark { font-size: 25px; font-weight: 700; fill: #23395d; }
+      .label { font-size: 21px; font-weight: 700; fill: #ffffff; }
+      .label-dark { font-size: 20px; font-weight: 700; fill: #102a43; }
+      .detail { font-size: 17px; fill: #f0f4f8; }
+      .detail-dark { font-size: 17px; fill: #243b53; }
+      .footer { font-size: 19px; font-weight: 700; fill: #102a43; }
+      .note { font-size: 16px; fill: #334e68; }
+    </style>
+  </defs>
+  <rect width="1200" height="680" fill="#ffffff"/>
+  <text class="fa title" x="600" y="70" text-anchor="middle">زنجیرهٔ تحویل پروژهٔ نهایی</text>
+  <text class="fa sub" x="600" y="112" text-anchor="middle">هر گام به یک خروجی و تصمیمِ قابل‌بازبینی متصل است</text>
+
+  <rect class="step" x="40" y="180" width="170" height="245" rx="18"/>
+  <text class="fa number" x="125" y="220" text-anchor="middle">۱</text>
+  <text class="fa label" x="125" y="268" text-anchor="middle">مرز هدف</text>
+  <text class="fa detail" x="125" y="315" text-anchor="middle">کاربر و کاربرد</text>
+  <text class="fa detail" x="125" y="345" text-anchor="middle">بیرون از دامنه</text>
+
+  <path class="arrow-line" d="M214 302 L226 302"/>
+  <rect class="step-light" x="230" y="180" width="170" height="245" rx="18"/>
+  <text class="fa number" x="315" y="220" text-anchor="middle" fill="#23395d">۲</text>
+  <text class="fa label-dark" x="315" y="268" text-anchor="middle">داده و منشأ</text>
+  <text class="fa detail-dark" x="315" y="315" text-anchor="middle">نمونهٔ ساختگی</text>
+  <text class="fa detail-dark" x="315" y="345" text-anchor="middle">داده‌کارت و تقسیم</text>
+
+  <path class="arrow-line" d="M404 302 L416 302"/>
+  <rect class="step" x="420" y="180" width="170" height="245" rx="18"/>
+  <text class="fa number" x="505" y="220" text-anchor="middle">۳</text>
+  <text class="fa label" x="505" y="268" text-anchor="middle">طرح اجرا</text>
+  <text class="fa detail" x="505" y="315" text-anchor="middle">برگهٔ اجرای ثابت</text>
+  <text class="fa detail" x="505" y="345" text-anchor="middle">فقط دادهٔ آموزش</text>
+
+  <path class="arrow-line" d="M594 302 L606 302"/>
+  <rect class="step-light" x="610" y="180" width="170" height="245" rx="18"/>
+  <text class="fa number-dark" x="695" y="220" text-anchor="middle">۴</text>
+  <text class="fa label-dark" x="695" y="268" text-anchor="middle">مدل و سنجش</text>
+  <text class="fa detail-dark" x="695" y="315" text-anchor="middle">ذخیرهٔ مدل</text>
+  <text class="fa detail-dark" x="695" y="345" text-anchor="middle">سنجه با مخرج معلوم</text>
+
+  <path class="arrow-line" d="M784 302 L796 302"/>
+  <rect class="step" x="800" y="180" width="170" height="245" rx="18"/>
+  <text class="fa number" x="885" y="220" text-anchor="middle">۵</text>
+  <text class="fa label" x="885" y="268" text-anchor="middle">مستندات</text>
+  <text class="fa detail" x="885" y="315" text-anchor="middle">مدل‌کارت</text>
+  <text class="fa detail" x="885" y="345" text-anchor="middle">خطر و محدودیت</text>
+
+  <path class="arrow-line" d="M974 302 L986 302"/>
+  <rect class="step-light" x="990" y="180" width="170" height="245" rx="18"/>
+  <text class="fa number" x="1075" y="220" text-anchor="middle" fill="#23395d">۶</text>
+  <text class="fa label-dark" x="1075" y="268" text-anchor="middle">تصمیم انتشار</text>
+  <text class="fa detail-dark" x="1075" y="315" text-anchor="middle">بستهٔ آموزشی: بله</text>
+  <text class="fa detail-dark" x="1075" y="345" text-anchor="middle">استقرار: متوقف</text>
+
+  <rect x="80" y="480" width="1040" height="104" rx="20" fill="#f0f4f8" stroke="#627d98" stroke-width="2"/>
+  <text class="fa footer" x="600" y="525" text-anchor="middle">تحویل همراه با نتیجه، محیط، آزمون و فهرست هش‌ها</text>
+  <text class="fa note" x="600" y="558" text-anchor="middle">چهار نمونهٔ ساختگی، مجوز ادعای کیفیت واقعی یا استفاده دربارهٔ انسان‌ها نیست</text>
+  <text class="fa note" x="600" y="633" text-anchor="middle">شماره، عنوان، پیکان و عبارت توقف معنا را منتقل می‌کنند؛ رنگ صرفاً راهنمای بصری است.</text>
+</svg>

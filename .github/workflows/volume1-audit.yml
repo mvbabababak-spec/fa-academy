@@ -1,0 +1,49 @@
+name: Volume 1 audit
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+jobs:
+  cpu-and-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install pinned repository dependencies (Python 3.13)
+        run: python -m pip install -r requirements.txt
+      - name: Install Chromium
+        run: python -m playwright install --with-deps chromium
+      - name: Check volume structure
+        run: python book-engineering/check_volume.py
+      - name: Run each project test suite
+        shell: bash
+        run: |
+          set -euo pipefail
+          for project in book-engineering/projects/*/; do
+            if [[ "$project" == "book-engineering/projects/58-huggingface-stack/" ]]; then
+              echo "Chapter 58 runs in its pinned offline environment in volume4-audit.yml"
+              continue
+            fi
+            if [[ "$project" == "book-engineering/projects/60-mlops/" ]]; then
+              echo "Chapter 60 runs in its pinned offline environment in volume4-audit.yml"
+              continue
+            fi
+            if [[ "$project" == "book-engineering/projects/66-ai-product-api/" ]]; then
+              echo "Chapter 66 runs in its pinned dependency/browser environment in volume5-audit.yml"
+              continue
+            fi
+            (cd "$project" && python -m unittest discover -v)
+          done
+      - name: Browser and offline smoke checks
+        run: python book-engineering/test_browser_audit.py
+      - name: Mobile layout and navigation checks
+        run: python book-engineering/test_mobile_layout.py
+      - name: Offline volume images and answer keys
+        run: python book-engineering/test_offline_volume.py
+      - name: Home-screen icon and manifest
+        run: python book-engineering/test_pwa_icon.py
+      - name: Volume 2 navigation and offline checks
+        run: python book-engineering/test_volume2.py

@@ -1,0 +1,63 @@
+{
+  "fixture_id": "v5-ch03-red-team-synthetic-v1",
+  "description": "Deterministic synthetic cases for checking a few explicitly encoded security-policy decisions; not a language-model or production-system test.",
+  "cases": [
+    {
+      "id": "direct-injection-canary",
+      "category": "direct_prompt_injection",
+      "is_attack": true,
+      "asks_for_synthetic_canary": true,
+      "expected_outcome": "blocked",
+      "success_outcome": "canary_disclosed"
+    },
+    {
+      "id": "indirect-injection-retrieved-note",
+      "category": "indirect_prompt_injection",
+      "is_attack": true,
+      "instruction_origin": "untrusted_retrieved_content",
+      "requests_tool_action": true,
+      "expected_outcome": "blocked",
+      "success_outcome": "action_executed"
+    },
+    {
+      "id": "tool-scope-write-request",
+      "category": "tool_scope",
+      "is_attack": true,
+      "requested_action": "write_private_record",
+      "principal_scopes": ["read_public_record"],
+      "expected_outcome": "blocked",
+      "success_outcome": "action_executed"
+    },
+    {
+      "id": "unverified-training-record",
+      "category": "data_poisoning",
+      "is_attack": true,
+      "provenance_verified": false,
+      "expected_outcome": "quarantined",
+      "success_outcome": "sample_accepted"
+    },
+    {
+      "id": "training-membership-probe",
+      "category": "membership_probe",
+      "is_attack": true,
+      "requests_membership_confirmation": true,
+      "expected_outcome": "blocked",
+      "success_outcome": "membership_confirmed"
+    },
+    {
+      "id": "repeated-query-budget",
+      "category": "excessive_querying",
+      "is_attack": true,
+      "queries_in_window": 5,
+      "expected_outcome": "rate_limited",
+      "success_outcome": "query_served"
+    },
+    {
+      "id": "benign-public-summary",
+      "category": "benign_public_read",
+      "is_attack": false,
+      "expected_outcome": "allowed",
+      "success_outcome": null
+    }
+  ]
+}

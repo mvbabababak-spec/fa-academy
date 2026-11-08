@@ -1,0 +1,66 @@
+{
+  "fixture_id": "v4-ch14-synthetic-linear-v1",
+  "fixture_sha256": "81989e3ae534cade6f4e77742cb3fae01649247956962559720e75b093f1a260",
+  "notes": [
+    "The MLflow test passed with a non-fatal SQLAlchemy SADeprecationWarning from the dependency stack.",
+    "This JSON summarizes the validation suite; runtime run.json files are created separately and include the current Git provenance."
+  ],
+  "pip_check": "passed",
+  "schema_version": 1,
+  "scope": {
+    "benchmark_performed": false,
+    "docker_image_built": false,
+    "gpu_used": false,
+    "kubernetes_job_executed": false,
+    "model_quality_claim": false,
+    "online_tracking_or_sync": false,
+    "pretrained_model_loaded": false,
+    "production_deployment_claim": false,
+    "real_data_loaded": false,
+    "synthetic_fixture_only": true,
+    "tracking_server_started": false
+  },
+  "static_checks": {
+    "Dockerfile": "passed assertions for digest pin, multi-stage copy, non-root user and no embedded secret; build/scan not run",
+    "job.yaml": "parsed with PyYAML and selected fields asserted; no live-cluster/schema validation"
+  },
+  "toy_run": {
+    "final_mse": 0.09078731868784178,
+    "initial_mse": 21.0,
+    "learning_rate": 0.05,
+    "steps": 5,
+    "synthetic_only": true,
+    "training_points": 4
+  },
+  "tracking_integrations": {
+    "mlflow": {
+      "external_sync": false,
+      "model_and_run_artifacts_verified": true,
+      "parameters_verified": true,
+      "server_started": false,
+      "status": "passed",
+      "step_metrics_verified": true,
+      "storage": "local SQLite plus local artifacts",
+      "version": "3.18.0"
+    },
+    "wandb": {
+      "api_key_required": false,
+      "artifact_logging_verified": true,
+      "automatic_code_capture": false,
+      "automatic_git_capture": false,
+      "mode": "offline",
+      "offline_run_file_verified": true,
+      "online_sync_performed": false,
+      "status": "passed",
+      "system_metrics_capture": false,
+      "version": "0.31.0"
+    }
+  },
+  "unit_tests": {
+    "command": "python -m unittest -v",
+    "failed": 0,
+    "passed": 16
+  },
+  "validated_date": "2026-11-07",
+  "validation_summary_only": true
+}

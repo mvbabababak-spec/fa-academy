@@ -1,0 +1,48 @@
+{
+  "container_reference": {
+    "build_performed": false,
+    "manifest_list_digest": "sha256:cf50a4f6ac4f026458b08d5222023d700ac806410dff5e9ca8728fa44f2b850f",
+    "registry_tag_last_updated_utc": "2026-10-21T11:08:17.498447Z",
+    "tag": "python:3.13.16-slim"
+  },
+  "fixture": {
+    "file": "sample_experiment.json",
+    "id": "v4-ch14-synthetic-linear-v1",
+    "records": 4,
+    "sha256": "81989e3ae534cade6f4e77742cb3fae01649247956962559720e75b093f1a260"
+  },
+  "implementation": "CPython",
+  "limitations": [
+    "Linux x86-64 only",
+    "Dockerfile not built or scanned",
+    "Kubernetes manifest not validated against a live API server/schema validator",
+    "no GPU, real data, model checkpoint, benchmark, online tracking, or W&B sync"
+  ],
+  "packages": {
+    "PyYAML": "6.0.3",
+    "mlflow": "3.18.0",
+    "wandb": "0.31.0"
+  },
+  "platform": {
+    "machine": "x86_64",
+    "system": "Linux"
+  },
+  "python": "3.13.16",
+  "requirements": {
+    "direct_file": "requirements.txt",
+    "lock_file": "requirements-lock-linux-py313.txt",
+    "lock_sha256": "a759b357a25c46c07256ce9a18bdc3c7c0f4f1276f3c1d374e284d278ba45ced",
+    "locked_distribution_count": 101,
+    "pip_check": "passed"
+  },
+  "schema_version": 1,
+  "validated_date": "2026-11-07",
+  "validation_tools": {
+    "PyYAML": "6.0.3; static YAML parsing only",
+    "docker": "unavailable",
+    "hadolint": "unavailable",
+    "kubeconform": "unavailable",
+    "kubectl": "unavailable",
+    "podman": "unavailable"
+  }
+}

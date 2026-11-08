@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" role="img" aria-labelledby="title desc" xml:lang="fa" viewBox="0 0 1440 816">
+  <title id="title">چرخهٔ طراحی آزمایش و تحلیل آماری</title>
+  <desc id="desc">هفت گام شماره‌دار از سؤال پژوهش تا گزارش دامنهٔ نتیجه: سؤال و برآورد هدف، واحد مستقل و جمعیت هدف، طراحی مقایسه با تصادفی‌سازی و بلوک‌بندی، قفل‌کردن معیار و حجم نمونه، گردآوری نسخه‌دار، تحلیل اثر با عدم‌قطعیت، و گزارش محدودیت و تعمیم. یک پیکان بازخورد از گزارش به پرسش برای مطالعهٔ بعدی برمی‌گردد.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 z" fill="#334155"/>
+    </marker>
+    <style>
+      text { font-family: sans-serif; fill: #172033; }
+      .label { font-size: 26px; font-weight: 700; }
+      .sub { font-size: 18px; }
+      .step { font-size: 24px; font-weight: 700; }
+      .box { fill: #ffffff; stroke: #334155; stroke-width: 3; rx: 20; }
+      .accent { fill: #e8f2f3; stroke: #155e63; stroke-width: 4; rx: 20; }
+      .line { fill: none; stroke: #334155; stroke-width: 4; marker-end: url(#arrow); }
+      .feedback { fill: none; stroke: #8a4b16; stroke-width: 4; stroke-dasharray: 10 8; marker-end: url(#arrow); }
+    </style>
+  </defs>
+  <rect x="0" y="0" width="1440" height="816" fill="#f7f8fa"/>
+  <g transform="translate(0 53)">
+  <text x="720" y="54" text-anchor="middle" class="label" direction="rtl" unicode-bidi="plaintext">از پیش‌فرض تا شاهد: هر گام پیش از دیدن نتیجه تعریف می‌شود</text>
+
+  <rect x="1130" y="105" width="240" height="150" class="accent"/>
+  <text x="1250" y="145" text-anchor="middle" class="step" direction="rtl" unicode-bidi="plaintext">۱. پرسش و برآورد هدف</text>
+  <text x="1250" y="183" text-anchor="middle" class="sub" direction="rtl" unicode-bidi="plaintext">چه چیزی، برای چه دامنه‌ای؟</text>
+  <text x="1250" y="215" text-anchor="middle" class="sub" direction="rtl" unicode-bidi="plaintext">اثرِ مورد علاقه را نام‌گذاری کن</text>
+
+  <rect x="835" y="105" width="240" height="150" class="box"/>
+  <text x="955" y="145" text-anchor="middle" class="step" direction="rtl" unicode-bidi="plaintext">۲. واحد و جمعیت</text>
+  <text x="955" y="183" text-anchor="middle" class="sub" direction="rtl" unicode-bidi="plaintext">واحد مستقل را بشمار</text>
+  <text x="955" y="215" text-anchor="middle" class="sub" direction="rtl" unicode-bidi="plaintext">تکرار را با نمونه اشتباه نگیر</text>
+
+  <rect x="540" y="105" width="240" height="150" class="box"/>
+  <text x="660" y="145" text-anchor="middle" class="step" direction="rtl" unicode-bidi="plaintext">۳. مقایسه و تخصیص</text>
+  <text x="660" y="183" text-anchor="middle" class="sub" direction="rtl" unicode-bidi="plaintext">baseline، تصادفی‌سازی</text>
+  <text x="660" y="215" text-anchor="middle" class="sub" direction="rtl" unicode-bidi="plaintext">و بلوک‌های ازپیش‌تعریف‌شده</text>
+
+  <rect x="245" y="105" width="240" height="150" class="box"/>
+  <text x="365" y="145" text-anchor="middle" class="step" direction="rtl" unicode-bidi="plaintext">۴. معیار و حجم نمونه</text>
+  <text x="365" y="183" text-anchor="middle" class="sub" direction="rtl" unicode-bidi="plaintext">پیامد اصلی و اثر مهم</text>
+  <text x="365" y="215" text-anchor="middle" class="sub" direction="rtl" unicode-bidi="plaintext">قبل از گردآوری ثبت شوند</text>
+
+  <path d="M1128 180 L1082 180" class="line"/>
+  <path d="M833 180 L787 180" class="line"/>
+  <path d="M538 180 L492 180" class="line"/>
+
+  <rect x="245" y="365" width="240" height="150" class="box"/>
+  <text x="365" y="405" text-anchor="middle" class="step" direction="rtl" unicode-bidi="plaintext">۵. گردآوری نسخه‌دار</text>
+  <text x="365" y="443" text-anchor="middle" class="sub" direction="rtl" unicode-bidi="plaintext">داده، مدل، prompt و محیط</text>
+  <text x="365" y="475" text-anchor="middle" class="sub" direction="rtl" unicode-bidi="plaintext">انحراف‌ها را ثبت کن</text>
+
+  <rect x="540" y="365" width="240" height="150" class="box"/>
+  <text x="660" y="405" text-anchor="middle" class="step" direction="rtl" unicode-bidi="plaintext">۶. تحلیل ازپیش‌نوشته</text>
+  <text x="660" y="443" text-anchor="middle" class="sub" direction="rtl" unicode-bidi="plaintext">اندازهٔ اثر و عدم‌قطعیت</text>
+  <text x="660" y="475" text-anchor="middle" class="sub" direction="rtl" unicode-bidi="plaintext">بر واحد مستقل</text>
+
+  <rect x="835" y="365" width="240" height="150" class="accent"/>
+  <text x="955" y="405" text-anchor="middle" class="step" direction="rtl" unicode-bidi="plaintext">۷. گزارش و دامنه</text>
+  <text x="955" y="443" text-anchor="middle" class="sub" direction="rtl" unicode-bidi="plaintext">نتیجه، محدودیت، هزینه</text>
+  <text x="955" y="475" text-anchor="middle" class="sub" direction="rtl" unicode-bidi="plaintext">چه چیزی هنوز نامعلوم است؟</text>
+
+  <path d="M365 257 L365 355" class="line"/>
+  <path d="M488 440 L530 440" class="line"/>
+  <path d="M783 440 L825 440" class="line"/>
+  <path d="M1078 440 C1265 440 1315 335 1315 265" class="feedback"/>
+  <text x="1220" y="365" text-anchor="middle" class="sub" direction="rtl" unicode-bidi="plaintext">پرسش بعدی با شواهد تازه</text>
+
+  <rect x="245" y="585" width="830" height="72" fill="#fff7ed" stroke="#8a4b16" stroke-width="2" rx="14"/>
+  <text x="660" y="630" text-anchor="middle" class="sub" direction="rtl" unicode-bidi="plaintext">معیارِ پس از نتیجه، واحدِ نادیده‌گرفته‌شده، یا حذفِ پسینی، استنتاج را عوض می‌کند؛ رنگ تنها حامل معنا نیست.</text>
+  </g>
+</svg>

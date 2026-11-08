@@ -1,0 +1,135 @@
+{
+  "annual_discount_rate": "0.05",
+  "cashflow_timing": "initial cost at year 0; recurring costs at year end; residual/buyout at horizon; yearly cashflows rounded to cents",
+  "comparison_status": {
+    "complete_invoice_or_cost_estimate": false,
+    "performance_parity_measured": false,
+    "prices_escalated": false,
+    "purchase_and_lease_amounts_are_vendor_quotes": false,
+    "synthetic_deliverables_are_not_benchmarks": true,
+    "taxes_and_financing_costs_included": false
+  },
+  "currency": "USD",
+  "fixture_id": "v4-ch10-synthetic-budget-v1",
+  "fixture_sha256": "1a536faa4dfd1f75d5b8bd07181cfb726a6ddaf9f781e88b7dc0d1ae9edc1424",
+  "horizon_years": 3,
+  "limitations": [
+    "Purchase and lease amounts and annual usage are synthetic assumptions, not offers or market quotes.",
+    "The dated cloud list price is one US region snapshot; it is not an all-in invoice or future price guarantee.",
+    "The Texas commercial electricity value is a statewide average, not a Dallas customer tariff or marginal bill rate.",
+    "Equal synthetic deliverables do not demonstrate equal throughput, quality, availability, or workload suitability.",
+    "Taxes, financing, inflation, escalation, demand charges, depreciation rules, downtime, labor, replacement, and all charges not explicit in the fixture are excluded."
+  ],
+  "market_snapshot": {
+    "cloud_compute": {
+      "as_of": "2026-11-06",
+      "currency": "USD",
+      "machine_type": "g4-standard-48",
+      "market": "Iowa, US (us-central1), on-demand list-price snapshot",
+      "price_usd_per_instance_hour": "4.49993",
+      "published_configuration": "48 vCPU; 180 GB host memory; one NVIDIA RTX PRO 6000 with 96 GB GDDR7",
+      "region": "us-central1 (Iowa, US)",
+      "separately_billed_or_excluded": [
+        "storage",
+        "network/egress",
+        "taxes",
+        "other services"
+      ],
+      "source_url": "https://cloud.google.com/products/compute/pricing/accelerator-optimized"
+    },
+    "electricity": {
+      "as_of": "2026-10-23",
+      "currency": "USD",
+      "data_month": "2026-08",
+      "market": "Texas, US statewide commercial average",
+      "price_display": "8.96 cents/kWh",
+      "price_usd_per_kwh": "0.0896",
+      "region": "Texas statewide; not Dallas-specific",
+      "source_url": "https://www.eia.gov/electricity/monthly/xls/table_5_06_a.xlsx",
+      "status": "preliminary published average; not a customer tariff"
+    }
+  },
+  "python_version": "3.13.16",
+  "result_schema_version": 1,
+  "scenarios": [
+    {
+      "annual_deliverables_assumed": 120,
+      "cashflows_year_0_to_horizon_usd": [
+        "7550.00",
+        "948.38",
+        "948.38",
+        "-851.62"
+      ],
+      "components": {
+        "acquisition_usd": "7200.00",
+        "annual_energy_cost_usd": "48.38",
+        "annual_energy_kwh": "540.00",
+        "annual_maintenance_usd": "600.00",
+        "annual_other_cost_usd": "300.00",
+        "terminal_residual_credit_usd": "1800.00",
+        "upfront_usd": "350.00"
+      },
+      "id": "buy-synthetic",
+      "market": "synthetic classroom case; no city or supplier quote",
+      "nominal_tco_usd": "8595.14",
+      "npv_cost_per_synthetic_deliverable_usd": "23.83",
+      "npv_tco_usd": "8577.77",
+      "quote_status": "synthetic_not_a_vendor_quote",
+      "strategy": "buy",
+      "total_deliverables_assumed": 360
+    },
+    {
+      "annual_deliverables_assumed": 120,
+      "cashflows_year_0_to_horizon_usd": [
+        "150.00",
+        "4618.38",
+        "4618.38",
+        "4618.38"
+      ],
+      "components": {
+        "annual_energy_cost_usd": "48.38",
+        "annual_energy_kwh": "540.00",
+        "annual_lease_payment_usd": "4020.00",
+        "annual_maintenance_usd": "250.00",
+        "annual_other_cost_usd": "300.00",
+        "terminal_buyout_usd": "0.00",
+        "terminal_residual_credit_usd": "0.00",
+        "upfront_usd": "150.00"
+      },
+      "id": "lease-synthetic",
+      "market": "synthetic classroom case; no city or supplier quote",
+      "nominal_tco_usd": "14005.14",
+      "npv_cost_per_synthetic_deliverable_usd": "35.35",
+      "npv_tco_usd": "12726.99",
+      "quote_status": "synthetic_not_a_vendor_quote",
+      "strategy": "lease",
+      "total_deliverables_assumed": 360
+    },
+    {
+      "annual_deliverables_assumed": 120,
+      "cashflows_year_0_to_horizon_usd": [
+        "0.00",
+        "4049.94",
+        "4049.94",
+        "4049.94"
+      ],
+      "components": {
+        "annual_billed_instance_hours": 800,
+        "annual_compute_cost_usd": "3599.94",
+        "annual_energy_cost_usd": null,
+        "annual_other_cost_usd": "450.00",
+        "market_instance_price_usd_per_hour": "4.49993",
+        "terminal_residual_credit_usd": "0.00",
+        "upfront_usd": "0.00"
+      },
+      "id": "cloud-snapshot-illustration",
+      "market": "Iowa, US (us-central1) snapshot only; not a Dallas rate or all-in quote",
+      "nominal_tco_usd": "12149.82",
+      "npv_cost_per_synthetic_deliverable_usd": "30.64",
+      "npv_tco_usd": "11028.99",
+      "quote_status": "synthetic_not_a_vendor_quote",
+      "strategy": "cloud",
+      "total_deliverables_assumed": 360
+    }
+  ]
+}

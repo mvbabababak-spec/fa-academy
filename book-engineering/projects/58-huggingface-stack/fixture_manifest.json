@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "fixture_id": "v4-ch12-synthetic-text-pipeline-v1",
+  "label_source": "synthetic_fixture",
+  "task_description": "Toy two-label examples for exercising an offline data-to-batch pipeline; labels have no real-world or linguistic meaning.",
+  "source_file": "sample_data.jsonl",
+  "sha256": "eb21fe6a41dcd4dc828c00a7dc0293370087bb77fc6df022078fc16a20d750a2",
+  "record_count": 12,
+  "split_record_counts": {
+    "train": 8,
+    "validation": 4
+  },
+  "split_group_counts": {
+    "train": 4,
+    "validation": 2
+  },
+  "label_counts": {
+    "train": {
+      "0": 4,
+      "1": 4
+    },
+    "validation": {
+      "0": 2,
+      "1": 2
+    }
+  },
+  "limitations": {
+    "real_user_data": false,
+    "language_coverage_claim": false,
+    "model_quality_evaluation": false,
+    "benchmark": false
+  }
+}

@@ -1,0 +1,151 @@
+{
+  "schema_version": "1.0",
+  "pack_id": "campusguide-synthetic-review-pack-v1",
+  "fixture_id": "v5-ch04-governance-pack-synthetic-v1",
+  "system": {
+    "system_id": "campusguide-synthetic-001",
+    "name": "CampusGuide (fictional)",
+    "provider": "Example AI Lab (fictional)",
+    "deployer": "Example Campus (fictional)",
+    "version": "demo-0.1",
+    "intended_use": "Explain hand-authored example course and scholarship rules, link to an authoritative source when one exists, and route unresolved questions to a human adviser; never decide eligibility.",
+    "out_of_scope_uses": [
+      "automated admissions, scholarship, discipline, or eligibility decisions",
+      "processing real student records or confidential documents",
+      "replacing an official policy or a human adviser"
+    ],
+    "review_by": "2027-02-07",
+    "jurisdiction_note": "Fictional exercise; no jurisdictional or legal classification performed."
+  },
+  "model_card": {
+    "model_id": "no-model-loaded-synthetic-placeholder",
+    "provider": "none; the project does not call a model",
+    "revision": "not-applicable",
+    "intended_use": "Demonstrate documentation fields only; no inference or training occurs.",
+    "evaluation_status": "not_run",
+    "limitations": [
+      "No model, endpoint, weights, prompts, or user-facing system is evaluated.",
+      "The example says nothing about factuality, bias, robustness, or quality of a real model."
+    ]
+  },
+  "dataset_cards": [
+    {
+      "dataset_id": "DS-SYNTH-01",
+      "name": "fictional course and scholarship rule examples",
+      "source": "Hand-authored synthetic rows created for this chapter; not copied from an institution.",
+      "collection_method": "Manual construction for schema testing; no scraping or user submissions.",
+      "license_status": "synthetic_example_not_a_real_license_review",
+      "personal_data": false,
+      "intended_use": "Demonstrate dataset-card completeness checks only.",
+      "known_gaps": [
+        "The records are not real policies and do not represent any institution.",
+        "No sampling, language-coverage, quality, or rights review is claimed."
+      ],
+      "review_by": "2027-02-07"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "EV-01",
+      "kind": "scope-record",
+      "scope": "Synthetic description of the intended and excluded uses.",
+      "status": "fixture_only"
+    },
+    {
+      "id": "EV-02",
+      "kind": "human-escalation-plan",
+      "scope": "Example routing rule; not tested with users or an operational adviser.",
+      "status": "planned"
+    },
+    {
+      "id": "EV-03",
+      "kind": "data-inventory-note",
+      "scope": "Synthetic dataset-card entry; no real data source was examined.",
+      "status": "fixture_only"
+    },
+    {
+      "id": "EV-04",
+      "kind": "access-and-retention-review",
+      "scope": "Placeholder for an authorized privacy and access review; no such review was performed.",
+      "status": "planned"
+    },
+    {
+      "id": "EV-05",
+      "kind": "content-owner-review",
+      "scope": "Placeholder for source freshness and approval; no official policy was reviewed.",
+      "status": "planned"
+    }
+  ],
+  "risk_register": [
+    {
+      "id": "R-01",
+      "scenario": "A reader mistakes an example explanation for a final scholarship-eligibility decision.",
+      "affected_parties": ["fictional applicants"],
+      "inherent_severity": "high",
+      "inherent_likelihood": "possible",
+      "control_owner": "content_owner_role",
+      "treatment": "mitigate",
+      "controls": [
+        "Do not issue eligibility decisions.",
+        "Show a clear boundary and route unresolved questions to an accountable adviser."
+      ],
+      "residual_severity": "moderate",
+      "status": "planned",
+      "evidence_refs": ["EV-01", "EV-02"]
+    },
+    {
+      "id": "R-02",
+      "scenario": "A future deployment receives real student records or retains more personal information than required.",
+      "affected_parties": ["fictional students"],
+      "inherent_severity": "high",
+      "inherent_likelihood": "possible",
+      "control_owner": "privacy_owner_role",
+      "treatment": "avoid",
+      "controls": [
+        "Keep the exercise fixture synthetic.",
+        "Block real-record use until a separate, authorized privacy and retention review is completed."
+      ],
+      "residual_severity": "high",
+      "status": "planned",
+      "evidence_refs": ["EV-03", "EV-04"]
+    },
+    {
+      "id": "R-03",
+      "scenario": "A policy example becomes stale or is interpreted outside its publication context.",
+      "affected_parties": ["fictional readers"],
+      "inherent_severity": "moderate",
+      "inherent_likelihood": "possible",
+      "control_owner": "content_owner_role",
+      "treatment": "mitigate",
+      "controls": [
+        "Record a named content owner and review date.",
+        "Link to a current official source in any real system and provide a correction route."
+      ],
+      "residual_severity": "moderate",
+      "status": "planned",
+      "evidence_refs": ["EV-02", "EV-05"]
+    },
+    {
+      "id": "R-04",
+      "scenario": "People using an untested language or assistive technology receive less useful guidance.",
+      "affected_parties": ["fictional multilingual readers"],
+      "inherent_severity": "moderate",
+      "inherent_likelihood": "possible",
+      "control_owner": "accessibility_owner_role",
+      "treatment": "mitigate",
+      "controls": [
+        "Do not claim language or accessibility coverage without scoped testing.",
+        "Offer a human route and document which populations have not been evaluated."
+      ],
+      "residual_severity": "moderate",
+      "status": "planned",
+      "evidence_refs": ["EV-01", "EV-02"]
+    }
+  ],
+  "decision": {
+    "gate_status": "hold",
+    "rationale": "Synthetic teaching fixture only; no real legal, privacy, model, user, or operational evidence has been reviewed, so no deployment approval is requested or implied.",
+    "approved_by": null,
+    "approved_at": null
+  }
+}

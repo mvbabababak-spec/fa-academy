@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "fixture_id": "v4-ch11-synthetic-gradient-v1",
+  "label_source": "synthetic_fixture",
+  "x": [0.0, 1.0],
+  "y": [1.0, 3.0],
+  "initial_parameters": {
+    "weight": 1.0,
+    "bias": 0.0
+  },
+  "absolute_tolerance": 0.00001,
+  "metadata": {
+    "real_dataset_loaded": false,
+    "pretrained_model_loaded": false,
+    "training_performed": false,
+    "gpu_used": false,
+    "benchmark_performed": false
+  }
+}

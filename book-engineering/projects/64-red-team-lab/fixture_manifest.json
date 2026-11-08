@@ -1,0 +1,10 @@
+{
+  "case_count": 7,
+  "contains_credentials_or_real_secrets": false,
+  "contains_personal_data": false,
+  "data_origin": "authored synthetic records; not collected from users, models, or an external corpus",
+  "file": "synthetic_security_fixture.json",
+  "fixture_id": "v5-ch03-red-team-synthetic-v1",
+  "model_or_service_under_test": null,
+  "sha256": "1f7183e4db3536e12afb9dd07c81042d0e13c2e7fab9312321bc4f2fed84013f"
+}

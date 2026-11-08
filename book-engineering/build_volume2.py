@@ -1,0 +1,42 @@
+"""Initialize volume 2 with chapters 1–3; follow with the incremental builders for chapters 4–11."""
+import json
+import re
+from pathlib import Path
+import mistune
+
+ROOT=Path(__file__).resolve().parent.parent
+file=ROOT/'data.json'
+data=json.loads(file.read_text(encoding='utf8'))
+render=mistune.create_markdown(escape=False,plugins=['table'])
+specs=[(1,'22-learning-paradigms','شیوه‌های یادگیری ماشین و صورت‌بندی مسئله','◈'),
+       (2,'23-regression','رگرسیون خطی و لجستیک از پایه','▣'),
+       (3,'24-classical-models','درخت، جنگل، SVM و نزدیک‌ترین همسایه‌ها','✦')]
+chapters=[]
+for n,slug,title,icon in specs:
+    path=f'book-engineering/chapters/{slug}.md';text=(ROOT/path).read_text(encoding='utf8')
+    parts=re.split(r'^## (.+)$',text,flags=re.MULTILINE)
+    sections=[]
+    for i in range(1,len(parts),2):
+        body=(parts[0]+'\n' if i==1 else '')+'## '+parts[i]+'\n'+parts[i+1]
+        sections.append({'id':f'art-science-v2-ch{n:02}-s{(i+1)//2:02}', 'title':parts[i].strip(),'file':path,'html':render(body)})
+    assert len(sections)>0
+    chapters.append({'num':n,'id':f'art-science-v2-ch{n:02}','title':title,'icon':icon,'sections':sections})
+book={'id':'art-science-intelligence-v2','title':'هنر و علم ساخت هوش — جلد دوم',
+      'subtitle':'یادگیری ماشین و شبکه‌های عصبی | جلد دوم: ۱۱ فصل',
+      'author':'Babak Moradvand','cover':'assets/images/art-science-cover.webp','chapters':chapters}
+found=[b for b in data['books'] if b['id']==book['id']]
+if found:
+    assert len(found)==1 and found[0]['chapters'][:3]==chapters, 'Existing chapters 1–3 differ; refusing to replace them'
+    existing=found[0]
+    metadata_changed=False
+    if existing.get('subtitle')!='یادگیری ماشین و شبکه‌های عصبی | جلد دوم: ۱۱ فصل':
+        existing['subtitle']='یادگیری ماشین و شبکه‌های عصبی | جلد دوم: ۱۱ فصل';metadata_changed=True
+    if existing.get('author')!='Babak Moradvand':
+        existing['author']='Babak Moradvand';metadata_changed=True
+    if metadata_changed:file.write_text(json.dumps(data,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf8')
+    print('Volume 2 already exists and matches; metadata '+('updated' if metadata_changed else 'already matches'))
+else:
+    i=next(i for i,b in enumerate(data['books']) if b['id']=='art-science-intelligence-v1')
+    data['books'].insert(i+1,book)
+    file.write_text(json.dumps(data,ensure_ascii=False,separators=(',',':'))+'\n',encoding='utf8')
+    print('Added volume 2:',[(c['num'],len(c['sections'])) for c in chapters])

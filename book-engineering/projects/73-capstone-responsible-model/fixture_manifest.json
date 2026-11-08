@@ -1,0 +1,15 @@
+{
+  "digest_scope": "exact UTF-8 bytes of synthetic_fixture.json; a hash is not a provenance or scientific-validity claim",
+  "external_source": null,
+  "fixture_sha256": "f064f554dfec8fe3d1b77dacc4c0a89fdd014b3821c67b2f721c7d48335093a1",
+  "personal_data": false,
+  "project_id": "v5-ch12-capstone-responsible-model-synthetic-v1",
+  "real_records": false,
+  "split_counts": {
+    "test": 4,
+    "train": 8,
+    "validation": 4
+  },
+  "synthetic": true,
+  "total_records": 16
+}

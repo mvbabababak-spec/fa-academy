@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "chapter": "volume4-local5-global51",
+  "environment": {
+    "python_version": "3.13.16",
+    "torch_version": "2.6.0+cpu",
+    "device": "cpu",
+    "dtype": "float32"
+  },
+  "unit_tests": {
+    "command": "python -m unittest discover -v",
+    "passed": 26,
+    "failed": 0,
+    "status": "passed"
+  },
+  "audit": {
+    "status": "synthetic_image_text_fixture_audit_complete",
+    "image_records": 4,
+    "text_records": 4,
+    "groups": 4,
+    "embedding_dimension": 4,
+    "label_source": "synthetic_fixture",
+    "sha256": "aba309bb1b3e69443802190b988a21e0432109c01b777f4f58fe11f992936522",
+    "training_performed": false,
+    "image_files_loaded": false,
+    "pretrained_model_loaded": false,
+    "model_downloaded": false,
+    "device": "cpu",
+    "claim_boundary": "8 synthetic vectors only; not image understanding, model quality, or retrieval performance"
+  },
+  "demo": {
+    "status": "synthetic_patch_and_embedding_smoke_test",
+    "patch_fixture": {
+      "input_shape": [3, 8, 8],
+      "patch_shape": [4, 48],
+      "reconstruction_exact": true
+    },
+    "vit_token_budget": {
+      "224x224_patch16": {
+        "grid": [14, 14],
+        "patch_tokens": 196,
+        "sequence_tokens": 197,
+        "attention_pairs_per_head": 38809
+      },
+      "448x448_patch16": {
+        "grid": [28, 28],
+        "patch_tokens": 784,
+        "sequence_tokens": 785,
+        "attention_pairs_per_head": 616225
+      }
+    },
+    "attention_pair_ratio_448_to_224": 15.878404493802984,
+    "synthetic_symmetric_contrastive_loss": 0.00024217297323048115,
+    "image_gradient_is_finite": true,
+    "image_to_text_retrieval": {
+      "queries": 4,
+      "candidates": 4,
+      "ranks": [1, 1, 1, 1],
+      "recall_at_k": {"1": 1.0, "5": 1.0},
+      "mean_reciprocal_rank": 1.0
+    },
+    "text_to_image_retrieval": {
+      "queries": 4,
+      "candidates": 4,
+      "ranks": [1, 1, 1, 1],
+      "recall_at_k": {"1": 1.0, "5": 1.0},
+      "mean_reciprocal_rank": 1.0
+    },
+    "training_performed": false,
+    "image_files_loaded": false,
+    "pretrained_model_loaded": false,
+    "model_downloaded": false,
+    "device": "cpu",
+    "claim_boundary": "fixed 8x8 tensor and synthetic embedding fixture; not a ViT forward pass or a real retrieval evaluation"
+  },
+  "boundaries": [
+    "No real images, captions, tokenizer, pretrained encoder, or checkpoint were loaded.",
+    "The perfect retrieval score follows from deliberately aligned synthetic vectors and is not evidence of model performance.",
+    "No rights, privacy, fairness, robustness, latency, energy, GPU, or product-quality evaluation was performed."
+  ]
+}

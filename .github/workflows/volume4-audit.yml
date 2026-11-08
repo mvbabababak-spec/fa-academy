@@ -1,0 +1,278 @@
+name: Volume 4 audit
+on:
+  push:
+    paths:
+      - '**'
+      - '.github/workflows/volume4-audit.yml'
+  pull_request:
+  workflow_dispatch:
+jobs:
+  volume4-cpu-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install pinned repository dependencies and Chromium
+        run: |
+          python -m pip install -r requirements.txt
+          python -m playwright install --with-deps chromium
+      - name: Check published book structures and immutable builders
+        run: |
+          python book-engineering/check_volume.py
+          python book-engineering/check_volume2.py
+          python book-engineering/rebuild_volume3_targets.py
+          python book-engineering/check_volume3.py
+          python book-engineering/build_volume4.py
+          python book-engineering/check_volume4.py
+      - name: Chapter 47 offline data-contract tests
+        run: |
+          (cd book-engineering/projects/47-instruction-tuning && python -m unittest discover -v)
+          python book-engineering/projects/47-instruction-tuning/sft_experiment.py \
+            --mode audit --data book-engineering/projects/47-instruction-tuning/sample_sft.jsonl \
+            --output /tmp/ch47-ci-audit
+          python -c "import json; p=json.load(open('/tmp/ch47-ci-audit/run.json')); assert p['status']=='validated_only' and p['training_performed'] is False and p['model_downloaded_or_loaded'] is False and p['data']['records']==15 and p['data']['groups']==14"
+      - name: Chapter 48 offline PEFT algebra tests
+        run: |
+          (cd book-engineering/projects/48-peft-lab && python -m unittest discover -v)
+          python book-engineering/projects/48-peft-lab/peft_lab.py \
+            --mode audit --fixture book-engineering/projects/48-peft-lab/sample_layers.json \
+            --output /tmp/ch48-ci-audit
+          python -c "import json; p=json.load(open('/tmp/ch48-ci-audit/run.json')); assert p['status']=='validated_only' and p['training_performed'] is False and p['model_downloaded'] is False and p['totals']['base_weight_parameters_in_fixture']==5120 and p['totals']['lora_trainable_parameters_in_fixture']==832 and p['totals']['quantized_weight_payload_lower_bound_bytes']==2560"
+          python book-engineering/projects/48-peft-lab/peft_lab.py \
+            --mode toy-lora --output /tmp/ch48-ci-toy
+          python -c "import json; p=json.load(open('/tmp/ch48-ci-toy/run.json')); assert p['status']=='synthetic_demo_completed' and p['model_downloaded'] is False and p['device']=='cpu' and p['final_mse'] < p['initial_mse'] and p['base_parameters_trainable'] is False and p['merge_max_abs_error'] < 1e-5"
+      - name: Chapter 49 offline preference objective tests
+        run: |
+          (cd book-engineering/projects/49-preference-lab && python -m unittest discover -v)
+          python book-engineering/projects/49-preference-lab/preference_lab.py \
+            --mode audit --fixture book-engineering/projects/49-preference-lab/sample_preferences.jsonl \
+            --output /tmp/ch49-ci-audit
+          python -c "import json; p=json.load(open('/tmp/ch49-ci-audit/run.json')); assert p['status']=='validated_only' and p['training_performed'] is False and p['model_loaded'] is False and p['model_downloaded'] is False and p['records']==12 and p['group_count']==6 and p['sha256']=='629b48e6a9c3f3a8d6c336eadbb1f3833b988348c1b11f1022221db121fc21bb'"
+          python book-engineering/projects/49-preference-lab/preference_lab.py \
+            --mode toy-dpo --output /tmp/ch49-ci-toy --steps 80 --seed 49
+          python -c "import json; p=json.load(open('/tmp/ch49-ci-toy/run.json')); assert p['status']=='synthetic_demo_completed' and p['model_loaded'] is False and p['model_downloaded'] is False and p['device']=='cpu' and p['final_dpo_loss'] < p['initial_dpo_loss'] and p['policy_chosen_probability'] > 0.5"
+      - name: Chapter 50 synthetic reasoning-data checks
+        run: |
+          (cd book-engineering/projects/50-synthetic-reasoning && python -m unittest discover -v)
+          python book-engineering/projects/50-synthetic-reasoning/reasoning_lab.py \
+            --mode audit --fixture book-engineering/projects/50-synthetic-reasoning/sample_traces.jsonl \
+            --output /tmp/ch50-ci-audit
+          python -c "import json; p=json.load(open('/tmp/ch50-ci-audit/run.json')); assert p['status']=='synthetic_fixture_audit_complete' and p['training_performed'] is False and p['language_model_loaded'] is False and p['model_downloaded'] is False and p['records']==12 and p['groups']==6 and p['sha256']=='1654621020c9dd2175cf0d7f66cb14ed78a3d192667c7e79ce7571219f47a075' and [p['split'][name]['records'] for name in ('train','validation','test')]==[8,2,2]"
+          python book-engineering/projects/50-synthetic-reasoning/reasoning_lab.py \
+            --mode demo --fixture book-engineering/projects/50-synthetic-reasoning/sample_traces.jsonl \
+            --output /tmp/ch50-ci-demo
+          python -c "import json; p=json.load(open('/tmp/ch50-ci-demo/run.json')); assert p['status']=='synthetic_math_helpers_smoke_test' and p['training_performed'] is False and p['language_model_loaded'] is False and p['model_downloaded'] is False and p['student_gradient_is_finite'] is True and p['vote_winner']=='125' and p['candidate_budget']==5"
+      - name: Chapter 51 synthetic vision and alignment checks
+        run: |
+          (cd book-engineering/projects/51-vision-lab && python -m unittest discover -v)
+          python book-engineering/projects/51-vision-lab/vision_lab.py \
+            --mode audit --fixture book-engineering/projects/51-vision-lab/sample_embeddings.json \
+            --output /tmp/ch51-ci-audit
+          python -c "import json; p=json.load(open('/tmp/ch51-ci-audit/run.json')); assert p['status']=='synthetic_image_text_fixture_audit_complete' and p['training_performed'] is False and p['image_files_loaded'] is False and p['pretrained_model_loaded'] is False and p['model_downloaded'] is False and p['image_records']==4 and p['text_records']==4 and p['groups']==4 and p['sha256']=='aba309bb1b3e69443802190b988a21e0432109c01b777f4f58fe11f992936522'"
+          python book-engineering/projects/51-vision-lab/vision_lab.py \
+            --mode demo --fixture book-engineering/projects/51-vision-lab/sample_embeddings.json \
+            --output /tmp/ch51-ci-demo
+          python -c "import json; p=json.load(open('/tmp/ch51-ci-demo/run.json')); assert p['status']=='synthetic_patch_and_embedding_smoke_test' and p['training_performed'] is False and p['image_files_loaded'] is False and p['pretrained_model_loaded'] is False and p['model_downloaded'] is False and p['patch_fixture']['reconstruction_exact'] is True and p['image_gradient_is_finite'] is True and p['image_to_text_retrieval']['recall_at_k']['1']==1.0 and p['text_to_image_retrieval']['recall_at_k']['1']==1.0 and p['attention_pair_ratio_448_to_224']==15.878404493802984"
+      - name: Chapter 52 synthetic audio and transcript-metric checks
+        run: |
+          (cd book-engineering/projects/52-audio-lab && python -m unittest discover -v)
+          python book-engineering/projects/52-audio-lab/audio_lab.py \
+            --mode audit --fixture book-engineering/projects/52-audio-lab/sample_transcripts.json \
+            --output /tmp/ch52-ci-audit
+          python -c "import json; p=json.load(open('/tmp/ch52-ci-audit/run.json')); assert p['status']=='synthetic_transcript_fixture_audit_complete' and p['training_performed'] is False and p['audio_recordings_loaded'] is False and p['speech_model_loaded'] is False and p['model_downloaded'] is False and p['fixture']['records']==3 and p['fixture']['sha256']=='46abd6b35e1481e0b3796522056d25168f7cc1823e0059fafc9a544dd5fdf347'"
+          python book-engineering/projects/52-audio-lab/audio_lab.py \
+            --mode demo --fixture book-engineering/projects/52-audio-lab/sample_transcripts.json \
+            --output /tmp/ch52-ci-demo
+          python -c "import json; p=json.load(open('/tmp/ch52-ci-demo/run.json')); assert p['status']=='synthetic_audio_framing_and_transcript_metric_demo_complete' and p['training_performed'] is False and p['audio_recordings_loaded'] is False and p['speech_model_loaded'] is False and p['model_downloaded'] is False and p['analytic_tone']['sample_count']==1600 and p['analytic_tone']['complete_frames_without_tail_padding']==8 and p['analytic_tone']['first_frame_peak_frequency_hz']==440.0 and p['transcript_metrics']['wer']['error_rate']==3/11 and p['transcript_metrics']['sentence_macro_wer']==0.21666666666666667"
+      - name: Chapter 53 synthetic diffusion fixture and sampler checks
+        run: |
+          (cd book-engineering/projects/53-diffusion-lab && python -m unittest discover -v)
+          python book-engineering/projects/53-diffusion-lab/diffusion_lab.py \
+            --mode audit --fixture book-engineering/projects/53-diffusion-lab/sample_mixture.json \
+            --output /tmp/ch53-ci-audit
+          python -c "import json; p=json.load(open('/tmp/ch53-ci-audit/run.json')); assert p['status']=='synthetic_diffusion_fixture_audit_complete' and p['training_performed'] is False and p['neural_model_loaded'] is False and p['model_downloaded'] is False and p['image_files_loaded'] is False and p['video_files_loaded'] is False and p['fixture']['components']==4 and p['fixture']['sha256']=='7646ab0c0d8cee8fdbf3e29ac88ce9e37b181859e0ff34935f6af7bbe28b208b'"
+          python book-engineering/projects/53-diffusion-lab/diffusion_lab.py \
+            --mode demo --fixture book-engineering/projects/53-diffusion-lab/sample_mixture.json \
+            --output /tmp/ch53-ci-demo --steps 200 --samples 64 --seed 53
+          python -c "import json; p=json.load(open('/tmp/ch53-ci-demo/run.json')); assert p['status']=='analytic_synthetic_mixture_ddpm_demo_complete' and p['training_performed'] is False and p['neural_model_loaded'] is False and p['model_downloaded'] is False and p['image_files_loaded'] is False and p['video_files_loaded'] is False and p['analytic_score_used'] is True and p['sampling']['timesteps']==200 and p['sampling']['sample_count']==64 and p['sampling']['seed']==53 and p['sampling']['terminal_alpha_bar']==0.002080618226191632 and p['nearest_synthetic_center_counts']=={'southwest':19,'northwest':17,'southeast':16,'northeast':12}"
+      - name: Chapter 55 synthetic lab-design planner tests
+        run: |
+          (cd book-engineering/projects/55-ai-lab-design && python -m unittest discover -v)
+          python book-engineering/projects/55-ai-lab-design/lab_design_planner.py \
+            --output /tmp/ch55-ci.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          result = json.loads(Path('/tmp/ch55-ci.json').read_text())
+          assert result['schema_version'] == 'v4-ch09-lab-design-v1'
+          assert result['fixture']['sha256'] == 'f3fc9ec6961b3655a05e8a9436b52963bbfa38e48bd58e94ce09c1dcf9f34689'
+          assert result['summary'] == {'profiles': 4, 'paper_feasible': 3, 'needs_revision': 1}
+          assert [item['status'] for item in result['profiles']] == ['paper_feasible', 'paper_feasible', 'paper_feasible', 'needs_revision']
+          assert result['scope']['real_hardware_measured'] is False
+          assert result['scope']['prices_included'] is False
+          assert result['scope']['benchmark_performed'] is False
+          assert result['scope']['installation_performed'] is False
+          PY
+      - name: Chapter 56 synthetic compute-budget model tests
+        run: |
+          (cd book-engineering/projects/56-ai-compute-budget && python -m unittest discover -v)
+          python book-engineering/projects/56-ai-compute-budget/budget_model.py \
+            --fixture book-engineering/projects/56-ai-compute-budget/sample_budget.json \
+            --output /tmp/ch56-ci-results.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          result = json.loads(Path('/tmp/ch56-ci-results.json').read_text())
+          rows = {row['id']: row for row in result['scenarios']}
+          assert result['fixture_sha256'] == '1a536faa4dfd1f75d5b8bd07181cfb726a6ddaf9f781e88b7dc0d1ae9edc1424'
+          assert result['market_snapshot']['cloud_compute']['region'] == 'us-central1 (Iowa, US)'
+          assert result['market_snapshot']['electricity']['region'] == 'Texas statewide; not Dallas-specific'
+          assert rows['buy-synthetic']['nominal_tco_usd'] == '8595.14'
+          assert rows['lease-synthetic']['nominal_tco_usd'] == '14005.14'
+          assert rows['cloud-snapshot-illustration']['nominal_tco_usd'] == '12149.82'
+          assert result['comparison_status']['performance_parity_measured'] is False
+          assert result['comparison_status']['complete_invoice_or_cost_estimate'] is False
+          PY
+      - name: Chapter 57 cross-framework CPU gradient contract tests
+        run: |
+          (cd book-engineering/projects/57-framework-lab && python -m unittest discover -v)
+          python book-engineering/projects/57-framework-lab/framework_compare.py \
+            --backend all --output /tmp/ch57-ci-results.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          result = json.loads(Path('/tmp/ch57-ci-results.json').read_text())
+          assert result['fixture_id'] == 'v4-ch11-synthetic-gradient-v1'
+          assert result['reference'] == {'loss': 2.5, 'gradient_weight': -2.0, 'gradient_bias': -3.0}
+          assert result['summary']['failed'] == []
+          assert result['framework_results']['torch']['status'] == 'passed'
+          assert result['framework_results']['torch']['device'] == 'cpu'
+          assert all(value is False for value in result['scope'].values())
+          PY
+      - name: Chapter 58 offline Hugging Face CPU pipeline tests
+        run: |
+          python -m venv /tmp/ch58-venv
+          /tmp/ch58-venv/bin/python -m pip install -r book-engineering/projects/58-huggingface-stack/requirements-cpu.txt
+          /tmp/ch58-venv/bin/python -m pip install -r book-engineering/projects/58-huggingface-stack/requirements-lock-linux-py313.txt
+          /tmp/ch58-venv/bin/python -m pip check
+          (cd book-engineering/projects/58-huggingface-stack && /tmp/ch58-venv/bin/python -m unittest discover -v)
+          /tmp/ch58-venv/bin/python book-engineering/projects/58-huggingface-stack/pipeline_demo.py \
+            --max-steps 2 --seed 58 --output /tmp/ch58-ci-results.json
+          HF_HUB_OFFLINE=1 HF_DATASETS_OFFLINE=1 /tmp/ch58-venv/bin/accelerate launch \
+            --cpu --num_processes 1 --num_machines 1 --mixed_precision no --dynamo_backend no \
+            book-engineering/projects/58-huggingface-stack/pipeline_demo.py \
+            --max-steps 2 --seed 58 --output /tmp/ch58-ci-accelerate-results.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          expected = {
+              'torch': '2.15.0+cpu', 'transformers': '5.22.2', 'datasets': '5.1.0',
+              'tokenizers': '0.23.3', 'accelerate': '1.15.0'
+          }
+          for path in ('/tmp/ch58-ci-results.json', '/tmp/ch58-ci-accelerate-results.json'):
+              result = json.loads(Path(path).read_text())
+              assert result['fixture_sha256'] == 'eb21fe6a41dcd4dc828c00a7dc0293370087bb77fc6df022078fc16a20d750a2'
+              assert result['environment']['packages'] == expected
+              assert result['environment']['accelerator_device'] == 'cpu'
+              assert result['data']['group_overlap'] == []
+              assert result['training']['steps'] == 2 and result['training']['all_gradients_finite'] is True
+              assert result['model']['pretrained_weights_loaded'] is False
+              assert all(value is False for value in result['scope'].values())
+          PY
+      - name: Chapter 59 GPU-stack CPU/Gloo contract tests
+        run: |
+          python -m pip check
+          (cd book-engineering/projects/59-gpu-systems && python -m unittest discover -v)
+          python book-engineering/projects/59-gpu-systems/gpu_systems_demo.py \
+            --mode preflight > /tmp/ch59-ci-preflight.json
+          python book-engineering/projects/59-gpu-systems/gpu_systems_demo.py \
+            --mode layout > /tmp/ch59-ci-layout.json
+          torchrun --standalone --nproc-per-node=2 \
+            book-engineering/projects/59-gpu-systems/gpu_systems_demo.py \
+            --mode gloo-smoke --output /tmp/ch59-ci-gloo.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          preflight = json.loads(Path('/tmp/ch59-ci-preflight.json').read_text())
+          layout = json.loads(Path('/tmp/ch59-ci-layout.json').read_text())
+          result = json.loads(Path('/tmp/ch59-ci-gloo.json').read_text())
+          assert preflight['torch'] == '2.6.0+cpu'
+          assert preflight['gloo_available'] is True and preflight['nccl_available'] is False
+          assert layout['fixture_sha256'] == '1edb63d0caa8eedbadf77de3a086c6d61cc1a7dc072601f97046066eb95e7fa0'
+          assert layout['layout']['world_size'] == layout['layout']['dimension_product'] == 16
+          assert result['fixture_sha256'] == layout['fixture_sha256']
+          assert result['process_group']['backend'] == 'gloo' and result['process_group']['world_size'] == 2
+          assert result['collective'] == {'operation': 'all_reduce_sum', 'observed': 3, 'expected': 3, 'passed': True}
+          assert all(value is False for value in result['scope'].values())
+          PY
+      - name: Chapter 60 local MLflow and offline W&B contract tests
+        run: |
+          python -m venv /tmp/ch60-venv
+          /tmp/ch60-venv/bin/python -m pip install -r book-engineering/projects/60-mlops/requirements-cpu.txt
+          /tmp/ch60-venv/bin/python -m pip install -r book-engineering/projects/60-mlops/requirements-lock-linux-py313.txt
+          /tmp/ch60-venv/bin/python -m pip check
+          (cd book-engineering/projects/60-mlops && /tmp/ch60-venv/bin/python -m unittest -v)
+          /tmp/ch60-venv/bin/python book-engineering/projects/60-mlops/experiment_ops.py \
+            --backend manifest --output /tmp/ch60-ci-manifest
+          /tmp/ch60-venv/bin/python book-engineering/projects/60-mlops/experiment_ops.py \
+            --backend mlflow --output /tmp/ch60-ci-mlflow
+          /tmp/ch60-venv/bin/python book-engineering/projects/60-mlops/experiment_ops.py \
+            --backend wandb-offline --output /tmp/ch60-ci-wandb
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          expected_fixture = '81989e3ae534cade6f4e77742cb3fae01649247956962559720e75b093f1a260'
+          for name, backend in (('manifest', 'manifest'), ('mlflow', 'mlflow'), ('wandb', 'wandb')):
+              path = Path(f'/tmp/ch60-ci-{name}/run.json')
+              result = json.loads(path.read_text())
+              assert result['fixture']['sha256'] == expected_fixture
+              assert result['metrics']['initial_mse'] == 21.0
+              assert result['metrics']['final_mse'] == 0.09078731868784178
+              assert result['tracking']['backend'] == backend
+              assert result['scope']['real_data_used'] is False
+              assert result['scope']['gpu_used'] is False
+              assert result['tracking']['external_sync_requested'] is False
+          mlflow_run = json.loads(Path('/tmp/ch60-ci-mlflow/run.json').read_text())
+          assert mlflow_run['tracking']['status'] == 'logged-local-sqlite'
+          wandb_run = json.loads(Path('/tmp/ch60-ci-wandb/run.json').read_text())
+          assert wandb_run['tracking']['mode'] == 'offline'
+          assert wandb_run['tracking']['status'] == 'saved-locally-not-synced'
+          offline_dir = Path('/tmp/ch60-ci-wandb') / wandb_run['tracking']['offline_run_directory']
+          assert offline_dir.is_dir() and list(offline_dir.glob('*.wandb'))
+          PY
+      - name: Chapter 61 synthetic inference-trace arithmetic
+        run: |
+          (cd book-engineering/projects/61-inference-serving && python -m unittest -v)
+          python book-engineering/projects/61-inference-serving/inference_lab.py \
+            --fixture book-engineering/projects/61-inference-serving/sample_trace.json \
+            --output /tmp/ch61-ci-analysis.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          result = json.loads(Path('/tmp/ch61-ci-analysis.json').read_text())
+          assert result['fixture_sha256'] == 'e53d085e8386c0c8d8dcb9b8b0c7ab9508bfef8d3f72341ea6c5f58bb9ffaf7c'
+          assert result['kv_cache_estimate']['bytes_for_concurrency'] == 4294967296
+          assert result['runs'][0]['requests']['successful'] == 5
+          assert result['runs'][1]['requests']['successful'] == 5
+          assert result['runs'][0]['runtime'] == 'fictional-reference'
+          assert result['scope']['real_runtime_used'] is False
+          assert result['scope']['gpu_used'] is False
+          assert result['scope']['benchmark_claim'] is False
+          PY
+      - name: Confirm volume 4 builder idempotence
+        run: |
+          cp data.json /tmp/v4-data-before.json
+          cp volume-4-full-fa.md /tmp/v4-markdown-before.md
+          python book-engineering/build_volume4.py
+          cmp data.json /tmp/v4-data-before.json
+          cmp volume-4-full-fa.md /tmp/v4-markdown-before.md
+      - name: Browser, responsive, exact-appendix and offline checks
+        run: |
+          python book-engineering/test_volume4.py
+          python book-engineering/test_mobile_layout.py

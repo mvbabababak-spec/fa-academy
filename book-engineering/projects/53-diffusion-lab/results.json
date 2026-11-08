@@ -1,0 +1,347 @@
+{
+  "unit_tests": {
+    "passed": 40,
+    "failed": 0,
+    "command": "python -m unittest discover -v",
+    "python": "3.13.16"
+  },
+  "environment": {
+    "python": "3.13.16",
+    "platform": "linux",
+    "dependencies": "Python standard library only"
+  },
+  "audit": {
+    "status": "synthetic_diffusion_fixture_audit_complete",
+    "mode": "audit",
+    "training_performed": false,
+    "neural_model_loaded": false,
+    "model_downloaded": false,
+    "image_files_loaded": false,
+    "video_files_loaded": false,
+    "device": "CPU; Python standard library only",
+    "fixture": {
+      "path": "sample_mixture.json",
+      "sha256": "7646ab0c0d8cee8fdbf3e29ac88ce9e37b181859e0ff34935f6af7bbe28b208b",
+      "fixture_id": "v4-ch07-2d-gaussian-mixture-v1",
+      "label_source": "synthetic_fixture",
+      "dimension": 2,
+      "components": 4,
+      "image_files_included": false,
+      "video_files_included": false,
+      "real_world_observations_included": false,
+      "trained_weights_included": false
+    },
+    "claims_not_supported": [
+      "quality of a trained image or video model",
+      "Persian-language output quality",
+      "hardware performance or benchmark results",
+      "copyright clearance, privacy compliance, or legal conclusions"
+    ],
+    "python": "3.13.16"
+  },
+  "demo": {
+    "status": "analytic_synthetic_mixture_ddpm_demo_complete",
+    "mode": "demo",
+    "training_performed": false,
+    "neural_model_loaded": false,
+    "model_downloaded": false,
+    "image_files_loaded": false,
+    "video_files_loaded": false,
+    "analytic_score_used": true,
+    "score_source": "closed_form_density_of_known_synthetic_gaussian_mixture",
+    "device": "CPU; Python standard library only",
+    "fixture": {
+      "path": "sample_mixture.json",
+      "sha256": "7646ab0c0d8cee8fdbf3e29ac88ce9e37b181859e0ff34935f6af7bbe28b208b",
+      "fixture_id": "v4-ch07-2d-gaussian-mixture-v1",
+      "label_source": "synthetic_fixture",
+      "dimension": 2,
+      "components": 4,
+      "image_files_included": false,
+      "video_files_included": false,
+      "real_world_observations_included": false,
+      "trained_weights_included": false
+    },
+    "sampling": {
+      "method": "epsilon-parameterized DDPM reverse updates",
+      "initial_prior": "standard-normal approximation at the terminal timestep",
+      "timesteps": 200,
+      "beta_start": 0.0005,
+      "beta_end": 0.06,
+      "terminal_alpha_bar": 0.002080618226191632,
+      "sample_count": 64,
+      "seed": 53,
+      "posterior_noise_added_at_t0": false
+    },
+    "nearest_synthetic_center_counts": {
+      "southwest": 19,
+      "northwest": 17,
+      "southeast": 16,
+      "northeast": 12
+    },
+    "sample_mean": [
+      -0.2332439537277366,
+      -0.14123519607642687
+    ],
+    "samples": [
+      [
+        -2.15689791253512,
+        2.537268087125221
+      ],
+      [
+        -2.36893702447998,
+        -1.8364289514178675
+      ],
+      [
+        -1.2017427877284743,
+        -2.2698345789810594
+      ],
+      [
+        -2.2994149451661476,
+        -2.031001432174922
+      ],
+      [
+        2.280270956087558,
+        -1.7324047537308185
+      ],
+      [
+        1.9473741731283207,
+        2.514782658515902
+      ],
+      [
+        -2.0449273267780517,
+        2.0286860594063936
+      ],
+      [
+        -1.9239008645499451,
+        1.8317953940420122
+      ],
+      [
+        1.35497151442807,
+        -1.1276413160268424
+      ],
+      [
+        2.3567077226659614,
+        1.741555520442322
+      ],
+      [
+        2.502810988924393,
+        -2.2405522808065936
+      ],
+      [
+        2.489226625521537,
+        -1.2671658423068026
+      ],
+      [
+        1.592109714673305,
+        -2.2759222794109775
+      ],
+      [
+        2.0452713876725945,
+        -2.1911136456625204
+      ],
+      [
+        -2.0820979580816292,
+        2.388746498322172
+      ],
+      [
+        -2.5605776954358674,
+        -1.8823045184522742
+      ],
+      [
+        -2.228603601740316,
+        -2.426226884691583
+      ],
+      [
+        2.28418597404035,
+        -3.1170076114582463
+      ],
+      [
+        2.520286382117891,
+        2.5261743224093403
+      ],
+      [
+        2.0831628308519528,
+        -2.1958638871818743
+      ],
+      [
+        -2.661892424859069,
+        -2.2307895683350356
+      ],
+      [
+        -2.1204436678610534,
+        2.1385934641112287
+      ],
+      [
+        2.6640755551868,
+        -1.8039965850932753
+      ],
+      [
+        -1.7671628828983996,
+        2.3890589511217497
+      ],
+      [
+        -1.4886279777085267,
+        -2.0144188665676612
+      ],
+      [
+        1.7132611428750257,
+        2.3474657640379566
+      ],
+      [
+        -1.8332213275179736,
+        -2.567402467597597
+      ],
+      [
+        -2.4567160644195565,
+        -2.106038487149149
+      ],
+      [
+        2.5520424826580412,
+        3.0923485632165373
+      ],
+      [
+        2.851324413242105,
+        -1.4735966593134013
+      ],
+      [
+        2.5663639469087136,
+        1.4752413258920807
+      ],
+      [
+        -2.037357628826747,
+        -1.596287846342544
+      ],
+      [
+        1.158867606556832,
+        -1.6072632279826995
+      ],
+      [
+        -2.894713104707835,
+        2.147782369016231
+      ],
+      [
+        3.0389479223167015,
+        1.310001222121657
+      ],
+      [
+        -2.0647052921478704,
+        -2.323943364636085
+      ],
+      [
+        2.1167421799606103,
+        2.2642945853128027
+      ],
+      [
+        -2.6884660525609214,
+        -2.10166861197547
+      ],
+      [
+        2.206744638728948,
+        -2.4794239025091493
+      ],
+      [
+        1.9976762022770271,
+        1.8278156618149957
+      ],
+      [
+        -2.3222485717322927,
+        1.759198388594907
+      ],
+      [
+        -1.835321864099722,
+        -1.636665581969872
+      ],
+      [
+        2.216051646035429,
+        1.9596456437199603
+      ],
+      [
+        -1.9278160768322077,
+        2.7741759031859843
+      ],
+      [
+        2.1959777078177534,
+        -1.9452949780732522
+      ],
+      [
+        -2.0048742329593985,
+        2.149263052637104
+      ],
+      [
+        -2.5720910390141736,
+        -2.30049455653449
+      ],
+      [
+        -1.6028664250432294,
+        2.141099031940554
+      ],
+      [
+        -2.009468093454038,
+        2.253554993171809
+      ],
+      [
+        -2.2821420859414356,
+        1.4518163479779678
+      ],
+      [
+        -1.628768975882492,
+        1.9077564033016345
+      ],
+      [
+        2.07232004685193,
+        -2.153660781702523
+      ],
+      [
+        -1.3464338879721047,
+        -2.096158630196528
+      ],
+      [
+        -2.700038798020791,
+        -1.6211120974368018
+      ],
+      [
+        -2.320882377664227,
+        -1.3378426098020082
+      ],
+      [
+        2.0135556513472705,
+        -2.112144089127456
+      ],
+      [
+        1.4349699911367793,
+        2.042719742333084
+      ],
+      [
+        -1.5108043957560537,
+        -1.8216022559946665
+      ],
+      [
+        -2.4114024460237076,
+        2.5470789087301737
+      ],
+      [
+        -1.8429638758192597,
+        -2.868136943835796
+      ],
+      [
+        1.7945948936592215,
+        1.915054531999501
+      ],
+      [
+        -1.5239375188549809,
+        1.8417385599849678
+      ],
+      [
+        -2.647990273889542,
+        2.7636524542233505
+      ],
+      [
+        2.392950142716878,
+        -2.3160068631230764
+      ]
+    ],
+    "interpretation_limit": "Toy 2-D distribution only; not image/video generation or model evaluation.",
+    "python": "3.13.16"
+  }
+}

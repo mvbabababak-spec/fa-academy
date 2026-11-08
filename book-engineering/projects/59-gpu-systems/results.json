@@ -1,0 +1,115 @@
+{
+  "review_date": "2026-11-07",
+  "schema_version": "v4-ch13-project-results-v1",
+  "fixture_id": "v4-ch13-synthetic-dense-layout-v1",
+  "fixture_sha256": "1edb63d0caa8eedbadf77de3a086c6d61cc1a7dc072601f97046066eb95e7fa0",
+  "unit_tests": {
+    "passed": 23,
+    "failed": 0,
+    "command": "python -m unittest discover -v"
+  },
+  "pip_check": "passed",
+  "environment": {
+    "python": "3.13.16",
+    "platform": "Linux-6.1.189+-x86_64-with-glibc2.41",
+    "torch": "2.6.0+cpu",
+    "device": "CPU only",
+    "gloo_available": true,
+    "nccl_available": false,
+    "cuda_build": null,
+    "hip_build": null
+  },
+  "layout_validation": {
+    "fixture_id": "v4-ch13-synthetic-dense-layout-v1",
+    "label_source": "synthetic_fixture",
+    "world_size": 16,
+    "dense_parallelism": {
+      "dp": 2,
+      "tp": 2,
+      "pp": 2,
+      "cp": 2
+    },
+    "dimension_product": 16,
+    "valid": true,
+    "scope": {
+      "expert_parallelism_included": false,
+      "real_hardware_observed": false,
+      "training_run_performed": false,
+      "benchmark_performed": false
+    }
+  },
+  "gloo_smoke": {
+    "schema_version": "v4-ch13-gloo-smoke-v1",
+    "fixture_id": "v4-ch13-synthetic-dense-layout-v1",
+    "fixture_sha256": "1edb63d0caa8eedbadf77de3a086c6d61cc1a7dc072601f97046066eb95e7fa0",
+    "validated_synthetic_layout": {
+      "fixture_id": "v4-ch13-synthetic-dense-layout-v1",
+      "label_source": "synthetic_fixture",
+      "world_size": 16,
+      "dense_parallelism": {
+        "dp": 2,
+        "tp": 2,
+        "pp": 2,
+        "cp": 2
+      },
+      "dimension_product": 16,
+      "valid": true,
+      "scope": {
+        "expert_parallelism_included": false,
+        "real_hardware_observed": false,
+        "training_run_performed": false,
+        "benchmark_performed": false
+      }
+    },
+    "environment": {
+      "python": "3.13.16",
+      "platform": "Linux-6.1.189+-x86_64-with-glibc2.41",
+      "torch": "2.6.0+cpu",
+      "torch_cuda_build": null,
+      "torch_hip_build": null,
+      "torch_cuda_api_available": false,
+      "accelerator_backend_classification": "cpu-or-no-accelerator-build",
+      "visible_device_count": 0,
+      "visible_device_names": [],
+      "distributed_available": true,
+      "gloo_available": true,
+      "nccl_available": false
+    },
+    "process_group": {
+      "backend": "gloo",
+      "rank": 0,
+      "local_rank": 0,
+      "world_size": 2,
+      "rank_inputs": [
+        1,
+        2
+      ]
+    },
+    "collective": {
+      "operation": "all_reduce_sum",
+      "observed": 3,
+      "expected": 3,
+      "passed": true
+    },
+    "scope": {
+      "cuda_runtime_tested": false,
+      "rocm_runtime_tested": false,
+      "triton_kernel_executed": false,
+      "deepspeed_training_executed": false,
+      "fsdp_training_executed": false,
+      "megatron_training_executed": false,
+      "gpu_benchmark_performed": false,
+      "model_quality_claim": false
+    }
+  },
+  "scope": {
+    "cuda_runtime_tested": false,
+    "rocm_runtime_tested": false,
+    "triton_kernel_executed": false,
+    "deepspeed_training_executed": false,
+    "fsdp_training_executed": false,
+    "megatron_training_executed": false,
+    "gpu_benchmark_performed": false,
+    "model_quality_claim": false
+  }
+}

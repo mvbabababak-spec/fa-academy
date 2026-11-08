@@ -1,0 +1,739 @@
+"""Browser, accessibility, exact-appendix and offline checks for volume 4."""
+from functools import partial
+from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
+import re
+from threading import Thread
+
+from playwright.sync_api import sync_playwright
+
+ROOT = Path(__file__).resolve().parent.parent
+BOOK_ID = "art-science-intelligence-v4"
+TITLE = "هنر و علم ساخت هوش — جلد چهارم"
+CACHE_NAME = re.search(r"const CACHE_NAME = '([^']+)'", (ROOT / "sw.js").read_text(encoding="utf-8")).group(1)
+OFFLINE_PATHS = [
+    "assets/images/covers/volume-1-cover.webp",
+    "assets/images/covers/volume-2-cover.webp",
+    "assets/images/covers/volume-3-cover.webp",
+    "assets/images/covers/volume-4-cover.webp",
+    "assets/images/covers/microsoft-ai-for-beginners-cover.webp",
+    "assets/images/covers/microsoft-generative-ai-for-beginners-cover.webp",
+    "assets/images/covers/microsoft-ml-for-beginners-cover.webp",
+    "assets/images/covers/microsoft-data-science-for-beginners-cover.webp",
+    "volume-4-full-fa.md",
+    "book-engineering/diagrams/v4-ch01-posttraining.svg",
+    "book-engineering/chapters/47-posttraining.md",
+    "book-engineering/chapters/47-audit-report-fa.md",
+    "book-engineering/answers/47-posttraining-fa.md",
+    "book-engineering/projects/47-instruction-tuning/README.md",
+    "book-engineering/projects/47-instruction-tuning/sft_experiment.py",
+    "book-engineering/projects/47-instruction-tuning/test_sft_experiment.py",
+    "book-engineering/projects/47-instruction-tuning/sample_sft.jsonl",
+    "book-engineering/projects/47-instruction-tuning/requirements-model-demo.txt",
+    "book-engineering/diagrams/v4-ch02-peft.svg",
+    "book-engineering/chapters/48-peft.md",
+    "book-engineering/chapters/48-audit-report-fa.md",
+    "book-engineering/answers/48-peft-fa.md",
+    "book-engineering/projects/48-peft-lab/README.md",
+    "book-engineering/projects/48-peft-lab/peft_lab.py",
+    "book-engineering/projects/48-peft-lab/test_peft_lab.py",
+    "book-engineering/projects/48-peft-lab/sample_layers.json",
+    "book-engineering/diagrams/v4-ch03-preference.svg",
+    "book-engineering/chapters/49-preference-optimization.md",
+    "book-engineering/chapters/49-audit-report-fa.md",
+    "book-engineering/answers/49-preference-optimization-fa.md",
+    "book-engineering/projects/49-preference-lab/README.md",
+    "book-engineering/projects/49-preference-lab/preference_lab.py",
+    "book-engineering/projects/49-preference-lab/test_preference_lab.py",
+    "book-engineering/projects/49-preference-lab/sample_preferences.jsonl",
+    "book-engineering/projects/49-preference-lab/results.json",
+    "book-engineering/diagrams/v4-ch04-synthetic-reasoning.svg",
+    "book-engineering/chapters/50-synthetic-reasoning.md",
+    "book-engineering/chapters/50-audit-report-fa.md",
+    "book-engineering/answers/50-synthetic-reasoning-fa.md",
+    "book-engineering/projects/50-synthetic-reasoning/README.md",
+    "book-engineering/projects/50-synthetic-reasoning/reasoning_lab.py",
+    "book-engineering/projects/50-synthetic-reasoning/test_reasoning_lab.py",
+    "book-engineering/projects/50-synthetic-reasoning/sample_traces.jsonl",
+    "book-engineering/projects/50-synthetic-reasoning/results.json",
+    "book-engineering/diagrams/v4-ch05-vision.svg",
+    "book-engineering/chapters/51-vision-models.md",
+    "book-engineering/chapters/51-audit-report-fa.md",
+    "book-engineering/answers/51-vision-models-fa.md",
+    "book-engineering/projects/51-vision-lab/README.md",
+    "book-engineering/projects/51-vision-lab/vision_lab.py",
+    "book-engineering/projects/51-vision-lab/test_vision_lab.py",
+    "book-engineering/projects/51-vision-lab/sample_embeddings.json",
+    "book-engineering/projects/51-vision-lab/results.json",
+    "book-engineering/diagrams/v4-ch06-audio.svg",
+    "book-engineering/chapters/52-audio-models.md",
+    "book-engineering/chapters/52-audit-report-fa.md",
+    "book-engineering/answers/52-audio-models-fa.md",
+    "book-engineering/projects/52-audio-lab/README.md",
+    "book-engineering/projects/52-audio-lab/audio_lab.py",
+    "book-engineering/projects/52-audio-lab/test_audio_lab.py",
+    "book-engineering/projects/52-audio-lab/sample_transcripts.json",
+    "book-engineering/projects/52-audio-lab/results.json",
+    "book-engineering/diagrams/v4-ch07-diffusion.svg",
+    "book-engineering/chapters/53-image-video-generation.md",
+    "book-engineering/chapters/53-audit-report-fa.md",
+    "book-engineering/answers/53-image-video-generation-fa.md",
+    "book-engineering/projects/53-diffusion-lab/README.md",
+    "book-engineering/projects/53-diffusion-lab/diffusion_lab.py",
+    "book-engineering/projects/53-diffusion-lab/test_diffusion_lab.py",
+    "book-engineering/projects/53-diffusion-lab/sample_mixture.json",
+    "book-engineering/projects/53-diffusion-lab/results.json",
+    "book-engineering/diagrams/v4-ch08-resource-estimation.svg",
+    "book-engineering/chapters/54-resource-estimation.md",
+    "book-engineering/chapters/54-audit-report-fa.md",
+    "book-engineering/answers/54-resource-estimation-fa.md",
+    "book-engineering/projects/54-resource-estimation/README.md",
+    "book-engineering/projects/54-resource-estimation/resource_estimator.py",
+    "book-engineering/projects/54-resource-estimation/test_resource_estimator.py",
+    "book-engineering/projects/54-resource-estimation/sample_profiles.json",
+    "book-engineering/projects/54-resource-estimation/results.json",
+    "book-engineering/diagrams/v4-ch09-lab-design.svg",
+    "book-engineering/chapters/55-ai-lab-design.md",
+    "book-engineering/chapters/55-audit-report-fa.md",
+    "book-engineering/answers/55-ai-lab-design.md",
+    "book-engineering/projects/55-ai-lab-design/README.md",
+    "book-engineering/projects/55-ai-lab-design/lab_design_planner.py",
+    "book-engineering/projects/55-ai-lab-design/test_lab_design_planner.py",
+    "book-engineering/projects/55-ai-lab-design/sample_labs.json",
+    "book-engineering/projects/55-ai-lab-design/results.json",
+    "assets/images/babak-ai/v4-ch10-tco-timeline.svg",
+    "book-engineering/chapters/56-ai-compute-budget.md",
+    "book-engineering/chapters/56-audit-report-fa.md",
+    "book-engineering/answers/56-ai-compute-budget-fa.md",
+    "book-engineering/projects/56-ai-compute-budget/README.md",
+    "book-engineering/projects/56-ai-compute-budget/budget_model.py",
+    "book-engineering/projects/56-ai-compute-budget/test_budget_model.py",
+    "book-engineering/projects/56-ai-compute-budget/sample_budget.json",
+    "book-engineering/projects/56-ai-compute-budget/results.json",
+    "book-engineering/diagrams/v4-ch11-framework-selection.svg",
+    "book-engineering/chapters/57-ml-frameworks.md",
+    "book-engineering/chapters/57-audit-report-fa.md",
+    "book-engineering/answers/57-ml-frameworks-fa.md",
+    "book-engineering/projects/57-framework-lab/README.md",
+    "book-engineering/projects/57-framework-lab/framework_compare.py",
+    "book-engineering/projects/57-framework-lab/test_framework_compare.py",
+    "book-engineering/projects/57-framework-lab/sample_problem.json",
+    "book-engineering/projects/57-framework-lab/results.json",
+    "book-engineering/diagrams/v4-ch12-huggingface-stack.svg",
+    "book-engineering/chapters/58-huggingface-stack.md",
+    "book-engineering/chapters/58-audit-report-fa.md",
+    "book-engineering/answers/58-huggingface-stack-fa.md",
+    "book-engineering/projects/58-huggingface-stack/README.md",
+    "book-engineering/projects/58-huggingface-stack/pipeline_demo.py",
+    "book-engineering/projects/58-huggingface-stack/test_pipeline_demo.py",
+    "book-engineering/projects/58-huggingface-stack/sample_data.jsonl",
+    "book-engineering/projects/58-huggingface-stack/fixture_manifest.json",
+    "book-engineering/projects/58-huggingface-stack/environment.json",
+    "book-engineering/projects/58-huggingface-stack/results.json",
+    "book-engineering/projects/58-huggingface-stack/requirements.txt",
+    "book-engineering/projects/58-huggingface-stack/requirements-cpu.txt",
+    "book-engineering/projects/58-huggingface-stack/requirements-lock-linux-py313.txt",
+    "book-engineering/diagrams/v4-ch13-gpu-systems.svg",
+    "book-engineering/chapters/59-gpu-systems.md",
+    "book-engineering/chapters/59-audit-report-fa.md",
+    "book-engineering/answers/59-gpu-systems-fa.md",
+    "book-engineering/projects/59-gpu-systems/README.md",
+    "book-engineering/projects/59-gpu-systems/gpu_systems_demo.py",
+    "book-engineering/projects/59-gpu-systems/test_gpu_systems_demo.py",
+    "book-engineering/projects/59-gpu-systems/sample_layout.json",
+    "book-engineering/projects/59-gpu-systems/fixture_manifest.json",
+    "book-engineering/projects/59-gpu-systems/environment.json",
+    "book-engineering/projects/59-gpu-systems/results.json",
+    "book-engineering/projects/59-gpu-systems/requirements.txt",
+    "book-engineering/projects/59-gpu-systems/requirements-cpu.txt",
+    "book-engineering/projects/59-gpu-systems/requirements-lock-linux-py313.txt",
+    "book-engineering/diagrams/v4-ch14-mlops.svg",
+    "book-engineering/chapters/60-mlops.md",
+    "book-engineering/chapters/60-audit-report-fa.md",
+    "book-engineering/answers/60-mlops-fa.md",
+    "book-engineering/projects/60-mlops/README.md",
+    "book-engineering/projects/60-mlops/experiment_ops.py",
+    "book-engineering/projects/60-mlops/test_experiment_ops.py",
+    "book-engineering/projects/60-mlops/sample_experiment.json",
+    "book-engineering/projects/60-mlops/fixture_manifest.json",
+    "book-engineering/projects/60-mlops/environment.json",
+    "book-engineering/projects/60-mlops/results.json",
+    "book-engineering/projects/60-mlops/requirements.txt",
+    "book-engineering/projects/60-mlops/requirements-cpu.txt",
+    "book-engineering/projects/60-mlops/requirements-lock-linux-py313.txt",
+    "book-engineering/projects/60-mlops/Dockerfile",
+    "book-engineering/projects/60-mlops/job.yaml",
+    "book-engineering/diagrams/v4-ch15-inference-serving.svg",
+    "book-engineering/chapters/61-inference-serving.md",
+    "book-engineering/chapters/61-audit-report-fa.md",
+    "book-engineering/answers/61-inference-serving-fa.md",
+    "book-engineering/projects/61-inference-serving/README.md",
+    "book-engineering/projects/61-inference-serving/inference_lab.py",
+    "book-engineering/projects/61-inference-serving/test_inference_lab.py",
+    "book-engineering/projects/61-inference-serving/sample_trace.json",
+    "book-engineering/projects/61-inference-serving/fixture_manifest.json",
+    "book-engineering/projects/61-inference-serving/environment.json",
+    "book-engineering/projects/61-inference-serving/results.json",
+]
+
+
+def main():
+    server = ThreadingHTTPServer(("127.0.0.1", 0), partial(SimpleHTTPRequestHandler, directory=str(ROOT.parent)))
+    Thread(target=server.serve_forever, daemon=True).start()
+    url = f"http://127.0.0.1:{server.server_port}/{ROOT.name}/"
+    project47 = (ROOT / "book-engineering/projects/47-instruction-tuning/sft_experiment.py").read_text(encoding="utf-8").rstrip()
+    project48 = (ROOT / "book-engineering/projects/48-peft-lab/peft_lab.py").read_text(encoding="utf-8").rstrip()
+    project49 = (ROOT / "book-engineering/projects/49-preference-lab/preference_lab.py").read_text(encoding="utf-8").rstrip()
+    project50 = (ROOT / "book-engineering/projects/50-synthetic-reasoning/reasoning_lab.py").read_text(encoding="utf-8").rstrip()
+    project51 = (ROOT / "book-engineering/projects/51-vision-lab/vision_lab.py").read_text(encoding="utf-8").rstrip()
+    project52 = (ROOT / "book-engineering/projects/52-audio-lab/audio_lab.py").read_text(encoding="utf-8").rstrip()
+    project53 = (ROOT / "book-engineering/projects/53-diffusion-lab/diffusion_lab.py").read_text(encoding="utf-8").rstrip()
+    project54 = (ROOT / "book-engineering/projects/54-resource-estimation/resource_estimator.py").read_text(encoding="utf-8").rstrip()
+    project55 = (ROOT / "book-engineering/projects/55-ai-lab-design/lab_design_planner.py").read_text(encoding="utf-8").rstrip()
+    project56 = (ROOT / "book-engineering/projects/56-ai-compute-budget/budget_model.py").read_text(encoding="utf-8").rstrip()
+    project57 = (ROOT / "book-engineering/projects/57-framework-lab/framework_compare.py").read_text(encoding="utf-8").rstrip()
+    project58 = (ROOT / "book-engineering/projects/58-huggingface-stack/pipeline_demo.py").read_text(encoding="utf-8").rstrip()
+    project59 = (ROOT / "book-engineering/projects/59-gpu-systems/gpu_systems_demo.py").read_text(encoding="utf-8").rstrip()
+    project60 = (ROOT / "book-engineering/projects/60-mlops/experiment_ops.py").read_text(encoding="utf-8").rstrip()
+    project61 = (ROOT / "book-engineering/projects/61-inference-serving/inference_lab.py").read_text(encoding="utf-8").rstrip()
+    try:
+        with sync_playwright() as playwright:
+            browser = playwright.chromium.launch(args=["--no-sandbox"])
+            for width in (320, 390, 1440):
+                context = browser.new_context(viewport={"width": width, "height": 900})
+                page = context.new_page()
+                errors = []
+                page.on("pageerror", lambda error: errors.append(str(error)))
+                page.goto(url, wait_until="networkidle")
+                page.wait_for_selector("#loading.hidden")
+                assert page.get_by_text(TITLE, exact=True).count() == 1
+                metadata = page.evaluate(f'''() => {{
+                  const book=DATA.books.find(item=>item.id==="{BOOK_ID}");
+                  return {{chapters:book.chapters.map(ch=>({{
+                    id:ch.id,
+                    sectionIds:ch.sections.map(section=>section.id),
+                    titles:ch.sections.map(section=>section.title),
+                    mathIndexes:ch.sections.map((section,index)=>section.html.includes('<math')?index:-1).filter(index=>index>=0),
+                    imageIndexes:ch.sections.map((section,index)=>section.html.includes('<img')?index:-1).filter(index=>index>=0),
+                    mathCount:ch.sections.reduce((count,section)=>count+(section.html.match(/<math/g)||[]).length,0),
+                    answerIndexes:ch.sections.map((section,index)=>section.html.includes('answers/')?index:-1).filter(index=>index>=0),
+                    sectionCount:ch.sections.length
+                  }}))}};
+                }}''')
+                assert len(metadata["chapters"]) == 15, metadata
+                c47, c48, c49, c50, c51, c52, c53, c54, c55, c56, c57, c58, c59, c60, c61 = metadata["chapters"]
+                assert [c["id"] for c in metadata["chapters"]] == [
+                    "art-science-v4-ch01", "art-science-v4-ch02", "art-science-v4-ch03", "art-science-v4-ch04", "art-science-v4-ch05", "art-science-v4-ch06", "art-science-v4-ch07", "art-science-v4-ch08", "art-science-v4-ch09", "art-science-v4-ch10", "art-science-v4-ch11", "art-science-v4-ch12", "art-science-v4-ch13", "art-science-v4-ch14", "art-science-v4-ch15"
+                ], metadata
+                assert c61["id"] == "art-science-v4-ch15" and c61["sectionCount"] == 25, c61
+                assert c61["mathCount"] >= 2 and c61["imageIndexes"] and c61["answerIndexes"], c61
+                for chapter in metadata["chapters"]:
+                    assert chapter["sectionCount"] >= 15
+                    assert chapter["sectionIds"][0].endswith("-s01")
+                    assert len(set(chapter["sectionIds"])) == chapter["sectionCount"]
+
+                # Chapter 47: SFT figure, accessible MathML, answer and exact appendix.
+                page.evaluate(f"openItem('{BOOK_ID}','book')")
+                headers = page.locator(".chapter-header")
+                assert headers.count() == 15
+                headers.nth(0).click()
+                page.evaluate(f"openSec('{BOOK_ID}',0,0)")
+                page.wait_for_selector(".reader-content")
+                image47 = page.locator(".reader-content img").first
+                alt47 = image47.get_attribute("alt")
+                assert all(term in alt47 for term in ("شکل ۴-۱-۱", "Continued Pretraining", "SFT", "−۱۰۰", "benchmark")), alt47
+                page.wait_for_function("""() => {
+                    const img=document.querySelector('.reader-content img');
+                    return img && img.complete && img.naturalWidth===1600 && img.naturalHeight===1000;
+                }""")
+                assert c47["mathIndexes"], "chapter 47 MathML missing"
+                math47_index = c47["mathIndexes"][0]
+                page.evaluate(f"openSec('{BOOK_ID}',0,{math47_index})")
+                math47 = page.locator(".reader-content math").first
+                assert page.locator(".reader-content math").count() == 1
+                assert math47.get_attribute("aria-label") and "زیان SFT" in math47.get_attribute("aria-label")
+                assert page.locator(".reader-content").evaluate("e => e.scrollWidth <= e.clientWidth + 2")
+                assert c47["answerIndexes"], "chapter 47 answer link missing"
+                page.evaluate(f"openSec('{BOOK_ID}',0,{c47['answerIndexes'][0]})")
+                assert page.locator(".reader-content a[href='book-engineering/answers/47-posttraining-fa.md']").count() == 1
+                appendix47 = next(i for i, title in enumerate(c47["titles"]) if "پیوست اجرایی" in title)
+                page.evaluate(f"openSec('{BOOK_ID}',0,{appendix47})")
+                assert page.locator(".reader-content pre code").last.text_content().rstrip("\n") == project47
+
+                # Chapter 48: PEFT figure, MathML, independent answer and exact appendix.
+                page.evaluate(f"openItem('{BOOK_ID}','book')")
+                headers = page.locator(".chapter-header")
+                assert headers.count() == 15
+                headers.nth(1).click()
+                page.evaluate(f"openSec('{BOOK_ID}',1,0)")
+                image48 = page.locator(".reader-content img").first
+                alt48 = image48.get_attribute("alt")
+                assert all(term in alt48 for term in ("شکل ۴-۲-۱", "adapter", "LoRA", "QLoRA")), alt48
+                page.wait_for_function("""() => {
+                    const img=document.querySelector('.reader-content img');
+                    return img && img.complete && img.naturalWidth===1600 && img.naturalHeight===1000;
+                }""")
+                assert c48["mathIndexes"], "chapter 48 MathML missing"
+                math48_index = c48["mathIndexes"][0]
+                page.evaluate(f"openSec('{BOOK_ID}',1,{math48_index})")
+                math48 = page.locator(".reader-content math").first
+                assert page.locator(".reader-content math").count() == 1
+                assert math48.get_attribute("aria-label") and "وزن مؤثر" in math48.get_attribute("aria-label")
+                assert page.locator(".reader-content").evaluate("e => e.scrollWidth <= e.clientWidth + 2")
+                assert c48["answerIndexes"], "chapter 48 answer link missing"
+                page.evaluate(f"openSec('{BOOK_ID}',1,{c48['answerIndexes'][0]})")
+                assert page.locator(".reader-content a[href='book-engineering/answers/48-peft-fa.md']").count() == 1
+                appendix48 = next(i for i, title in enumerate(c48["titles"]) if "پیوست اجرایی" in title)
+                page.evaluate(f"openSec('{BOOK_ID}',1,{appendix48})")
+                assert page.locator(".reader-content pre code").last.text_content().rstrip("\n") == project48
+
+                # Chapter 49: preference diagram, MathML, independent answer and exact tested code.
+                page.evaluate(f"openItem('{BOOK_ID}','book')")
+                headers = page.locator(".chapter-header")
+                assert headers.count() == 15
+                headers.nth(2).click()
+                page.evaluate(f"openSec('{BOOK_ID}',2,0)")
+                image49 = page.locator(".reader-content img").first
+                alt49 = image49.get_attribute("alt")
+                assert all(term in alt49 for term in ("شکل ۴-۳-۱", "RLHF", "DPO", "GRPO", "RLAIF")), alt49
+                page.wait_for_function("""() => {
+                    const img=document.querySelector('.reader-content img');
+                    return img && img.complete && img.naturalWidth===1600 && img.naturalHeight===1000;
+                }""")
+                assert c49["mathIndexes"], "chapter 49 MathML missing"
+                math49_index = c49["mathIndexes"][0]
+                page.evaluate(f"openSec('{BOOK_ID}',2,{math49_index})")
+                math49 = page.locator(".reader-content math").first
+                assert page.locator(".reader-content math").count() == 1
+                assert math49.get_attribute("aria-label") and "احتمال ترجیح" in math49.get_attribute("aria-label")
+                assert page.locator(".reader-content").evaluate("e => e.scrollWidth <= e.clientWidth + 2")
+                assert c49["answerIndexes"], "chapter 49 answer link missing"
+                page.evaluate(f"openSec('{BOOK_ID}',2,{c49['answerIndexes'][0]})")
+                assert page.locator(".reader-content a[href='book-engineering/answers/49-preference-optimization-fa.md']").count() == 1
+                appendix49 = next(i for i, title in enumerate(c49["titles"]) if "پیوست اجرایی" in title)
+                page.evaluate(f"openSec('{BOOK_ID}',2,{appendix49})")
+                assert page.locator(".reader-content pre code").last.text_content().rstrip("\n") == project49
+
+                # Chapter 50: synthetic-data diagram, accessible MathML, answer and exact project code.
+                page.evaluate(f"openItem('{BOOK_ID}','book')")
+                headers = page.locator(".chapter-header")
+                assert headers.count() == 15
+                headers.nth(3).click()
+                page.evaluate(f"openSec('{BOOK_ID}',3,0)")
+                image50 = page.locator(".reader-content img").first
+                alt50 = image50.get_attribute("alt")
+                assert all(term in alt50 for term in ("شکل ۴-۴-۱", "دادهٔ مصنوعی", "teacher", "student", "curriculum")), alt50
+                page.wait_for_function("""() => {
+                    const img=document.querySelector('.reader-content img');
+                    return img && img.complete && img.naturalWidth===1600 && img.naturalHeight===1000;
+                }""")
+                assert len(c50["mathIndexes"]) >= 4, "chapter 50 MathML missing"
+                math50_index = c50["mathIndexes"][0]
+                page.evaluate(f"openSec('{BOOK_ID}',3,{math50_index})")
+                math50 = page.locator(".reader-content math").first
+                assert page.locator(".reader-content math").count() == 2
+                assert math50.get_attribute("aria-label") and "دما" in math50.get_attribute("aria-label")
+                assert page.locator(".reader-content").evaluate("e => e.scrollWidth <= e.clientWidth + 2")
+                assert c50["answerIndexes"], "chapter 50 independent answer link missing"
+                page.evaluate(f"openSec('{BOOK_ID}',3,{c50['answerIndexes'][0]})")
+                assert page.locator(".reader-content a[href='book-engineering/answers/50-synthetic-reasoning-fa.md']").count() == 1
+                appendix50 = next(i for i, title in enumerate(c50["titles"]) if "پیوست اجرایی" in title)
+                page.evaluate(f"openSec('{BOOK_ID}',3,{appendix50})")
+                assert page.locator(".reader-content pre code").last.text_content().rstrip("\n") == project50
+                # Chapter 51: ViT figure, patch MathML, independent answer and exact tested code.
+                page.evaluate(f"openItem('{BOOK_ID}','book')")
+                headers = page.locator(".chapter-header")
+                assert headers.count() == 15
+                headers.nth(4).click()
+                page.evaluate(f"openSec('{BOOK_ID}',4,0)")
+                image51 = page.locator(".reader-content img").first
+                alt51 = image51.get_attribute("alt")
+                assert all(term in alt51 for term in ("شکل ۴-۵-۱", "Vision Transformer", "وصله", "retrieval")), alt51
+                page.wait_for_function("""() => {
+                    const img=document.querySelector('.reader-content img');
+                    return img && img.complete && img.naturalWidth===1600 && img.naturalHeight===1000;
+                }""")
+                assert len(c51["mathIndexes"]) >= 4, "chapter 51 MathML missing"
+                math51_index = c51["mathIndexes"][0]
+                page.evaluate(f"openSec('{BOOK_ID}',4,{math51_index})")
+                math51 = page.locator(".reader-content math").first
+                assert page.locator(".reader-content math").count() >= 1
+                assert math51.get_attribute("aria-label") and "تعداد وصله" in math51.get_attribute("aria-label")
+                assert page.locator(".reader-content").evaluate("e => e.scrollWidth <= e.clientWidth + 2")
+                assert c51["answerIndexes"], "chapter 51 independent answer link missing"
+                page.evaluate(f"openSec('{BOOK_ID}',4,{c51['answerIndexes'][0]})")
+                assert page.locator(".reader-content a[href='book-engineering/answers/51-vision-models-fa.md']").count() == 1
+                appendix51 = next(i for i, title in enumerate(c51["titles"]) if "پیوست اجرایی" in title)
+                page.evaluate(f"openSec('{BOOK_ID}',4,{appendix51})")
+                assert page.locator(".reader-content pre code").last.text_content().rstrip("\n") == project51
+
+                # Chapter 52: speech/audio diagram, accessible framing/metric MathML, answer and exact tested code.
+                page.evaluate(f"openItem('{BOOK_ID}','book')")
+                headers = page.locator(".chapter-header")
+                assert headers.count() == 15
+                headers.nth(5).click()
+                page.evaluate(f"openSec('{BOOK_ID}',5,0)")
+                image52 = page.locator(".reader-content img").first
+                alt52 = image52.get_attribute("alt")
+                assert all(term in alt52 for term in ("شکل ۴-۶-۱", "ASR", "TTS", "Audio-Language")), alt52
+                page.wait_for_function("""() => {
+                    const img=document.querySelector('.reader-content img');
+                    return img && img.complete && img.naturalWidth===1600 && img.naturalHeight===1000;
+                }""")
+                assert len(c52["mathIndexes"]) >= 5, "chapter 52 accessible MathML missing"
+                math52_index = c52["mathIndexes"][0]
+                page.evaluate(f"openSec('{BOOK_ID}',5,{math52_index})")
+                math52 = page.locator(".reader-content math").first
+                assert math52.get_attribute("aria-label") and "تعداد نمونه" in math52.get_attribute("aria-label")
+                assert page.locator(".reader-content").evaluate("e => e.scrollWidth <= e.clientWidth + 2")
+                assert c52["answerIndexes"], "chapter 52 independent answer link missing"
+                page.evaluate(f"openSec('{BOOK_ID}',5,{c52['answerIndexes'][0]})")
+                assert page.locator(".reader-content a[href='book-engineering/answers/52-audio-models-fa.md']").count() == 1
+                appendix52 = next(i for i, title in enumerate(c52["titles"]) if "پیوست اجرایی" in title)
+                page.evaluate(f"openSec('{BOOK_ID}',5,{appendix52})")
+                assert page.locator(".reader-content pre code").last.text_content().rstrip("\n") == project52
+                # Chapter 53: conditional diffusion diagram, MathML, independent answer and exact tested code.
+                page.evaluate(f"openItem('{BOOK_ID}','book')")
+                headers = page.locator(".chapter-header")
+                assert headers.count() == 15
+                headers.nth(6).click()
+                page.evaluate(f"openSec('{BOOK_ID}',6,0)")
+                image53 = page.locator(".reader-content img").first
+                alt53 = image53.get_attribute("alt")
+                assert all(term in alt53 for term in ("شکل ۴-۷-۱", "diffusion شرطی", "cross-attention", "provenance")), alt53
+                page.wait_for_function("""() => {
+                    const img=document.querySelector('.reader-content img');
+                    return img && img.complete && img.naturalWidth===1600 && img.naturalHeight===1000;
+                }""")
+                assert c53["mathCount"] >= 9 and c53["mathIndexes"], "chapter 53 MathML missing"
+                math53_index = c53["mathIndexes"][0]
+                page.evaluate(f"openSec('{BOOK_ID}',6,{math53_index})")
+                math53 = page.locator(".reader-content math").first
+                assert page.locator(".reader-content math").count() == 1
+                assert math53.get_attribute("aria-label") and "گام پیش‌رو" in math53.get_attribute("aria-label")
+                assert page.locator(".reader-content").evaluate("e => e.scrollWidth <= e.clientWidth + 2")
+                assert c53["answerIndexes"], "chapter 53 independent answer link missing"
+                page.evaluate(f"openSec('{BOOK_ID}',6,{c53['answerIndexes'][0]})")
+                assert page.locator(".reader-content a[href='book-engineering/answers/53-image-video-generation-fa.md']").count() == 1
+                appendix53 = next(i for i, title in enumerate(c53["titles"]) if "پیوست اجرایی" in title)
+                page.evaluate(f"openSec('{BOOK_ID}',6,{appendix53})")
+                assert page.locator(".reader-content pre code").last.text_content().rstrip("\n") == project53
+
+                # Chapter 54: resource ledger diagram, accessible formulas, independent answers and exact tested code.
+                page.evaluate(f"openItem('{BOOK_ID}','book')")
+                headers = page.locator(".chapter-header")
+                assert headers.count() == 15
+                headers.nth(7).click()
+                page.evaluate(f"openSec('{BOOK_ID}',7,0)")
+                image54 = page.locator(".reader-content img").first
+                alt54 = image54.get_attribute("alt")
+                assert all(term in alt54 for term in ("شکل ۴-۸-۱", "استنتاج", "Fine-tuning", "آموزش از صفر", "activation")), alt54
+                page.wait_for_function("""() => {
+                    const img=document.querySelector('.reader-content img');
+                    return img && img.complete && img.naturalWidth===1600 && img.naturalHeight===1000;
+                }""")
+                assert c54["mathCount"] >= 10 and c54["mathIndexes"], "chapter 54 accessible MathML missing"
+                math54_index = c54["mathIndexes"][0]
+                page.evaluate(f"openSec('{BOOK_ID}',7,{math54_index})")
+                math54 = page.locator(".reader-content math").first
+                assert page.locator(".reader-content math").count() == 1
+                assert math54.get_attribute("aria-label") and "گیبی‌بایت" in math54.get_attribute("aria-label")
+                assert page.locator(".reader-content").evaluate("e => e.scrollWidth <= e.clientWidth + 2")
+                assert c54["answerIndexes"], "chapter 54 independent answer link missing"
+                page.evaluate(f"openSec('{BOOK_ID}',7,{c54['answerIndexes'][0]})")
+                assert page.locator(".reader-content a[href='book-engineering/answers/54-resource-estimation-fa.md']").count() == 1
+                appendix54 = next(i for i, title in enumerate(c54["titles"]) if "پیوست اجرایی" in title)
+                page.evaluate(f"openSec('{BOOK_ID}',7,{appendix54})")
+                assert page.locator(".reader-content pre code").last.text_content().rstrip("\n") == project54
+
+                # Chapter 55: lab-design architecture, accessible MathML, independent answer and byte-identical planner.
+                page.evaluate(f"openItem('{BOOK_ID}','book')")
+                headers = page.locator(".chapter-header")
+                assert headers.count() == 15
+                headers.nth(8).click()
+                page.evaluate(f"openSec('{BOOK_ID}',8,0)")
+                image55 = page.locator(".reader-content img").first
+                alt55 = image55.get_attribute("alt")
+                assert all(term in alt55 for term in ("شکل ۴-۹-۱", "شخصی", "workstation", "کلاستر", "خنک‌کاری")), alt55
+                page.wait_for_function("""() => {
+                    const img=document.querySelector('.reader-content img');
+                    return img && img.complete && img.naturalWidth===1600 && img.naturalHeight===1000;
+                }""")
+                assert c55["mathCount"] >= 5 and c55["mathIndexes"], "chapter 55 accessible MathML missing"
+                math55_index = c55["mathIndexes"][0]
+                page.evaluate(f"openSec('{BOOK_ID}',8,{math55_index})")
+                math55 = page.locator(".reader-content math").first
+                assert math55.get_attribute("aria-label") and "حافظهٔ قابل‌استفاده" in math55.get_attribute("aria-label")
+                assert page.locator(".reader-content").evaluate("e => e.scrollWidth <= e.clientWidth + 2")
+                assert c55["answerIndexes"], "chapter 55 independent answer link missing"
+                page.evaluate(f"openSec('{BOOK_ID}',8,{c55['answerIndexes'][0]})")
+                assert page.locator(".reader-content a[href='book-engineering/answers/55-ai-lab-design.md']").count() == 1
+                appendix55 = next(i for i, title in enumerate(c55["titles"]) if "پیوست اجرایی" in title)
+                page.evaluate(f"openSec('{BOOK_ID}',8,{appendix55})")
+                assert page.locator(".reader-content pre code").last.text_content().rstrip("\n") == project55
+
+                # Chapter 56: dated-market TCO diagram, accessible formula, independent answer and exact calculator appendix.
+                page.evaluate(f"openItem('{BOOK_ID}','book')")
+                headers = page.locator(".chapter-header")
+                assert headers.count() == 15
+                headers.nth(9).click()
+                page.evaluate(f"openSec('{BOOK_ID}',9,0)")
+                image56 = page.locator(".reader-content img").first
+                alt56 = image56.get_attribute("alt")
+                assert all(term in alt56 for term in ("شکل ۴-۱۰-۱", "خرید", "اجاره", "ابر", "TCO")), alt56
+                page.wait_for_function("""() => {
+                    const img=document.querySelector('.reader-content img');
+                    return img && img.complete && img.naturalWidth===1600 && img.naturalHeight===1000;
+                }""")
+                assert c56["mathCount"] >= 5 and c56["mathIndexes"], "chapter 56 accessible MathML missing"
+                math56_index = c56["mathIndexes"][0]
+                page.evaluate(f"openSec('{BOOK_ID}',9,{math56_index})")
+                math56 = page.locator(".reader-content math").first
+                assert page.locator(".reader-content math").count() == 1
+                assert math56.get_attribute("aria-label") and "هزینهٔ کل مالکیت اسمی" in math56.get_attribute("aria-label")
+                assert page.locator(".reader-content").evaluate("e => e.scrollWidth <= e.clientWidth + 2")
+                assert c56["answerIndexes"], "chapter 56 independent answer link missing"
+                page.evaluate(f"openSec('{BOOK_ID}',9,{c56['answerIndexes'][0]})")
+                assert page.locator(".reader-content a[href='book-engineering/answers/56-ai-compute-budget-fa.md']").count() == 1
+                appendix56 = next(i for i, title in enumerate(c56["titles"]) if "پیوست اجرایی" in title)
+                page.evaluate(f"openSec('{BOOK_ID}',9,{appendix56})")
+                assert page.locator(".reader-content pre code").last.text_content().rstrip("\n") == project56
+
+                # Chapter 57: framework chooser, accessible formula, independent answer and exact CPU comparison appendix.
+                page.evaluate(f"openItem('{BOOK_ID}','book')")
+                headers = page.locator(".chapter-header")
+                assert headers.count() == 15
+                headers.nth(10).click()
+                page.evaluate(f"openSec('{BOOK_ID}',10,0)")
+                image57 = page.locator(".reader-content img").first
+                alt57 = image57.get_attribute("alt")
+                assert all(term in alt57 for term in ("شکل ۴-۱۱-۱", "PyTorch", "JAX", "TensorFlow", "benchmark")), alt57
+                page.wait_for_function("""() => {
+                    const img=document.querySelector('.reader-content img');
+                    return img && img.complete && img.naturalWidth===1600 && img.naturalHeight===1000;
+                }""")
+                assert c57["mathCount"] >= 1 and c57["mathIndexes"], "chapter 57 accessible MathML missing"
+                math57_index = c57["mathIndexes"][0]
+                page.evaluate(f"openSec('{BOOK_ID}',10,{math57_index})")
+                math57 = page.locator(".reader-content math").first
+                assert math57.get_attribute("aria-label") and "میانگین مربع خطا" in math57.get_attribute("aria-label")
+                assert page.locator(".reader-content").evaluate("e => e.scrollWidth <= e.clientWidth + 2")
+                assert c57["answerIndexes"], "chapter 57 independent answer link missing"
+                page.evaluate(f"openSec('{BOOK_ID}',10,{c57['answerIndexes'][0]})")
+                assert page.locator(".reader-content a[href='book-engineering/answers/57-ml-frameworks-fa.md']").count() == 1
+                appendix57 = next(i for i, title in enumerate(c57["titles"]) if "پیوست اجرایی" in title)
+                page.evaluate(f"openSec('{BOOK_ID}',10,{appendix57})")
+                assert page.locator(".reader-content pre code").last.text_content().rstrip("\n") == project57
+
+                # Chapter 58: accessible pipeline diagram/formula, independent answers and exact tested HF project.
+                page.evaluate(f"openItem('{BOOK_ID}','book')")
+                headers = page.locator(".chapter-header")
+                assert headers.count() == 15
+                headers.nth(11).click()
+                page.evaluate(f"openSec('{BOOK_ID}',11,0)")
+                image58 = page.locator(".reader-content img").first
+                alt58 = image58.get_attribute("alt")
+                assert all(term in alt58 for term in ("شکل ۴-۱۲-۱", "Hugging Face", "benchmark")), alt58
+                page.wait_for_function("""() => {
+                    const img=document.querySelector('.reader-content img');
+                    return img && img.complete && img.naturalWidth===1600 && img.naturalHeight===1000;
+                }""")
+                assert c58["mathCount"] >= 1 and c58["mathIndexes"], "chapter 58 accessible MathML missing"
+                math58_index = c58["mathIndexes"][0]
+                page.evaluate(f"openSec('{BOOK_ID}',11,{math58_index})")
+                math58 = page.locator(".reader-content math").first
+                assert math58.get_attribute("aria-label") and "natural logarithm" in math58.get_attribute("aria-label")
+                assert page.locator(".reader-content").evaluate("e => e.scrollWidth <= e.clientWidth + 2")
+                assert c58["answerIndexes"], "chapter 58 independent answer link missing"
+                page.evaluate(f"openSec('{BOOK_ID}',11,{c58['answerIndexes'][0]})")
+                assert page.locator(".reader-content a[href='book-engineering/answers/58-huggingface-stack-fa.md']").count() == 1
+                appendix58 = next(i for i, title in enumerate(c58["titles"]) if "پیوست اجرایی" in title)
+                page.evaluate(f"openSec('{BOOK_ID}',11,{appendix58})")
+                assert page.locator(".reader-content pre code").last.text_content().rstrip("\n") == project58
+
+                # Chapter 59: accessible GPU-stack diagram/formula, independent answer and exact CPU/Gloo appendix.
+                page.evaluate(f"openItem('{BOOK_ID}','book')")
+                headers = page.locator(".chapter-header")
+                assert headers.count() == 15
+                headers.nth(12).click()
+                assert c59["imageIndexes"], "chapter 59 figure section missing"
+                image59_index = c59["imageIndexes"][0]
+                page.evaluate(f"openSec('{BOOK_ID}',12,{image59_index})")
+                image59 = page.locator(".reader-content img").first
+                alt59 = image59.get_attribute("alt")
+                assert all(term in alt59 for term in ("شکل ۴-۱۳-۱", "PyTorch", "CUDA", "ROCm", "benchmark")), alt59
+                page.wait_for_function("() => { const img=document.querySelector('.reader-content img'); return img && img.complete && img.naturalWidth===1600 && img.naturalHeight===1000; }")
+                assert c59["mathCount"] >= 1 and c59["mathIndexes"], "chapter 59 accessible MathML missing"
+                math59_index = c59["mathIndexes"][0]
+                page.evaluate(f"openSec('{BOOK_ID}',12,{math59_index})")
+                math59 = page.locator(".reader-content math").first
+                assert math59.get_attribute("aria-label") and "world size" in math59.get_attribute("aria-label")
+                assert page.locator(".reader-content").evaluate("e => e.scrollWidth <= e.clientWidth + 2")
+                assert c59["answerIndexes"], "chapter 59 independent answer link missing"
+                page.evaluate(f"openSec('{BOOK_ID}',12,{c59['answerIndexes'][0]})")
+                assert page.locator(".reader-content a[href='book-engineering/answers/59-gpu-systems-fa.md']").count() == 1
+                appendix59 = next(i for i, title in enumerate(c59["titles"]) if "پیوست اجرایی" in title)
+                page.evaluate(f"openSec('{BOOK_ID}',12,{appendix59})")
+                assert page.locator(".reader-content pre code").last.text_content().rstrip("\n") == project59
+
+                # Chapter 60: provenance diagram/formula, independent answers and exact executable appendix.
+                page.evaluate(f"openItem('{BOOK_ID}','book')")
+                headers = page.locator(".chapter-header")
+                assert headers.count() == 15
+                headers.nth(13).click()
+                assert c60["imageIndexes"], "chapter 60 figure section missing"
+                image60_index = c60["imageIndexes"][0]
+                page.evaluate(f"openSec('{BOOK_ID}',13,{image60_index})")
+                image60 = page.locator(".reader-content img").first
+                alt60 = image60.get_attribute("alt")
+                assert all(term in alt60 for term in ("شکل ۴-۱۴-۱", "MLflow", "W&B", "run.json", "کیفیت مدل", "benchmark")), alt60
+                page.wait_for_function("() => { const img=document.querySelector('.reader-content img'); return img && img.complete && img.naturalWidth===1600 && img.naturalHeight===1000; }")
+                assert c60["mathCount"] >= 2 and c60["mathIndexes"], "chapter 60 accessible MathML missing"
+                math60_index = c60["mathIndexes"][0]
+                page.evaluate(f"openSec('{BOOK_ID}',13,{math60_index})")
+                math60 = page.locator(".reader-content math").first
+                assert math60.get_attribute("aria-label") and "SHA256" in math60.get_attribute("aria-label")
+                assert page.locator(".reader-content").evaluate("e => e.scrollWidth <= e.clientWidth + 2")
+                assert c60["answerIndexes"], "chapter 60 independent answer link missing"
+                page.evaluate(f"openSec('{BOOK_ID}',13,{c60['answerIndexes'][0]})")
+                assert page.locator(".reader-content a[href='book-engineering/answers/60-mlops-fa.md']").count() == 1
+                appendix60 = next(i for i, title in enumerate(c60["titles"]) if "پیوست اجرایی" in title)
+                page.evaluate(f"openSec('{BOOK_ID}',13,{appendix60})")
+                assert page.locator(".reader-content pre code").last.text_content().rstrip("\n") == project60
+
+                # Chapter 61: inference runtime figure, KV/latency MathML, independent answer and exact analyzer appendix.
+                page.evaluate(f"openItem('{BOOK_ID}','book')")
+                headers = page.locator(".chapter-header")
+                assert headers.count() == 15
+                headers.nth(14).click()
+                assert c61["imageIndexes"], "chapter 61 figure section missing"
+                image61_index = c61["imageIndexes"][0]
+                page.evaluate(f"openSec('{BOOK_ID}',14,{image61_index})")
+                image61 = page.locator(".reader-content img").first
+                alt61 = image61.get_attribute("alt")
+                assert all(term in alt61 for term in ("شکل ۴-۱۵-۱", "runtime", "KV cache", "benchmark")), alt61
+                page.wait_for_function("() => { const img=document.querySelector('.reader-content img'); return img && img.complete && img.naturalWidth===1600 && img.naturalHeight===1000; }")
+                assert c61["mathCount"] >= 2 and c61["mathIndexes"], "chapter 61 accessible MathML missing"
+                math61_index = c61["mathIndexes"][0]
+                page.evaluate(f"openSec('{BOOK_ID}',14,{math61_index})")
+                math61 = page.locator(".reader-content math").first
+                assert math61.get_attribute("aria-label") and "TPOT" in math61.get_attribute("aria-label")
+                assert page.locator(".reader-content").evaluate("e => e.scrollWidth <= e.clientWidth + 2")
+                assert c61["answerIndexes"], "chapter 61 independent answer link missing"
+                page.evaluate(f"openSec('{BOOK_ID}',14,{c61['answerIndexes'][0]})")
+                assert page.locator(".reader-content a[href='book-engineering/answers/61-inference-serving-fa.md']").count() == 1
+                appendix61 = next(i for i, title in enumerate(c61["titles"]) if "پیوست اجرایی" in title)
+                page.evaluate(f"openSec('{BOOK_ID}',14,{appendix61})")
+                assert page.locator(".reader-content pre code").last.text_content().rstrip("\n") == project61
+
+                assert not errors, errors
+
+                assert page.evaluate("navigator.serviceWorker.ready.then(() => true)")
+                page.wait_for_timeout(250)
+                cache_check = page.evaluate("""async arg => {
+                  const cache=await caches.open(arg.cacheName), bad=[];
+                  for(const path of arg.paths){
+                    const url=new URL(path,location.href).href;
+                    const response=await cache.match(url);
+                    if(!response || !response.ok) bad.push(path);
+                  }
+                  return bad;
+                }""", {"cacheName": CACHE_NAME, "paths": OFFLINE_PATHS})
+                assert cache_check == [], cache_check
+
+                context.set_offline(True)
+                offline47 = page.evaluate("fetch('book-engineering/answers/47-posttraining-fa.md').then(r => r.ok ? r.text() : '')")
+                offline48 = page.evaluate("fetch('book-engineering/answers/48-peft-fa.md').then(r => r.ok ? r.text() : '')")
+                offline49 = page.evaluate("fetch('book-engineering/answers/49-preference-optimization-fa.md').then(r => r.ok ? r.text() : '')")
+                offline50 = page.evaluate("fetch('book-engineering/answers/50-synthetic-reasoning-fa.md').then(r => r.ok ? r.text() : '')")
+                offline51 = page.evaluate("fetch('book-engineering/answers/51-vision-models-fa.md').then(r => r.ok ? r.text() : '')")
+                offline52 = page.evaluate("fetch('book-engineering/answers/52-audio-models-fa.md').then(r => r.ok ? r.text() : '')")
+                offline53 = page.evaluate("fetch('book-engineering/answers/53-image-video-generation-fa.md').then(r => r.ok ? r.text() : '')")
+                offline54 = page.evaluate("fetch('book-engineering/answers/54-resource-estimation-fa.md').then(r => r.ok ? r.text() : '')")
+                offline55 = page.evaluate("fetch('book-engineering/answers/55-ai-lab-design.md').then(r => r.ok ? r.text() : '')")
+                offline56 = page.evaluate("fetch('book-engineering/answers/56-ai-compute-budget-fa.md').then(r => r.ok ? r.text() : '')")
+                source56 = page.evaluate("fetch('book-engineering/chapters/56-ai-compute-budget.md').then(r => r.ok ? r.text() : '')")
+                report56 = page.evaluate("fetch('book-engineering/chapters/56-audit-report-fa.md').then(r => r.ok ? r.text() : '')")
+                offline57 = page.evaluate("fetch('book-engineering/answers/57-ml-frameworks-fa.md').then(r => r.ok ? r.text() : '')")
+                source57 = page.evaluate("fetch('book-engineering/chapters/57-ml-frameworks.md').then(r => r.ok ? r.text() : '')")
+                report57 = page.evaluate("fetch('book-engineering/chapters/57-audit-report-fa.md').then(r => r.ok ? r.text() : '')")
+                diagram57 = page.evaluate("fetch('book-engineering/diagrams/v4-ch11-framework-selection.svg').then(r => r.ok ? r.text() : '')")
+                offline58 = page.evaluate("fetch('book-engineering/answers/58-huggingface-stack-fa.md').then(r => r.ok ? r.text() : '')")
+                source58 = page.evaluate("fetch('book-engineering/chapters/58-huggingface-stack.md').then(r => r.ok ? r.text() : '')")
+                report58 = page.evaluate("fetch('book-engineering/chapters/58-audit-report-fa.md').then(r => r.ok ? r.text() : '')")
+                diagram58 = page.evaluate("fetch('book-engineering/diagrams/v4-ch12-huggingface-stack.svg').then(r => r.ok ? r.text() : '')")
+                source59 = page.evaluate("fetch('book-engineering/chapters/59-gpu-systems.md').then(r => r.ok ? r.text() : '')")
+                report59 = page.evaluate("fetch('book-engineering/chapters/59-audit-report-fa.md').then(r => r.ok ? r.text() : '')")
+                answer59 = page.evaluate("fetch('book-engineering/answers/59-gpu-systems-fa.md').then(r => r.ok ? r.text() : '')")
+                diagram59 = page.evaluate("fetch('book-engineering/diagrams/v4-ch13-gpu-systems.svg').then(r => r.ok ? r.text() : '')")
+                source60 = page.evaluate("fetch('book-engineering/chapters/60-mlops.md').then(r => r.ok ? r.text() : '')")
+                report60 = page.evaluate("fetch('book-engineering/chapters/60-audit-report-fa.md').then(r => r.ok ? r.text() : '')")
+                answer60 = page.evaluate("fetch('book-engineering/answers/60-mlops-fa.md').then(r => r.ok ? r.text() : '')")
+                diagram60 = page.evaluate("fetch('book-engineering/diagrams/v4-ch14-mlops.svg').then(r => r.ok ? r.text() : '')")
+                source61 = page.evaluate("fetch('book-engineering/chapters/61-inference-serving.md').then(r => r.ok ? r.text() : '')")
+                report61 = page.evaluate("fetch('book-engineering/chapters/61-audit-report-fa.md').then(r => r.ok ? r.text() : '')")
+                answer61 = page.evaluate("fetch('book-engineering/answers/61-inference-serving-fa.md').then(r => r.ok ? r.text() : '')")
+                diagram61 = page.evaluate("fetch('book-engineering/diagrams/v4-ch15-inference-serving.svg').then(r => r.ok ? r.text() : '')")
+                source51 = page.evaluate("fetch('book-engineering/chapters/51-vision-models.md').then(r => r.ok ? r.text() : '')")
+                source52 = page.evaluate("fetch('book-engineering/chapters/52-audio-models.md').then(r => r.ok ? r.text() : '')")
+                source53 = page.evaluate("fetch('book-engineering/chapters/53-image-video-generation.md').then(r => r.ok ? r.text() : '')")
+                report53 = page.evaluate("fetch('book-engineering/chapters/53-audit-report-fa.md').then(r => r.ok ? r.text() : '')")
+                source54 = page.evaluate("fetch('book-engineering/chapters/54-resource-estimation.md').then(r => r.ok ? r.text() : '')")
+                report54 = page.evaluate("fetch('book-engineering/chapters/54-audit-report-fa.md').then(r => r.ok ? r.text() : '')")
+                source55 = page.evaluate("fetch('book-engineering/chapters/55-ai-lab-design.md').then(r => r.ok ? r.text() : '')")
+                report55 = page.evaluate("fetch('book-engineering/chapters/55-audit-report-fa.md').then(r => r.ok ? r.text() : '')")
+                source49 = page.evaluate("fetch('book-engineering/chapters/49-preference-optimization.md').then(r => r.ok ? r.text() : '')")
+                source50 = page.evaluate("fetch('book-engineering/chapters/50-synthetic-reasoning.md').then(r => r.ok ? r.text() : '')")
+                assert "پاسخ‌نامهٔ تشریحی فصل ۴۷" in offline47
+                assert "پاسخ‌نامهٔ تشریحی فصل ۴۸" in offline48
+                assert "پاسخ‌نامهٔ تشریحی فصل ۴۹" in offline49
+                assert "پاسخ‌نامهٔ تشریحی فصل ۵۰" in offline50
+                assert "پاسخ‌نامهٔ تشریحی فصل ۵۱" in offline51
+                assert "پاسخ‌نامهٔ تشریحی فصل ۵۲" in offline52
+                assert "پاسخ‌نامهٔ تشریحی فصل ۵۳" in offline53
+                assert "پاسخ‌نامهٔ تشریحی فصل ۵۴" in offline54
+                assert "پاسخ‌نامهٔ مستقل" in offline55 and "فصل ۵۵" in offline55
+                assert "پاسخ‌نامهٔ مستقل" in offline56 and "فصل ۵۶" in offline56
+                assert "Iowa" in source56 and "Texas statewide" in source56 and "NIST SP 1326" in source56 and "synthetic_fixture" in source56
+                assert "13/13 آزمون unit موفق" in report56 and "۹۸ دارایی آفلاین" in report56
+                assert "پاسخ‌نامهٔ مستقل" in offline57 and "فصل ۵۷" in offline57
+                assert "Python" in source57 and "PyTorch" in source57 and "JAX" in source57 and "TensorFlow" in source57
+                assert "نتایج اجرای واقعی" in report57 and "synthetic_fixture" in report57
+                assert "<svg" in diagram57
+                assert "پاسخ‌نامهٔ مستقل" in offline58 and "فصل ۵۸" in offline58
+                assert all(term in source58 for term in ("Transformers", "Datasets", "Tokenizers", "Accelerate", "trust_remote_code"))
+                assert "نتایج اجرای واقعی" in report58 and "۱۲/۱۲ آزمون unit موفق" in report58 and "synthetic_fixture" in report58
+                assert "<svg" in diagram58
+                assert "CUDA" in source59 and "ROCm" in source59 and "Triton" in source59
+                assert "پاسخ‌نامهٔ مستقل" in answer59
+                assert "نتایج اجرای واقعی" in report59
+                assert "<svg" in diagram59
+                assert "MLflow" in source60 and "W&B" in source60 and "synthetic_fixture" in source60
+                assert "پاسخ‌نامهٔ مستقل" in answer60 and "فصل ۶۰" in answer60
+                assert "۱۶/۱۶ آزمون unit موفق" in report60 and "آزموده نشده" in report60
+                assert "<svg" in diagram60
+                assert all(term in source61 for term in ("vLLM", "llama.cpp", "Ollama", "GGUF", "KV cache", "TensorRT-LLM"))
+                assert "پاسخ‌نامهٔ مستقل" in answer61 and "فصل ۶۱" in answer61
+                assert "۲۴/۲۴ آزمون unit موفق" in report61 and "benchmark" in report61 and "آزموده نشده" in report61
+                assert "<svg" in diagram61
+                assert "طراحی آزمایشگاه" in source55 and "فصل ۵۶" in source55 and "NIST SP 800-88 Rev. 2" in source55
+                assert "نتایج اجرای واقعی" in report55 and "۵۷/۵۷ آزمون موفق" in report55
+                assert "سخت‌افزار واقعی" in report55 and "تضمین ایمنی" in report55
+                assert "برآورد منابع" in source54 and "KV cache" in source54 and "6ND" in source54
+                assert "نتایج اجرای واقعی" in report54 and "۴۵/۴۵ آزمون unit موفق" in report54
+                assert "مدل واقعی" in report54 and "benchmark" in report54
+                assert "Diffusion" in source53 and "C2PA" in source53 and "VBench" in source53
+                assert "نتایج اجرای واقعی" in report53 and "synthetic_diffusion_fixture_audit_complete" in report53
+                assert "DPO" in source49 and "TRL v1.17.1" in source49
+                assert "synthetic_fixture" in source50 and "محاسبهٔ زمان آزمون" in source50
+                assert "Vision Transformer" in source51 and "SigLIP" in source51
+                assert "Qwen3-TTS" in source52 and "VocalGrad" in source52 and "آزمایشگاه CPU" in source52
+                print(f"PASS volume 4 chapters 47–61 at {width}px: sections={[c47['sectionCount'],c48['sectionCount'],c49['sectionCount'],c50['sectionCount'],c51['sectionCount'],c52['sectionCount'],c53['sectionCount'],c54['sectionCount'],c55['sectionCount'],c56['sectionCount'],c57['sectionCount'],c58['sectionCount'],c59['sectionCount'],c60['sectionCount'],c61['sectionCount']]}, MathML/appendices exact, {len(OFFLINE_PATHS)} offline assets")
+                context.close()
+            browser.close()
+    finally:
+        server.shutdown()
+
+
+if __name__ == "__main__":
+    main()

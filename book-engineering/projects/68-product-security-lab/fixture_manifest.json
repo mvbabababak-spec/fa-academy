@@ -1,0 +1,11 @@
+{
+  "fixture_id": "v5-ch07-security-ops-synthetic-v1",
+  "sha256": "8d338ce00ba5c66e8d4ac2169669a828167594245e2ae0680d9aac06912b7b99",
+  "synthetic": true,
+  "event_count": 14,
+  "credential_count": 4,
+  "contains_personal_data": false,
+  "contains_real_credentials": false,
+  "contains_production_trace": false,
+  "source": "Invented deterministic educational fixture; no external source or production telemetry."
+}

@@ -1,0 +1,6 @@
+# Optional Pythia SFT demonstration; PyTorch 2.6.0 comes from ../../../requirements.txt.
+--extra-index-url https://pypi.org/simple
+transformers==4.57.6
+huggingface-hub==0.36.0
+tokenizers==0.22.1
+safetensors==0.7.0

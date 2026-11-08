@@ -1,0 +1,59 @@
+{
+  "fixture_id": "v4-ch11-synthetic-gradient-v1",
+  "fixture_sha256": "b9c134951bbf77a0bee3ec3c498e332bb63810a95638fa1efb7b256a1cc69771",
+  "framework_results": {
+    "jax": {
+      "backend": "jax",
+      "status": "not_installed"
+    },
+    "tensorflow": {
+      "backend": "tensorflow",
+      "status": "not_installed"
+    },
+    "torch": {
+      "absolute_difference_from_reference": {
+        "gradient_bias": 0.0,
+        "gradient_weight": 0.0,
+        "loss": 0.0
+      },
+      "backend": "torch",
+      "device": "cpu",
+      "observed": {
+        "gradient_bias": -3.0,
+        "gradient_weight": -2.0,
+        "loss": 2.5
+      },
+      "status": "passed",
+      "tolerance": 1e-05,
+      "version": "2.15.0+cpu"
+    }
+  },
+  "platform": "Linux x86_64",
+  "python_version": "3.13.16",
+  "reference": {
+    "gradient_bias": -3.0,
+    "gradient_weight": -2.0,
+    "loss": 2.5
+  },
+  "requested_backend": "all",
+  "schema_version": 1,
+  "scope": {
+    "benchmark_performed": false,
+    "gpu_used": false,
+    "network_access_performed": false,
+    "pretrained_model_loaded": false,
+    "real_dataset_loaded": false,
+    "training_performed": false
+  },
+  "summary": {
+    "failed": [],
+    "passed": [
+      "torch"
+    ],
+    "skipped_not_installed": [
+      "jax",
+      "tensorflow"
+    ],
+    "status": "passed_with_skips"
+  }
+}
