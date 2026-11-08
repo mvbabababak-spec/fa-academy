@@ -1,0 +1,23 @@
+{
+  "audit_date": "2026-11-04",
+  "project_id": "v5-ch10-experiment-design-synthetic-v1",
+  "python": {
+    "implementation": "CPython",
+    "version": "3.13.16"
+  },
+  "dependencies": [],
+  "analysis_plan_sha256": "cd9b1de0fd009bf24b87af8dbb9db026d60797c40235559a97d4a31148753b56",
+  "fixture_sha256": "738a23912b5a25101dd605b66fde537a5cb2467754512319974bf9497d4f6722",
+  "execution": {
+    "unit_tests": "19/19 passed",
+    "external_network_requests": 0,
+    "model_inference_calls": 0,
+    "gpu_used": false,
+    "production_traffic_used": false,
+    "personal_records": 0,
+    "real_credentials_used": false,
+    "p_value_reported": false,
+    "inference_authorized": false,
+    "result_matches_saved_reference": true
+  }
+}

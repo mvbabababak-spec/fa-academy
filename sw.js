@@ -1,5 +1,5 @@
-// ===== فا-اکدمی Service Worker v113 =====
-const CACHE_NAME = 'fa-academy-v113';
+// ===== فا-اکدمی Service Worker v114 =====
+const CACHE_NAME = 'fa-academy-v114';
 const CORE_FILES = [
   './',
   './index.html',
@@ -481,6 +481,19 @@ const CORE_FILES = [
   './book-engineering/projects/70-reading-papers-lab/results.json',
   './book-engineering/projects/70-reading-papers-lab/synthetic_paper_packet.json',
   './book-engineering/projects/70-reading-papers-lab/test_paper_reproduction.py',
+  './book-engineering/chapters/71-research-design-statistics.md',
+  './book-engineering/chapters/71-audit-report-fa.md',
+  './book-engineering/diagrams/v5-ch10-experiment-design.svg',
+  './book-engineering/answers/71-research-design-statistics-fa.md',
+  './book-engineering/projects/71-experiment-design-lab/README.md',
+  './book-engineering/projects/71-experiment-design-lab/analysis_plan.json',
+  './book-engineering/projects/71-experiment-design-lab/environment.json',
+  './book-engineering/projects/71-experiment-design-lab/experiment_design.py',
+  './book-engineering/projects/71-experiment-design-lab/fixture_manifest.json',
+  './book-engineering/projects/71-experiment-design-lab/requirements.txt',
+  './book-engineering/projects/71-experiment-design-lab/results.json',
+  './book-engineering/projects/71-experiment-design-lab/synthetic_paired_scores.json',
+  './book-engineering/projects/71-experiment-design-lab/test_experiment_design.py',
 ];
 
 // ===== INSTALL: Cache core files =====

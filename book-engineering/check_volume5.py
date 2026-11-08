@@ -105,7 +105,7 @@ def main() -> None:
             image_path_on_disk = (ROOT / image_relative if image_relative.parts and image_relative.parts[0] in {"book-engineering", "assets"}
                                   else source.parent / image_relative)
             require(image_path_on_disk.is_file(), f"chapter {global_num} missing figure {image_path}")
-        if global_num in (62, 63, 64, 65, 66, 67, 68, 69, 70):
+        if global_num in (62, 63, 64, 65, 66, 67, 68, 69, 70, 71):
             exercise_match = re.search(r"(?ms)^##\s+[^\n]*تمرین‌ها[^\n]*\n(.*?)(?=^##\s|\Z)", source_text)
             require(exercise_match is not None, f"chapter {global_num} exercise section missing")
             questions = re.findall(r"(?m)^([۱-۸])\. (.+)$", exercise_match.group(1))
@@ -510,6 +510,97 @@ def main() -> None:
                     and execution.get("real_credentials_used") is False
                     and execution.get("published_paper_used") is False,
                     "chapter 70 environment metadata mismatch")
+
+        if global_num == 71:
+            require(len(book["chapters"][9]["sections"]) == 35,
+                    "chapter 71 expected 35 sections, including its executable appendix")
+            project_files = (
+                "environment.json", "fixture_manifest.json", "analysis_plan.json",
+                "synthetic_paired_scores.json", "results.json", "experiment_design.py",
+                "test_experiment_design.py", "README.md", "requirements.txt",
+            )
+            for filename in project_files:
+                require((project_dir / filename).is_file(), f"chapter 71 project file missing: {filename}")
+            plan_path = project_dir / "analysis_plan.json"
+            fixture_path = project_dir / "synthetic_paired_scores.json"
+            plan_hash = hashlib.sha256(plan_path.read_bytes()).hexdigest()
+            fixture_hash = hashlib.sha256(fixture_path.read_bytes()).hexdigest()
+            plan = json.loads(plan_path.read_text(encoding="utf-8"))
+            fixture = json.loads(fixture_path.read_text(encoding="utf-8"))
+            manifest = json.loads((project_dir / "fixture_manifest.json").read_text(encoding="utf-8"))
+            result = json.loads((project_dir / "results.json").read_text(encoding="utf-8"))
+            environment = json.loads((project_dir / "environment.json").read_text(encoding="utf-8"))
+            require(plan.get("project_id") == manifest.get("project_id") == "v5-ch10-experiment-design-synthetic-v1"
+                    and plan.get("status") == "illustrative_only_not_a_preregistration"
+                    and plan.get("synthetic_only") is True
+                    and plan.get("analysis_unit") == plan.get("resampling_unit") == "task_group"
+                    and plan.get("analysis", {}).get("report_p_value") is False,
+                    "chapter 71 analysis plan claims real preregistration or uses inconsistent units")
+            require(manifest.get("analysis_plan_sha256") == plan_hash
+                    and manifest.get("fixture_sha256") == fixture_hash
+                    and manifest.get("synthetic") is True
+                    and manifest.get("group_count") == 8
+                    and manifest.get("task_count") == 16
+                    and manifest.get("topic_group_counts") == {
+                        "reasoning": 3, "knowledge": 3, "summarization": 2,
+                    }
+                    and manifest.get("observation_count") == 32
+                    and manifest.get("contains_real_model_outputs") is False
+                    and manifest.get("contains_personal_data") is False
+                    and manifest.get("external_network_required") is False
+                    and fixture.get("fixture_id") == manifest.get("project_id")
+                    and fixture.get("synthetic") is True
+                    and fixture.get("external_data_used") is False
+                    and len(fixture.get("observations", [])) == 32,
+                    "chapter 71 manifest does not match the synthetic paired-score fixture")
+            require(result.get("project_id") == manifest.get("project_id")
+                    and result.get("fixture_id") == manifest.get("project_id")
+                    and result.get("analysis_plan_sha256") == plan_hash
+                    and result.get("fixture_sha256") == fixture_hash
+                    and result.get("synthetic") is True
+                    and result.get("design") == {
+                        "independent_groups": 8, "tasks_per_group": 2,
+                        "repetitions_per_task": 2, "paired_observation_rows": 32,
+                        "resampling_unit": "task_group",
+                    },
+                    "chapter 71 results identity or design mismatch")
+            primary = result.get("primary_result", {})
+            interval = primary.get("bootstrap_percentile_interval", {})
+            require(primary.get("mean_paired_difference") == 0.0421875
+                    and primary.get("median_group_difference") == 0.04375
+                    and primary.get("p_value") is None
+                    and interval.get("confidence_level") == 0.95
+                    and interval.get("lower") == 0.031875
+                    and interval.get("upper") == 0.052187
+                    and interval.get("replicates") == 2000
+                    and interval.get("seed") == 71
+                    and interval.get("unit_resampled") == "task_group_within_topic"
+                    and interval.get("stratification_factor") == "topic"
+                    and interval.get("strata_count") == 3
+                    and result.get("inference_authorized") is False
+                    and result.get("external_network_requests") == 0
+                    and result.get("model_inference_calls") == 0
+                    and result.get("gpu_used") is False,
+                    "chapter 71 fixture result overstates inference or contradicts the declared analysis")
+            execution = environment.get("execution", {})
+            require(environment.get("audit_date") == "2026-11-04"
+                    and environment.get("project_id") == manifest.get("project_id")
+                    and environment.get("python", {}).get("implementation") == "CPython"
+                    and environment.get("python", {}).get("version") == "3.13.16"
+                    and environment.get("dependencies") == []
+                    and environment.get("analysis_plan_sha256") == plan_hash
+                    and environment.get("fixture_sha256") == fixture_hash
+                    and execution.get("unit_tests") == "19/19 passed"
+                    and execution.get("external_network_requests") == 0
+                    and execution.get("model_inference_calls") == 0
+                    and execution.get("gpu_used") is False
+                    and execution.get("production_traffic_used") is False
+                    and execution.get("personal_records") == 0
+                    and execution.get("real_credentials_used") is False
+                    and execution.get("p_value_reported") is False
+                    and execution.get("inference_authorized") is False
+                    and execution.get("result_matches_saved_reference") is True,
+                    "chapter 71 environment metadata mismatch")
 
         diagram_relative = builder.DIAGRAMS.get(global_num)
         if diagram_relative:

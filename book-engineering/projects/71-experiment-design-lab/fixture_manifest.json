@@ -1,0 +1,17 @@
+{
+  "project_id": "v5-ch10-experiment-design-synthetic-v1",
+  "analysis_plan_sha256": "cd9b1de0fd009bf24b87af8dbb9db026d60797c40235559a97d4a31148753b56",
+  "fixture_sha256": "738a23912b5a25101dd605b66fde537a5cb2467754512319974bf9497d4f6722",
+  "synthetic": true,
+  "group_count": 8,
+  "task_count": 16,
+  "topic_group_counts": {
+    "reasoning": 3,
+    "knowledge": 3,
+    "summarization": 2
+  },
+  "observation_count": 32,
+  "contains_real_model_outputs": false,
+  "contains_personal_data": false,
+  "external_network_required": false
+}
