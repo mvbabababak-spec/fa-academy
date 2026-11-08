@@ -1,5 +1,5 @@
-// ===== فا-اکدمی Service Worker v200 =====
-const CACHE_NAME = 'fa-academy-v200';
+// ===== فا-اکدمی Service Worker v202 =====
+const CACHE_NAME = 'fa-academy-v202';
 const CORE_FILES = [
   './',
   './index.html',
