@@ -1,0 +1,271 @@
+{
+  "fixture_id": "v5-ch07-security-ops-synthetic-v1",
+  "synthetic": true,
+  "contains_personal_data": false,
+  "contains_real_credentials": false,
+  "policy": {
+    "version": "synthetic-v1",
+    "bucket_capacity": 2,
+    "refill_units_per_second": 1,
+    "auth_failure_threshold": 3,
+    "auth_failure_window_ms": 60000
+  },
+  "credential_registry": {
+    "cred-reader-a": {
+      "principal_ref": "principal-a1",
+      "tenant_ref": "tenant-a",
+      "roles": ["reader"],
+      "active": true
+    },
+    "cred-admin-a": {
+      "principal_ref": "principal-a-admin",
+      "tenant_ref": "tenant-a",
+      "roles": ["reader", "security-admin"],
+      "active": true
+    },
+    "cred-reader-b": {
+      "principal_ref": "principal-b1",
+      "tenant_ref": "tenant-b",
+      "roles": ["reader"],
+      "active": true
+    },
+    "cred-disabled-b": {
+      "principal_ref": "principal-b2",
+      "tenant_ref": "tenant-b",
+      "roles": ["reader"],
+      "active": false
+    }
+  },
+  "events": [
+    {
+      "event_id": "req-001",
+      "timestamp_ms": 0,
+      "request_id": "trace-001",
+      "credential_ref": "cred-reader-a",
+      "claimed_tenant_ref": "tenant-b",
+      "action": "record.read",
+      "resource_type": "record",
+      "resource_tenant_ref": "tenant-a",
+      "estimated_cost_units": 1,
+      "source_ip": "198.51.100.21",
+      "authorization_canary": "SYNTHETIC-CREDENTIAL-CANARY-DO-NOT-LOG",
+      "email_canary": "synthetic-person@example.invalid",
+      "prompt_canary": "SYNTHETIC-PRIVATE-PROMPT-DO-NOT-LOG"
+    },
+    {
+      "event_id": "req-002",
+      "timestamp_ms": 100,
+      "request_id": "trace-002",
+      "credential_ref": "cred-reader-a",
+      "claimed_tenant_ref": "tenant-a",
+      "action": "record.read",
+      "resource_type": "record",
+      "resource_tenant_ref": "tenant-a",
+      "estimated_cost_units": 1,
+      "source_ip": "198.51.100.21",
+      "authorization_canary": "SYNTHETIC-CREDENTIAL-CANARY-DO-NOT-LOG",
+      "email_canary": "synthetic-person@example.invalid",
+      "prompt_canary": "SYNTHETIC-PRIVATE-PROMPT-DO-NOT-LOG"
+    },
+    {
+      "event_id": "req-003",
+      "timestamp_ms": 200,
+      "request_id": "trace-003",
+      "credential_ref": "cred-reader-a",
+      "claimed_tenant_ref": "tenant-a",
+      "action": "record.read",
+      "resource_type": "record",
+      "resource_tenant_ref": "tenant-a",
+      "estimated_cost_units": 1,
+      "source_ip": "198.51.100.21",
+      "authorization_canary": "SYNTHETIC-CREDENTIAL-CANARY-DO-NOT-LOG",
+      "email_canary": "synthetic-person@example.invalid",
+      "prompt_canary": "SYNTHETIC-PRIVATE-PROMPT-DO-NOT-LOG"
+    },
+    {
+      "event_id": "req-004",
+      "timestamp_ms": 1800,
+      "request_id": "trace-004",
+      "credential_ref": "cred-reader-a",
+      "claimed_tenant_ref": "tenant-a",
+      "action": "record.read",
+      "resource_type": "record",
+      "resource_tenant_ref": "tenant-a",
+      "estimated_cost_units": 1,
+      "source_ip": "198.51.100.21",
+      "authorization_canary": "SYNTHETIC-CREDENTIAL-CANARY-DO-NOT-LOG",
+      "email_canary": "synthetic-person@example.invalid",
+      "prompt_canary": "SYNTHETIC-PRIVATE-PROMPT-DO-NOT-LOG"
+    },
+    {
+      "event_id": "req-005",
+      "timestamp_ms": 1900,
+      "request_id": "trace-005",
+      "credential_ref": "cred-reader-a",
+      "claimed_tenant_ref": "tenant-a",
+      "action": "record.read",
+      "resource_type": "record",
+      "resource_tenant_ref": "tenant-a",
+      "estimated_cost_units": 1,
+      "source_ip": "198.51.100.21",
+      "authorization_canary": "SYNTHETIC-CREDENTIAL-CANARY-DO-NOT-LOG",
+      "email_canary": "synthetic-person@example.invalid",
+      "prompt_canary": "SYNTHETIC-PRIVATE-PROMPT-DO-NOT-LOG"
+    },
+    {
+      "event_id": "req-006",
+      "timestamp_ms": 3000,
+      "request_id": "trace-006",
+      "credential_ref": "cred-reader-a",
+      "claimed_tenant_ref": "tenant-a",
+      "action": "record.read",
+      "resource_type": "record",
+      "resource_tenant_ref": "tenant-a",
+      "estimated_cost_units": 1,
+      "source_ip": "198.51.100.21",
+      "authorization_canary": "SYNTHETIC-CREDENTIAL-CANARY-DO-NOT-LOG",
+      "email_canary": "synthetic-person@example.invalid",
+      "prompt_canary": "SYNTHETIC-PRIVATE-PROMPT-DO-NOT-LOG"
+    },
+    {
+      "event_id": "req-007",
+      "timestamp_ms": 4000,
+      "request_id": "trace-007",
+      "credential_ref": "cred-reader-a",
+      "claimed_tenant_ref": "tenant-a",
+      "action": "record.read",
+      "resource_type": "record",
+      "resource_tenant_ref": "tenant-b",
+      "estimated_cost_units": 1,
+      "source_ip": "198.51.100.21",
+      "authorization_canary": "SYNTHETIC-CREDENTIAL-CANARY-DO-NOT-LOG",
+      "email_canary": "synthetic-person@example.invalid",
+      "prompt_canary": "SYNTHETIC-PRIVATE-PROMPT-DO-NOT-LOG"
+    },
+    {
+      "event_id": "req-008",
+      "timestamp_ms": 5000,
+      "request_id": "trace-008",
+      "credential_ref": "cred-reader-a",
+      "claimed_tenant_ref": "tenant-a",
+      "action": "audit.export",
+      "resource_type": "audit-log",
+      "resource_tenant_ref": "tenant-a",
+      "estimated_cost_units": 1,
+      "source_ip": "198.51.100.21",
+      "authorization_canary": "SYNTHETIC-CREDENTIAL-CANARY-DO-NOT-LOG",
+      "email_canary": "synthetic-person@example.invalid",
+      "prompt_canary": "SYNTHETIC-PRIVATE-PROMPT-DO-NOT-LOG"
+    },
+    {
+      "event_id": "req-009",
+      "timestamp_ms": 5100,
+      "request_id": "trace-009",
+      "credential_ref": null,
+      "claimed_tenant_ref": "tenant-a",
+      "action": "record.read",
+      "resource_type": "record",
+      "resource_tenant_ref": "tenant-a",
+      "estimated_cost_units": 1,
+      "source_ip": "198.51.100.23",
+      "authorization_canary": "SYNTHETIC-CREDENTIAL-CANARY-DO-NOT-LOG",
+      "email_canary": "synthetic-person@example.invalid",
+      "prompt_canary": "SYNTHETIC-PRIVATE-PROMPT-DO-NOT-LOG"
+    },
+    {
+      "event_id": "req-010",
+      "timestamp_ms": 5200,
+      "request_id": "trace-010",
+      "credential_ref": "cred-unknown",
+      "claimed_tenant_ref": "tenant-a",
+      "action": "record.read",
+      "resource_type": "record",
+      "resource_tenant_ref": "tenant-a",
+      "estimated_cost_units": 1,
+      "source_ip": "198.51.100.23",
+      "authorization_canary": "SYNTHETIC-CREDENTIAL-CANARY-DO-NOT-LOG",
+      "email_canary": "synthetic-person@example.invalid",
+      "prompt_canary": "SYNTHETIC-PRIVATE-PROMPT-DO-NOT-LOG"
+    },
+    {
+      "event_id": "req-011",
+      "timestamp_ms": 5300,
+      "request_id": "trace-011",
+      "credential_ref": "cred-disabled-b",
+      "claimed_tenant_ref": "tenant-b",
+      "action": "record.read",
+      "resource_type": "record",
+      "resource_tenant_ref": "tenant-b",
+      "estimated_cost_units": 1,
+      "source_ip": "198.51.100.23",
+      "authorization_canary": "SYNTHETIC-CREDENTIAL-CANARY-DO-NOT-LOG",
+      "email_canary": "synthetic-person@example.invalid",
+      "prompt_canary": "SYNTHETIC-PRIVATE-PROMPT-DO-NOT-LOG"
+    },
+    {
+      "event_id": "req-012",
+      "timestamp_ms": 6000,
+      "request_id": "trace-012",
+      "credential_ref": "cred-admin-a",
+      "claimed_tenant_ref": "tenant-a",
+      "action": "audit.export",
+      "resource_type": "audit-log",
+      "resource_tenant_ref": "tenant-a",
+      "estimated_cost_units": 1,
+      "source_ip": "198.51.100.24",
+      "authorization_canary": "SYNTHETIC-CREDENTIAL-CANARY-DO-NOT-LOG",
+      "email_canary": "synthetic-person@example.invalid",
+      "prompt_canary": "SYNTHETIC-PRIVATE-PROMPT-DO-NOT-LOG"
+    },
+    {
+      "event_id": "req-013",
+      "timestamp_ms": 7000,
+      "request_id": "trace-013",
+      "credential_ref": "cred-reader-b",
+      "claimed_tenant_ref": "tenant-a",
+      "action": "record.read",
+      "resource_type": "record",
+      "resource_tenant_ref": "tenant-b",
+      "estimated_cost_units": 1,
+      "source_ip": "198.51.100.31",
+      "authorization_canary": "SYNTHETIC-CREDENTIAL-CANARY-DO-NOT-LOG",
+      "email_canary": "synthetic-person@example.invalid",
+      "prompt_canary": "SYNTHETIC-PRIVATE-PROMPT-DO-NOT-LOG"
+    },
+    {
+      "event_id": "req-014",
+      "timestamp_ms": 7100,
+      "request_id": "trace-014",
+      "credential_ref": "cred-reader-b",
+      "claimed_tenant_ref": "tenant-b",
+      "action": "record.read",
+      "resource_type": "record",
+      "resource_tenant_ref": "tenant-a",
+      "estimated_cost_units": 1,
+      "source_ip": "198.51.100.31",
+      "authorization_canary": "SYNTHETIC-CREDENTIAL-CANARY-DO-NOT-LOG",
+      "email_canary": "synthetic-person@example.invalid",
+      "prompt_canary": "SYNTHETIC-PRIVATE-PROMPT-DO-NOT-LOG"
+    }
+  ],
+  "response_steps": [
+    {
+      "incident_id": "incident-001",
+      "phase": "contain",
+      "evidence_type": "credential_revocation_record",
+      "evidence_ref": "synthetic-evidence-001"
+    },
+    {
+      "incident_id": "incident-001",
+      "phase": "recover",
+      "evidence_type": "rotation_verified",
+      "evidence_ref": "synthetic-evidence-002"
+    },
+    {
+      "incident_id": "incident-001",
+      "phase": "close",
+      "evidence_type": "postmortem_reviewed",
+      "evidence_ref": "synthetic-evidence-003"
+    }
+  ]
+}

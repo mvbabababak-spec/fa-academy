@@ -22,7 +22,7 @@ jobs:
         run: |
           python -m pip install -r requirements.txt
           python -m playwright install --with-deps chromium
-      - name: Check published structures through chapter 67
+      - name: Check published structures through chapter 68
         run: |
           python book-engineering/check_volume.py
           python book-engineering/check_volume2.py
@@ -146,6 +146,33 @@ jobs:
           assert result['run_count'] == 4
           assert result['external_http_requests'] == result['live_model_calls'] == 0
           assert result['gpu_used'] is False and result['model_quality_evaluated'] is False
+          PY
+      - name: Chapter 68 synthetic product-security project tests
+        run: |
+          (cd book-engineering/projects/68-product-security-lab && python -m unittest discover -v)
+          python book-engineering/projects/68-product-security-lab/security_ops.py \
+            --fixture book-engineering/projects/68-product-security-lab/synthetic_security_events.json \
+            --output /tmp/ch68-ci-results.json
+          cmp /tmp/ch68-ci-results.json book-engineering/projects/68-product-security-lab/results.json
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+          root = Path('book-engineering/projects/68-product-security-lab')
+          fixture_hash = hashlib.sha256((root / 'synthetic_security_events.json').read_bytes()).hexdigest()
+          manifest = json.loads((root / 'fixture_manifest.json').read_text())
+          result = json.loads(Path('/tmp/ch68-ci-results.json').read_text())
+          assert fixture_hash == manifest['sha256'] == result['fixture_sha256']
+          assert result['fixture_id'] == 'v5-ch07-security-ops-synthetic-v1'
+          assert result['request_count'] == 14
+          assert result['decision_counts'] == {'allowed': 6, 'denied': 6, 'rate_limited': 2}
+          assert result['auth_failure_count'] == 3 and result['authorization_denial_count'] == 3
+          assert result['rate_limited_count'] == 2 and result['incident_count'] == 1
+          assert result['incidents'][0]['state'] == 'closed'
+          assert result['external_http_requests'] == result['live_auth_provider_calls'] == 0
+          assert result['live_model_calls'] == result['personal_records'] == 0
+          assert result['gpu_used'] is False and result['real_credentials_used'] is False
+          assert result['metrics']['private_fields_logged'] == 0
           PY
       - name: Confirm volume 5 builder idempotence
         run: |

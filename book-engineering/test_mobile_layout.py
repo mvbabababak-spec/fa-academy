@@ -44,14 +44,14 @@ def main():
                   return {count:book&&book.chapters.length,id:chapter&&chapter.id,sections:chapter&&chapter.sections.length,
                     firstSection:chapter&&chapter.sections[0].id,lastSection:chapter&&chapter.sections.at(-1).id};
                 }""")
-                assert chapter62 == {'count':6,'id':'art-science-v5-ch01','sections':26,'firstSection':'art-science-v5-ch01-s01','lastSection':'art-science-v5-ch01-s26'}, chapter62
+                assert chapter62 == {'count':7,'id':'art-science-v5-ch01','sections':26,'firstSection':'art-science-v5-ch01-s01','lastSection':'art-science-v5-ch01-s26'}, chapter62
                 chapter63 = page.evaluate("""() => {
                   const book=DATA.books.find(item=>item.id==='art-science-intelligence-v5');
                   const chapter=book&&book.chapters[1];
                   return {count:book&&book.chapters.length,id:chapter&&chapter.id,sections:chapter&&chapter.sections.length,
                     firstSection:chapter&&chapter.sections[0].id,lastSection:chapter&&chapter.sections.at(-1).id};
                 }""")
-                assert chapter63['count'] == 6 and chapter63['id'] == 'art-science-v5-ch02', chapter63
+                assert chapter63['count'] == 7 and chapter63['id'] == 'art-science-v5-ch02', chapter63
                 assert chapter63['sections'] == 34 and chapter63['firstSection'] == 'art-science-v5-ch02-s01', chapter63
                 assert chapter63['lastSection'] == 'art-science-v5-ch02-s34', chapter63
                 chapter64 = page.evaluate("""() => {
@@ -60,7 +60,7 @@ def main():
                   return {count:book&&book.chapters.length,id:chapter&&chapter.id,sections:chapter&&chapter.sections.length,
                     firstSection:chapter&&chapter.sections[0].id,lastSection:chapter&&chapter.sections.at(-1).id};
                 }""")
-                assert chapter64 == {'count':6,'id':'art-science-v5-ch03','sections':39,
+                assert chapter64 == {'count':7,'id':'art-science-v5-ch03','sections':39,
                   'firstSection':'art-science-v5-ch03-s01','lastSection':'art-science-v5-ch03-s39'}, chapter64
                 chapter65 = page.evaluate("""() => {
                   const book=DATA.books.find(item=>item.id==='art-science-intelligence-v5');
@@ -68,7 +68,7 @@ def main():
                   return {count:book&&book.chapters.length,id:chapter&&chapter.id,sections:chapter&&chapter.sections.length,
                     firstSection:chapter&&chapter.sections[0].id,lastSection:chapter&&chapter.sections.at(-1).id};
                 }""")
-                assert chapter65 == {'count':6,'id':'art-science-v5-ch04','sections':41,
+                assert chapter65 == {'count':7,'id':'art-science-v5-ch04','sections':41,
                   'firstSection':'art-science-v5-ch04-s01','lastSection':'art-science-v5-ch04-s41'}, chapter65
                 chapter66 = page.evaluate("""() => {
                   const book=DATA.books.find(item=>item.id==='art-science-intelligence-v5');
@@ -76,7 +76,7 @@ def main():
                   return {count:book&&book.chapters.length,id:chapter&&chapter.id,sections:chapter&&chapter.sections.length,
                     firstSection:chapter&&chapter.sections[0].id,lastSection:chapter&&chapter.sections.at(-1).id};
                 }""")
-                assert chapter66 == {'count':6,'id':'art-science-v5-ch05','sections':40,
+                assert chapter66 == {'count':7,'id':'art-science-v5-ch05','sections':40,
                   'firstSection':'art-science-v5-ch05-s01','lastSection':'art-science-v5-ch05-s40'}, chapter66
                 chapter67 = page.evaluate("""() => {
                   const book=DATA.books.find(item=>item.id==='art-science-intelligence-v5');
@@ -84,8 +84,16 @@ def main():
                   return {count:book&&book.chapters.length,id:chapter&&chapter.id,sections:chapter&&chapter.sections.length,
                     firstSection:chapter&&chapter.sections[0].id,lastSection:chapter&&chapter.sections.at(-1).id};
                 }""")
-                assert chapter67 == {'count':6,'id':'art-science-v5-ch06','sections':28,
+                assert chapter67 == {'count':7,'id':'art-science-v5-ch06','sections':28,
                   'firstSection':'art-science-v5-ch06-s01','lastSection':'art-science-v5-ch06-s28'}, chapter67
+                chapter68 = page.evaluate("""() => {
+                  const book=DATA.books.find(item=>item.id==='art-science-intelligence-v5');
+                  const chapter=book&&book.chapters[6];
+                  return {count:book&&book.chapters.length,id:chapter&&chapter.id,sections:chapter&&chapter.sections.length,
+                    firstSection:chapter&&chapter.sections[0].id,lastSection:chapter&&chapter.sections.at(-1).id};
+                }""")
+                assert chapter68 == {'count':7,'id':'art-science-v5-ch07','sections':37,
+                  'firstSection':'art-science-v5-ch07-s01','lastSection':'art-science-v5-ch07-s37'}, chapter68
                 assert page.locator('.home-hero > p').first.inner_text() == 'مجموعه‌ای جامع از کتاب‌ها و دوره‌های آموزشی هوش مصنوعی — با دسترسی آفلاین'
                 page.evaluate("document.querySelectorAll('.book-card--volume img,.book-card--microsoft img').forEach(img => img.loading='eager')")
                 page.wait_for_function("""() => {
@@ -290,6 +298,13 @@ def main():
                 v5_diagram67_offline = page.evaluate("fetch('book-engineering/diagrams/v5-ch06-serving-pipeline.svg').then(r => r.ok ? r.text() : '')")
                 v5_project67_offline = page.evaluate("fetch('book-engineering/projects/67-serving-lab/results.json').then(r => r.ok ? r.text() : '')")
                 v5_fixture67_offline = page.evaluate("fetch('book-engineering/projects/67-serving-lab/synthetic_serving_trace.json').then(r => r.ok ? r.text() : '')")
+                v5_answer68_offline = page.evaluate("fetch('book-engineering/answers/68-product-security-monitoring-fa.md').then(r => r.ok ? r.text() : '')")
+                v5_source68_offline = page.evaluate("fetch('book-engineering/chapters/68-product-security-monitoring.md').then(r => r.ok ? r.text() : '')")
+                v5_report68_offline = page.evaluate("fetch('book-engineering/chapters/68-audit-report-fa.md').then(r => r.ok ? r.text() : '')")
+                v5_diagram68_offline = page.evaluate("fetch('book-engineering/diagrams/v5-ch07-product-security-flow.svg').then(r => r.ok ? r.text() : '')")
+                v5_project68_offline = page.evaluate("fetch('book-engineering/projects/68-product-security-lab/results.json').then(r => r.ok ? r.text() : '')")
+                v5_fixture68_offline = page.evaluate("fetch('book-engineering/projects/68-product-security-lab/synthetic_security_events.json').then(r => r.ok ? r.text() : '')")
+                v5_environment68_offline = page.evaluate("fetch('book-engineering/projects/68-product-security-lab/environment.json').then(r => r.ok ? r.text() : '')")
                 v5_markdown_offline = page.evaluate("fetch('volume-5-full-fa.md').then(r => r.ok ? r.text() : '')")
                 v5_cover_dimensions_offline = page.evaluate("""async () => {
                   const response=await fetch('assets/images/covers/volume-5-cover.png');
@@ -323,7 +338,14 @@ def main():
                 assert 'سرو در سطح محصول' in v5_diagram67_offline
                 assert 'v5-ch06-serving-synthetic-v1' in v5_fixture67_offline
                 assert 'response_cache_hits' in v5_project67_offline
-                assert all(term in v5_markdown_offline for term in ('جلد پنجم', 'فصل ۶۲', 'فصل ۶۳', 'فصل ۶۴', 'فصل ۶۵', 'فصل ۶۶', 'فصل ۶۷'))
+                assert 'پاسخ‌نامهٔ مستقل فصل ۶۸' in v5_answer68_offline
+                assert 'فصل محلی ۷ جلد پنجم = فصل سراسری ۶۸' in v5_source68_offline
+                assert 'فصل سراسری ۶۸' in v5_report68_offline
+                assert 'prompt / token / PII' in v5_diagram68_offline
+                assert 'AUTH_FAILURE_BURST' in v5_project68_offline and '"allowed": 6' in v5_project68_offline
+                assert '"audit_date": "2026-11-08"' in v5_environment68_offline
+                assert 'v5-ch07-security-ops-synthetic-v1' in v5_fixture68_offline
+                assert all(term in v5_markdown_offline for term in ('جلد پنجم', 'فصل ۶۲', 'فصل ۶۳', 'فصل ۶۴', 'فصل ۶۵', 'فصل ۶۶', 'فصل ۶۷', 'فصل ۶۸'))
                 answer = page.evaluate("fetch('book-engineering/answers/01-intelligence-answers-fa.md').then(r => r.ok ? r.text() : '')")
                 assert 'پاسخ‌نامه فصل ۱' in answer, 'answer key unavailable offline'
                 chapter55_offline = page.evaluate("fetch('book-engineering/chapters/55-ai-lab-design.md').then(r => r.ok ? r.text() : '')")
@@ -372,7 +394,7 @@ def main():
                     f"{book_id}: {stats['paragraphs']} justified prose paragraphs, {stats['indented']} indented, {stats['formulas']} MathML, {stats['captions']} captions"
                     for book_id,stats in result['typography'].items()
                 )
-                print(f"PASS {width}px: covers online/offline, chapters 55–67 source/answer/diagram offline, text, header, RTL navigation, locked viewport and {result['count']} sections; {typography_summary}")
+                print(f"PASS {width}px: covers online/offline, chapters 55–68 source/answer/diagram offline, text, header, RTL navigation, locked viewport and {result['count']} sections; {typography_summary}")
                 context.close()
             browser.close()
     finally:

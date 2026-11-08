@@ -83,7 +83,8 @@ def main() -> None:
         source_text = source.read_text(encoding="utf-8")
         require(f"فصل محلی {fa_num(global_num - 61)} جلد پنجم = فصل سراسری {fa_num(global_num)}" in source_text,
                 f"chapter {global_num} local/global mapping missing")
-        require("تاریخ بازبینی منابع: ۷ نوامبر ۲۰۲۶" in source_text, f"chapter {global_num} source date missing")
+        expected_review_date = "۷ نوامبر ۲۰۲۶" if global_num <= 67 else "۴ نوامبر ۲۰۲۶"
+        require(f"تاریخ بازبینی منابع: {expected_review_date}" in source_text, f"chapter {global_num} source date missing or does not match its review date")
         require(bool(re.search(r"^##\s+.*منابع و تاریخ بازبینی", source_text, flags=re.MULTILINE)), f"chapter {global_num} dated bibliography missing")
         require(bool(re.search(r"^##\s+.*تمرین‌ها", source_text, flags=re.MULTILINE)) and bool(re.search(r"^##\s+.*جمع‌بندی", source_text, flags=re.MULTILINE)), f"chapter {global_num} needs exercises and summary")
         require("پاسخ‌نامهٔ مستقل" in source_text and "پروژهٔ فصل" in source_text and "گزارش ممیزی" in source_text,
@@ -104,7 +105,7 @@ def main() -> None:
             image_path_on_disk = (ROOT / image_relative if image_relative.parts and image_relative.parts[0] in {"book-engineering", "assets"}
                                   else source.parent / image_relative)
             require(image_path_on_disk.is_file(), f"chapter {global_num} missing figure {image_path}")
-        if global_num in (62, 63, 64, 65, 66, 67):
+        if global_num in (62, 63, 64, 65, 66, 67, 68):
             questions = re.findall(r"(?m)^([۱-۸])\. (.+)$", source_text.split("## پیوست اجرایی", 1)[0])
             answer_questions = re.findall(r"(?m)^\*\*صورت پرسش:\*\* (.+)$", answer.read_text(encoding="utf-8"))
             require(len(questions) == 8 and [question for _, question in questions] == answer_questions,
@@ -284,6 +285,78 @@ def main() -> None:
                     and environment.get("execution", {}).get("production_trace_used") is False
                     and environment.get("execution", {}).get("personal_records") == 0,
                     "chapter 67 environment metadata mismatch")
+
+        if global_num == 68:
+            require(len(book["chapters"][6]["sections"]) == 37, "chapter 68 expected 37 sections")
+            project_files = (
+                "environment.json", "fixture_manifest.json", "results.json",
+                "synthetic_security_events.json", "security_ops.py", "test_security_ops.py",
+                "README.md", "requirements.txt",
+            )
+            for filename in project_files:
+                require((project_dir / filename).is_file(), f"chapter 68 project file missing: {filename}")
+            fixture_path = project_dir / "synthetic_security_events.json"
+            fixture_hash = hashlib.sha256(fixture_path.read_bytes()).hexdigest()
+            manifest = json.loads((project_dir / "fixture_manifest.json").read_text(encoding="utf-8"))
+            result = json.loads((project_dir / "results.json").read_text(encoding="utf-8"))
+            environment = json.loads((project_dir / "environment.json").read_text(encoding="utf-8"))
+            require(manifest.get("fixture_id") == "v5-ch07-security-ops-synthetic-v1"
+                    and manifest.get("sha256") == fixture_hash
+                    and manifest.get("synthetic") is True
+                    and manifest.get("event_count") == 14
+                    and manifest.get("credential_count") == 4
+                    and manifest.get("contains_personal_data") is False
+                    and manifest.get("contains_real_credentials") is False
+                    and manifest.get("contains_production_trace") is False,
+                    "chapter 68 fixture manifest does not match the synthetic events")
+            require(result.get("project_id") == manifest.get("fixture_id")
+                    and result.get("fixture_id") == manifest.get("fixture_id")
+                    and result.get("fixture_sha256") == fixture_hash
+                    and result.get("synthetic") is True
+                    and result.get("request_count") == 14
+                    and result.get("decision_counts") == {"allowed": 6, "denied": 6, "rate_limited": 2}
+                    and result.get("reason_counts") == {
+                        "invalid_credential": 2, "missing_credential": 1, "policy_allow": 6,
+                        "rate_limit_exceeded": 2, "role_required": 1, "tenant_boundary": 2,
+                    }
+                    and result.get("auth_failure_count") == 3
+                    and result.get("authorization_denial_count") == 3
+                    and result.get("rate_limited_count") == 2
+                    and result.get("audit_event_count") == 14
+                    and result.get("incident_count") == 1
+                    and result.get("alerts", [{}])[0].get("alert_code") == "AUTH_FAILURE_BURST"
+                    and result.get("incidents", [{}])[0].get("state") == "closed"
+                    and result.get("external_http_requests") == 0
+                    and result.get("live_auth_provider_calls") == 0
+                    and result.get("live_model_calls") == 0
+                    and result.get("gpu_used") is False
+                    and result.get("personal_records") == 0
+                    and result.get("real_credentials_used") is False,
+                    "chapter 68 results overstate or contradict the synthetic policy simulation")
+            metrics = result.get("metrics", {})
+            require(metrics.get("private_fields_logged") == 0
+                    and metrics.get("dimension_fields") == ["outcome", "reason_code"]
+                    and "tenant_ref" not in metrics and "actor_ref" not in metrics,
+                    "chapter 68 metrics contain high-cardinality or personal dimensions")
+            serialized_result = json.dumps(result, ensure_ascii=False)
+            require(all(value not in serialized_result for value in (
+                "SYNTHETIC-CREDENTIAL-CANARY-DO-NOT-LOG",
+                "SYNTHETIC-PRIVATE-PROMPT-DO-NOT-LOG",
+                "synthetic-person@example.invalid", "198.51.100.",
+            )), "chapter 68 result contains a private canary or source address")
+            require(environment.get("audit_date") == "2026-11-08"
+                    and environment.get("python", {}).get("implementation") == "CPython"
+                    and environment.get("python", {}).get("version") == "3.13.16"
+                    and environment.get("dependencies") == []
+                    and environment.get("fixture_sha256") == fixture_hash
+                    and environment.get("execution", {}).get("external_http_requests") == 0
+                    and environment.get("execution", {}).get("live_auth_provider_calls") == 0
+                    and environment.get("execution", {}).get("live_model_calls") == 0
+                    and environment.get("execution", {}).get("gpu_used") is False
+                    and environment.get("execution", {}).get("production_trace_used") is False
+                    and environment.get("execution", {}).get("personal_records") == 0
+                    and environment.get("execution", {}).get("unit_tests") == "25/25 passed",
+                    "chapter 68 environment metadata mismatch")
 
         diagram_relative = builder.DIAGRAMS.get(global_num)
         if diagram_relative:

@@ -1,5 +1,5 @@
-// ===== فا-اکدمی Service Worker v107 =====
-const CACHE_NAME = 'fa-academy-v107';
+// ===== فا-اکدمی Service Worker v108 =====
+const CACHE_NAME = 'fa-academy-v108';
 const CORE_FILES = [
   './',
   './index.html',
@@ -443,6 +443,18 @@ const CORE_FILES = [
   './book-engineering/projects/67-serving-lab/serving_lab.py',
   './book-engineering/projects/67-serving-lab/synthetic_serving_trace.json',
   './book-engineering/projects/67-serving-lab/test_serving_lab.py',
+  './book-engineering/chapters/68-product-security-monitoring.md',
+  './book-engineering/chapters/68-audit-report-fa.md',
+  './book-engineering/diagrams/v5-ch07-product-security-flow.svg',
+  './book-engineering/answers/68-product-security-monitoring-fa.md',
+  './book-engineering/projects/68-product-security-lab/README.md',
+  './book-engineering/projects/68-product-security-lab/environment.json',
+  './book-engineering/projects/68-product-security-lab/fixture_manifest.json',
+  './book-engineering/projects/68-product-security-lab/requirements.txt',
+  './book-engineering/projects/68-product-security-lab/results.json',
+  './book-engineering/projects/68-product-security-lab/security_ops.py',
+  './book-engineering/projects/68-product-security-lab/synthetic_security_events.json',
+  './book-engineering/projects/68-product-security-lab/test_security_ops.py',
 ];
 
 // ===== INSTALL: Cache core files =====

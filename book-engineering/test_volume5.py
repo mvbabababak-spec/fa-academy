@@ -21,6 +21,7 @@ CHAPTER_TITLES = {
     65: "هم‌ترازی، حاکمیت، مستندسازی، مدل‌کارت، داده‌کارت و مدیریت ریسک",
     66: "API و FastAPI، Backend، Frontend، برنامهٔ وب و موبایل؛ قرارداد داده و آزمایش",
     67: "سرو مدل، بهینه‌سازی استنتاج، Cache، صف، تأخیر و توان عملیاتی",
+    68: "احراز هویت، محدودیت نرخ، ثبت رخداد، پایش، حریم خصوصی و پاسخ به رخداد",
 }
 PROJECT_CODES = {
     global_num: (ROOT / path).read_text(encoding="utf-8").rstrip("\n")
@@ -58,15 +59,16 @@ def main() -> None:
                       sectionCount:chapter.sections.length,
                       mathSections:chapter.sections.map((section,index)=>({{index,count:(section.html.match(/<math/g)||[]).length}})).filter(item=>item.count>0)}}))}};
                 }}""")
-                assert metadata["count"] == 6, metadata
+                assert metadata["count"] == 7, metadata
                 assert metadata["cover"] == builder.COVER_PATH, metadata
                 assert metadata["subtitle"] == "ارزیابی، محصول و پژوهش | ۱۲ فصل", metadata
                 assert [chapter["id"] for chapter in metadata["chapters"]] == [
                     "art-science-v5-ch01", "art-science-v5-ch02", "art-science-v5-ch03",
-                    "art-science-v5-ch04", "art-science-v5-ch05", "art-science-v5-ch06"
+                    "art-science-v5-ch04", "art-science-v5-ch05", "art-science-v5-ch06",
+                    "art-science-v5-ch07"
                 ], metadata
                 assert [chapter["title"] for chapter in metadata["chapters"]] == [
-                    CHAPTER_TITLES[number] for number in (62, 63, 64, 65, 66, 67)
+                    CHAPTER_TITLES[number] for number in (62, 63, 64, 65, 66, 67, 68)
                 ], metadata
                 assert metadata["chapters"][0]["sectionCount"] == 26, metadata
                 assert metadata["chapters"][0]["sectionIds"][0] == "art-science-v5-ch01-s01", metadata
@@ -86,9 +88,12 @@ def main() -> None:
                 assert metadata["chapters"][5]["sectionCount"] == 28, metadata
                 assert metadata["chapters"][5]["sectionIds"][0] == "art-science-v5-ch06-s01", metadata
                 assert metadata["chapters"][5]["sectionIds"][-1] == "art-science-v5-ch06-s28", metadata
+                assert metadata["chapters"][6]["sectionCount"] == 37, metadata
+                assert metadata["chapters"][6]["sectionIds"][0] == "art-science-v5-ch07-s01", metadata
+                assert metadata["chapters"][6]["sectionIds"][-1] == "art-science-v5-ch07-s37", metadata
                 assert all(chapter["mathSections"] for chapter in metadata["chapters"]), metadata
 
-                # Confirm the portrait cover, accessible figures and MathML in all six authored chapters.
+                # Confirm the portrait cover, accessible figures and MathML in all seven authored chapters.
                 page.locator(".book-card--volume img").last.evaluate("img => img.loading='eager'")
                 page.wait_for_function("""() => {
                   const img=Array.from(document.querySelectorAll('.book-card--volume img'))
@@ -186,6 +191,12 @@ def main() -> None:
                 offline_diagram67 = page.evaluate("fetch('book-engineering/diagrams/v5-ch06-serving-pipeline.svg').then(r=>r.ok?r.text():'')")
                 offline_project67 = page.evaluate("fetch('book-engineering/projects/67-serving-lab/results.json').then(r=>r.ok?r.text():'')")
                 offline_fixture67 = page.evaluate("fetch('book-engineering/projects/67-serving-lab/synthetic_serving_trace.json').then(r=>r.ok?r.text():'')")
+                offline_answer68 = page.evaluate("fetch('book-engineering/answers/68-product-security-monitoring-fa.md').then(r=>r.ok?r.text():'')")
+                offline_report68 = page.evaluate("fetch('book-engineering/chapters/68-audit-report-fa.md').then(r=>r.ok?r.text():'')")
+                offline_source68 = page.evaluate("fetch('book-engineering/chapters/68-product-security-monitoring.md').then(r=>r.ok?r.text():'')")
+                offline_diagram68 = page.evaluate("fetch('book-engineering/diagrams/v5-ch07-product-security-flow.svg').then(r=>r.ok?r.text():'')")
+                offline_project68 = page.evaluate("fetch('book-engineering/projects/68-product-security-lab/results.json').then(r=>r.ok?r.text():'')")
+                offline_fixture68 = page.evaluate("fetch('book-engineering/projects/68-product-security-lab/synthetic_security_events.json').then(r=>r.ok?r.text():'')")
                 offline_full_text = page.evaluate("fetch('volume-5-full-fa.md').then(r=>r.ok?r.text():'')")
                 assert "پاسخ‌نامهٔ مستقل فصل ۶۲" in offline_answer62
                 assert "پاسخ‌نامهٔ مستقل فصل ۶۳" in offline_answer63
@@ -216,9 +227,15 @@ def main() -> None:
                 assert "سرو در سطح محصول" in offline_diagram67
                 assert 'v5-ch06-serving-synthetic-v1' in offline_fixture67
                 assert '"response_cache_hits": 12' in offline_project67
-                assert all(term in offline_full_text for term in ("جلد پنجم", "فصل ۶۲", "فصل ۶۳", "فصل ۶۴", "فصل ۶۵", "فصل ۶۶", "فصل ۶۷"))
+                assert "پاسخ‌نامهٔ مستقل فصل ۶۸" in offline_answer68
+                assert "فصل سراسری ۶۸" in offline_report68
+                assert "فصل محلی ۷ جلد پنجم = فصل سراسری ۶۸" in offline_source68
+                assert "prompt / token / PII" in offline_diagram68
+                assert "AUTH_FAILURE_BURST" in offline_project68 and '"allowed": 6' in offline_project68
+                assert "v5-ch07-security-ops-synthetic-v1" in offline_fixture68
+                assert all(term in offline_full_text for term in ("جلد پنجم", "فصل ۶۲", "فصل ۶۳", "فصل ۶۴", "فصل ۶۵", "فصل ۶۶", "فصل ۶۷", "فصل ۶۸"))
                 assert not errors, errors
-                print(f"PASS volume 5 chapters 62–67 browser/offline checks at {width}px: sections={[chapter['sectionCount'] for chapter in metadata['chapters']]}, accessible MathML/SVG, exact code appendices, {len(OFFLINE_PATHS)} offline paths")
+                print(f"PASS volume 5 chapters 62–68 browser/offline checks at {width}px: sections={[chapter['sectionCount'] for chapter in metadata['chapters']]}, accessible MathML/SVG, exact code appendices, {len(OFFLINE_PATHS)} offline paths")
                 context.close()
             browser.close()
     finally:
