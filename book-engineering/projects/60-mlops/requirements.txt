@@ -1,5 +1,0 @@
-# Direct runtime dependencies for the synthetic experiment-tracking example.
-# These pins were installed and checked in CPython 3.13.16 on Linux x86-64.
-mlflow==3.18.0
-wandb==0.31.0
-PyYAML==6.0.3

@@ -1,2 +1,0 @@
-# پروژه فصل ۹ جلد دوم
-Python 3.13.16، NumPy 2.3.5، PyTorch 2.6.0+cpu. اجرا: `python neural_network.py` و `python -m unittest -v`. نصب CPU: `python -m pip install numpy==2.3.5` سپس `python -m pip install torch==2.6.0 --index-url https://download.pytorch.org/whl/cpu`. داده ساختگی ۱۸۰/۶۰/۶۰، ثابت و بدون داده خارجی. خروجی CPU: زیان آموزش 0.693009536 به 0.058947023، اعتبارسنجی 0.076186755، دقت آزمون 1.0 و اختلاف logit با PyTorch 1.776e-15. شش تست موفق. تنها وزن استنتاج در پوشه موقت ذخیره و بازیابی شد؛ ادامه آموزش و GPU آزمایش نشده‌اند.

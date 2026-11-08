@@ -1,9 +1,0 @@
-{
-  "data_class": "synthetic_fixture",
-  "fixture_file": "sample_experiment.json",
-  "fixture_id": "v4-ch14-synthetic-linear-v1",
-  "real_data_included": false,
-  "record_count": 4,
-  "schema_version": 1,
-  "sha256": "81989e3ae534cade6f4e77742cb3fae01649247956962559720e75b093f1a260"
-}

@@ -1,1 +1,0 @@
-# No third-party dependencies. The project uses the CPython 3.13.16 standard library.

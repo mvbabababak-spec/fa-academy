@@ -1,2 +1,0 @@
-A benchmark question: is 2 plus 2 equal to 4?
-A synthetic sentence about planets orbiting a star.

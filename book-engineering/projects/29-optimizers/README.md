@@ -1,2 +1,0 @@
-# پروژه فصل ۸ جلد دوم
-Python 3.13.16، NumPy 2.3.5، PyTorch 2.6.0+cpu. اجرا: `python optimizers.py` و `python -m unittest -v`. نصب CPU: `python -m pip install numpy==2.3.5` و `python -m pip install torch==2.6.0 --index-url https://download.pytorch.org/whl/cpu`. گرادیان‌ها از پیش تعیین‌شده‌اند؛ این یک benchmark آموزش واقعی نیست. هفت تست موفق؛ مقدار نهایی SGD=0.994، Adam=0.978015717 و AdamW=0.979743214.

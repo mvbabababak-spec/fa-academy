@@ -1,9 +1,0 @@
-{
-  "dependencies": [],
-  "execution": "local CPU; Python standard library only",
-  "external_model_or_api": false,
-  "fixture_sha256": "9a2fb3e97951f5e06eabf0a6fdb10e982f9ad7e738f4766049eb28fb4714dea6",
-  "model_or_weights_loaded": false,
-  "network_used": false,
-  "python": "CPython 3.13.16"
-}

@@ -1,6 +1,0 @@
-# Direct dependencies verified with CPython 3.13.16 on 2026-11-07.
-fastapi==0.162.2
-starlette==1.10.0
-pydantic==2.14.2
-httpx2==2.16.0
-uvicorn==0.54.0

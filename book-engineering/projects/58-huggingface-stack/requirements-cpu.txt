@@ -1,3 +1,0 @@
-# PyTorch CPU wheel only; install this separately from the PyPI dependencies.
---index-url https://download.pytorch.org/whl/cpu
-torch==2.15.0+cpu

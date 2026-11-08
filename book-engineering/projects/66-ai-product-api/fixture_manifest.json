@@ -1,9 +1,0 @@
-{
-  "fixture_id": "v5-ch05-api-contract-synthetic-v1",
-  "file": "synthetic_fixture.json",
-  "sha256": "aa333a70cf87376fdde7a919d5b79fc1a97cf4ea8da15c8eab89c551c2070bad",
-  "record_count": 1,
-  "synthetic": true,
-  "contains_personal_data": false,
-  "network_used_to_create_fixture": false
-}
