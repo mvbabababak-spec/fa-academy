@@ -302,7 +302,7 @@ def main() -> None:
                 assert "v5-ch10-experiment-design-synthetic-v1" in offline_fixture71
                 assert '"unit_tests": "19/19 passed"' in offline_env71
                 assert "پاسخ‌نامهٔ مستقل فصل ۷۲" in offline_answer72
-                assert "فصل سراسری ۷۲" in offline_report72
+                assert "فصل محلی ۱۱/سراسری ۷۲ جلد پنجم" in offline_report72
                 assert "فصل محلی ۱۱ جلد پنجم = فصل سراسری ۷۲" in offline_source72
                 assert "مسیر طراحی معماری و برنامهٔ پژوهشی" in offline_diagram72
                 assert '"project_id": "v5-ch11-research-architecture-synthetic-v1"' in offline_project72

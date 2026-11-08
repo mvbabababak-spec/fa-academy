@@ -648,7 +648,7 @@ def main() -> None:
                     "chapter 72 results must report structure only and no scientific conclusion")
             execution = environment.get("execution", {})
             limits = environment.get("interpretation_limits", {})
-            require(environment.get("audit_date") == "2026-11-04"
+            require(environment.get("audit_date") == "2026-11-08"
                     and environment.get("runtime", {}).get("implementation") == "CPython"
                     and environment.get("runtime", {}).get("version") == "3.13.16"
                     and environment.get("runtime", {}).get("third_party_dependencies") == []

@@ -24,11 +24,11 @@ def main():
                 # while preserving the full per-width, per-section coverage below.
                 if browser is not None:
                     browser.close()
-                browser = p.chromium.launch(args=['--no-sandbox'])
+                browser = p.chromium.launch(args=['--no-sandbox', '--disable-dev-shm-usage'])
                 context = browser.new_context(viewport={'width': width, 'height': 900}, is_mobile=width < 768, has_touch=width < 768)
                 page = context.new_page()
-                page.goto(url, wait_until='networkidle')
-                page.wait_for_selector('#loading.hidden')
+                page.goto(url, wait_until='domcontentloaded', timeout=90000)
+                page.wait_for_selector('#loading.hidden', timeout=90000)
                 chapter60 = page.evaluate("""() => {
                   const book=DATA.books.find(item=>item.id==='art-science-intelligence-v4');
                   const chapter=book&&book.chapters[13];
@@ -287,7 +287,9 @@ def main():
                 assert not result['typographyFailures'] and not result['typographyMissing'], result
                 page.evaluate('navigator.serviceWorker.ready')
                 page.wait_for_timeout(250)
+                page.close()
                 context.set_offline(True)
+                page = context.new_page()
                 page.goto(url, wait_until='domcontentloaded')
                 page.wait_for_selector('#loading.hidden')
                 page.evaluate("document.querySelectorAll('.book-card--volume img,.book-card--microsoft img').forEach(img => img.loading='eager')")
@@ -434,7 +436,7 @@ def main():
                 assert '"unit_tests": "19/19 passed"' in v5_environment71_offline
                 assert 'پاسخ‌نامهٔ مستقل فصل ۷۲' in v5_answer72_offline
                 assert 'فصل محلی ۱۱ جلد پنجم = فصل سراسری ۷۲' in v5_source72_offline
-                assert 'فصل سراسری ۷۲' in v5_report72_offline
+                assert 'فصل محلی ۱۱/سراسری ۷۲ جلد پنجم' in v5_report72_offline
                 assert 'مسیر طراحی معماری و برنامهٔ پژوهشی' in v5_diagram72_offline
                 assert '"project_id": "v5-ch11-research-architecture-synthetic-v1"' in v5_project72_offline
                 assert '"novelty_confirmed": false' in v5_project72_offline
