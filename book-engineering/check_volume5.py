@@ -105,7 +105,7 @@ def main() -> None:
             image_path_on_disk = (ROOT / image_relative if image_relative.parts and image_relative.parts[0] in {"book-engineering", "assets"}
                                   else source.parent / image_relative)
             require(image_path_on_disk.is_file(), f"chapter {global_num} missing figure {image_path}")
-        if global_num in (62, 63, 64, 65, 66, 67, 68, 69, 70, 71):
+        if global_num in (62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72):
             exercise_match = re.search(r"(?ms)^##\s+[^\n]*تمرین‌ها[^\n]*\n(.*?)(?=^##\s|\Z)", source_text)
             require(exercise_match is not None, f"chapter {global_num} exercise section missing")
             questions = re.findall(r"(?m)^([۱-۸])\. (.+)$", exercise_match.group(1))
@@ -601,6 +601,72 @@ def main() -> None:
                     and execution.get("inference_authorized") is False
                     and execution.get("result_matches_saved_reference") is True,
                     "chapter 71 environment metadata mismatch")
+
+        if global_num == 72:
+            require(len(book["chapters"][10]["sections"]) == 43,
+                    "chapter 72 expected 43 sections, including its executable appendix")
+            project_files = (
+                "README.md", "environment.json", "fixture_manifest.json", "results.json",
+                "research_packet.json", "research_architecture.py", "test_research_architecture.py",
+                "requirements.txt",
+            )
+            for filename in project_files:
+                require((project_dir / filename).is_file(), f"chapter 72 project file missing: {filename}")
+            packet_path = project_dir / "research_packet.json"
+            packet_hash = hashlib.sha256(packet_path.read_bytes()).hexdigest()
+            packet = json.loads(packet_path.read_text(encoding="utf-8"))
+            manifest = json.loads((project_dir / "fixture_manifest.json").read_text(encoding="utf-8"))
+            result = json.loads((project_dir / "results.json").read_text(encoding="utf-8"))
+            environment = json.loads((project_dir / "environment.json").read_text(encoding="utf-8"))
+            conclusions = result.get("scientific_conclusions", {})
+            require(packet.get("project_id") == manifest.get("project_id") == result.get("project_id")
+                    == "v5-ch11-research-architecture-synthetic-v1"
+                    and packet.get("synthetic") is True
+                    and packet.get("real_data_used") is False
+                    and packet.get("real_model_outputs") is False
+                    and packet.get("network_used") is False
+                    and packet.get("status") == "proposal_not_tested",
+                    "chapter 72 packet must remain a fictional, untested proposal")
+            require(manifest.get("fixture_sha256") == packet_hash
+                    and result.get("fixture_sha256") == packet_hash
+                    and environment.get("fixture", {}).get("sha256") == packet_hash
+                    and manifest.get("synthetic") is True
+                    and manifest.get("real_data_used") is False
+                    and manifest.get("real_model_outputs") is False
+                    and manifest.get("personal_data_present") is False
+                    and manifest.get("network_used") is False,
+                    "chapter 72 manifest, results and environment must match the synthetic packet")
+            require(result.get("validation_status") == "structural_consistency_passed"
+                    and result.get("counts") == {
+                        "architecture_components": 1, "architecture_alternatives": 2,
+                        "quality_scenarios": 3, "planned_evaluations": 2, "hypotheses": 1,
+                        "paper_sections": 11, "contributors": 3, "roadmap_milestones": 4,
+                        "registered_sources": 6,
+                    }
+                    and all(value is False for value in conclusions.values())
+                    and result.get("synthetic") is True,
+                    "chapter 72 results must report structure only and no scientific conclusion")
+            execution = environment.get("execution", {})
+            limits = environment.get("interpretation_limits", {})
+            require(environment.get("audit_date") == "2026-11-04"
+                    and environment.get("runtime", {}).get("implementation") == "CPython"
+                    and environment.get("runtime", {}).get("version") == "3.13.16"
+                    and environment.get("runtime", {}).get("third_party_dependencies") == []
+                    and execution.get("unit_tests") == "25/25 passed"
+                    and execution.get("network_access") is False
+                    and execution.get("network_requests") == 0
+                    and execution.get("gpu_used") is False
+                    and execution.get("real_data_used") is False
+                    and execution.get("real_model_outputs") is False
+                    and execution.get("inference_calls") == 0
+                    and execution.get("reference_output_reproduced") is True
+                    and limits.get("structural_consistency_only") is True
+                    and limits.get("novelty_confirmed") is False
+                    and limits.get("architecture_quality_evaluated") is False
+                    and limits.get("hypothesis_tested") is False
+                    and limits.get("statistical_inference_authorized") is False
+                    and limits.get("publication_readiness_certified") is False,
+                    "chapter 72 environment metadata overstates the tested scope")
 
         diagram_relative = builder.DIAGRAMS.get(global_num)
         if diagram_relative:

@@ -46,6 +46,7 @@ APPENDIX_PROJECTS = {
     69: "book-engineering/projects/69-deployment-cicd-lab/deployment_gate.py",
     70: "book-engineering/projects/70-reading-papers-lab/paper_reproduction.py",
     71: "book-engineering/projects/71-experiment-design-lab/experiment_design.py",
+    72: "book-engineering/projects/72-research-architecture-lab/research_architecture.py",
 }
 DIAGRAMS = {
     62: "book-engineering/diagrams/v5-ch01-evaluation-protocol.svg",
@@ -58,6 +59,7 @@ DIAGRAMS = {
     69: "book-engineering/diagrams/v5-ch08-release-pipeline.svg",
     70: "book-engineering/diagrams/v5-ch09-paper-evidence.svg",
     71: "book-engineering/diagrams/v5-ch10-experiment-design.svg",
+    72: "book-engineering/diagrams/v5-ch11-research-architecture.svg",
 }
 ANSWER_KEYS = {
     62: "book-engineering/answers/62-benchmarking-evaluation-fa.md",
@@ -70,6 +72,7 @@ ANSWER_KEYS = {
     69: "book-engineering/answers/69-deployment-cicd-fa.md",
     70: "book-engineering/answers/70-reading-papers-reproduction-fa.md",
     71: "book-engineering/answers/71-research-design-statistics-fa.md",
+    72: "book-engineering/answers/72-research-architecture-community-fa.md",
 }
 PROJECT_DIRS = {
     62: "book-engineering/projects/62-evaluation-lab",
@@ -82,6 +85,7 @@ PROJECT_DIRS = {
     69: "book-engineering/projects/69-deployment-cicd-lab",
     70: "book-engineering/projects/70-reading-papers-lab",
     71: "book-engineering/projects/71-experiment-design-lab",
+    72: "book-engineering/projects/72-research-architecture-lab",
 }
 
 

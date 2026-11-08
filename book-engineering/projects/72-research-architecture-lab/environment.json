@@ -1,0 +1,35 @@
+{
+  "project_id": "v5-ch11-research-architecture-synthetic-v1",
+  "audit_date": "2026-11-04",
+  "runtime": {
+    "implementation": "CPython",
+    "version": "3.13.16",
+    "third_party_dependencies": []
+  },
+  "execution": {
+    "unit_tests": "25/25 passed",
+    "network_access": false,
+    "network_requests": 0,
+    "gpu_used": false,
+    "real_data_used": false,
+    "real_model_outputs": false,
+    "inference_calls": 0,
+    "reference_output_reproduced": true
+  },
+  "interpretation_limits": {
+    "structural_consistency_only": true,
+    "novelty_confirmed": false,
+    "architecture_quality_evaluated": false,
+    "hypothesis_tested": false,
+    "statistical_inference_authorized": false,
+    "publication_readiness_certified": false,
+    "authorship_decided": false,
+    "license_or_ethics_approved": false
+  },
+  "fixture": {
+    "id": "v5-ch11-research-architecture-synthetic-v1",
+    "type": "fictional research-planning packet",
+    "sha256": "4a63bb49e8a4dce2332bce19054240e2cd92dfe20e2b71f519b243cdfbdb918e",
+    "manifest_file": "fixture_manifest.json"
+  }
+}

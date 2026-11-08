@@ -49,14 +49,14 @@ def main():
                   return {count:book&&book.chapters.length,id:chapter&&chapter.id,sections:chapter&&chapter.sections.length,
                     firstSection:chapter&&chapter.sections[0].id,lastSection:chapter&&chapter.sections.at(-1).id};
                 }""")
-                assert chapter62 == {'count':10,'id':'art-science-v5-ch01','sections':26,'firstSection':'art-science-v5-ch01-s01','lastSection':'art-science-v5-ch01-s26'}, chapter62
+                assert chapter62 == {'count':11,'id':'art-science-v5-ch01','sections':26,'firstSection':'art-science-v5-ch01-s01','lastSection':'art-science-v5-ch01-s26'}, chapter62
                 chapter63 = page.evaluate("""() => {
                   const book=DATA.books.find(item=>item.id==='art-science-intelligence-v5');
                   const chapter=book&&book.chapters[1];
                   return {count:book&&book.chapters.length,id:chapter&&chapter.id,sections:chapter&&chapter.sections.length,
                     firstSection:chapter&&chapter.sections[0].id,lastSection:chapter&&chapter.sections.at(-1).id};
                 }""")
-                assert chapter63['count'] == 10 and chapter63['id'] == 'art-science-v5-ch02', chapter63
+                assert chapter63['count'] == 11 and chapter63['id'] == 'art-science-v5-ch02', chapter63
                 assert chapter63['sections'] == 34 and chapter63['firstSection'] == 'art-science-v5-ch02-s01', chapter63
                 assert chapter63['lastSection'] == 'art-science-v5-ch02-s34', chapter63
                 chapter64 = page.evaluate("""() => {
@@ -65,7 +65,7 @@ def main():
                   return {count:book&&book.chapters.length,id:chapter&&chapter.id,sections:chapter&&chapter.sections.length,
                     firstSection:chapter&&chapter.sections[0].id,lastSection:chapter&&chapter.sections.at(-1).id};
                 }""")
-                assert chapter64 == {'count':10,'id':'art-science-v5-ch03','sections':39,
+                assert chapter64 == {'count':11,'id':'art-science-v5-ch03','sections':39,
                   'firstSection':'art-science-v5-ch03-s01','lastSection':'art-science-v5-ch03-s39'}, chapter64
                 chapter65 = page.evaluate("""() => {
                   const book=DATA.books.find(item=>item.id==='art-science-intelligence-v5');
@@ -73,7 +73,7 @@ def main():
                   return {count:book&&book.chapters.length,id:chapter&&chapter.id,sections:chapter&&chapter.sections.length,
                     firstSection:chapter&&chapter.sections[0].id,lastSection:chapter&&chapter.sections.at(-1).id};
                 }""")
-                assert chapter65 == {'count':10,'id':'art-science-v5-ch04','sections':41,
+                assert chapter65 == {'count':11,'id':'art-science-v5-ch04','sections':41,
                   'firstSection':'art-science-v5-ch04-s01','lastSection':'art-science-v5-ch04-s41'}, chapter65
                 chapter66 = page.evaluate("""() => {
                   const book=DATA.books.find(item=>item.id==='art-science-intelligence-v5');
@@ -81,7 +81,7 @@ def main():
                   return {count:book&&book.chapters.length,id:chapter&&chapter.id,sections:chapter&&chapter.sections.length,
                     firstSection:chapter&&chapter.sections[0].id,lastSection:chapter&&chapter.sections.at(-1).id};
                 }""")
-                assert chapter66 == {'count':10,'id':'art-science-v5-ch05','sections':40,
+                assert chapter66 == {'count':11,'id':'art-science-v5-ch05','sections':40,
                   'firstSection':'art-science-v5-ch05-s01','lastSection':'art-science-v5-ch05-s40'}, chapter66
                 chapter67 = page.evaluate("""() => {
                   const book=DATA.books.find(item=>item.id==='art-science-intelligence-v5');
@@ -89,7 +89,7 @@ def main():
                   return {count:book&&book.chapters.length,id:chapter&&chapter.id,sections:chapter&&chapter.sections.length,
                     firstSection:chapter&&chapter.sections[0].id,lastSection:chapter&&chapter.sections.at(-1).id};
                 }""")
-                assert chapter67 == {'count':10,'id':'art-science-v5-ch06','sections':28,
+                assert chapter67 == {'count':11,'id':'art-science-v5-ch06','sections':28,
                   'firstSection':'art-science-v5-ch06-s01','lastSection':'art-science-v5-ch06-s28'}, chapter67
                 chapter68 = page.evaluate("""() => {
                   const book=DATA.books.find(item=>item.id==='art-science-intelligence-v5');
@@ -97,7 +97,7 @@ def main():
                   return {count:book&&book.chapters.length,id:chapter&&chapter.id,sections:chapter&&chapter.sections.length,
                     firstSection:chapter&&chapter.sections[0].id,lastSection:chapter&&chapter.sections.at(-1).id};
                 }""")
-                assert chapter68 == {'count':10,'id':'art-science-v5-ch07','sections':37,
+                assert chapter68 == {'count':11,'id':'art-science-v5-ch07','sections':37,
                   'firstSection':'art-science-v5-ch07-s01','lastSection':'art-science-v5-ch07-s37'}, chapter68
                 chapter69 = page.evaluate("""() => {
                   const book=DATA.books.find(item=>item.id==='art-science-intelligence-v5');
@@ -105,7 +105,7 @@ def main():
                   return {count:book&&book.chapters.length,id:chapter&&chapter.id,sections:chapter&&chapter.sections.length,
                     firstSection:chapter&&chapter.sections[0].id,lastSection:chapter&&chapter.sections.at(-1).id};
                 }""")
-                assert chapter69 == {'count':10,'id':'art-science-v5-ch08','sections':29,
+                assert chapter69 == {'count':11,'id':'art-science-v5-ch08','sections':29,
                   'firstSection':'art-science-v5-ch08-s01','lastSection':'art-science-v5-ch08-s29'}, chapter69
                 chapter70 = page.evaluate("""() => {
                   const book=DATA.books.find(item=>item.id==='art-science-intelligence-v5');
@@ -113,7 +113,7 @@ def main():
                   return {count:book&&book.chapters.length,id:chapter&&chapter.id,sections:chapter&&chapter.sections.length,
                     firstSection:chapter&&chapter.sections[0].id,lastSection:chapter&&chapter.sections.at(-1).id};
                 }""")
-                assert chapter70 == {'count':10,'id':'art-science-v5-ch09','sections':29,
+                assert chapter70 == {'count':11,'id':'art-science-v5-ch09','sections':29,
                   'firstSection':'art-science-v5-ch09-s01','lastSection':'art-science-v5-ch09-s29'}, chapter70
                 chapter71 = page.evaluate("""() => {
                   const book=DATA.books.find(item=>item.id==='art-science-intelligence-v5');
@@ -121,8 +121,16 @@ def main():
                   return {count:book&&book.chapters.length,id:chapter&&chapter.id,sections:chapter&&chapter.sections.length,
                     firstSection:chapter&&chapter.sections[0].id,lastSection:chapter&&chapter.sections.at(-1).id};
                 }""")
-                assert chapter71 == {'count':10,'id':'art-science-v5-ch10','sections':35,
+                assert chapter71 == {'count':11,'id':'art-science-v5-ch10','sections':35,
                   'firstSection':'art-science-v5-ch10-s01','lastSection':'art-science-v5-ch10-s35'}, chapter71
+                chapter72 = page.evaluate("""() => {
+                  const book=DATA.books.find(item=>item.id==='art-science-intelligence-v5');
+                  const chapter=book&&book.chapters[10];
+                  return {count:book&&book.chapters.length,id:chapter&&chapter.id,sections:chapter&&chapter.sections.length,
+                    firstSection:chapter&&chapter.sections[0].id,lastSection:chapter&&chapter.sections.at(-1).id};
+                }""")
+                assert chapter72 == {'count':11,'id':'art-science-v5-ch11','sections':43,
+                  'firstSection':'art-science-v5-ch11-s01','lastSection':'art-science-v5-ch11-s43'}, chapter72
                 assert page.locator('.home-hero > p').first.inner_text() == 'مجموعه‌ای جامع از کتاب‌ها و دوره‌های آموزشی هوش مصنوعی — با دسترسی آفلاین'
                 page.evaluate("document.querySelectorAll('.book-card--volume img,.book-card--microsoft img').forEach(img => img.loading='eager')")
                 page.wait_for_function("""() => {
@@ -355,6 +363,13 @@ def main():
                 v5_project71_offline = page.evaluate("fetch('book-engineering/projects/71-experiment-design-lab/results.json').then(r => r.ok ? r.text() : '')")
                 v5_fixture71_offline = page.evaluate("fetch('book-engineering/projects/71-experiment-design-lab/synthetic_paired_scores.json').then(r => r.ok ? r.text() : '')")
                 v5_environment71_offline = page.evaluate("fetch('book-engineering/projects/71-experiment-design-lab/environment.json').then(r => r.ok ? r.text() : '')")
+                v5_answer72_offline = page.evaluate("fetch('book-engineering/answers/72-research-architecture-community-fa.md').then(r => r.ok ? r.text() : '')")
+                v5_source72_offline = page.evaluate("fetch('book-engineering/chapters/72-research-architecture-community.md').then(r => r.ok ? r.text() : '')")
+                v5_report72_offline = page.evaluate("fetch('book-engineering/chapters/72-audit-report-fa.md').then(r => r.ok ? r.text() : '')")
+                v5_diagram72_offline = page.evaluate("fetch('book-engineering/diagrams/v5-ch11-research-architecture.svg').then(r => r.ok ? r.text() : '')")
+                v5_project72_offline = page.evaluate("fetch('book-engineering/projects/72-research-architecture-lab/results.json').then(r => r.ok ? r.text() : '')")
+                v5_fixture72_offline = page.evaluate("fetch('book-engineering/projects/72-research-architecture-lab/research_packet.json').then(r => r.ok ? r.text() : '')")
+                v5_environment72_offline = page.evaluate("fetch('book-engineering/projects/72-research-architecture-lab/environment.json').then(r => r.ok ? r.text() : '')")
                 v5_markdown_offline = page.evaluate("fetch('volume-5-full-fa.md').then(r => r.ok ? r.text() : '')")
                 v5_cover_dimensions_offline = page.evaluate("""async () => {
                   const response=await fetch('assets/images/covers/volume-5-cover.png');
@@ -417,7 +432,15 @@ def main():
                 assert '"mean_paired_difference": 0.0421875' in v5_project71_offline
                 assert 'v5-ch10-experiment-design-synthetic-v1' in v5_fixture71_offline
                 assert '"unit_tests": "19/19 passed"' in v5_environment71_offline
-                assert all(term in v5_markdown_offline for term in ('جلد پنجم', 'فصل ۶۲', 'فصل ۶۳', 'فصل ۶۴', 'فصل ۶۵', 'فصل ۶۶', 'فصل ۶۷', 'فصل ۶۸', 'فصل ۶۹', 'فصل ۷۰', 'فصل ۷۱'))
+                assert 'پاسخ‌نامهٔ مستقل فصل ۷۲' in v5_answer72_offline
+                assert 'فصل محلی ۱۱ جلد پنجم = فصل سراسری ۷۲' in v5_source72_offline
+                assert 'فصل سراسری ۷۲' in v5_report72_offline
+                assert 'مسیر طراحی معماری و برنامهٔ پژوهشی' in v5_diagram72_offline
+                assert '"project_id": "v5-ch11-research-architecture-synthetic-v1"' in v5_project72_offline
+                assert '"novelty_confirmed": false' in v5_project72_offline
+                assert 'v5-ch11-research-architecture-synthetic-v1' in v5_fixture72_offline
+                assert '"unit_tests": "25/25 passed"' in v5_environment72_offline
+                assert all(term in v5_markdown_offline for term in ('جلد پنجم', 'فصل ۶۲', 'فصل ۶۳', 'فصل ۶۴', 'فصل ۶۵', 'فصل ۶۶', 'فصل ۶۷', 'فصل ۶۸', 'فصل ۶۹', 'فصل ۷۰', 'فصل ۷۱', 'فصل ۷۲'))
                 answer = page.evaluate("fetch('book-engineering/answers/01-intelligence-answers-fa.md').then(r => r.ok ? r.text() : '')")
                 assert 'پاسخ‌نامه فصل ۱' in answer, 'answer key unavailable offline'
                 chapter55_offline = page.evaluate("fetch('book-engineering/chapters/55-ai-lab-design.md').then(r => r.ok ? r.text() : '')")
@@ -466,7 +489,7 @@ def main():
                     f"{book_id}: {stats['paragraphs']} justified prose paragraphs, {stats['indented']} indented, {stats['formulas']} MathML, {stats['captions']} captions"
                     for book_id,stats in result['typography'].items()
                 )
-                print(f"PASS {width}px: covers online/offline, chapters 55–71 source/answer/diagram offline, text, header, RTL navigation, locked viewport and {result['count']} sections; {typography_summary}")
+                print(f"PASS {width}px: covers online/offline, chapters 55–72 source/answer/diagram offline, text, header, RTL navigation, locked viewport and {result['count']} sections; {typography_summary}")
                 context.close()
             browser.close()
     finally:

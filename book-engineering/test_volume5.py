@@ -25,6 +25,7 @@ CHAPTER_TITLES = {
     69: "استقرار ابری و محلی، نسخه‌بندی، CI/CD، مقیاس‌پذیری، بازگشت نسخه و هزینهٔ نگه‌داری",
     70: "خواندن مقاله، بررسی ادعا و روش، تحلیل معماری و بازتولید نتایج",
     71: "طراحی آزمایش، فرضیه و معیار، ساخت دیتاست، مقایسهٔ مدل‌ها و تحلیل آماری",
+    72: "توسعهٔ معماری، نوشتن مقاله، مشارکت متن‌باز، تشکیل تیم و برنامهٔ پژوهشی بلندمدت",
 }
 PROJECT_CODES = {
     global_num: (ROOT / path).read_text(encoding="utf-8").rstrip("\n")
@@ -62,17 +63,17 @@ def main() -> None:
                       sectionCount:chapter.sections.length,
                       mathSections:chapter.sections.map((section,index)=>({{index,count:(section.html.match(/<math/g)||[]).length}})).filter(item=>item.count>0)}}))}};
                 }}""")
-                assert metadata["count"] == 10, metadata
+                assert metadata["count"] == 11, metadata
                 assert metadata["cover"] == builder.COVER_PATH, metadata
                 assert metadata["subtitle"] == "ارزیابی، محصول و پژوهش | ۱۲ فصل", metadata
                 assert [chapter["id"] for chapter in metadata["chapters"]] == [
                     "art-science-v5-ch01", "art-science-v5-ch02", "art-science-v5-ch03",
                     "art-science-v5-ch04", "art-science-v5-ch05", "art-science-v5-ch06",
                     "art-science-v5-ch07", "art-science-v5-ch08", "art-science-v5-ch09",
-                    "art-science-v5-ch10"
+                    "art-science-v5-ch10", "art-science-v5-ch11"
                 ], metadata
                 assert [chapter["title"] for chapter in metadata["chapters"]] == [
-                    CHAPTER_TITLES[number] for number in (62, 63, 64, 65, 66, 67, 68, 69, 70, 71)
+                    CHAPTER_TITLES[number] for number in (62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72)
                 ], metadata
                 assert metadata["chapters"][0]["sectionCount"] == 26, metadata
                 assert metadata["chapters"][0]["sectionIds"][0] == "art-science-v5-ch01-s01", metadata
@@ -104,9 +105,13 @@ def main() -> None:
                 assert metadata["chapters"][9]["sectionCount"] == 35, metadata
                 assert metadata["chapters"][9]["sectionIds"][0] == "art-science-v5-ch10-s01", metadata
                 assert metadata["chapters"][9]["sectionIds"][-1] == "art-science-v5-ch10-s35", metadata
-                assert all(chapter["mathSections"] for chapter in metadata["chapters"]), metadata
+                assert metadata["chapters"][10]["sectionCount"] == 43, metadata
+                assert metadata["chapters"][10]["sectionIds"][0] == "art-science-v5-ch11-s01", metadata
+                assert metadata["chapters"][10]["sectionIds"][-1] == "art-science-v5-ch11-s43", metadata
+                assert all(chapter["mathSections"] for chapter in metadata["chapters"][:10]), metadata
+                assert metadata["chapters"][10]["mathSections"] == [], metadata
 
-                # Confirm the portrait cover, accessible figures and MathML in all ten authored chapters.
+                # Confirm the portrait cover and accessible figures in all eleven chapters; check MathML where authored.
                 page.locator(".book-card--volume img").last.evaluate("img => img.loading='eager'")
                 page.wait_for_function("""() => {
                   const img=Array.from(document.querySelectorAll('.book-card--volume img'))
@@ -132,11 +137,12 @@ def main() -> None:
                     }""")
                     assert content.evaluate("e=>e.scrollWidth<=e.clientWidth+2")
 
-                    math_index = chapter["mathSections"][0]["index"]
-                    page.evaluate(f"openSec('{BOOK_ID}',{chapter_index},{math_index})")
-                    math = page.locator(".reader-content math").first
-                    assert math.count() >= 1 and math.get_attribute("aria-label"), chapter["id"]
-                    assert page.locator(".reader-content").evaluate("e=>e.scrollWidth<=e.clientWidth+2")
+                    if chapter["mathSections"]:
+                        math_index = chapter["mathSections"][0]["index"]
+                        page.evaluate(f"openSec('{BOOK_ID}',{chapter_index},{math_index})")
+                        math = page.locator(".reader-content math").first
+                        assert math.count() >= 1 and math.get_attribute("aria-label"), chapter["id"]
+                        assert page.locator(".reader-content").evaluate("e=>e.scrollWidth<=e.clientWidth+2")
 
                     summary_index = next(i for i, title in enumerate(chapter["sectionTitles"]) if "جمع‌بندی" in title)
                     page.evaluate(f"openSec('{BOOK_ID}',{chapter_index},{summary_index})")
@@ -230,6 +236,13 @@ def main() -> None:
                 offline_project71 = page.evaluate("fetch('book-engineering/projects/71-experiment-design-lab/results.json').then(r=>r.ok?r.text():'')")
                 offline_fixture71 = page.evaluate("fetch('book-engineering/projects/71-experiment-design-lab/synthetic_paired_scores.json').then(r=>r.ok?r.text():'')")
                 offline_env71 = page.evaluate("fetch('book-engineering/projects/71-experiment-design-lab/environment.json').then(r=>r.ok?r.text():'')")
+                offline_answer72 = page.evaluate("fetch('book-engineering/answers/72-research-architecture-community-fa.md').then(r=>r.ok?r.text():'')")
+                offline_report72 = page.evaluate("fetch('book-engineering/chapters/72-audit-report-fa.md').then(r=>r.ok?r.text():'')")
+                offline_source72 = page.evaluate("fetch('book-engineering/chapters/72-research-architecture-community.md').then(r=>r.ok?r.text():'')")
+                offline_diagram72 = page.evaluate("fetch('book-engineering/diagrams/v5-ch11-research-architecture.svg').then(r=>r.ok?r.text():'')")
+                offline_project72 = page.evaluate("fetch('book-engineering/projects/72-research-architecture-lab/results.json').then(r=>r.ok?r.text():'')")
+                offline_fixture72 = page.evaluate("fetch('book-engineering/projects/72-research-architecture-lab/research_packet.json').then(r=>r.ok?r.text():'')")
+                offline_env72 = page.evaluate("fetch('book-engineering/projects/72-research-architecture-lab/environment.json').then(r=>r.ok?r.text():'')")
                 offline_full_text = page.evaluate("fetch('volume-5-full-fa.md').then(r=>r.ok?r.text():'')")
                 assert "پاسخ‌نامهٔ مستقل فصل ۶۲" in offline_answer62
                 assert "پاسخ‌نامهٔ مستقل فصل ۶۳" in offline_answer63
@@ -288,9 +301,17 @@ def main() -> None:
                 assert '"mean_paired_difference": 0.0421875' in offline_project71
                 assert "v5-ch10-experiment-design-synthetic-v1" in offline_fixture71
                 assert '"unit_tests": "19/19 passed"' in offline_env71
-                assert all(term in offline_full_text for term in ("جلد پنجم", "فصل ۶۲", "فصل ۶۳", "فصل ۶۴", "فصل ۶۵", "فصل ۶۶", "فصل ۶۷", "فصل ۶۸", "فصل ۶۹", "فصل ۷۰", "فصل ۷۱"))
+                assert "پاسخ‌نامهٔ مستقل فصل ۷۲" in offline_answer72
+                assert "فصل سراسری ۷۲" in offline_report72
+                assert "فصل محلی ۱۱ جلد پنجم = فصل سراسری ۷۲" in offline_source72
+                assert "مسیر طراحی معماری و برنامهٔ پژوهشی" in offline_diagram72
+                assert '"project_id": "v5-ch11-research-architecture-synthetic-v1"' in offline_project72
+                assert '"novelty_confirmed": false' in offline_project72
+                assert '"synthetic": true' in offline_fixture72
+                assert '"unit_tests": "25/25 passed"' in offline_env72
+                assert all(term in offline_full_text for term in ("جلد پنجم", "فصل ۶۲", "فصل ۶۳", "فصل ۶۴", "فصل ۶۵", "فصل ۶۶", "فصل ۶۷", "فصل ۶۸", "فصل ۶۹", "فصل ۷۰", "فصل ۷۱", "فصل ۷۲"))
                 assert not errors, errors
-                print(f"PASS volume 5 chapters 62–71 browser/offline checks at {width}px: sections={[chapter['sectionCount'] for chapter in metadata['chapters']]}, accessible MathML/SVG, exact code appendices, {len(OFFLINE_PATHS)} offline paths")
+                print(f"PASS volume 5 chapters 62–72 browser/offline checks at {width}px: sections={[chapter['sectionCount'] for chapter in metadata['chapters']]}, accessible MathML/SVG, exact code appendices, {len(OFFLINE_PATHS)} offline paths")
                 context.close()
             browser.close()
     finally:

@@ -1,0 +1,10 @@
+{
+  "project_id": "v5-ch11-research-architecture-synthetic-v1",
+  "fixture_sha256": "4a63bb49e8a4dce2332bce19054240e2cd92dfe20e2b71f519b243cdfbdb918e",
+  "synthetic": true,
+  "fixture_type": "fictional research-planning packet; not experimental data",
+  "real_data_used": false,
+  "real_model_outputs": false,
+  "personal_data_present": false,
+  "network_used": false
+}

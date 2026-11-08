@@ -178,6 +178,7 @@ python book-engineering/test_mobile_layout.py
 - **۶۷–۶۹:** [فصل ۶۷](chapters/67-model-serving-operations.md) · [فصل ۶۸](chapters/68-product-security-monitoring.md) · [فصل ۶۹](chapters/69-deployment-cicd.md)؛ همراه‌ها و آزمون‌ها در پوشه‌های هم‌شماره ثبت شده‌اند.
 - **۷۰:** [متن](chapters/70-reading-papers-reproduction.md) · [پاسخ‌نامه](answers/70-reading-papers-reproduction-fa.md) · [پروژه](projects/70-reading-papers-lab/README.md) · [گزارش](chapters/70-audit-report-fa.md) · [نمودار](diagrams/v5-ch09-paper-evidence.svg)
 - **۷۱:** [متن](chapters/71-research-design-statistics.md) · [پاسخ‌نامهٔ مستقل](answers/71-research-design-statistics-fa.md) · [پروژهٔ آزمایش طراحی](projects/71-experiment-design-lab/README.md) · [گزارش ممیزی](chapters/71-audit-report-fa.md) · [نمودار](diagrams/v5-ch10-experiment-design.svg)
+- **۷۲:** [متن](chapters/72-research-architecture-community.md) · [پاسخ‌نامهٔ مستقل](answers/72-research-architecture-community-fa.md) · [پروژهٔ packet ساختگی](projects/72-research-architecture-lab/README.md) · [گزارش ممیزی](chapters/72-audit-report-fa.md) · [نمودار دسترس‌پذیر](diagrams/v5-ch11-research-architecture.svg)
 
 ### ساخت و گیت‌های محلی
 
@@ -224,6 +225,9 @@ python book-engineering/projects/71-experiment-design-lab/experiment_design.py \
   --manifest book-engineering/projects/71-experiment-design-lab/fixture_manifest.json \\
   --output /tmp/ch71-results.json
 cmp /tmp/ch71-results.json book-engineering/projects/71-experiment-design-lab/results.json
+(cd book-engineering/projects/72-research-architecture-lab && python -W error -m unittest -v)
+python book-engineering/projects/72-research-architecture-lab/research_architecture.py --packet book-engineering/projects/72-research-architecture-lab/research_packet.json --manifest book-engineering/projects/72-research-architecture-lab/fixture_manifest.json --output /tmp/ch72-results.json
+cmp /tmp/ch72-results.json book-engineering/projects/72-research-architecture-lab/results.json
 python book-engineering/test_volume5.py
 python book-engineering/test_mobile_layout.py
 ```
@@ -235,3 +239,5 @@ python book-engineering/test_mobile_layout.py
 تاریخچهٔ انتشار فصل ۷۰: محتوای فصل در commit `bb8f84ee66b818e9a0785b386503155e008b1be0` با push عادی منتشر شد؛ `git ls-remote` با SHA محلی برابر بود و [CI شمارهٔ ۱۸](https://github.com/mvbabababak-spec/fa-academy/actions/runs/42467370410) موفق شد. Pages زنده ۹ فصل جلد پنجم، ۲۹ بخش فصل ۷۰ و Service Worker `v112` را گزارش کرد؛ Playwright در ۳۹۰ پیکسل overflow ندید و منابع کلیدی پس از قطع شبکه HTTP 200 دادند.
 
 انتشار محتوای فصل ۷۱ با push عادی در commit `adc429bb32a12a17e269e84d9826d1ebc43b2498` انجام شد؛ `git ls-remote` با SHA انتشار برابر بود. [Volume 5 audit #42473872365](https://github.com/mvbabababak-spec/fa-academy/actions/runs/42473872365) و [Pages build and deployment #42473872234](https://github.com/mvbabababak-spec/fa-academy/actions/runs/42473872234) موفق شدند؛ workflow جلدهای ۱–۴ نیز روی همان commit موفق شد. Pages زنده ۱۰ فصل/۳۵ بخش فصل ۷۱ و Service Worker `v114` را ارائه کرد؛ ۱۳ فایل با SHA-256 محلی تطبیق داده شدند و Playwright در ۳۹۰ پیکسل، ۹ منبع را آنلاین و پس از قطع شبکه HTTP 200 دریافت کرد. جزئیات در [گزارش ممیزی فصل ۷۱](chapters/71-audit-report-fa.md) است. `.tmp-audit/` فقط برای render و log است و نباید stage شود. Force push ممنوع است. محصول این مخزن وب/PWA و Markdown است؛ PDF و EPUB تولید یا آزموده نشده‌اند.
+
+تکمیل محلی فصل ۷۲: جلد پنجم ۱۱/۱۲ فصل و ۴۳ بخش تازه دارد؛ Service Worker `v116` شامل ۱۴۱ مسیر آفلاین است. پنج checker جلدها، پروژهٔ ساختگی (۲۵/۲۵ آزمون)، `test_volume5.py` در ۳۲۰/۳۹۰/۷۶۸/۱۴۴۰ پیکسل و builder idempotence موفق‌اند. اجرای جامع موبایل در یک نوبت هر پنج عرض را گذراند؛ در بازاجرای پس از اصلاح مسیر پیکان خط‌چین SVG، ۷۶۸ پیکسل timeout شد، در حالی که آزمون نهایی چهارعرضی فصل ۷۲ موفق بود. دارایی‌های 404 نامرتبط دست‌نخورده ماندند. جزئیات در [گزارش ممیزی فصل ۷۲](chapters/72-audit-report-fa.md) است؛ remote، CI و Pages پس از push جداگانه تأیید می‌شوند.

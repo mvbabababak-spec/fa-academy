@@ -1,0 +1,262 @@
+{
+  "project_id": "v5-ch11-research-architecture-synthetic-v1",
+  "fixture_id": "v5-ch11-research-architecture-synthetic-v1",
+  "synthetic": true,
+  "real_data_used": false,
+  "real_model_outputs": false,
+  "network_used": false,
+  "status": "proposal_not_tested",
+  "problem": {
+    "context": "یک سناریوی کاملاً ساختگی برای پژوهش روی بلوک‌های رمزگذار دنباله؛ هیچ داده یا اجرای مدلی در پرونده نیست.",
+    "boundary": "فقط پیشنهاد پژوهشی در محیط آزمایشگاهی؛ خارج از دامنهٔ تولید، سرویس‌دهی و تصمیم‌گیری دربارهٔ کاربران.",
+    "question": "آیا افزودن یک سازوکار دروازه‌دارِ باقیمانده به بلوک پایه، در بودجهٔ ازپیش‌تعریف‌شده، کیفیت بازنمایی را نسبت به گزینه‌های مقایسه بهتر می‌کند؟"
+  },
+  "contribution": {
+    "type": "architecture",
+    "candidate_claim": "طرح اولیهٔ یک مبدل باقیماندهٔ دروازه‌دار با قرارداد ورودی‌ـ‌خروجی ثابت؛ این عبارت ادعای تازگی یا کارایی نیست.",
+    "mechanism": "یک دروازهٔ آموختنی سهمِ یک به‌روزرسانی باقیمانده را در هر بلوک مقیاس می‌کند؛ سازوکار صرفاً فرضی است.",
+    "falsification_condition": "اگر در مقایسهٔ ازپیش‌مشخص‌شده، معیارِ ازپیش‌ثبت‌شده بهبود نکند یا نقض قرارداد/بودجه تکرار شود، فرضیه پشتیبانی نمی‌شود و باید طرح بازنگری یا کنار گذاشته شود.",
+    "status": "proposal_not_tested",
+    "novelty_status": "not_assessed"
+  },
+  "architecture": {
+    "baseline": "بلوک باقیماندهٔ پایه، فقط به‌عنوان گزینهٔ مقایسهٔ فرضی",
+    "version": "proposal-0.1",
+    "components": [
+      {
+        "id": "A1",
+        "name": "مبدل باقیماندهٔ دروازه‌دار (نمونهٔ مفهومی)",
+        "input_contract": "حالت پنهان با شکل مفهومی [batch, sequence, hidden]؛ قرارداد اجرایی و کتابخانه‌ای هنوز تعیین نشده است.",
+        "output_contract": "همان شکل و نوع دادهٔ ورودی؛ بدون state پنهان یا فراخوانی شبکه.",
+        "status": "proposed",
+        "evidence_state": "none"
+      }
+    ],
+    "invariants": [
+      "شکل و نوع دادهٔ خروجی با ورودی برابر بماند.",
+      "مسیر پایه و گزینهٔ بدون دروازه برای مقایسه حفظ شود.",
+      "هیچ ادعای تازه‌بودن یا بهبود عملکرد از روی این طرح نتیجه نشود."
+    ],
+    "alternatives": [
+      {
+        "id": "ALT-1",
+        "option": "بلوک پایهٔ بدون تغییر",
+        "role": "control"
+      },
+      {
+        "id": "ALT-2",
+        "option": "مبدل باقیماندهٔ هم‌شکل ولی بدون دروازه",
+        "role": "alternative"
+      }
+    ]
+  },
+  "quality_scenarios": [
+    {
+      "id": "Q1",
+      "attribute": "modifiability",
+      "stimulus": "پژوهشگر باید فقط تابع دروازه را تغییر دهد.",
+      "response": "مرز جزء اجازه دهد تغییر بدون تغییر قرارداد بیرونی ثبت و بازبینی شود.",
+      "priority": "high",
+      "evaluation_ref": "E1"
+    },
+    {
+      "id": "Q2",
+      "attribute": "resource_budget",
+      "stimulus": "افزودن جزء ممکن است هزینهٔ محاسباتی را بالا ببرد.",
+      "response": "طرح ارزیابی باید هزینه را در همان پروتکل و بودجهٔ مقایسه آشکار کند.",
+      "priority": "medium",
+      "evaluation_ref": "E2"
+    },
+    {
+      "id": "Q3",
+      "attribute": "reproducibility",
+      "stimulus": "عضو دیگری از تیم همان نسخهٔ مفهومی را بازسازی می‌کند.",
+      "response": "نسخه، قرارداد و گزینهٔ مقایسه باید بدون تفسیر پنهان قابل شناسایی باشند.",
+      "priority": "high",
+      "evaluation_ref": "E1"
+    }
+  ],
+  "evaluation_plan": [
+    {
+      "id": "E1",
+      "question": "آیا قرارداد جزء و بازسازیِ نسخهٔ ثبت‌شده از سوی بازبین دوم یکسان تفسیر می‌شود؟",
+      "comparison": "طرح و قرارداد نسخهٔ proposal-0.1 در برابر مشخصات بلوک پایه؛ فقط مرور ساختاری برنامه‌ریزی شده است.",
+      "status": "planned",
+      "has_results": false
+    },
+    {
+      "id": "E2",
+      "question": "آیا طرح اندازه‌گیریِ هزینه و کیفیت می‌تواند مقایسهٔ منصفانه‌ای تعریف کند؟",
+      "comparison": "برنامهٔ مقایسهٔ پایه، مبدل بدون دروازه و مبدل دروازه‌دار؛ هیچ خروجی محاسباتی موجود نیست.",
+      "status": "planned",
+      "has_results": false
+    }
+  ],
+  "claims": [
+    {
+      "id": "C1",
+      "type": "testable_architecture_hypothesis",
+      "text": "سازوکار دروازه‌دار شاید در بودجهٔ برابر، کیفیت بازنمایی را بهتر کند؛ هنوز آزموده نشده است.",
+      "status": "hypothesis",
+      "evaluation_refs": [
+        "E1",
+        "E2"
+      ]
+    }
+  ],
+  "related_work": {
+    "search_status": "illustrative_map_not_exhaustive",
+    "source_refs": [
+      "S1",
+      "S2",
+      "S3",
+      "S4"
+    ]
+  },
+  "sources": [
+    {
+      "id": "S1",
+      "title": "A Design Science Research Methodology for Information Systems Research",
+      "url": "https://doi.org/10.2753/MIS0742-1222240302"
+    },
+    {
+      "id": "S2",
+      "title": "Architecture Tradeoff Analysis Method (ATAM) collection",
+      "url": "https://www.sei.cmu.edu/library/architecture-tradeoff-analysis-method-collection/"
+    },
+    {
+      "id": "S3",
+      "title": "Ten simple rules for structuring papers",
+      "url": "https://doi.org/10.1371/journal.pcbi.1005619"
+    },
+    {
+      "id": "S4",
+      "title": "NeurIPS Paper Checklist Guidelines (venue-specific example)",
+      "url": "https://neurips.cc/public/guides/PaperChecklist"
+    },
+    {
+      "id": "S5",
+      "title": "CRediT contributor role taxonomy",
+      "url": "https://credit.niso.org/"
+    },
+    {
+      "id": "S6",
+      "title": "Enhancing the Effectiveness of Team Science",
+      "url": "https://doi.org/10.17226/19007"
+    }
+  ],
+  "paper_outline": [
+    {
+      "id": "title",
+      "intent": "ادعای محدود و دقیق را بازتاب دهد."
+    },
+    {
+      "id": "abstract",
+      "intent": "پرسش، سازوکار، روش، یافتهٔ واقعی و محدودیت را در نسخهٔ نهایی خلاصه کند؛ هنوز یافته‌ای وجود ندارد."
+    },
+    {
+      "id": "introduction",
+      "intent": "مسئله و سهم پیشنهادی را از هم جدا کند."
+    },
+    {
+      "id": "related_work",
+      "intent": "جایگاه و تفاوت را مستند کند، نه اینکه ادعای تازگی بسازد."
+    },
+    {
+      "id": "method",
+      "intent": "طرح و جزئیات لازم برای بازسازی را مشخص کند."
+    },
+    {
+      "id": "architecture",
+      "intent": "اجزا، قراردادها، نسخه و مصالحه‌ها را نشان دهد."
+    },
+    {
+      "id": "evaluation",
+      "intent": "پس از تصویب پروتکل، مقایسه را گزارش کند؛ این پرونده فقط برنامه دارد."
+    },
+    {
+      "id": "results",
+      "intent": "فقط نتایج اندازه‌گیری‌شده و قابل ردیابی را در نسخهٔ آینده درج کند."
+    },
+    {
+      "id": "limitations",
+      "intent": "دامنه، فرض‌ها و موارد نامعلوم را آشکار کند."
+    },
+    {
+      "id": "ethics_and_availability",
+      "intent": "سیاست اخلاق، مجوز، دسترس‌پذیری و محدودیت اشتراک را پس از بررسی ثبت کند."
+    },
+    {
+      "id": "conclusion",
+      "intent": "فقط جمع‌بندیِ متناسب با شواهد نهایی را بیان کند."
+    }
+  ],
+  "contributors": [
+    {
+      "id": "P1",
+      "label": "مشارکت‌کنندهٔ فرضی الف",
+      "credit_roles": [
+        "Conceptualization",
+        "Methodology"
+      ],
+      "authorship_status": "not_decided"
+    },
+    {
+      "id": "P2",
+      "label": "مشارکت‌کنندهٔ فرضی ب",
+      "credit_roles": [
+        "Software",
+        "Validation"
+      ],
+      "authorship_status": "not_decided"
+    },
+    {
+      "id": "P3",
+      "label": "مشارکت‌کنندهٔ فرضی پ",
+      "credit_roles": [
+        "Writing – original draft",
+        "Visualization"
+      ],
+      "authorship_status": "not_decided"
+    }
+  ],
+  "roadmap": [
+    {
+      "id": "M1",
+      "period": "هفته‌های ۱ تا ۲",
+      "deliverable": "صورت مسئله و نقشهٔ مقدماتی کار مرتبط",
+      "decision_gate": "آیا مسئلهٔ محدود و شکافِ مستند برای ادامه وجود دارد؟",
+      "status": "planned"
+    },
+    {
+      "id": "M2",
+      "period": "هفته‌های ۳ تا ۵",
+      "deliverable": "قرارداد جزء و دو گزینهٔ معماری بازبینی‌شده",
+      "decision_gate": "آیا گزینه‌ها قابل مقایسه و مرزها قابل پیاده‌سازی‌اند؟",
+      "status": "planned"
+    },
+    {
+      "id": "M3",
+      "period": "هفته‌های ۶ تا ۹",
+      "deliverable": "پروتکل ارزیابی برای مرور مستقل",
+      "decision_gate": "آیا پروتکل شفاف است و معیار توقف پیش از مشاهدهٔ نتیجه ثبت شده؟",
+      "status": "planned"
+    },
+    {
+      "id": "M4",
+      "period": "هفته‌های ۱۰ تا ۱۲",
+      "deliverable": "تصمیم دربارهٔ مقاله، مخزن و برنامهٔ بعدی",
+      "decision_gate": "آیا سیاست محل انتشار، مجوز، مشارکت‌ها و محدودیت‌ها روشن است؟ در غیر این صورت ارسال یا انتشار متوقف شود.",
+      "status": "planned"
+    }
+  ],
+  "release_plan": {
+    "target_venue": "not_selected",
+    "code_status": "not_released",
+    "dataset_status": "none",
+    "model_weight_status": "none",
+    "license_review": "pending",
+    "artifact_review": "not_started",
+    "human_subjects_review": "not_assessed"
+  }
+}
