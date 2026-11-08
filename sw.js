@@ -1,5 +1,5 @@
-// ===== فا-اکدمی Service Worker v111 =====
-const CACHE_NAME = 'fa-academy-v111';
+// ===== فا-اکدمی Service Worker v112 =====
+const CACHE_NAME = 'fa-academy-v112';
 const CORE_FILES = [
   './',
   './index.html',
@@ -469,6 +469,18 @@ const CORE_FILES = [
   './book-engineering/projects/69-deployment-cicd-lab/synthetic_release_scenarios.json',
   './book-engineering/projects/69-deployment-cicd-lab/test_deployment_gate.py',
   './book-engineering/projects/69-deployment-cicd-lab/test_local_stub.py',
+  './book-engineering/chapters/70-reading-papers-reproduction.md',
+  './book-engineering/chapters/70-audit-report-fa.md',
+  './book-engineering/diagrams/v5-ch09-paper-evidence.svg',
+  './book-engineering/answers/70-reading-papers-reproduction-fa.md',
+  './book-engineering/projects/70-reading-papers-lab/README.md',
+  './book-engineering/projects/70-reading-papers-lab/environment.json',
+  './book-engineering/projects/70-reading-papers-lab/fixture_manifest.json',
+  './book-engineering/projects/70-reading-papers-lab/paper_reproduction.py',
+  './book-engineering/projects/70-reading-papers-lab/requirements.txt',
+  './book-engineering/projects/70-reading-papers-lab/results.json',
+  './book-engineering/projects/70-reading-papers-lab/synthetic_paper_packet.json',
+  './book-engineering/projects/70-reading-papers-lab/test_paper_reproduction.py',
 ];
 
 // ===== INSTALL: Cache core files =====

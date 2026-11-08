@@ -27,7 +27,7 @@ jobs:
         run: |
           python -m pip install -r requirements.txt
           python -m playwright install --with-deps chromium
-      - name: Check published structures through chapter 69
+      - name: Check published structures through chapter 70
         run: |
           python book-engineering/check_volume.py
           python book-engineering/check_volume2.py
@@ -203,6 +203,42 @@ jobs:
           assert environment['execution']['unit_tests'] == '41/41 passed'
           assert environment['execution']['loopback_http_smoke_tests'] == 5
           assert environment['execution']['real_credentials_used'] is False
+          PY
+      - name: Chapter 70 synthetic paper-reproduction project tests
+        run: |
+          (cd book-engineering/projects/70-reading-papers-lab && python -m unittest -v)
+          python book-engineering/projects/70-reading-papers-lab/paper_reproduction.py \
+            --packet book-engineering/projects/70-reading-papers-lab/synthetic_paper_packet.json \
+            --manifest book-engineering/projects/70-reading-papers-lab/fixture_manifest.json \
+            --output /tmp/ch70-ci-results.json
+          cmp /tmp/ch70-ci-results.json book-engineering/projects/70-reading-papers-lab/results.json
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+          root = Path('book-engineering/projects/70-reading-papers-lab')
+          fixture_hash = hashlib.sha256((root / 'synthetic_paper_packet.json').read_bytes()).hexdigest()
+          manifest = json.loads((root / 'fixture_manifest.json').read_text())
+          result = json.loads(Path('/tmp/ch70-ci-results.json').read_text())
+          environment = json.loads((root / 'environment.json').read_text())
+          assert fixture_hash == manifest['sha256'] == result['fixture_sha256'] == environment['fixture_sha256']
+          assert result['project_id'] == 'v5-ch09-paper-reproduction-synthetic-v1'
+          assert result['synthetic'] is True and result['overall_status'] == 'partial_or_unassessed'
+          assert result['status_counts'] == {'blocked': 1, 'not_assessed': 1, 'reproduced_within_tolerance': 1}
+          claims = {claim['claim_id']: claim for claim in result['claim_results']}
+          assert claims['C1']['status'] == 'reproduced_within_tolerance'
+          assert claims['C1']['metrics']['absolute_difference_from_published_candidate'] == 0.02
+          assert claims['C1']['metrics']['relative_improvement_vs_baseline'] == 0.16
+          assert claims['C2']['status'] == 'blocked'
+          assert claims['C2']['missing_artifacts'] == ['checkpoint_sha256', 'tokenizer_sha256']
+          assert claims['C3']['status'] == 'not_assessed'
+          assert claims['C3']['missing_required_groups'] == ['fictional-domain-B']
+          assert environment['execution']['unit_tests'] == '16/16 passed'
+          assert environment['execution']['external_network_requests'] == 0
+          assert environment['execution']['external_paper_or_artifact_access'] == 0
+          assert environment['execution']['live_model_calls'] == 0
+          assert environment['execution']['gpu_used'] is False
+          assert environment['execution']['published_paper_used'] is False
           PY
       - name: Confirm volume 5 builder idempotence
         run: |

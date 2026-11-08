@@ -23,6 +23,7 @@ CHAPTER_TITLES = {
     67: "سرو مدل، بهینه‌سازی استنتاج، Cache، صف، تأخیر و توان عملیاتی",
     68: "احراز هویت، محدودیت نرخ، ثبت رخداد، پایش، حریم خصوصی و پاسخ به رخداد",
     69: "استقرار ابری و محلی، نسخه‌بندی، CI/CD، مقیاس‌پذیری، بازگشت نسخه و هزینهٔ نگه‌داری",
+    70: "خواندن مقاله، بررسی ادعا و روش، تحلیل معماری و بازتولید نتایج",
 }
 PROJECT_CODES = {
     global_num: (ROOT / path).read_text(encoding="utf-8").rstrip("\n")
@@ -60,16 +61,16 @@ def main() -> None:
                       sectionCount:chapter.sections.length,
                       mathSections:chapter.sections.map((section,index)=>({{index,count:(section.html.match(/<math/g)||[]).length}})).filter(item=>item.count>0)}}))}};
                 }}""")
-                assert metadata["count"] == 8, metadata
+                assert metadata["count"] == 9, metadata
                 assert metadata["cover"] == builder.COVER_PATH, metadata
                 assert metadata["subtitle"] == "ارزیابی، محصول و پژوهش | ۱۲ فصل", metadata
                 assert [chapter["id"] for chapter in metadata["chapters"]] == [
                     "art-science-v5-ch01", "art-science-v5-ch02", "art-science-v5-ch03",
                     "art-science-v5-ch04", "art-science-v5-ch05", "art-science-v5-ch06",
-                    "art-science-v5-ch07", "art-science-v5-ch08"
+                    "art-science-v5-ch07", "art-science-v5-ch08", "art-science-v5-ch09"
                 ], metadata
                 assert [chapter["title"] for chapter in metadata["chapters"]] == [
-                    CHAPTER_TITLES[number] for number in (62, 63, 64, 65, 66, 67, 68, 69)
+                    CHAPTER_TITLES[number] for number in (62, 63, 64, 65, 66, 67, 68, 69, 70)
                 ], metadata
                 assert metadata["chapters"][0]["sectionCount"] == 26, metadata
                 assert metadata["chapters"][0]["sectionIds"][0] == "art-science-v5-ch01-s01", metadata
@@ -95,9 +96,12 @@ def main() -> None:
                 assert metadata["chapters"][7]["sectionCount"] == 29, metadata
                 assert metadata["chapters"][7]["sectionIds"][0] == "art-science-v5-ch08-s01", metadata
                 assert metadata["chapters"][7]["sectionIds"][-1] == "art-science-v5-ch08-s29", metadata
+                assert metadata["chapters"][8]["sectionCount"] == 29, metadata
+                assert metadata["chapters"][8]["sectionIds"][0] == "art-science-v5-ch09-s01", metadata
+                assert metadata["chapters"][8]["sectionIds"][-1] == "art-science-v5-ch09-s29", metadata
                 assert all(chapter["mathSections"] for chapter in metadata["chapters"]), metadata
 
-                # Confirm the portrait cover, accessible figures and MathML in all eight authored chapters.
+                # Confirm the portrait cover, accessible figures and MathML in all nine authored chapters.
                 page.locator(".book-card--volume img").last.evaluate("img => img.loading='eager'")
                 page.wait_for_function("""() => {
                   const img=Array.from(document.querySelectorAll('.book-card--volume img'))
@@ -207,6 +211,13 @@ def main() -> None:
                 offline_diagram69 = page.evaluate("fetch('book-engineering/diagrams/v5-ch08-release-pipeline.svg').then(r=>r.ok?r.text():'')")
                 offline_project69 = page.evaluate("fetch('book-engineering/projects/69-deployment-cicd-lab/results.json').then(r=>r.ok?r.text():'')")
                 offline_fixture69 = page.evaluate("fetch('book-engineering/projects/69-deployment-cicd-lab/synthetic_release_scenarios.json').then(r=>r.ok?r.text():'')")
+                offline_answer70 = page.evaluate("fetch('book-engineering/answers/70-reading-papers-reproduction-fa.md').then(r=>r.ok?r.text():'')")
+                offline_report70 = page.evaluate("fetch('book-engineering/chapters/70-audit-report-fa.md').then(r=>r.ok?r.text():'')")
+                offline_source70 = page.evaluate("fetch('book-engineering/chapters/70-reading-papers-reproduction.md').then(r=>r.ok?r.text():'')")
+                offline_diagram70 = page.evaluate("fetch('book-engineering/diagrams/v5-ch09-paper-evidence.svg').then(r=>r.ok?r.text():'')")
+                offline_project70 = page.evaluate("fetch('book-engineering/projects/70-reading-papers-lab/results.json').then(r=>r.ok?r.text():'')")
+                offline_fixture70 = page.evaluate("fetch('book-engineering/projects/70-reading-papers-lab/synthetic_paper_packet.json').then(r=>r.ok?r.text():'')")
+                offline_env70 = page.evaluate("fetch('book-engineering/projects/70-reading-papers-lab/environment.json').then(r=>r.ok?r.text():'')")
                 offline_full_text = page.evaluate("fetch('volume-5-full-fa.md').then(r=>r.ok?r.text():'')")
                 assert "پاسخ‌نامهٔ مستقل فصل ۶۲" in offline_answer62
                 assert "پاسخ‌نامهٔ مستقل فصل ۶۳" in offline_answer63
@@ -249,9 +260,17 @@ def main() -> None:
                 assert "digest پایدارِ پیشین" in offline_diagram69 and "پیکان خط‌چین" in offline_diagram69
                 assert '"rolled_back": 1' in offline_project69 and '"decision": "blocked"' in offline_project69
                 assert "v5-ch08-deployment-cicd-synthetic-v1" in offline_fixture69
-                assert all(term in offline_full_text for term in ("جلد پنجم", "فصل ۶۲", "فصل ۶۳", "فصل ۶۴", "فصل ۶۵", "فصل ۶۶", "فصل ۶۷", "فصل ۶۸", "فصل ۶۹"))
+                assert "پاسخ‌نامهٔ مستقل فصل ۷۰" in offline_answer70
+                assert "فصل سراسری ۷۰" in offline_report70
+                assert "فصل محلی ۹ جلد پنجم = فصل سراسری ۷۰" in offline_source70
+                assert "از ادعای مقاله تا گزارش محدود بازتولید" in offline_diagram70
+                assert '"project_id": "v5-ch09-paper-reproduction-synthetic-v1"' in offline_project70
+                assert '"reproduced_within_tolerance": 1' in offline_project70
+                assert '"synthetic": true' in offline_fixture70 and 'fictional-domain-B' in offline_fixture70
+                assert '"unit_tests": "16/16 passed"' in offline_env70
+                assert all(term in offline_full_text for term in ("جلد پنجم", "فصل ۶۲", "فصل ۶۳", "فصل ۶۴", "فصل ۶۵", "فصل ۶۶", "فصل ۶۷", "فصل ۶۸", "فصل ۶۹", "فصل ۷۰"))
                 assert not errors, errors
-                print(f"PASS volume 5 chapters 62–69 browser/offline checks at {width}px: sections={[chapter['sectionCount'] for chapter in metadata['chapters']]}, accessible MathML/SVG, exact code appendices, {len(OFFLINE_PATHS)} offline paths")
+                print(f"PASS volume 5 chapters 62–70 browser/offline checks at {width}px: sections={[chapter['sectionCount'] for chapter in metadata['chapters']]}, accessible MathML/SVG, exact code appendices, {len(OFFLINE_PATHS)} offline paths")
                 context.close()
             browser.close()
     finally:

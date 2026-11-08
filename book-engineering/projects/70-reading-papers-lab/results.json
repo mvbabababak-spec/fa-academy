@@ -1,0 +1,53 @@
+{
+  "project_id": "v5-ch09-paper-reproduction-synthetic-v1",
+  "paper_id": "EDU-SYN-70-001",
+  "paper_status": "fictional teaching packet; not a published study",
+  "synthetic": true,
+  "claim_results": [
+    {
+      "claim_id": "C1",
+      "scope": "fixed eight-row synthetic test set; MAE comparison of a declared baseline and candidate",
+      "status": "reproduced_within_tolerance",
+      "metrics": {
+        "baseline_mae": 0.5,
+        "reported_candidate_mae_from_rows": 0.4,
+        "published_candidate_mae": 0.4,
+        "rerun_candidate_mae": 0.42,
+        "absolute_difference_from_published_candidate": 0.02,
+        "reported_rows_difference_from_published_candidate": 0.0,
+        "baseline_difference_from_published": 0.0,
+        "relative_improvement_vs_baseline": 0.16,
+        "max_absolute_metric_difference": 0.03,
+        "minimum_relative_improvement": 0.15
+      },
+      "interpretation": "روی داده و پروتکل ساختگیِ ثابت، نتیجه در تلورانس اعلام‌شده به‌دست آمد؛ این فقط یک بازتولید آموزشی است."
+    },
+    {
+      "claim_id": "C2",
+      "scope": "performance of a checkpoint-dependent adaptation",
+      "status": "blocked",
+      "missing_artifacts": [
+        "checkpoint_sha256",
+        "tokenizer_sha256"
+      ],
+      "interpretation": "ادعای وابسته به checkpoint اجرا نشد؛ نبود artifact شاهدی علیه درستی ادعا نیست."
+    },
+    {
+      "claim_id": "C3",
+      "scope": "generalization from fictional-domain-A to a different domain",
+      "status": "not_assessed",
+      "missing_required_groups": [
+        "fictional-domain-B"
+      ],
+      "interpretation": "برای تعمیم به دامنهٔ جدید، گروه/دادهٔ مستقلِ لازم در این بسته نیست؛ ادعا آزموده نشده است."
+    }
+  ],
+  "status_counts": {
+    "reproduced_within_tolerance": 1,
+    "blocked": 1,
+    "not_assessed": 1
+  },
+  "overall_status": "partial_or_unassessed",
+  "scope_note": "این خروجی فقط کنترل fixture ساختگی را گزارش می‌کند؛ داوری دربارهٔ مقاله یا مدل واقعی نیست.",
+  "fixture_sha256": "f2b27da3601b55de360a6bbfb3a3b91f7e12a885f0170f789f730f836178c7ed"
+}

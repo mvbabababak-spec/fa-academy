@@ -105,7 +105,7 @@ def main() -> None:
             image_path_on_disk = (ROOT / image_relative if image_relative.parts and image_relative.parts[0] in {"book-engineering", "assets"}
                                   else source.parent / image_relative)
             require(image_path_on_disk.is_file(), f"chapter {global_num} missing figure {image_path}")
-        if global_num in (62, 63, 64, 65, 66, 67, 68, 69):
+        if global_num in (62, 63, 64, 65, 66, 67, 68, 69, 70):
             exercise_match = re.search(r"(?ms)^##\s+[^\n]*تمرین‌ها[^\n]*\n(.*?)(?=^##\s|\Z)", source_text)
             require(exercise_match is not None, f"chapter {global_num} exercise section missing")
             questions = re.findall(r"(?m)^([۱-۸])\. (.+)$", exercise_match.group(1))
@@ -444,6 +444,72 @@ def main() -> None:
                     and execution.get("personal_records") == 0
                     and execution.get("real_credentials_used") is False,
                     "chapter 69 environment metadata mismatch")
+
+        if global_num == 70:
+            require(len(book["chapters"][8]["sections"]) == 29,
+                    "chapter 70 expected 29 sections, including its executable appendix")
+            project_files = (
+                "environment.json", "fixture_manifest.json", "results.json",
+                "synthetic_paper_packet.json", "paper_reproduction.py",
+                "test_paper_reproduction.py", "README.md", "requirements.txt",
+            )
+            for filename in project_files:
+                require((project_dir / filename).is_file(), f"chapter 70 project file missing: {filename}")
+            fixture_path = project_dir / "synthetic_paper_packet.json"
+            fixture_hash = hashlib.sha256(fixture_path.read_bytes()).hexdigest()
+            manifest = json.loads((project_dir / "fixture_manifest.json").read_text(encoding="utf-8"))
+            result = json.loads((project_dir / "results.json").read_text(encoding="utf-8"))
+            environment = json.loads((project_dir / "environment.json").read_text(encoding="utf-8"))
+            require(manifest.get("fixture_id") == "v5-ch09-paper-reproduction-synthetic-v1"
+                    and manifest.get("sha256") == fixture_hash
+                    and manifest.get("synthetic") is True
+                    and manifest.get("observation_count") == 8
+                    and manifest.get("claim_ids") == ["C1", "C2", "C3"]
+                    and manifest.get("contains_published_research") is False
+                    and manifest.get("contains_real_data") is False
+                    and manifest.get("contains_real_model_artifacts") is False
+                    and manifest.get("external_network_required") is False,
+                    "chapter 70 manifest does not match the synthetic paper packet")
+            require(result.get("project_id") == manifest.get("fixture_id")
+                    and result.get("paper_id") == "EDU-SYN-70-001"
+                    and result.get("paper_status") == "fictional teaching packet; not a published study"
+                    and result.get("fixture_sha256") == fixture_hash
+                    and result.get("synthetic") is True
+                    and result.get("overall_status") == "partial_or_unassessed"
+                    and result.get("status_counts") == {
+                        "blocked": 1, "not_assessed": 1, "reproduced_within_tolerance": 1,
+                    },
+                    "chapter 70 results overstate or contradict the synthetic packet")
+            claims = {item.get("claim_id"): item for item in result.get("claim_results", [])}
+            require(set(claims) == {"C1", "C2", "C3"}
+                    and claims["C1"].get("status") == "reproduced_within_tolerance"
+                    and claims["C1"].get("metrics", {}).get("baseline_mae") == 0.5
+                    and claims["C1"].get("metrics", {}).get("reported_candidate_mae_from_rows") == 0.4
+                    and claims["C1"].get("metrics", {}).get("rerun_candidate_mae") == 0.42
+                    and claims["C1"].get("metrics", {}).get("absolute_difference_from_published_candidate") == 0.02
+                    and claims["C1"].get("metrics", {}).get("relative_improvement_vs_baseline") == 0.16
+                    and claims["C2"].get("status") == "blocked"
+                    and claims["C2"].get("missing_artifacts") == ["checkpoint_sha256", "tokenizer_sha256"]
+                    and claims["C3"].get("status") == "not_assessed"
+                    and claims["C3"].get("missing_required_groups") == ["fictional-domain-B"],
+                    "chapter 70 claim-level outcomes or metrics mismatch")
+            execution = environment.get("execution", {})
+            require(environment.get("audit_date") == "2026-11-04"
+                    and environment.get("project_id") == manifest.get("fixture_id")
+                    and environment.get("python", {}).get("implementation") == "CPython"
+                    and environment.get("python", {}).get("version") == "3.13.16"
+                    and environment.get("dependencies") == []
+                    and environment.get("fixture_sha256") == fixture_hash
+                    and execution.get("unit_tests") == "16/16 passed"
+                    and execution.get("external_network_requests") == 0
+                    and execution.get("external_paper_or_artifact_access") == 0
+                    and execution.get("live_model_calls") == 0
+                    and execution.get("gpu_used") is False
+                    and execution.get("production_trace_used") is False
+                    and execution.get("personal_records") == 0
+                    and execution.get("real_credentials_used") is False
+                    and execution.get("published_paper_used") is False,
+                    "chapter 70 environment metadata mismatch")
 
         diagram_relative = builder.DIAGRAMS.get(global_num)
         if diagram_relative:

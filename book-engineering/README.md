@@ -194,13 +194,32 @@ python book-engineering/check_volume5.py
 (cd book-engineering/projects/63-model-behavior-lab && python -m unittest discover -v)
 (cd book-engineering/projects/64-red-team-lab && python -m unittest discover -v)
 (cd book-engineering/projects/65-governance-lab && python -m unittest discover -v)
+python book-engineering/projects/65-governance-lab/governance_check.py --output /tmp/ch65-results.json
+(cd book-engineering/projects/66-ai-product-api && python -m unittest discover -v)
 python book-engineering/projects/66-ai-product-api/audit.py --output /tmp/ch66-results.json
+(cd book-engineering/projects/67-serving-lab && python -m unittest discover -v)
+python book-engineering/projects/67-serving-lab/serving_lab.py \
+  --fixture book-engineering/projects/67-serving-lab/synthetic_serving_trace.json \
+  --output /tmp/ch67-results.json
+(cd book-engineering/projects/68-product-security-lab && python -m unittest discover -v)
+python book-engineering/projects/68-product-security-lab/security_ops.py \
+  --fixture book-engineering/projects/68-product-security-lab/synthetic_security_events.json \
+  --output /tmp/ch68-results.json
+(cd book-engineering/projects/69-deployment-cicd-lab && python -m unittest -v)
+python book-engineering/projects/69-deployment-cicd-lab/deployment_gate.py \
+  --fixture book-engineering/projects/69-deployment-cicd-lab/synthetic_release_scenarios.json \
+  --output /tmp/ch69-results.json
+(cd book-engineering/projects/70-reading-papers-lab && python -m unittest -v)
+python book-engineering/projects/70-reading-papers-lab/paper_reproduction.py \
+  --packet book-engineering/projects/70-reading-papers-lab/synthetic_paper_packet.json \
+  --manifest book-engineering/projects/70-reading-papers-lab/fixture_manifest.json \
+  --output /tmp/ch70-results.json
 python book-engineering/test_volume5.py
 python book-engineering/test_mobile_layout.py
 ```
 
-در گیت فعلی: جلد پنجم ۵/۱۲ فصل با تعداد بخش‌های `[۲۶، ۳۴، ۳۹، ۴۱، ۴۰]`، هشت سؤال/پاسخ دقیق، پیوست کد همسان، SVG/MathML دسترس‌پذیر، Markdown و `fa-academy-v105` با ۶۶ مسیر آفلاین دارد؛ افزایش نسخهٔ Service Worker برای نوسازی گزارش ممیزی پیش‌ذخیره‌شده انجام شد. پروژهٔ فصل ۶۶ از fixture ثابت با SHA-256 برابر `aa333a70cf87376fdde7a919d5b79fc1a97cf4ea8da15c8eab89c551c2070bad` استفاده می‌کند؛ ۱۲/۱۲ آزمون API و ۲/۲ آزمون مرورگر موفق‌اند. دادهٔ شخصی، درخواست بیرونی یا تماس مدل زنده ندارد. `environment.json` نسخه‌های دقیق را ثبت می‌کند؛ اجرای API درون‌فرایندی است و suite مرورگر پاسخ API را intercept می‌کند، پس نتیجه E2E شبکه‌ای یا ارزیابی کیفیت/امنیت/دسترس‌پذیری رسمی نیست.
+وضعیت محلی پس از نگارش فصل سراسری ۷۰: جلد پنجم ۹/۱۲ فصل دارد و تعداد بخش‌ها `[۲۶، ۳۴، ۳۹، ۴۱، ۴۰، ۲۸، ۳۷، ۲۹، ۲۹]` است. نه فصل پاسخ‌نامهٔ مستقل، هشت پرسش و پیوست اجراییِ همسان دارند؛ شکل‌های SVG و فرمول‌های MathML دسترس‌پذیرند. `build_volume5.py` و `check_volume5.py` فصل ۷۰ را ثبت می‌کنند؛ Service Worker در `v112`، ۱۱۶ مسیر آفلاین را دارد. fixture فصل ۷۰ ساختگی است و SHA-256 آن `f2b27da3601b55de360a6bbfb3a3b91f7e12a885f0170f789f730f836178c7ed` است؛ ۱۶/۱۶ آزمون پروژه موفق شدند و خروجی یک claim را در تلورانس، یک مورد را blocked و یک مورد را ارزیابی‌نشده گزارش می‌کند.
 
-پنج checker سراسری و پروژه‌های ۶۲–۶۶، build/idempotence، `test_volume5.py` در ۳۲۰/۳۹۰/۷۶۸/۱۴۴۰ و `test_mobile_layout.py` در ۳۲۰/۳۹۰/۴۱۴/۷۶۸/۱۴۴۰ پیکسل محلی موفق شدند. پیوندهای محلی در منبع Markdown نسبت به پوشهٔ فصل‌اند؛ سازنده فقط HTML reader را به مسیر site-root تبدیل می‌کند. آزمون موبایل ۱٬۳۲۹ بخش پنج جلد، RTL/overflow/ناوبری/تایپوگرافی و دسترسی آفلاین فصل‌های ۵۵–۶۶ را بررسی می‌کند. به‌علت sparse checkout، دارایی‌های مرجع موردنیاز checkerها در اجرای محلی با hash دقیق C3 به‌صورت موقت بار شدند و بعد پاک شدند؛ فایل منتشرشده یا تصویر مرجع تغییر نکرد. `.github/workflows/volume5-audit.yml` همین checkerها، آزمون‌های پروژه، idempotence و مرورگر/موبایل را اجرا می‌کند.
+پنج checker جلدها، آزمون‌های پروژه‌های ۶۲–۷۰، بازتولید CLIها، build/idempotence، `test_volume5.py` در ۳۲۰/۳۹۰/۷۶۸/۱۴۴۰ و `test_mobile_layout.py` در ۳۲۰/۳۹۰/۴۱۴/۷۶۸/۱۴۴۰ پیکسل محلی موفق شدند. آزمون موبایل ۱٬۴۵۲ بخش کل سایت، RTL، overflow، ناوبری، تایپوگرافی و دسترسی آفلاین فصل‌های ۵۵–۷۰ را بررسی می‌کند. در اجرای محلی نهایی، ۳۵ پاسخ 404 از هشت مسیر تصویری قدیمی خارج از فصل ۷۰ بود؛ هیچ فایل فصل ۷۰ در این دسته نیست. پیوندهای محلی منبع Markdown نسبت به پوشهٔ فصل‌اند؛ سازنده فقط HTML reader را برای site-root بازنویسی می‌کند. `.github/workflows/volume5-audit.yml` همین checkerها، آزمون‌های پروژه، idempotence و مرورگر/موبایل را اجرا می‌کند.
 
-نتایج remote و CI پس از push عادی تأیید شدند: commit محتوای فصل `5dc36725c962ce05790cac1728df744d4c640e42` و اصلاح گیت `9ed607a862b5b11042ad640394606e00fab28851` روی `gh-pages` هستند؛ نوک remote با commit اصلاحی برابر بود. اجرای نخست جلد اول در commit فصل به‌دلیل اجرای suite فصل ۶۶ در محیط عمومیِ بدون وابستگی‌های پین‌شده شکست خورد؛ پس از واگذاری درست به workflow جلد پنجم، runهای جلدهای ۱–۵ و Pages همگی موفق شدند. شناسه‌های دقیق، وضعیت هر دو سری run، هشدارهای غیربلوکه‌کننده و بررسی محتوای زنده در `chapters/66-audit-report-fa.md` ثبت شده‌اند. گزارش ممیزی در Service Worker پیش‌ذخیره می‌شود؛ برای تازه‌کردن نسخهٔ آفلاین، cache از v104 به v105 افزایش یافته و ۶۶ مسیر حفظ شده‌اند. Force push ممنوع است. پیش از فصل ۶۷، ساختار هر پنج جلد و مرز موضوعی فصل‌های ۶۶–۶۸ باید دوباره بررسی شود. انتشار فعلی وب/PWA و Markdown است؛ PDF و EPUB تولید یا آزموده نشده‌اند.
+تأیید remote، CI و Pages فصل ۷۰ پس از push عادی در گزارش ممیزی همین فصل ثبت خواهد شد؛ تا آن زمان نتیجهٔ محلی، تأیید انتشار محسوب نمی‌شود. `.tmp-audit/` فقط برای logهای محلی است و نباید stage شود. Force push ممنوع است. پیش از فصل ۷۱، ساختار هر پنج جلد و مرز موضوعی فصل‌های ۷۰ و ۷۱ دوباره بررسی می‌شوند. محصول این مخزن وب/PWA و Markdown است؛ PDF و EPUB تولید یا آزموده نشده‌اند.
