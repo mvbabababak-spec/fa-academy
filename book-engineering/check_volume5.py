@@ -105,8 +105,10 @@ def main() -> None:
             image_path_on_disk = (ROOT / image_relative if image_relative.parts and image_relative.parts[0] in {"book-engineering", "assets"}
                                   else source.parent / image_relative)
             require(image_path_on_disk.is_file(), f"chapter {global_num} missing figure {image_path}")
-        if global_num in (62, 63, 64, 65, 66, 67, 68):
-            questions = re.findall(r"(?m)^([۱-۸])\. (.+)$", source_text.split("## پیوست اجرایی", 1)[0])
+        if global_num in (62, 63, 64, 65, 66, 67, 68, 69):
+            exercise_match = re.search(r"(?ms)^##\s+[^\n]*تمرین‌ها[^\n]*\n(.*?)(?=^##\s|\Z)", source_text)
+            require(exercise_match is not None, f"chapter {global_num} exercise section missing")
+            questions = re.findall(r"(?m)^([۱-۸])\. (.+)$", exercise_match.group(1))
             answer_questions = re.findall(r"(?m)^\*\*صورت پرسش:\*\* (.+)$", answer.read_text(encoding="utf-8"))
             require(len(questions) == 8 and [question for _, question in questions] == answer_questions,
                     f"chapter {global_num} answer key must preserve all eight question texts exactly")
@@ -357,6 +359,91 @@ def main() -> None:
                     and environment.get("execution", {}).get("personal_records") == 0
                     and environment.get("execution", {}).get("unit_tests") == "25/25 passed",
                     "chapter 68 environment metadata mismatch")
+
+        if global_num == 69:
+            require(len(book["chapters"][7]["sections"]) == 29, "chapter 69 expected 29 sections, including its executable appendix")
+            project_files = (
+                "environment.json", "fixture_manifest.json", "results.json",
+                "synthetic_release_scenarios.json", "deployment_gate.py", "local_stub.py",
+                "test_deployment_gate.py", "test_local_stub.py", "README.md", "requirements.txt",
+            )
+            for filename in project_files:
+                require((project_dir / filename).is_file(), f"chapter 69 project file missing: {filename}")
+            fixture_path = project_dir / "synthetic_release_scenarios.json"
+            fixture_hash = hashlib.sha256(fixture_path.read_bytes()).hexdigest()
+            manifest = json.loads((project_dir / "fixture_manifest.json").read_text(encoding="utf-8"))
+            result = json.loads((project_dir / "results.json").read_text(encoding="utf-8"))
+            environment = json.loads((project_dir / "environment.json").read_text(encoding="utf-8"))
+            require(manifest.get("fixture_id") == "v5-ch08-deployment-cicd-synthetic-v1"
+                    and manifest.get("sha256") == fixture_hash
+                    and manifest.get("synthetic") is True
+                    and manifest.get("scenario_count") == 3
+                    and manifest.get("scenario_names") == [
+                        "healthy_staged_rollout", "latency_regression_rolls_back",
+                        "missing_provenance_is_blocked",
+                    ]
+                    and manifest.get("contains_model_weights") is False
+                    and manifest.get("contains_production_traffic") is False
+                    and manifest.get("contains_personal_data") is False
+                    and manifest.get("contains_credentials") is False
+                    and manifest.get("external_network_required") is False,
+                    "chapter 69 fixture manifest does not match the synthetic release scenarios")
+            require(result.get("project_id") == manifest.get("fixture_id")
+                    and result.get("fixture_id") == manifest.get("fixture_id")
+                    and result.get("fixture_sha256") == fixture_hash
+                    and result.get("synthetic") is True
+                    and result.get("scenario_count") == 3
+                    and result.get("decision_counts") == {
+                        "blocked": 1, "hold": 0, "rolled_back": 1, "promoted": 1,
+                    }
+                    and result.get("external_network_requests") == 0
+                    and result.get("cloud_deployments") == 0
+                    and result.get("production_writes") == 0
+                    and result.get("model_inference_calls") == 0
+                    and result.get("gpu_used") is False
+                    and result.get("personal_records") == 0,
+                    "chapter 69 results overstate or contradict the synthetic release scenarios")
+            scenarios = {item.get("scenario"): item for item in result.get("results", [])}
+            require(set(scenarios) == set(manifest["scenario_names"])
+                    and all(item.get("simulated_only") is True for item in scenarios.values()),
+                    "chapter 69 result scenarios or simulated-only declarations mismatch")
+            promoted = scenarios["healthy_staged_rollout"]
+            rolled_back = scenarios["latency_regression_rolls_back"]
+            blocked = scenarios["missing_provenance_is_blocked"]
+            require(promoted.get("decision") == "promoted"
+                    and promoted.get("promoted_stages_percent") == [5, 25, 100]
+                    and promoted.get("active_release_id") == "candidate-r4"
+                    and promoted.get("rollback_performed") is False,
+                    "chapter 69 healthy rollout result mismatch")
+            require(rolled_back.get("decision") == "rolled_back"
+                    and rolled_back.get("failed_at_percent") == 25
+                    and rolled_back.get("observed_p95_ms") == 930
+                    and rolled_back.get("active_release_id") == "stable-r3"
+                    and rolled_back.get("rollback_performed") is True,
+                    "chapter 69 canary rollback result mismatch")
+            require(blocked.get("decision") == "blocked"
+                    and blocked.get("preflight_passed") is False
+                    and blocked.get("blocked_reasons") == ["provenance_not_verified"]
+                    and blocked.get("promoted_stages_percent") == [],
+                    "chapter 69 provenance gate result mismatch")
+            execution = environment.get("execution", {})
+            require(environment.get("audit_date") == "2026-11-04"
+                    and environment.get("project_id") == manifest.get("fixture_id")
+                    and environment.get("python", {}).get("implementation") == "CPython"
+                    and environment.get("python", {}).get("version") == "3.13.16"
+                    and environment.get("dependencies") == []
+                    and environment.get("fixture_sha256") == fixture_hash
+                    and execution.get("unit_tests") == "41/41 passed"
+                    and execution.get("external_network_requests") == 0
+                    and execution.get("loopback_http_smoke_tests") == 5
+                    and execution.get("cloud_deployments") == 0
+                    and execution.get("production_writes") == 0
+                    and execution.get("model_inference_calls") == 0
+                    and execution.get("model_weights_loaded") is False
+                    and execution.get("gpu_used") is False
+                    and execution.get("personal_records") == 0
+                    and execution.get("real_credentials_used") is False,
+                    "chapter 69 environment metadata mismatch")
 
         diagram_relative = builder.DIAGRAMS.get(global_num)
         if diagram_relative:

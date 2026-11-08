@@ -1,0 +1,66 @@
+{
+  "project_id": "v5-ch08-deployment-cicd-synthetic-v1",
+  "fixture_id": "v5-ch08-deployment-cicd-synthetic-v1",
+  "fixture_sha256": "4b8824611574ac3ed631bdc81bc78037116afec70acee6942151c59f8ad3a57f",
+  "synthetic": true,
+  "scenario_count": 3,
+  "decision_counts": {
+    "blocked": 1,
+    "hold": 0,
+    "rolled_back": 1,
+    "promoted": 1
+  },
+  "results": [
+    {
+      "scenario": "healthy_staged_rollout",
+      "decision": "promoted",
+      "preflight_passed": true,
+      "blocked_reasons": [],
+      "active_release_id": "candidate-r4",
+      "candidate_release_id": "candidate-r4",
+      "previous_release_id": "stable-r3",
+      "promoted_stages_percent": [
+        5,
+        25,
+        100
+      ],
+      "rollback_performed": false,
+      "simulated_only": true
+    },
+    {
+      "scenario": "latency_regression_rolls_back",
+      "decision": "rolled_back",
+      "preflight_passed": true,
+      "blocked_reasons": [
+        "canary_p95_over_limit"
+      ],
+      "active_release_id": "stable-r3",
+      "candidate_release_id": "candidate-r4-slow",
+      "promoted_stages_percent": [
+        5
+      ],
+      "failed_at_percent": 25,
+      "observed_p95_ms": 930,
+      "rollback_performed": true,
+      "simulated_only": true
+    },
+    {
+      "scenario": "missing_provenance_is_blocked",
+      "decision": "blocked",
+      "preflight_passed": false,
+      "blocked_reasons": [
+        "provenance_not_verified"
+      ],
+      "active_release_id": "stable-r3",
+      "promoted_stages_percent": [],
+      "rollback_performed": false,
+      "simulated_only": true
+    }
+  ],
+  "external_network_requests": 0,
+  "cloud_deployments": 0,
+  "production_writes": 0,
+  "model_inference_calls": 0,
+  "gpu_used": false,
+  "personal_records": 0
+}

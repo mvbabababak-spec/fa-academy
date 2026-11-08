@@ -56,6 +56,9 @@ python book-engineering/projects/68-product-security-lab/security_ops.py \
   --fixture book-engineering/projects/68-product-security-lab/synthetic_security_events.json \
   --output /tmp/ch68-results.json
 cmp /tmp/ch68-results.json book-engineering/projects/68-product-security-lab/results.json
+(cd book-engineering/projects/69-deployment-cicd-lab && python -m unittest -v)
+python book-engineering/projects/69-deployment-cicd-lab/deployment_gate.py --fixture book-engineering/projects/69-deployment-cicd-lab/synthetic_release_scenarios.json --output /tmp/ch69-results.json
+cmp /tmp/ch69-results.json book-engineering/projects/69-deployment-cicd-lab/results.json
 python book-engineering/test_volume5.py
 python book-engineering/test_mobile_layout.py
 ```

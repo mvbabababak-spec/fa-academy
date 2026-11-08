@@ -43,6 +43,7 @@ APPENDIX_PROJECTS = {
     66: "book-engineering/projects/66-ai-product-api/app.py",
     67: "book-engineering/projects/67-serving-lab/serving_lab.py",
     68: "book-engineering/projects/68-product-security-lab/security_ops.py",
+    69: "book-engineering/projects/69-deployment-cicd-lab/deployment_gate.py",
 }
 DIAGRAMS = {
     62: "book-engineering/diagrams/v5-ch01-evaluation-protocol.svg",
@@ -52,6 +53,7 @@ DIAGRAMS = {
     66: "book-engineering/diagrams/v5-ch05-api-contract.svg",
     67: "book-engineering/diagrams/v5-ch06-serving-pipeline.svg",
     68: "book-engineering/diagrams/v5-ch07-product-security-flow.svg",
+    69: "book-engineering/diagrams/v5-ch08-release-pipeline.svg",
 }
 ANSWER_KEYS = {
     62: "book-engineering/answers/62-benchmarking-evaluation-fa.md",
@@ -61,6 +63,7 @@ ANSWER_KEYS = {
     66: "book-engineering/answers/66-ai-product-api-fa.md",
     67: "book-engineering/answers/67-model-serving-operations-fa.md",
     68: "book-engineering/answers/68-product-security-monitoring-fa.md",
+    69: "book-engineering/answers/69-deployment-cicd-fa.md",
 }
 PROJECT_DIRS = {
     62: "book-engineering/projects/62-evaluation-lab",
@@ -70,6 +73,7 @@ PROJECT_DIRS = {
     66: "book-engineering/projects/66-ai-product-api",
     67: "book-engineering/projects/67-serving-lab",
     68: "book-engineering/projects/68-product-security-lab",
+    69: "book-engineering/projects/69-deployment-cicd-lab",
 }
 
 

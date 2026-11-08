@@ -1,5 +1,5 @@
-// ===== فا-اکدمی Service Worker v109 =====
-const CACHE_NAME = 'fa-academy-v109';
+// ===== فا-اکدمی Service Worker v110 =====
+const CACHE_NAME = 'fa-academy-v110';
 const CORE_FILES = [
   './',
   './index.html',
@@ -455,6 +455,20 @@ const CORE_FILES = [
   './book-engineering/projects/68-product-security-lab/security_ops.py',
   './book-engineering/projects/68-product-security-lab/synthetic_security_events.json',
   './book-engineering/projects/68-product-security-lab/test_security_ops.py',
+  './book-engineering/chapters/69-deployment-cicd.md',
+  './book-engineering/chapters/69-audit-report-fa.md',
+  './book-engineering/diagrams/v5-ch08-release-pipeline.svg',
+  './book-engineering/answers/69-deployment-cicd-fa.md',
+  './book-engineering/projects/69-deployment-cicd-lab/README.md',
+  './book-engineering/projects/69-deployment-cicd-lab/deployment_gate.py',
+  './book-engineering/projects/69-deployment-cicd-lab/environment.json',
+  './book-engineering/projects/69-deployment-cicd-lab/fixture_manifest.json',
+  './book-engineering/projects/69-deployment-cicd-lab/local_stub.py',
+  './book-engineering/projects/69-deployment-cicd-lab/requirements.txt',
+  './book-engineering/projects/69-deployment-cicd-lab/results.json',
+  './book-engineering/projects/69-deployment-cicd-lab/synthetic_release_scenarios.json',
+  './book-engineering/projects/69-deployment-cicd-lab/test_deployment_gate.py',
+  './book-engineering/projects/69-deployment-cicd-lab/test_local_stub.py',
 ];
 
 // ===== INSTALL: Cache core files =====
