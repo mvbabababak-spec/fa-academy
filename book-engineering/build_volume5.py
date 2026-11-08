@@ -47,6 +47,7 @@ APPENDIX_PROJECTS = {
     70: "book-engineering/projects/70-reading-papers-lab/paper_reproduction.py",
     71: "book-engineering/projects/71-experiment-design-lab/experiment_design.py",
     72: "book-engineering/projects/72-research-architecture-lab/research_architecture.py",
+    73: "book-engineering/projects/73-capstone-responsible-model/capstone.py",
 }
 DIAGRAMS = {
     62: "book-engineering/diagrams/v5-ch01-evaluation-protocol.svg",
@@ -60,6 +61,7 @@ DIAGRAMS = {
     70: "book-engineering/diagrams/v5-ch09-paper-evidence.svg",
     71: "book-engineering/diagrams/v5-ch10-experiment-design.svg",
     72: "book-engineering/diagrams/v5-ch11-research-architecture.svg",
+    73: "book-engineering/diagrams/v5-ch12-capstone-release.svg",
 }
 ANSWER_KEYS = {
     62: "book-engineering/answers/62-benchmarking-evaluation-fa.md",
@@ -73,6 +75,7 @@ ANSWER_KEYS = {
     70: "book-engineering/answers/70-reading-papers-reproduction-fa.md",
     71: "book-engineering/answers/71-research-design-statistics-fa.md",
     72: "book-engineering/answers/72-research-architecture-community-fa.md",
+    73: "book-engineering/answers/73-capstone-responsible-model-fa.md",
 }
 PROJECT_DIRS = {
     62: "book-engineering/projects/62-evaluation-lab",
@@ -86,6 +89,7 @@ PROJECT_DIRS = {
     70: "book-engineering/projects/70-reading-papers-lab",
     71: "book-engineering/projects/71-experiment-design-lab",
     72: "book-engineering/projects/72-research-architecture-lab",
+    73: "book-engineering/projects/73-capstone-responsible-model",
 }
 
 

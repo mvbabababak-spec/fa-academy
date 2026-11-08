@@ -1,5 +1,5 @@
-// ===== فا-اکدمی Service Worker v118 =====
-const CACHE_NAME = 'fa-academy-v118';
+// ===== فا-اکدمی Service Worker v122 =====
+const CACHE_NAME = 'fa-academy-v122';
 const CORE_FILES = [
   './',
   './index.html',
@@ -506,6 +506,24 @@ const CORE_FILES = [
   './book-engineering/projects/72-research-architecture-lab/research_packet.json',
   './book-engineering/projects/72-research-architecture-lab/results.json',
   './book-engineering/projects/72-research-architecture-lab/test_research_architecture.py',
+  './book-engineering/chapters/73-capstone-responsible-model.md',
+  './book-engineering/chapters/73-audit-report-fa.md',
+  './book-engineering/diagrams/v5-ch12-capstone-release.svg',
+  './book-engineering/answers/73-capstone-responsible-model-fa.md',
+  './book-engineering/projects/73-capstone-responsible-model/README.md',
+  './book-engineering/projects/73-capstone-responsible-model/capstone.py',
+  './book-engineering/projects/73-capstone-responsible-model/checkpoint.json',
+  './book-engineering/projects/73-capstone-responsible-model/data_card.md',
+  './book-engineering/projects/73-capstone-responsible-model/environment.json',
+  './book-engineering/projects/73-capstone-responsible-model/fixture_manifest.json',
+  './book-engineering/projects/73-capstone-responsible-model/model_card.md',
+  './book-engineering/projects/73-capstone-responsible-model/release_decision.json',
+  './book-engineering/projects/73-capstone-responsible-model/release_manifest.json',
+  './book-engineering/projects/73-capstone-responsible-model/requirements.txt',
+  './book-engineering/projects/73-capstone-responsible-model/results.json',
+  './book-engineering/projects/73-capstone-responsible-model/run_card.json',
+  './book-engineering/projects/73-capstone-responsible-model/synthetic_fixture.json',
+  './book-engineering/projects/73-capstone-responsible-model/test_capstone.py',
 ];
 
 // ===== INSTALL: Cache core files =====

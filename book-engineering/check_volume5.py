@@ -105,7 +105,7 @@ def main() -> None:
             image_path_on_disk = (ROOT / image_relative if image_relative.parts and image_relative.parts[0] in {"book-engineering", "assets"}
                                   else source.parent / image_relative)
             require(image_path_on_disk.is_file(), f"chapter {global_num} missing figure {image_path}")
-        if global_num in (62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72):
+        if global_num in (62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73):
             exercise_match = re.search(r"(?ms)^##\s+[^\n]*تمرین‌ها[^\n]*\n(.*?)(?=^##\s|\Z)", source_text)
             require(exercise_match is not None, f"chapter {global_num} exercise section missing")
             questions = re.findall(r"(?m)^([۱-۸])\. (.+)$", exercise_match.group(1))
@@ -667,6 +667,100 @@ def main() -> None:
                     and limits.get("statistical_inference_authorized") is False
                     and limits.get("publication_readiness_certified") is False,
                     "chapter 72 environment metadata overstates the tested scope")
+
+        if global_num == 73:
+            require(len(book["chapters"][11]["sections"]) == 43,
+                    "chapter 73 expected 43 sections, including its executable appendix")
+            project_files = (
+                "README.md", "capstone.py", "test_capstone.py", "requirements.txt",
+                "synthetic_fixture.json", "fixture_manifest.json", "run_card.json",
+                "data_card.md", "model_card.md", "release_decision.json",
+                "checkpoint.json", "results.json", "environment.json", "release_manifest.json",
+            )
+            for filename in project_files:
+                require((project_dir / filename).is_file(), f"chapter 73 project file missing: {filename}")
+            fixture_path = project_dir / "synthetic_fixture.json"
+            fixture_hash = hashlib.sha256(fixture_path.read_bytes()).hexdigest()
+            fixture = json.loads(fixture_path.read_text(encoding="utf-8"))
+            fixture_manifest = json.loads((project_dir / "fixture_manifest.json").read_text(encoding="utf-8"))
+            checkpoint = json.loads((project_dir / "checkpoint.json").read_text(encoding="utf-8"))
+            result = json.loads((project_dir / "results.json").read_text(encoding="utf-8"))
+            environment = json.loads((project_dir / "environment.json").read_text(encoding="utf-8"))
+            release_decision = json.loads((project_dir / "release_decision.json").read_text(encoding="utf-8"))
+            release_manifest = json.loads((project_dir / "release_manifest.json").read_text(encoding="utf-8"))
+            project_id = "v5-ch12-capstone-responsible-model-synthetic-v1"
+            require(fixture.get("project_id") == fixture_manifest.get("project_id")
+                    == checkpoint.get("project_id") == result.get("project_id")
+                    == environment.get("project_id") == release_decision.get("project_id")
+                    == release_manifest.get("project_id") == project_id
+                    and fixture.get("synthetic") is True
+                    and fixture.get("provenance", {}).get("real_records") is False
+                    and fixture.get("provenance", {}).get("personal_data") is False
+                    and fixture.get("provenance", {}).get("external_source") is None,
+                    "chapter 73 fixture identity or provenance is not explicitly synthetic")
+            require(fixture_manifest.get("fixture_sha256") == fixture_hash
+                    and fixture_manifest.get("total_records") == 16
+                    and fixture_manifest.get("split_counts") == {"train": 8, "validation": 4, "test": 4}
+                    and checkpoint.get("fixture_sha256") == fixture_hash
+                    and result.get("fixture_sha256") == fixture_hash
+                    and environment.get("input", {}).get("fixture_sha256") == fixture_hash,
+                    "chapter 73 fixture, manifest, checkpoint, result, and environment hashes disagree")
+            metrics = result.get("metrics", {})
+            test_metrics = metrics.get("test", {})
+            baseline = result.get("majority_baseline_test", {})
+            claims = result.get("claims", {})
+            require(result.get("synthetic_fixture_only") is True
+                    and result.get("real_data_used") is False
+                    and result.get("pretrained_model_used") is False
+                    and result.get("external_api_calls") == 0
+                    and metrics.get("train", {}).get("count") == 8
+                    and metrics.get("validation", {}).get("count") == 4
+                    and (test_metrics.get("correct"), test_metrics.get("count"), test_metrics.get("accuracy")) == (4, 4, 1.0)
+                    and (baseline.get("correct"), baseline.get("count"), baseline.get("accuracy")) == (2, 4, 0.5)
+                    and all(value is False for value in claims.values()),
+                    "chapter 73 results must stay descriptive and limited to the tiny synthetic fixture")
+            expected_release_files = {
+                "source/README.md", "source/capstone.py", "source/test_capstone.py",
+                "source/requirements.txt", "source/synthetic_fixture.json", "source/fixture_manifest.json",
+                "source/run_card.json", "source/data_card.md", "source/model_card.md",
+                "source/release_decision.json", "output/checkpoint.json", "output/results.json",
+                "output/environment.json",
+            }
+            actual_release_files = release_manifest.get("files", {})
+            require(set(actual_release_files) == expected_release_files
+                    and release_manifest.get("hash_algorithm") == "SHA-256"
+                    and release_manifest.get("deployment_approved") is False
+                    and release_manifest.get("self_hash_included") is False,
+                    "chapter 73 release manifest has an unexpected file set or decision")
+            for entry, digest in actual_release_files.items():
+                relative = entry.removeprefix("source/").removeprefix("output/")
+                require(len(digest) == 64 and all(c in "0123456789abcdef" for c in digest),
+                        f"chapter 73 invalid SHA-256 digest for {entry}")
+                require(digest == hashlib.sha256((project_dir / relative).read_bytes()).hexdigest(),
+                        f"chapter 73 release manifest digest mismatch for {entry}")
+            execution = environment.get("execution", {})
+            limits = environment.get("interpretation_limits", {})
+            require(environment.get("audit_date") == "2026-11-08"
+                    and environment.get("runtime", {}).get("implementation") == "CPython"
+                    and environment.get("runtime", {}).get("version") == "3.13.16"
+                    and environment.get("dependencies") == []
+                    and execution.get("unit_tests") == "25/25 passed"
+                    and execution.get("training_executed") is True
+                    and execution.get("external_network_requests") == 0
+                    and execution.get("external_api_calls") == 0
+                    and execution.get("gpu_used") is False
+                    and execution.get("real_data_used") is False
+                    and execution.get("personal_data_used") is False
+                    and execution.get("pretrained_model_used") is False
+                    and execution.get("result_reproduced_from_saved_fixture") is True
+                    and limits.get("synthetic_fixture_only") is True
+                    and limits.get("real_world_quality_assessed") is False
+                    and limits.get("generalization_assessed") is False
+                    and limits.get("deployment_authorized") is False
+                    and release_decision.get("reviewed_as_of") == "2026-11-08"
+                    and release_decision.get("decision") == "educational_source_packet_only"
+                    and release_decision.get("model_deployment") == "not_approved",
+                    "chapter 73 environment or release decision overstates the tested scope")
 
         diagram_relative = builder.DIAGRAMS.get(global_num)
         if diagram_relative:

@@ -26,6 +26,7 @@ CHAPTER_TITLES = {
     70: "خواندن مقاله، بررسی ادعا و روش، تحلیل معماری و بازتولید نتایج",
     71: "طراحی آزمایش، فرضیه و معیار، ساخت دیتاست، مقایسهٔ مدل‌ها و تحلیل آماری",
     72: "توسعهٔ معماری، نوشتن مقاله، مشارکت متن‌باز، تشکیل تیم و برنامهٔ پژوهشی بلندمدت",
+    73: "پروژهٔ نهایی: طراحی، آموزش، ارزیابی و انتشار مسئولانهٔ مدل مستقل با گزارش قابل‌بازتولید",
 }
 PROJECT_CODES = {
     global_num: (ROOT / path).read_text(encoding="utf-8").rstrip("\n")
@@ -63,17 +64,17 @@ def main() -> None:
                       sectionCount:chapter.sections.length,
                       mathSections:chapter.sections.map((section,index)=>({{index,count:(section.html.match(/<math/g)||[]).length}})).filter(item=>item.count>0)}}))}};
                 }}""")
-                assert metadata["count"] == 11, metadata
+                assert metadata["count"] == 12, metadata
                 assert metadata["cover"] == builder.COVER_PATH, metadata
                 assert metadata["subtitle"] == "ارزیابی، محصول و پژوهش | ۱۲ فصل", metadata
                 assert [chapter["id"] for chapter in metadata["chapters"]] == [
                     "art-science-v5-ch01", "art-science-v5-ch02", "art-science-v5-ch03",
                     "art-science-v5-ch04", "art-science-v5-ch05", "art-science-v5-ch06",
                     "art-science-v5-ch07", "art-science-v5-ch08", "art-science-v5-ch09",
-                    "art-science-v5-ch10", "art-science-v5-ch11"
+                    "art-science-v5-ch10", "art-science-v5-ch11", "art-science-v5-ch12"
                 ], metadata
                 assert [chapter["title"] for chapter in metadata["chapters"]] == [
-                    CHAPTER_TITLES[number] for number in (62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72)
+                    CHAPTER_TITLES[number] for number in (62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73)
                 ], metadata
                 assert metadata["chapters"][0]["sectionCount"] == 26, metadata
                 assert metadata["chapters"][0]["sectionIds"][0] == "art-science-v5-ch01-s01", metadata
@@ -108,10 +109,14 @@ def main() -> None:
                 assert metadata["chapters"][10]["sectionCount"] == 43, metadata
                 assert metadata["chapters"][10]["sectionIds"][0] == "art-science-v5-ch11-s01", metadata
                 assert metadata["chapters"][10]["sectionIds"][-1] == "art-science-v5-ch11-s43", metadata
+                assert metadata["chapters"][11]["sectionCount"] == 43, metadata
+                assert metadata["chapters"][11]["sectionIds"][0] == "art-science-v5-ch12-s01", metadata
+                assert metadata["chapters"][11]["sectionIds"][-1] == "art-science-v5-ch12-s43", metadata
                 assert all(chapter["mathSections"] for chapter in metadata["chapters"][:10]), metadata
                 assert metadata["chapters"][10]["mathSections"] == [], metadata
+                assert metadata["chapters"][11]["mathSections"] == [], metadata
 
-                # Confirm the portrait cover and accessible figures in all eleven chapters; check MathML where authored.
+                # Confirm the portrait cover and accessible figures in all twelve chapters; check MathML where authored.
                 page.locator(".book-card--volume img").last.evaluate("img => img.loading='eager'")
                 page.wait_for_function("""() => {
                   const img=Array.from(document.querySelectorAll('.book-card--volume img'))
@@ -243,6 +248,14 @@ def main() -> None:
                 offline_project72 = page.evaluate("fetch('book-engineering/projects/72-research-architecture-lab/results.json').then(r=>r.ok?r.text():'')")
                 offline_fixture72 = page.evaluate("fetch('book-engineering/projects/72-research-architecture-lab/research_packet.json').then(r=>r.ok?r.text():'')")
                 offline_env72 = page.evaluate("fetch('book-engineering/projects/72-research-architecture-lab/environment.json').then(r=>r.ok?r.text():'')")
+                offline_answer73 = page.evaluate("fetch('book-engineering/answers/73-capstone-responsible-model-fa.md').then(r=>r.ok?r.text():'')")
+                offline_report73 = page.evaluate("fetch('book-engineering/chapters/73-audit-report-fa.md').then(r=>r.ok?r.text():'')")
+                offline_source73 = page.evaluate("fetch('book-engineering/chapters/73-capstone-responsible-model.md').then(r=>r.ok?r.text():'')")
+                offline_diagram73 = page.evaluate("fetch('book-engineering/diagrams/v5-ch12-capstone-release.svg').then(r=>r.ok?r.text():'')")
+                offline_project73 = page.evaluate("fetch('book-engineering/projects/73-capstone-responsible-model/results.json').then(r=>r.ok?r.text():'')")
+                offline_fixture73 = page.evaluate("fetch('book-engineering/projects/73-capstone-responsible-model/synthetic_fixture.json').then(r=>r.ok?r.text():'')")
+                offline_env73 = page.evaluate("fetch('book-engineering/projects/73-capstone-responsible-model/environment.json').then(r=>r.ok?r.text():'')")
+                offline_release73 = page.evaluate("fetch('book-engineering/projects/73-capstone-responsible-model/release_decision.json').then(r=>r.ok?r.text():'')")
                 offline_full_text = page.evaluate("fetch('volume-5-full-fa.md').then(r=>r.ok?r.text():'')")
                 assert "پاسخ‌نامهٔ مستقل فصل ۶۲" in offline_answer62
                 assert "پاسخ‌نامهٔ مستقل فصل ۶۳" in offline_answer63
@@ -309,9 +322,19 @@ def main() -> None:
                 assert '"novelty_confirmed": false' in offline_project72
                 assert '"synthetic": true' in offline_fixture72
                 assert '"unit_tests": "25/25 passed"' in offline_env72
-                assert all(term in offline_full_text for term in ("جلد پنجم", "فصل ۶۲", "فصل ۶۳", "فصل ۶۴", "فصل ۶۵", "فصل ۶۶", "فصل ۶۷", "فصل ۶۸", "فصل ۶۹", "فصل ۷۰", "فصل ۷۱", "فصل ۷۲"))
+                assert "پاسخ‌نامهٔ مستقل فصل ۷۳" in offline_answer73
+                assert "فصل محلی ۱۲ جلد پنجم = فصل سراسری ۷۳" in offline_source73
+                assert "گام شماره‌دار" in offline_diagram73 and "استقرار: متوقف" in offline_diagram73
+                assert '"project_id": "v5-ch12-capstone-responsible-model-synthetic-v1"' in offline_project73
+                assert '"accuracy": 1.0' in offline_project73 and '"deployment_approved": false' in offline_project73
+                assert '"synthetic": true' in offline_fixture73
+                assert '"audit_date": "2026-11-08"' in offline_env73
+                assert '"unit_tests": "25/25 passed"' in offline_env73
+                assert '"reviewed_as_of": "2026-11-08"' in offline_release73
+                assert '"model_deployment": "not_approved"' in offline_release73
+                assert all(term in offline_full_text for term in ("جلد پنجم", "فصل ۶۲", "فصل ۶۳", "فصل ۶۴", "فصل ۶۵", "فصل ۶۶", "فصل ۶۷", "فصل ۶۸", "فصل ۶۹", "فصل ۷۰", "فصل ۷۱", "فصل ۷۲", "فصل ۷۳"))
                 assert not errors, errors
-                print(f"PASS volume 5 chapters 62–72 browser/offline checks at {width}px: sections={[chapter['sectionCount'] for chapter in metadata['chapters']]}, accessible MathML/SVG, exact code appendices, {len(OFFLINE_PATHS)} offline paths")
+                print(f"PASS volume 5 chapters 62–73 browser/offline checks at {width}px: sections={[chapter['sectionCount'] for chapter in metadata['chapters']]}, accessible MathML/SVG, exact code appendices, {len(OFFLINE_PATHS)} offline paths")
                 context.close()
             browser.close()
     finally:
