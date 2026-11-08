@@ -33,7 +33,7 @@ var totalDone=Object.keys(this.state.completed).filter(function(k){return this.s
 var self=this;
 var pct=Math.round((totalDone/totalSections)*100);
 document.getElementById('home-stats').innerHTML='<div class="home-stat"><div class="home-stat-num">'+books.length+'</div><div class="home-stat-label">کتاب</div></div><div class="home-stat"><div class="home-stat-num">'+(this.courses?this.courses.length:0)+'</div><div class="home-stat-label">دوره</div></div><div class="home-stat"><div class="home-stat-num">'+totalChapters+'</div><div class="home-stat-label">جلد</div></div><div class="home-stat"><div class="home-stat-num">'+pct+'٪</div><div class="home-stat-label">پروش</div></div>';
-var icons={'ai':'🧠','genai':'🤖','ml':'📊','datascience':'📈'};
+var icons={'vol1':'🧠','vol2':'📈','vol3':'🔄','vol4':'⚡','vol5':'🎯','ai':'🧠','genai':'🤖','ml':'📊','datascience':'📈'};
 var grid=document.getElementById('home-books');
 grid.innerHTML=books.map(function(b,i){
 var total=b.chapters.reduce(function(s,c){return s+c.sections.length},0);
