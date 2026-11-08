@@ -15,10 +15,10 @@ python3 -m unittest -v
 python3 capstone.py --fixture synthetic_fixture.json --output-dir /tmp/ch73-capstone-run
 cmp results.json /tmp/ch73-capstone-run/results.json
 cmp checkpoint.json /tmp/ch73-capstone-run/checkpoint.json
-cmp release_manifest.json /tmp/ch73-capstone-run/release_manifest.json
+python3 capstone.py --output-dir /tmp/ch73-capstone-run --verify-only
 ```
 
-`environment.json` تفاوت مفسر و پلتفرم اجرای شما را ثبت می‌کند؛ اگر نسخهٔ Python فرق داشته باشد، آن فایل لزوماً با snapshot ثبت‌شده برابر نیست. خروجی‌های محاسباتی باید برای همان ورودی و پیکربندی deterministic باشند.
+`checkpoint.json` و `results.json` خروجی‌های محاسباتی‌اند و با ورودی و پیکربندی یکسان باید بایت‌به‌بایت برابر باشند. `environment.json` نسخهٔ واقعی Python و پلتفرم را ثبت می‌کند، پس در runtime متفاوت انتظار می‌رود فرق کند؛ `release_manifest.json` هم hash محیط همان اجرا را نگه می‌دارد. فرمان `--verify-only` manifest تازه‌ساخته‌شده را در همان پوشه بررسی می‌کند. مقایسهٔ environment و manifest با snapshot فقط وقتی معنا دارد که runtime ثبت‌شده نیز یکسان باشد.
 
 ## اجزای تحویل
 

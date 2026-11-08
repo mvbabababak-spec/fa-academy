@@ -1,11 +1,12 @@
 # Fa Academy
 
-اپ وب/PWA فارسی برای مجموعهٔ پنج‌جلدی «هنر و علم ساخت هوش». جلد اول ۲۱ فصل و جلد دوم ۱۱ فصل منتشرشده دارد. جلد سوم ۱۴ فصل محلی (۱–۱۴)، متناظر با فصل‌های سراسری ۳۳–۴۶، منتشر شده است. جلد چهارم ۱۵ فصل محلی (سراسری ۴۷–۶۱) دارد و هر ۱۵ فصل جداگانه منتشر شده‌اند. جلد پنجم در نقشه ۱۲ فصل محلی دارد؛ فصل‌های محلی ۱ تا ۴ (فصل‌های سراسری ۶۲ تا ۶۵) منتشر شده‌اند و فصل محلی ۵/سراسری ۶۶ با commit مستقل منتشر شده است. پس از اصلاح واگذاری یک آزمون در workflow جلد اول، هر پنج workflow جلدها و Pages موفق شدند؛ جزئیات commitها، runها و بررسی زنده در [گزارش ممیزی فصل ۶۶](book-engineering/chapters/66-audit-report-fa.md) آمده است. متن‌های قابل‌دریافت:
+اپ وب/PWA فارسیِ مجموعهٔ پنج‌جلدی «هنر و علم ساخت هوش» است. جلدهای اول تا پنجم به‌ترتیب ۲۱، ۱۱، ۱۴، ۱۵ و ۱۲ فصل دارند؛ شناسنامه و وضعیت انتشار هر جلد در فایل Markdown خودش حفظ شده است. جلد پنجم فصل‌های سراسری ۶۲ تا ۷۳ را شامل می‌شود و فصل ۷۳ پروژهٔ نهایی مستقل آن است. متن‌های قابل‌دریافت:
 
+- [متن کامل هر پنج جلد در یک فایل Markdown](all-volumes-full-fa.md)
 - [جلد دوم — Markdown](volume-2-full-fa.md)
 - [جلد سوم، فصل‌های ۳۳–۴۶ — Markdown](volume-3-full-fa.md)
 - [جلد چهارم، فصل‌های ۴۷–۶۱ — Markdown](volume-4-full-fa.md)
-- [جلد پنجم، فصل‌های ۶۲–۶۶ — Markdown](volume-5-full-fa.md)
+- [جلد پنجم، فصل‌های ۶۲–۷۳ — Markdown](volume-5-full-fa.md)
 
 **قالب انتشار فعلی وب/PWA و Markdown است. PDF و EPUB تولید و آزموده نشده‌اند و به milestone بعدی موکول‌اند.** راهنمای اجرا، محدوده و محدودیت پروژه‌ها در [book-engineering/README.md](book-engineering/README.md) آمده است.
 
@@ -41,13 +42,20 @@
 
 ## جلد پنجم: فصل‌های محلی ۱–۱۲ / سراسری ۶۲–۷۳
 
-فصل‌های محلی ۱–۴ (سراسری ۶۲–۶۵) جداگانه منتشر شده‌اند؛ فصل محلی ۵/سراسری ۶۶ با commit مستقل و push عادی منتشر شد. اجرای نخستِ جلد اول آشکار کرد که حلقهٔ عمومی آزمون پروژه‌ها باید فصل ۶۶ را به محیط پین‌شدهٔ جلد پنجم واگذارد؛ اصلاح این گیت و تأیید موفق هر پنج workflow و Pages در گزارش ممیزی ثبت شده‌اند. این جلد benchmark و رفتار مدل (۶۲–۶۳)، Red Teaming و امنیت (۶۴)، حکمرانی و ریسک (۶۵)، سپس محصول/API و قراردادهای backend/frontend (۶۶) را به هم پیوند می‌دهد. مرزهای بعدی حفظ شده‌اند: runtime و بهینه‌سازی در ۶۷، احراز هویت/پایش/پاسخ به رخداد در ۶۸، و استقرار/CI/CD در ۶۹ است؛ پژوهش مستقل در فصل‌های ۷۰–۷۳ می‌آید.
+جلد پنجم ۱۲ فصل محلی (سراسری ۶۲–۷۳) دارد؛ فصل ۷۳ پروژهٔ نهایی مستقلی است که طراحی، آموزش، ارزیابی و انتشار مسئولانه را به هم می‌پیوندد. موضوع‌ها از ارزیابی و رفتار مدل (۶۲–۶۳)، امنیت و حاکمیت (۶۴–۶۵)، محصول/API (۶۶)، سرو و امنیت عملیاتی (۶۷–۶۸)، استقرار و CI/CD (۶۹)، تا پژوهش و پروژهٔ نهایی (۷۰–۷۳) پیش می‌روند.
 
 - [فصل ۶۲: متن](book-engineering/chapters/62-benchmarking-evaluation.md) · [پاسخ‌نامه](book-engineering/answers/62-benchmarking-evaluation-fa.md) · [پروژه](book-engineering/projects/62-evaluation-lab/README.md) · [گزارش ممیزی](book-engineering/chapters/62-audit-report-fa.md)
 - [فصل ۶۳: متن](book-engineering/chapters/63-hallucination-bias-robustness.md) · [پاسخ‌نامه](book-engineering/answers/63-hallucination-bias-robustness-fa.md) · [پروژه](book-engineering/projects/63-model-behavior-lab/README.md) · [گزارش ممیزی](book-engineering/chapters/63-audit-report-fa.md)
 - [فصل ۶۴: متن](book-engineering/chapters/64-red-teaming-security.md) · [پاسخ‌نامه](book-engineering/answers/64-red-teaming-security-fa.md) · [پروژه](book-engineering/projects/64-red-team-lab/README.md) · [گزارش ممیزی](book-engineering/chapters/64-audit-report-fa.md)
 - [فصل ۶۵: متن](book-engineering/chapters/65-alignment-governance.md) · [پاسخ‌نامه](book-engineering/answers/65-alignment-governance-fa.md) · [پروژه](book-engineering/projects/65-governance-lab/README.md) · [گزارش ممیزی](book-engineering/chapters/65-audit-report-fa.md)
 - [فصل ۶۶: متن](book-engineering/chapters/66-ai-product-api.md) · [پاسخ‌نامه](book-engineering/answers/66-ai-product-api-fa.md) · [پروژه](book-engineering/projects/66-ai-product-api/README.md) · [گزارش ممیزی](book-engineering/chapters/66-audit-report-fa.md)
+- [فصل ۶۷: متن](book-engineering/chapters/67-model-serving-operations.md) · [پاسخ‌نامه](book-engineering/answers/67-model-serving-operations-fa.md) · [پروژه](book-engineering/projects/67-serving-lab/README.md) · [گزارش ممیزی](book-engineering/chapters/67-audit-report-fa.md)
+- [فصل ۶۸: متن](book-engineering/chapters/68-product-security-monitoring.md) · [پاسخ‌نامه](book-engineering/answers/68-product-security-monitoring-fa.md) · [پروژه](book-engineering/projects/68-product-security-lab/README.md) · [گزارش ممیزی](book-engineering/chapters/68-audit-report-fa.md)
+- [فصل ۶۹: متن](book-engineering/chapters/69-deployment-cicd.md) · [پاسخ‌نامه](book-engineering/answers/69-deployment-cicd-fa.md) · [پروژه](book-engineering/projects/69-deployment-cicd-lab/README.md) · [گزارش ممیزی](book-engineering/chapters/69-audit-report-fa.md)
+- [فصل ۷۰: متن](book-engineering/chapters/70-reading-papers-reproduction.md) · [پاسخ‌نامه](book-engineering/answers/70-reading-papers-reproduction-fa.md) · [پروژه](book-engineering/projects/70-reading-papers-lab/README.md) · [گزارش ممیزی](book-engineering/chapters/70-audit-report-fa.md)
+- [فصل ۷۱: متن](book-engineering/chapters/71-research-design-statistics.md) · [پاسخ‌نامه](book-engineering/answers/71-research-design-statistics-fa.md) · [پروژه](book-engineering/projects/71-experiment-design-lab/README.md) · [گزارش ممیزی](book-engineering/chapters/71-audit-report-fa.md)
+- [فصل ۷۲: متن](book-engineering/chapters/72-research-architecture-community.md) · [پاسخ‌نامه](book-engineering/answers/72-research-architecture-community-fa.md) · [پروژه](book-engineering/projects/72-research-architecture-lab/README.md) · [گزارش ممیزی](book-engineering/chapters/72-audit-report-fa.md)
+- [فصل ۷۳: متن](book-engineering/chapters/73-capstone-responsible-model.md) · [پاسخ‌نامه](book-engineering/answers/73-capstone-responsible-model-fa.md) · [پروژه](book-engineering/projects/73-capstone-responsible-model/README.md) · [گزارش ممیزی](book-engineering/chapters/73-audit-report-fa.md)
 
 فصل ۶۶ روی fixture ساختگی و بدون شبکه یا مدل زنده، ۱۲ آزمون API و دو آزمون مرورگر دارد؛ نسخه‌ها، محدودیت‌ها و نتایج در [گزارش ممیزی](book-engineering/chapters/66-audit-report-fa.md) و `projects/66-ai-product-api/results.json` ثبت شده‌اند. برای بازتولید، از ریشهٔ مخزن اجرا کنید:
 
@@ -62,6 +70,6 @@ python book-engineering/test_volume5.py
 python book-engineering/test_mobile_layout.py
 ```
 
-در این snapshot جلد پنجم ۵/۱۲ فصل و ۴۰ بخش تازه دارد؛ Service Worker `fa-academy-v105` با ۶۶ مسیر آفلاین، از جمله گزارش به‌روزشدهٔ فصل ۶۶، منتشر می‌شود. پنج checker جلدها، پروژه‌های ۶۲–۶۶، آزمون idempotence سازنده و browser/mobile در گیت محلی موفق شدند. commit محتوای فصل [`5dc3672`](https://github.com/mvbabababak-spec/fa-academy/commit/5dc36725c962ce05790cac1728df744d4c640e42) و commit اصلاح واگذاری CI [`9ed607a`](https://github.com/mvbabababak-spec/fa-academy/commit/9ed607a862b5b11042ad640394606e00fab28851) روی `gh-pages` منتشر شدند؛ پس از اصلاح، هر پنج workflow و Pages با وضعیت موفق تأیید شدند. شناسهٔ runها، شکست اولیهٔ جلد اول و علت اصلاح در [گزارش ممیزی فصل ۶۶](book-engineering/chapters/66-audit-report-fa.md) ثبت است. تصویر مرجع `book-engineering/reports/browser-mobile.webp` و تغییرهای responsive قبلی حفظ شده‌اند.
+در نسخهٔ فعلی جلد پنجم ۱۲/۱۲ فصل (سراسری ۶۲–۷۳) دارد؛ Service Worker `v123` مجموعهٔ مسیرهای آفلاین جلد پنجم را نگه می‌دارد. فایل `all-volumes-full-fa.md` نسخهٔ یک‌پارچهٔ Markdown هر پنج جلد است. نتیجهٔ CI، انتشار Pages و بررسی زنده/آفلاین فصل ۷۳ در [گزارش ممیزی فصل ۷۳](book-engineering/chapters/73-audit-report-fa.md) ثبت می‌شود. تغییرهای responsive موجود حفظ شده‌اند.
 
-قالب انتشار وب/PWA و Markdown است؛ PDF و EPUB تولید یا آزموده نشده‌اند. فصل ۶۵ تکرار نمی‌شود. فصل ۶۷ را تا ثبت SHA انتشار فصل ۶۶، تأیید remote، workflowهای جلدهای ۱–۵ و Pages آغاز نکنید.
+قالب انتشار وب/PWA و Markdown است؛ PDF و EPUB تولید یا آزموده نشده‌اند.

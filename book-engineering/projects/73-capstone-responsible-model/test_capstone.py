@@ -2,7 +2,9 @@
 from __future__ import annotations
 
 import json
+import platform
 import shutil
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -136,8 +138,24 @@ class CapstoneContractTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp:
             output = Path(temp)
             capstone.run_project(ROOT / "synthetic_fixture.json", output, ROOT)
-            for name in (*capstone.OUTPUT_FILES, "release_manifest.json"):
+            for name in ("checkpoint.json", "results.json"):
                 self.assertEqual((ROOT / name).read_bytes(), (output / name).read_bytes(), name)
+
+            stored_environment = capstone.read_json(ROOT / "environment.json")
+            generated_environment = capstone.read_json(output / "environment.json")
+            self.assertEqual(
+                {key: value for key, value in generated_environment.items() if key != "runtime"},
+                {key: value for key, value in stored_environment.items() if key != "runtime"},
+            )
+            self.assertEqual(
+                generated_environment["runtime"],
+                {
+                    "implementation": platform.python_implementation(),
+                    "version": platform.python_version(),
+                    "platform": sys.platform,
+                },
+            )
+            capstone.verify_release(output / "release_manifest.json", ROOT, output)
 
     def test_24_manifest_verifies_and_detects_output_tampering(self) -> None:
         with tempfile.TemporaryDirectory() as temp:

@@ -278,8 +278,18 @@ def main() -> None:
         if len(existing) > len(chapters):
             raise RuntimeError("a volume 5 chapter source is missing; refusing to remove it")
         for index, old_chapter in enumerate(existing):
-            if old_chapter != chapters[index]:
+            if old_chapter == chapters[index]:
+                continue
+            # Allow corrections only to the active final capstone; earlier chapters stay immutable.
+            is_active_capstone = (
+                index == len(existing) - 1
+                and index == len(chapters) - 1
+                and specs[index][1] == 73
+            )
+            if not is_active_capstone:
                 raise RuntimeError(f"existing volume 5 chapter {index + 1} differs from its source; refusing to rewrite it")
+            existing[index] = chapters[index]
+            changed = True
         if len(existing) < len(chapters):
             book["chapters"] = existing + chapters[len(existing):]
             changed = True
